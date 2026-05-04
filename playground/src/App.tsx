@@ -6,8 +6,8 @@ import {
   TEMPLATES,
   TooltipProvider,
 } from '@loykin/designkit'
-import { StyleControls } from '@/components/editor/StyleEditor'
-import { CodeExport } from '@/components/editor/CodeExport'
+import { StyleControls } from './components/editor/StyleEditor'
+import { CodeExport } from './components/editor/CodeExport'
 
 export default function App() {
   useStyleInjector()

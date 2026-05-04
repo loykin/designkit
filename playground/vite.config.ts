@@ -8,7 +8,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@loykin/designkit': resolve(__dirname, '../src/index.ts'),
-      '@': resolve(__dirname, './src'),
+      '@': resolve(__dirname, '../src'),
     },
   },
 })
