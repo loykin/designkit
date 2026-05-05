@@ -21,8 +21,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --noEmit && tsup",
+    "build": "tsc --noEmit && tsup && node scripts/build-css.mjs && echo 'declare const styles: string; export default styles;' > dist/styles.d.ts",
     "build:js": "tsup",
+    "build:css": "node scripts/build-css.mjs",
     "dev": "concurrently \"tsup --watch\" \"pnpm --filter designkit-playground dev\"",
     "type-check": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
@@ -37,6 +38,9 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
+    "@loykin/gridkit": "0.1.12",
+    "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-virtual": "^3.13.24",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.14.0",

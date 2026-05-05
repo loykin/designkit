@@ -7,7 +7,13 @@ export default defineConfig({
   dts:       true,
   sourcemap: true,
   clean:     true,
-  external:  ['react', 'react-dom'],
+  external:  [
+    'react',
+    'react-dom',
+    '@loykin/gridkit',
+    '@tanstack/react-table',
+    '@tanstack/react-virtual',
+  ],
   treeshake: true,
   esbuildOptions(options) {
     options.alias = { '@': resolve(__dirname, './src') }

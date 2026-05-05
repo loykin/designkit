@@ -1,0 +1,83 @@
+/*
+ * DesignKit preset bridge.
+ *
+ * DesignKit should own the shared design tokens and map them onto the
+ * package-specific variables used by Loykin kits. This file is intentionally
+ * small for now; package adapters will grow here as gridkit/chartkit/basekit
+ * are wired into the playground.
+ */
+
+:root {
+  --dk-radius: var(--radius, 0.5rem);
+  --dk-background: var(--background, oklch(1 0 0));
+  --dk-foreground: var(--foreground, oklch(0.145 0 0));
+  --dk-card: var(--card, oklch(1 0 0));
+  --dk-card-foreground: var(--card-foreground, oklch(0.145 0 0));
+  --dk-primary: var(--primary, oklch(0.205 0.15 220));
+  --dk-primary-foreground: var(--primary-foreground, oklch(0.985 0 0));
+  --dk-secondary: var(--secondary, oklch(0.97 0 0));
+  --dk-secondary-foreground: var(--secondary-foreground, oklch(0.205 0 0));
+  --dk-muted: var(--muted, oklch(0.97 0 0));
+  --dk-muted-foreground: var(--muted-foreground, oklch(0.556 0 0));
+  --dk-accent: var(--accent, oklch(0.97 0 0));
+  --dk-accent-foreground: var(--accent-foreground, oklch(0.205 0 0));
+  --dk-border: var(--border, oklch(0.922 0 0));
+  --dk-input: var(--input, oklch(0.922 0 0));
+  --dk-ring: var(--ring, oklch(0.708 0 0));
+  --dk-destructive: var(--destructive, oklch(0.577 0.245 27.325));
+
+  --dk-density: 1;
+  --dk-page-padding-x: 1.5rem;
+  --dk-page-padding-y: 1rem;
+  --dk-panel-gap: 1rem;
+  --dk-toolbar-height: 2.75rem;
+}
+
+.dark {
+  --dk-background: var(--background, oklch(0.145 0 0));
+  --dk-foreground: var(--foreground, oklch(0.985 0 0));
+  --dk-card: var(--card, oklch(0.205 0 0));
+  --dk-card-foreground: var(--card-foreground, oklch(0.985 0 0));
+  --dk-muted: var(--muted, oklch(0.269 0 0));
+  --dk-muted-foreground: var(--muted-foreground, oklch(0.708 0 0));
+  --dk-border: var(--border, oklch(1 0 0 / 10%));
+  --dk-input: var(--input, oklch(1 0 0 / 15%));
+}
+
+[data-dk-density="compact"] {
+  --dk-density: 0.85;
+  --dk-page-padding-y: 0.75rem;
+  --dk-panel-gap: 0.75rem;
+  --dk-toolbar-height: 2.5rem;
+}
+
+[data-dk-density="comfortable"] {
+  --dk-density: 1.15;
+  --dk-page-padding-y: 1.25rem;
+  --dk-panel-gap: 1.25rem;
+  --dk-toolbar-height: 3rem;
+}
+
+/* gridkit adapter */
+:root,
+.designkit-theme {
+  --dg-background: var(--dk-background);
+  --dg-foreground: var(--dk-foreground);
+  --dg-popover: var(--dk-card);
+  --dg-popover-foreground: var(--dk-card-foreground);
+  --dg-primary: var(--dk-primary);
+  --dg-primary-foreground: var(--dk-primary-foreground);
+  --dg-secondary: var(--dk-secondary);
+  --dg-secondary-foreground: var(--dk-secondary-foreground);
+  --dg-muted: var(--dk-muted);
+  --dg-muted-foreground: var(--dk-muted-foreground);
+  --dg-accent: var(--dk-accent);
+  --dg-accent-foreground: var(--dk-accent-foreground);
+  --dg-destructive: var(--dk-destructive);
+  --dg-border: var(--dk-border);
+  --dg-input: var(--dk-input);
+  --dg-ring: var(--dk-ring);
+  --dg-radius: var(--dk-radius);
+  --dg-card-gap: var(--dk-panel-gap);
+  --dg-card-padding: calc(1rem * var(--dk-density));
+}

@@ -1,14 +1,13 @@
+import { useMemo } from 'react'
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from '@/components/ui/table'
+  DataGrid,
+  DataGridPaginationPages,
+  type DataGridColumnDef,
+} from '@loykin/gridkit'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
-import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Search, Plus, Download, MoreHorizontal, ArrowUpDown } from 'lucide-react'
+import { Search, Plus, Download } from 'lucide-react'
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
@@ -74,6 +73,18 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
   totalCount,
   pagination,
 }: TableBodyTemplateProps<T>) {
+  const gridColumns = useMemo<DataGridColumnDef<T>[]>(() => (
+    columns.map((col) => ({
+      accessorKey: col.key,
+      header: col.label,
+      cell: (ctx) => {
+        const row = ctx.row.original
+        const value = row[col.key]
+        return col.render ? col.render(value, row) : String(value ?? '')
+      },
+    }))
+  ), [columns])
+
   return (
     <div className="layout-table h-full flex flex-col bg-background text-foreground" style={theme}>
       <div className="flex items-center gap-2 px-6 py-3 border-b shrink-0">
@@ -94,63 +105,27 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
         )}
       </div>
 
-      <div className="flex-1 overflow-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-10"><Checkbox /></TableHead>
-              {columns.map((col) => (
-                <TableHead key={col.key}>
-                  <button className="flex items-center gap-1 hover:text-foreground transition-colors">
-                    {col.label}<ArrowUpDown className="h-3 w-3" />
-                  </button>
-                </TableHead>
-              ))}
-              <TableHead className="w-10" />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((row) => (
-              <TableRow key={String(row[rowKey])}>
-                <TableCell><Checkbox /></TableCell>
-                {columns.map((col) => (
-                  <TableCell key={col.key}>
-                    {col.render ? col.render(row[col.key], row) : String(row[col.key] ?? '')}
-                  </TableCell>
-                ))}
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-7 w-7">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Reset password</DropdownMenuItem>
-                      <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <div className="flex-1 overflow-hidden p-6">
+        <DataGrid
+          data={data}
+          columns={gridColumns}
+          getRowId={(row, index) => String(row[rowKey] ?? index)}
+          tableHeight="100%"
+          rowHeight={36}
+          bordered
+          enableSorting
+          tableWidthMode="fill-last"
+          pagination={{ pageSize: 10 }}
+          footer={(table) => (
+            pagination ?? (
+              <div className="flex h-10 items-center justify-between border-t px-3 text-xs text-muted-foreground">
+                <span>{totalCount ?? data.length} results</span>
+                <DataGridPaginationPages table={table} />
+              </div>
+            )
+          )}
+        />
       </div>
-
-      {pagination ?? (
-        <div className="flex items-center justify-between px-6 py-3 border-t text-xs text-muted-foreground shrink-0">
-          <span>{totalCount ?? data.length} results</span>
-          <div className="flex items-center gap-1">
-            {['Prev', '1', '2', '3', 'Next'].map((p) => (
-              <button key={p} className={[
-                'px-2.5 py-1 rounded-[--radius] transition-colors',
-                p === '1' ? 'bg-primary text-primary-foreground' : 'hover:bg-accent',
-              ].join(' ')}>{p}</button>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   )
 }
