@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react'
+import { Children, useMemo, useState } from 'react'
 import { DataPage } from '@/components/templates/datapage/DataPage'
+import { cn } from '@/lib/utils'
 
 export interface DataBodyTabProps {
   id: string
@@ -40,7 +41,7 @@ function isDataBodyTab(node: React.ReactNode): node is React.ReactElement<DataBo
 
 function Root({
   theme,
-  className = 'layout-databody',
+  className,
   breadcrumb,
   title,
   description,
@@ -53,9 +54,7 @@ function Root({
   children,
   contentClassName,
 }: DataBodyTemplateProps) {
-  const childArray = useMemo(() => (
-    Array.isArray(children) ? children : [children]
-  ), [children])
+  const childArray = useMemo(() => Children.toArray(children), [children])
   const tabs = childArray.filter(isDataBodyTab)
   const hasTabs = tabs.length > 0
   const [internalTab, setInternalTab] = useState(defaultTab ?? tabs[0]?.props.id ?? '')
@@ -68,7 +67,7 @@ function Root({
   }
 
   return (
-    <DataPage className={className} style={theme}>
+    <DataPage className={cn('layout-databody', className)} style={theme}>
       <DataPage.Header>
         <DataPage.TitleBlock
           breadcrumb={breadcrumb}
@@ -94,7 +93,7 @@ function Root({
         </DataPage.Tabs>
       )}
 
-      <DataPage.Content className={contentClassName ?? 'px-6 pb-6 pt-5'}>
+      <DataPage.Content className={contentClassName}>
         {(toolbarLeft || toolbarRight) && (
           <DataPage.GroupToolbar>
             <div className="flex min-w-0 items-center gap-2">{toolbarLeft}</div>

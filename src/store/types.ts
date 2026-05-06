@@ -1,4 +1,5 @@
 export type ShellId    = 'sidebar' | 'header'
+export type DensityId  = 'compact' | 'default' | 'comfortable'
 export type TemplateId =
   | 'table'
   | 'table-infinity'
@@ -17,6 +18,7 @@ export interface GlobalTheme {
   primaryChroma: number
   fontScale:     number
   lineHeight:    number
+  density:       DensityId
   darkMode:      boolean
 }
 

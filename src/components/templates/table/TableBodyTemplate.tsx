@@ -366,7 +366,13 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
         </DataPage.Tabs>
       )}
 
-      <DataPage.Content className={activeVariant === 'infinity' ? 'px-6 pb-0 pt-5' : 'px-6 pb-6 pt-5'}>
+      <DataPage.Content
+        className={
+          activeVariant === 'infinity'
+            ? 'px-[var(--dk-page-padding-x)] pb-0 pt-[var(--dk-page-padding-y)]'
+            : 'px-[var(--dk-page-padding-x)] pb-[var(--dk-page-padding-y)] pt-[var(--dk-page-padding-y)]'
+        }
+      >
         <DataPage.Group className="h-full">
           <DataPage.GroupBody className="h-full [&_.dg-shell]:h-full [&_.dg-table-wrapper]:min-h-0 [&_.dg-table-wrapper]:flex-1">
             {grid}

@@ -8,6 +8,7 @@ export const useThemeStore = create<ThemeState>((set) => ({
     primaryChroma: 0.15,
     fontScale:     1,
     lineHeight:    1,
+    density:       'default',
     darkMode:      false,
   },
   overrides: {

@@ -7,6 +7,7 @@ import {
   Separator,
 } from '@loykin/designkit'
 import { Sun, Moon, Settings2 } from 'lucide-react'
+import type { DensityId } from '@loykin/designkit'
 
 function val(v: number | readonly number[]) {
   return Array.isArray(v) ? v[0] : (v as number)
@@ -48,9 +49,20 @@ function SliderRow({
   )
 }
 
+const densityItems: { id: DensityId; label: string }[] = [
+  { id: 'compact', label: 'Compact' },
+  { id: 'default', label: 'Default' },
+  { id: 'comfortable', label: 'Comfort' },
+]
+
 export function StyleControls() {
   const { global: g, overrides, activeTemplate, setGlobal, setOverride } = useThemeStore()
   const ov = overrides[activeTemplate]
+  const activeLabel = activeTemplate
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ')
+  const hasOverride = ov.radius !== undefined || ov.primaryChroma !== undefined
 
   return (
     <div className="flex items-center gap-2">
@@ -84,7 +96,24 @@ export function StyleControls() {
           <Separator />
 
           <div className="space-y-3">
-            <p className="text-xs font-semibold">Global Radius</p>
+            <p className="text-xs font-semibold">Layout</p>
+            <div className="grid grid-cols-3 gap-1 rounded-md border bg-muted/30 p-1">
+              {densityItems.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setGlobal({ density: item.id })}
+                  className={[
+                    'h-7 rounded-[calc(var(--radius)-2px)] px-2 text-[11px] transition-colors',
+                    g.density === item.id
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground',
+                  ].join(' ')}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
             <SliderRow label="Radius"
               value={g.radius} min={0} max={2} step={0.0625}
               onChange={(n) => setGlobal({ radius: n })} />
@@ -106,10 +135,10 @@ export function StyleControls() {
 
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <p className="text-xs font-semibold capitalize">{activeTemplate} Override</p>
-              {ov.radius !== undefined && (
+              <p className="text-xs font-semibold">{activeLabel} Override</p>
+              {hasOverride && (
                 <button
-                  onClick={() => setOverride(activeTemplate, { radius: undefined })}
+                  onClick={() => setOverride(activeTemplate, { radius: undefined, primaryChroma: undefined })}
                   className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
                 >
                   reset
@@ -119,6 +148,9 @@ export function StyleControls() {
             <SliderRow label="Radius"
               value={ov.radius ?? g.radius} min={0} max={2} step={0.0625}
               onChange={(n) => setOverride(activeTemplate, { radius: n })} />
+            <SliderRow label="Intensity"
+              value={ov.primaryChroma ?? g.primaryChroma} min={0} max={0.3} step={0.005}
+              onChange={(n) => setOverride(activeTemplate, { primaryChroma: n })} />
           </div>
 
         </PopoverContent>

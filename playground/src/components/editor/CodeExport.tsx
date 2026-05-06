@@ -13,6 +13,7 @@ import {
   Button,
 } from '@loykin/designkit'
 import { Code2, Copy, Check } from 'lucide-react'
+import type { DensityId } from '@loykin/designkit'
 
 function radiusVarLines(r: number): string[] {
   return [
@@ -48,10 +49,43 @@ function typographyVarLines(fontScale: number, lineHeight: number): string[] {
     `  --dk-text-sm:     calc(0.875rem * ${fontScale});`,
     `  --dk-text-base:   calc(1rem * ${fontScale});`,
     `  --dk-text-lg:     calc(1.125rem * ${fontScale});`,
+    `  --dk-text-xl:     calc(1.25rem * ${fontScale});`,
     `  --dk-leading-xs:  calc(1rem * ${lineHeight});`,
     `  --dk-leading-sm:  calc(1.25rem * ${lineHeight});`,
     `  --dk-leading-base:calc(1.5rem * ${lineHeight});`,
     `  --dk-leading-lg:  calc(1.75rem * ${lineHeight});`,
+    `  --dk-leading-xl:  calc(1.75rem * ${lineHeight});`,
+  ]
+}
+
+function densityVarLines(density: DensityId): string[] {
+  const values = {
+    compact: {
+      density: 0.85,
+      pagePaddingY: '0.75rem',
+      panelGap: '0.75rem',
+      toolbarHeight: '2.5rem',
+    },
+    default: {
+      density: 1,
+      pagePaddingY: '1rem',
+      panelGap: '1rem',
+      toolbarHeight: '2.75rem',
+    },
+    comfortable: {
+      density: 1.15,
+      pagePaddingY: '1.25rem',
+      panelGap: '1.25rem',
+      toolbarHeight: '3rem',
+    },
+  }[density]
+
+  return [
+    `  --dk-density:        ${values.density};`,
+    `  --dk-page-padding-x: 1.5rem;`,
+    `  --dk-page-padding-y: ${values.pagePaddingY};`,
+    `  --dk-panel-gap:      ${values.panelGap};`,
+    `  --dk-toolbar-height: ${values.toolbarHeight};`,
   ]
 }
 
@@ -61,6 +95,7 @@ function buildCSSCode(
   globalHue: number,
   fontScale: number,
   lineHeight: number,
+  density: DensityId,
   tmplId: string,
   tmplRadius: number | undefined,
   tmplChroma: number | undefined,
@@ -70,6 +105,7 @@ function buildCSSCode(
     ...radiusVarLines(globalRadius),
     ...colorVarLines(globalChroma, globalHue),
     ...typographyVarLines(fontScale, lineHeight),
+    ...densityVarLines(density),
     '}',
   ].join('\n')
 
@@ -182,7 +218,7 @@ export function CodeExport() {
 
   const cssCode = buildCSSCode(
     g.radius, g.primaryChroma, g.primaryHue,
-    g.fontScale, g.lineHeight,
+    g.fontScale, g.lineHeight, g.density,
     activeTemplate, ov.radius, ov.primaryChroma,
   )
 
@@ -244,6 +280,8 @@ export function CodeExport() {
                   <span>{g.fontScale.toFixed(2)}</span>
                   <span>Line height</span>
                   <span>{g.lineHeight.toFixed(2)}</span>
+                  <span>Density</span>
+                  <span>{g.density}</span>
                 </div>
               </div>
             </TabsContent>

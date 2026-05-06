@@ -11,7 +11,7 @@ export interface TypographyBodyTemplateProps {
 }
 
 const scaleRows = [
-  { label: 'Page title', className: 'text-lg font-semibold', sample: 'Customer Operations' },
+  { label: 'Page title', className: 'text-xl font-semibold', sample: 'Customer Operations' },
   { label: 'Section title', className: 'text-base font-medium', sample: 'Service Health' },
   { label: 'Body', className: 'text-sm', sample: 'Review active incidents, service status, and recent deployments.' },
   { label: 'Caption', className: 'text-xs text-muted-foreground', sample: 'Updated 4 minutes ago' },
@@ -28,9 +28,9 @@ export function TypographyBodyTemplate({ theme, breadcrumb }: TypographyBodyTemp
         />
       </DataPage.Header>
 
-      <DataPage.Content className="grid gap-4 px-6 pb-6 pt-2 lg:grid-cols-[1fr_22rem]">
+      <DataPage.Content className="grid gap-[var(--dk-panel-gap)] lg:grid-cols-[1fr_22rem]">
         <div className="space-y-4">
-          <Card className="rounded-[var(--radius)] border border-border ring-0">
+          <Card className="rounded-lg border border-border ring-0">
             <CardHeader>
               <CardTitle>Scale</CardTitle>
             </CardHeader>
@@ -44,7 +44,7 @@ export function TypographyBodyTemplate({ theme, breadcrumb }: TypographyBodyTemp
             </CardContent>
           </Card>
 
-          <Card className="rounded-[var(--radius)] border border-border ring-0">
+          <Card className="rounded-lg border border-border ring-0">
             <CardHeader>
               <CardTitle>Dense Interface</CardTitle>
             </CardHeader>
@@ -57,7 +57,7 @@ export function TypographyBodyTemplate({ theme, breadcrumb }: TypographyBodyTemp
               <Separator />
               <div className="grid gap-2">
                 {['API Gateway', 'Billing Worker', 'Notification Queue'].map((item, index) => (
-                  <div key={item} className="flex items-center justify-between rounded-[var(--radius)] border px-3 py-2">
+                  <div key={item} className="flex items-center justify-between rounded-lg border px-3 py-2">
                     <div>
                       <p className="text-sm font-medium">{item}</p>
                       <p className="text-xs text-muted-foreground">p95 latency {42 + index * 18}ms</p>
@@ -72,7 +72,7 @@ export function TypographyBodyTemplate({ theme, breadcrumb }: TypographyBodyTemp
           </Card>
         </div>
 
-        <Card className="rounded-[var(--radius)] border border-border ring-0">
+        <Card className="rounded-lg border border-border ring-0">
           <CardHeader>
             <CardTitle>Sidebar Sample</CardTitle>
           </CardHeader>

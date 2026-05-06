@@ -89,7 +89,7 @@ function Header({ children, className }: DataPageHeaderProps) {
   return (
     <header
       data-slot="data-page-header"
-      className={cn('shrink-0 px-6 pb-5 pt-5', className)}
+      className={cn('shrink-0 px-[var(--dk-page-padding-x)] pb-[var(--dk-page-padding-y)] pt-[var(--dk-page-padding-y)]', className)}
     >
       <div className="flex min-h-14 items-end justify-between gap-4">
         {children}
@@ -165,8 +165,8 @@ function Content({ children, className, padding = 'default' }: DataPageContentPr
       data-slot="data-page-content"
       className={cn(
         'min-h-0 flex-1 overflow-auto',
-        padding === 'default' && 'p-6',
-        padding === 'compact' && 'p-4',
+        padding === 'default' && 'px-[var(--dk-page-padding-x)] pb-[var(--dk-page-padding-y)] pt-[var(--dk-page-padding-y)]',
+        padding === 'compact' && 'p-[calc(var(--dk-page-padding-y)*0.875)]',
         padding === 'none' && 'p-0',
         className,
       )}
@@ -205,7 +205,7 @@ function GroupHeader({
   return (
     <div
       data-slot="data-page-group-header"
-      className={cn('flex items-start justify-between gap-4 px-0 pb-3', className)}
+      className={cn('flex items-start justify-between gap-4 px-0 pb-[calc(var(--dk-panel-gap)*0.75)]', className)}
     >
       <div className="min-w-0">
         {title && <h2 className="text-sm font-medium">{title}</h2>}
@@ -223,7 +223,7 @@ function GroupToolbar({ children, className }: DataPageGroupToolbarProps) {
   return (
     <div
       data-slot="data-page-group-toolbar"
-      className={cn('flex items-center justify-between gap-3 pb-3', className)}
+      className={cn('flex min-h-[var(--dk-toolbar-height)] items-center justify-between gap-3 pb-[calc(var(--dk-panel-gap)*0.75)]', className)}
     >
       {children}
     </div>

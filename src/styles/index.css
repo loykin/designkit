@@ -37,10 +37,12 @@
   --dk-text-sm: 0.875rem;
   --dk-text-base: 1rem;
   --dk-text-lg: 1.125rem;
+  --dk-text-xl: 1.25rem;
   --dk-leading-xs: 1rem;
   --dk-leading-sm: 1.25rem;
   --dk-leading-base: 1.5rem;
   --dk-leading-lg: 1.75rem;
+  --dk-leading-xl: 1.75rem;
 }
 
 .dark {
@@ -99,10 +101,12 @@
   --text-sm: var(--dk-text-sm);
   --text-base: var(--dk-text-base);
   --text-lg: var(--dk-text-lg);
+  --text-xl: var(--dk-text-xl);
   --text-xs--line-height: var(--dk-leading-xs);
   --text-sm--line-height: var(--dk-leading-sm);
   --text-base--line-height: var(--dk-leading-base);
   --text-lg--line-height: var(--dk-leading-lg);
+  --text-xl--line-height: var(--dk-leading-xl);
 }
 
 .designkit-theme .dg-table,
