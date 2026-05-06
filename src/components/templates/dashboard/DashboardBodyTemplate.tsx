@@ -18,6 +18,8 @@ export interface ServiceRow {
 export interface DashboardBodyTemplateProps {
   theme?:    React.CSSProperties
   title?:    string
+  description?: React.ReactNode
+  breadcrumb?: React.ReactNode
   /** Slot: replaces toolbar actions */
   actions?:  React.ReactNode
   stats?:    StatCard[]
@@ -63,6 +65,8 @@ const dotColor: Record<string, string> = {
 export function DashboardBodyTemplate({
   theme,
   title    = 'Overview',
+  description,
+  breadcrumb,
   actions,
   stats    = demoStats,
   services = demoServices,
@@ -71,15 +75,19 @@ export function DashboardBodyTemplate({
 }: DashboardBodyTemplateProps) {
   return (
     <div className="layout-dashboard h-full overflow-auto bg-background text-foreground" style={theme}>
-      <div className="p-6 space-y-6">
+      <div className="space-y-6">
 
-        <div className="flex items-center justify-between">
-          <h1 className="text-sm font-semibold">{title}</h1>
+        <div className="flex min-h-14 items-end justify-between gap-4 px-6 pb-5 pt-5">
+          <div className="min-w-0">
+            {breadcrumb && <div className="mb-2 text-xs text-muted-foreground">{breadcrumb}</div>}
+            <h1 className="truncate text-xl font-semibold">{title}</h1>
+            {description && <p className="mt-1.5 text-sm text-muted-foreground">{description}</p>}
+          </div>
           {actions ?? <Button variant="outline" size="sm" className="h-8 text-xs">Export Report</Button>}
         </div>
 
         {/* Stat cards */}
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-4 gap-4 px-6">
           {stats.map((s) => (
             <Card key={s.label}>
               <CardContent className="p-4">
@@ -98,7 +106,7 @@ export function DashboardBodyTemplate({
         </div>
 
         {/* Chart + Events */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 px-6">
           <Card className="col-span-2">
             <CardHeader className="pb-2 flex-row items-center justify-between space-y-0">
               <CardTitle className="text-sm">Request Volume</CardTitle>
@@ -148,7 +156,7 @@ export function DashboardBodyTemplate({
         </div>
 
         {/* Service table */}
-        <Card>
+        <Card className="mx-6 mb-6">
           <CardHeader className="pb-2"><CardTitle className="text-sm">Services</CardTitle></CardHeader>
           <CardContent className="p-0">
             <Table>

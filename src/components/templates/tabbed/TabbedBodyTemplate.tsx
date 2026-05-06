@@ -21,6 +21,8 @@ export interface TabbedTab {
 export interface TabbedBodyTemplateProps {
   theme?:       React.CSSProperties
   title?:       string
+  description?: React.ReactNode
+  breadcrumb?:  React.ReactNode
   tabs?:        TabbedTab[]
   /** Controlled: current active tab id */
   activeTab?:   string
@@ -149,6 +151,8 @@ const demoSummary = (
 export function TabbedBodyTemplate({
   theme,
   title       = 'Incidents',
+  description,
+  breadcrumb,
   tabs        = demoTabs,
   activeTab:  controlledTab,
   onTabChange,
@@ -168,7 +172,7 @@ export function TabbedBodyTemplate({
   return (
     <DataPage className="layout-tabbed" style={theme}>
       <DataPage.Header>
-        <DataPage.TitleBlock title={title} />
+        <DataPage.TitleBlock title={title} description={description} breadcrumb={breadcrumb} />
       </DataPage.Header>
 
       {summary && (

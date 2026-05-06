@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator'
 
 export interface TypographyBodyTemplateProps {
   theme?: React.CSSProperties
+  breadcrumb?: React.ReactNode
 }
 
 const scaleRows = [
@@ -16,11 +17,12 @@ const scaleRows = [
   { label: 'Caption', className: 'text-xs text-muted-foreground', sample: 'Updated 4 minutes ago' },
 ]
 
-export function TypographyBodyTemplate({ theme }: TypographyBodyTemplateProps) {
+export function TypographyBodyTemplate({ theme, breadcrumb }: TypographyBodyTemplateProps) {
   return (
     <DataPage className="layout-typography" style={theme}>
       <DataPage.Header>
         <DataPage.TitleBlock
+          breadcrumb={breadcrumb}
           title="Typography"
           description="Global type scale preview for shell, template, and grid content"
         />

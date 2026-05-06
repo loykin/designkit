@@ -6,14 +6,15 @@ import {
   DataGridInfinity,
   DataGridPaginationCompact,
   DragHandleCell,
+  GlobalSearch,
   type DataGridColumnDef,
 } from '@loykin/gridkit'
+import type { Table as TanStackTable } from '@tanstack/react-table'
 import { DataPage } from '@/components/templates/datapage/DataPage'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Search, Plus, Download } from 'lucide-react'
+import { Plus, Download } from 'lucide-react'
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
@@ -36,6 +37,7 @@ export interface TableBodyTemplateProps<T extends Record<string, unknown> = Demo
   theme?:      React.CSSProperties
   title?:      string
   description?: React.ReactNode
+  breadcrumb?: React.ReactNode
   actions?:    React.ReactNode
   columns?:    TableColumn<T>[]
   data?:       T[]
@@ -98,6 +100,7 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
   theme,
   title      = 'Users',
   description,
+  breadcrumb,
   actions,
   columns    = demoColumns as unknown as TableColumn<T>[],
   data       = demoData as unknown as T[],
@@ -145,10 +148,13 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
     {
       id: 'drag',
       size: 28,
+      minSize: 28,
+      maxSize: 28,
       enableResizing: false,
       enableSorting: false,
       header: () => null,
       cell: () => <DragHandleCell />,
+      meta: { align: 'center' },
     },
     ...gridColumns,
   ]), [gridColumns])
@@ -172,6 +178,23 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
   }
 
   const tableTabs = tabs || []
+  const leftFilters = (table: TanStackTable<T>) => (
+    <GlobalSearch table={table} placeholder="Search..." />
+  )
+  const rightFilters = () => (
+    <div className="flex items-center gap-2">
+      {actions ?? (
+        <>
+          <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+            <Download className="h-3.5 w-3.5" />Export
+          </Button>
+          <Button size="sm" className="h-8 gap-1.5 text-xs">
+            <Plus className="h-3.5 w-3.5" />Add User
+          </Button>
+        </>
+      )}
+    </div>
+  )
 
   const grid = (() => {
     if (activeVariant === 'infinity') {
@@ -185,6 +208,8 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
           enableSorting
           enableColumnFilters
           tableWidthMode="fill-last"
+          leftFilters={leftFilters}
+          rightFilters={rightFilters}
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetching}
           fetchNextPage={fetchNextPage}
@@ -203,8 +228,15 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
           onRowReorder={setOrderedData}
           tableHeight="100%"
           rowHeight={36}
+          columnSizing={{ drag: 28 }}
           tableWidthMode="fill-last"
+          leftFilters={leftFilters}
+          rightFilters={rightFilters}
           emptyMessage="No rows found"
+          classNames={{
+            cell: '[&[data-col-id=drag]]:px-1',
+            headerCell: '[&[data-col-id=drag]]:px-1',
+          }}
         />
       )
     }
@@ -220,6 +252,8 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
           enableSorting
           enableColumnFilters
           tableWidthMode="fill-last"
+          leftFilters={leftFilters}
+          rightFilters={rightFilters}
           cardColumns={activeVariant === 'card-list' ? 1 : undefined}
           minCardWidth={220}
           minColumns={activeVariant === 'card-list' ? 1 : 2}
@@ -227,7 +261,7 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
             const original = row.original
             if (activeVariant === 'card-list') {
               return (
-                <Card size="sm" className="rounded-[var(--radius)] border border-border shadow-sm ring-0">
+                <Card size="sm" className="rounded-lg border border-border shadow-sm ring-0">
                   <CardContent className="flex items-center justify-between gap-4 py-2.5">
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium">{String(original.name ?? original[rowKey] ?? 'Untitled')}</p>
@@ -248,7 +282,7 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
             }
 
             return (
-              <Card size="sm" className="h-full rounded-[var(--radius)] border border-border shadow-sm ring-0">
+              <Card size="sm" className="h-full rounded-lg border border-border shadow-sm ring-0">
                 <CardContent className="py-3">
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -288,6 +322,8 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
         rowHeight={36}
         enableSorting
         tableWidthMode="fill-last"
+        leftFilters={leftFilters}
+        rightFilters={rightFilters}
         pagination={{ pageSize: 10 }}
         footer={(table) => (
           pagination ?? (
@@ -302,9 +338,17 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
   })()
 
   return (
-    <DataPage className={rootClassName} style={theme}>
+    <DataPage
+      className={rootClassName}
+      style={{
+        ...(activeVariant === 'card' || activeVariant === 'card-list'
+          ? { '--dg-card-padding': '0px' }
+          : {}),
+        ...theme,
+      } as React.CSSProperties}
+    >
       <DataPage.Header>
-        <DataPage.TitleBlock title={title} description={description} />
+        <DataPage.TitleBlock title={title} description={description} breadcrumb={breadcrumb} />
       </DataPage.Header>
 
       {tableTabs.length > 0 && (
@@ -322,28 +366,9 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
         </DataPage.Tabs>
       )}
 
-      <DataPage.Content className={activeVariant === 'infinity' ? 'px-6 pb-0 pt-1' : 'px-6 pb-6 pt-1'}>
+      <DataPage.Content className={activeVariant === 'infinity' ? 'px-6 pb-0 pt-5' : 'px-6 pb-6 pt-5'}>
         <DataPage.Group className="h-full">
-          <DataPage.GroupToolbar>
-            <div className="relative">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-              <Input placeholder="Search…" className="pl-8 h-8 w-52 text-xs" />
-            </div>
-            <DataPage.Actions>
-              {actions ?? (
-                <>
-                  <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
-                    <Download className="h-3.5 w-3.5" />Export
-                  </Button>
-                  <Button size="sm" className="h-8 gap-1.5 text-xs">
-                    <Plus className="h-3.5 w-3.5" />Add User
-                  </Button>
-                </>
-              )}
-            </DataPage.Actions>
-          </DataPage.GroupToolbar>
-
-          <DataPage.GroupBody className="h-[calc(100%-2.75rem)]">
+          <DataPage.GroupBody className="h-full [&_.dg-shell]:h-full [&_.dg-table-wrapper]:min-h-0 [&_.dg-table-wrapper]:flex-1">
             {grid}
           </DataPage.GroupBody>
         </DataPage.Group>

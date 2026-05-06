@@ -20,6 +20,7 @@ export interface CardItem {
 export interface CardListBodyTemplateProps {
   theme?:       React.CSSProperties
   title?:       string
+  breadcrumb?:  React.ReactNode
   /** Slot: replaces toolbar actions */
   actions?:     React.ReactNode
   items?:       CardItem[]
@@ -54,6 +55,7 @@ const colClass = { 2: 'grid-cols-2', 3: 'grid-cols-2 xl:grid-cols-3', 4: 'grid-c
 export function CardListBodyTemplate({
   theme,
   title   = 'Repositories',
+  breadcrumb,
   actions,
   items   = demoItems,
   columns = 3,
@@ -62,7 +64,10 @@ export function CardListBodyTemplate({
   return (
     <div className="layout-cardlist h-full flex flex-col bg-background text-foreground" style={theme}>
       <div className="flex items-center gap-2 px-6 py-3 border-b shrink-0">
-        <h1 className="text-sm font-semibold mr-auto">{title}</h1>
+        <div className="mr-auto min-w-0">
+          {breadcrumb && <div className="mb-1 text-xs text-muted-foreground">{breadcrumb}</div>}
+          <h1 className="truncate text-xl font-semibold">{title}</h1>
+        </div>
         {filters ?? (
           <>
             <div className="relative">

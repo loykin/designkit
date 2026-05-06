@@ -57,7 +57,13 @@ import { TabbedBodyTemplate    } from './tabbed/TabbedBodyTemplate'
 import { FormBodyTemplate      } from './form/FormBodyTemplate'
 
 function StandardTableTemplate({ theme }: { theme?: React.CSSProperties }) {
-  return createElement(TableBodyTemplate, { theme, variant: 'standard', layoutClassName: 'layout-table', title: 'Users' })
+  return createElement(TableBodyTemplate, {
+    theme,
+    variant: 'standard',
+    layoutClassName: 'layout-table',
+    breadcrumb: 'Data / Table',
+    title: 'Users',
+  })
 }
 
 function InfinityTableTemplate({ theme }: { theme?: React.CSSProperties }) {
@@ -65,6 +71,7 @@ function InfinityTableTemplate({ theme }: { theme?: React.CSSProperties }) {
     theme,
     variant: 'infinity',
     layoutClassName: 'layout-table-infinity',
+    breadcrumb: 'Data / Table / Infinite Scroll',
     title: 'Users',
     description: 'gridkit DataGridInfinity',
   })
@@ -75,6 +82,7 @@ function DragTableTemplate({ theme }: { theme?: React.CSSProperties }) {
     theme,
     variant: 'drag',
     layoutClassName: 'layout-table-drag',
+    breadcrumb: 'Data / Table / Row Drag',
     title: 'Services',
     description: 'gridkit DataGridDrag',
   })
@@ -85,6 +93,7 @@ function CardTableTemplate({ theme }: { theme?: React.CSSProperties }) {
     theme,
     variant: 'card',
     layoutClassName: 'layout-table-card',
+    breadcrumb: 'Data / Table / Card Grid',
     title: 'User Cards',
     description: 'gridkit DataGridCard',
   })
@@ -95,6 +104,7 @@ function CardListTableTemplate({ theme }: { theme?: React.CSSProperties }) {
     theme,
     variant: 'card-list',
     layoutClassName: 'layout-table-card-list',
+    breadcrumb: 'Data / Table / Card List',
     title: 'User Cards',
     description: 'gridkit DataGridCard list mode',
   })
@@ -106,10 +116,44 @@ export const TEMPLATES: TemplateConfig[] = [
   { id: 'table-drag',     label: 'Row Drag',        group: 'Table', component: DragTableTemplate     },
   { id: 'table-card',     label: 'Card Grid',       group: 'Table', component: CardTableTemplate     },
   { id: 'table-card-list', label: 'Card List',      group: 'Table', component: CardListTableTemplate },
-  { id: 'dashboard',      label: 'Dashboard',       group: 'Pages', component: DashboardBodyTemplate },
-  { id: 'typography',     label: 'Typography',      group: 'Design', component: TypographyBodyTemplate },
-  { id: 'tabbed',         label: 'Tabbed',          group: 'Pages', component: TabbedBodyTemplate    },
-  { id: 'form',           label: 'Form',            group: 'Pages', component: FormBodyTemplate      },
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    group: 'Pages',
+    component: (props) => createElement(DashboardBodyTemplate, {
+      ...props,
+      breadcrumb: 'Pages / Dashboard',
+      description: 'Operational metrics and service health',
+    }),
+  },
+  {
+    id: 'typography',
+    label: 'Typography',
+    group: 'Design',
+    component: (props) => createElement(TypographyBodyTemplate, {
+      ...props,
+      breadcrumb: 'Design / Typography',
+    }),
+  },
+  {
+    id: 'tabbed',
+    label: 'Tabbed',
+    group: 'Pages',
+    component: (props) => createElement(TabbedBodyTemplate, {
+      ...props,
+      breadcrumb: 'Pages / Tabbed',
+      description: 'Incident queue grouped by status',
+    }),
+  },
+  {
+    id: 'form',
+    label: 'Form',
+    group: 'Pages',
+    component: (props) => createElement(FormBodyTemplate, {
+      ...props,
+      breadcrumb: 'Pages / Form',
+    }),
+  },
 ]
 
 export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = [

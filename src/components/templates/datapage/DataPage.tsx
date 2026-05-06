@@ -89,9 +89,9 @@ function Header({ children, className }: DataPageHeaderProps) {
   return (
     <header
       data-slot="data-page-header"
-      className={cn('shrink-0 px-6 pb-3 pt-5', className)}
+      className={cn('shrink-0 px-6 pb-5 pt-5', className)}
     >
-      <div className="flex min-h-10 items-end justify-between gap-4">
+      <div className="flex min-h-14 items-end justify-between gap-4">
         {children}
       </div>
     </header>
@@ -103,9 +103,9 @@ function TitleBlock({ title, description, breadcrumb, className }: DataPageTitle
 
   return (
     <div data-slot="data-page-title-block" className={cn('min-w-0 flex-1', className)}>
-      {breadcrumb && <div className="mb-1 text-xs text-muted-foreground">{breadcrumb}</div>}
-      {title && <h1 className="truncate text-lg font-semibold">{title}</h1>}
-      {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
+      {breadcrumb && <div className="mb-2 text-xs text-muted-foreground">{breadcrumb}</div>}
+      {title && <h1 className="truncate text-xl font-semibold">{title}</h1>}
+      {description && <p className="mt-1.5 text-sm text-muted-foreground">{description}</p>}
     </div>
   )
 }

@@ -20,7 +20,8 @@ export interface FormSection {
 export interface FormBodyTemplateProps {
   theme?:       React.CSSProperties
   title?:       string
-  description?: string
+  description?: React.ReactNode
+  breadcrumb?:  React.ReactNode
   /** Slot: replaces the save/cancel buttons */
   actions?:     React.ReactNode
   sections?:    FormSection[]
@@ -141,17 +142,19 @@ export function FormBodyTemplate({
   theme,
   title       = 'Account Settings',
   description = 'Manage your account preferences and security.',
+  breadcrumb,
   actions,
   sections    = demoSections,
 }: FormBodyTemplateProps) {
   return (
     <div className="layout-form h-full overflow-auto bg-background text-foreground" style={theme}>
-      <div className="px-6 py-6">
+      <div>
 
-        <div className="flex items-start justify-between pb-6">
+        <div className="flex min-h-14 items-end justify-between gap-4 px-6 pb-5 pt-5">
           <div>
-            <h1 className="text-sm font-semibold">{title}</h1>
-            {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
+            {breadcrumb && <div className="mb-2 text-xs text-muted-foreground">{breadcrumb}</div>}
+            <h1 className="text-xl font-semibold">{title}</h1>
+            {description && <p className="mt-1.5 text-sm text-muted-foreground">{description}</p>}
           </div>
           {actions ?? (
             <div className="flex gap-2">
@@ -161,6 +164,7 @@ export function FormBodyTemplate({
           )}
         </div>
 
+        <div className="px-6">
         {sections.map((section, i) => (
           <div key={section.key}>
             {i > 0 && <Separator />}
@@ -181,6 +185,7 @@ export function FormBodyTemplate({
             </div>
           </div>
         ))}
+        </div>
 
       </div>
     </div>
