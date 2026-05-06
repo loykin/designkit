@@ -18,6 +18,7 @@ export const useThemeStore = create<ThemeState>((set) => ({
     'table-card-list': { radius: 0.375 },
     dashboard:      { radius: 0.125 },
     typography:     { radius: 0.375 },
+    databody:       { radius: 0.375 },
     tabbed:         { radius: 0.375 },
     form:           { radius: 0.5   },
   },

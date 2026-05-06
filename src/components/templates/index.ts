@@ -32,6 +32,8 @@ export {
 export { DashboardBodyTemplate } from './dashboard/DashboardBodyTemplate'
 export { CardListBodyTemplate  } from './cardlist/CardListBodyTemplate'
 export { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
+export { DataBodyTemplate } from './databody/DataBodyTemplate'
+export { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
 export { TabbedBodyTemplate    } from './tabbed/TabbedBodyTemplate'
 export { FormBodyTemplate      } from './form/FormBodyTemplate'
 export { DataPage              } from './datapage/DataPage'
@@ -53,6 +55,7 @@ export type {
 import { TableBodyTemplate     } from './table/TableBodyTemplate'
 import { DashboardBodyTemplate } from './dashboard/DashboardBodyTemplate'
 import { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
+import { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
 import { TabbedBodyTemplate    } from './tabbed/TabbedBodyTemplate'
 import { FormBodyTemplate      } from './form/FormBodyTemplate'
 
@@ -136,6 +139,12 @@ export const TEMPLATES: TemplateConfig[] = [
     }),
   },
   {
+    id: 'databody',
+    label: 'Body Template',
+    group: 'Design',
+    component: DataBodyTemplateDemo,
+  },
+  {
     id: 'tabbed',
     label: 'Tabbed',
     group: 'Pages',
@@ -179,6 +188,7 @@ export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = [
     label: 'Design',
     items: [
       { id: 'typography', label: 'Typography', icon: Type },
+      { id: 'databody', label: 'Body Template', icon: LayoutDashboard },
     ],
   },
   {

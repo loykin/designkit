@@ -92,6 +92,7 @@ const componentName: Record<string, string> = {
   'table-card-list': 'TableBodyTemplate',
   dashboard: 'DashboardBodyTemplate',
   typography: 'TypographyBodyTemplate',
+  databody: 'DataBodyTemplate',
   tabbed: 'TabbedBodyTemplate',
   form: 'FormBodyTemplate',
 }
