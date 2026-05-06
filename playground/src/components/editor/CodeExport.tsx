@@ -16,6 +16,8 @@ import { Code2, Copy, Check } from 'lucide-react'
 
 function radiusVarLines(r: number): string[] {
   return [
+    `  --dk-radius:  ${r}rem;`,
+    `  --dg-radius:  ${r}rem;`,
     `  --radius:     ${r}rem;`,
     `  --radius-sm:  ${(r * 0.6).toFixed(4)}rem;`,
     `  --radius-md:  ${(r * 0.8).toFixed(4)}rem;`,
@@ -26,6 +28,12 @@ function radiusVarLines(r: number): string[] {
 
 function colorVarLines(chroma: number, hue: number): string[] {
   return [
+    `  --dk-primary:            oklch(0.205 ${chroma} ${hue});`,
+    `  --dk-primary-foreground: oklch(0.985 0 0);`,
+    `  --dk-ring:               oklch(0.5 ${chroma} ${hue});`,
+    `  --dg-primary:            oklch(0.205 ${chroma} ${hue});`,
+    `  --dg-primary-foreground: oklch(0.985 0 0);`,
+    `  --dg-ring:               oklch(0.5 ${chroma} ${hue});`,
     `  --primary:             oklch(0.205 ${chroma} ${hue});`,
     `  --primary-foreground:  oklch(0.985 0 0);`,
     `  --ring:                oklch(0.5 ${chroma} ${hue});`,
@@ -77,10 +85,16 @@ function buildComponentCode(
   const pkg  = `@loykin/designkit`
 
   const themeEntries: string[] = []
-  if (tmplRadius !== undefined)
+  if (tmplRadius !== undefined) {
+    themeEntries.push(`    '--dk-radius': '${tmplRadius}rem',`)
+    themeEntries.push(`    '--dg-radius': '${tmplRadius}rem',`)
     themeEntries.push(`    '--radius': '${tmplRadius}rem',`)
-  if (tmplChroma !== undefined)
+  }
+  if (tmplChroma !== undefined) {
+    themeEntries.push(`    '--dk-primary': 'oklch(0.205 ${tmplChroma} ${globalHue})',`)
+    themeEntries.push(`    '--dg-primary': 'oklch(0.205 ${tmplChroma} ${globalHue})',`)
     themeEntries.push(`    '--primary': 'oklch(0.205 ${tmplChroma} ${globalHue})',`)
+  }
 
   const themeProp = themeEntries.length
     ? `\n  theme={{\n${themeEntries.join('\n')}\n  }}`
@@ -145,11 +159,13 @@ export function CodeExport() {
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
-        <Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs">
-          <Code2 className="h-3.5 w-3.5" />
-          Code
-        </Button>
+      <SheetTrigger
+        render={
+          <Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs" />
+        }
+      >
+        <Code2 className="h-3.5 w-3.5" />
+        Code
       </SheetTrigger>
       <SheetContent className="w-[520px] sm:max-w-[520px] flex flex-col gap-0 p-0">
         <SheetHeader className="px-6 py-4 border-b shrink-0">

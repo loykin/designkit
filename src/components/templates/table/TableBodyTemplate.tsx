@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import {
   DataGrid,
-  DataGridPaginationPages,
+  DataGridPaginationCompact,
   type DataGridColumnDef,
 } from '@loykin/gridkit'
+import { DataPage } from '@/components/templates/datapage/DataPage'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -86,46 +87,55 @@ export function TableBodyTemplate<T extends Record<string, unknown> = DemoRow>({
   ), [columns])
 
   return (
-    <div className="layout-table h-full flex flex-col bg-background text-foreground" style={theme}>
-      <div className="flex items-center gap-2 px-6 py-3 border-b shrink-0">
-        <h1 className="text-sm font-semibold mr-auto">{title}</h1>
-        <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-          <Input placeholder="Search…" className="pl-8 h-8 w-52 text-xs" />
-        </div>
-        {actions ?? (
-          <>
-            <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
-              <Download className="h-3.5 w-3.5" />Export
-            </Button>
-            <Button size="sm" className="h-8 gap-1.5 text-xs">
-              <Plus className="h-3.5 w-3.5" />Add User
-            </Button>
-          </>
-        )}
-      </div>
+    <DataPage className="layout-table" style={theme}>
+      <DataPage.Header>
+        <DataPage.TitleBlock title={title} />
+      </DataPage.Header>
 
-      <div className="flex-1 overflow-hidden p-6">
-        <DataGrid
-          data={data}
-          columns={gridColumns}
-          getRowId={(row, index) => String(row[rowKey] ?? index)}
-          tableHeight="100%"
-          rowHeight={36}
-          bordered
-          enableSorting
-          tableWidthMode="fill-last"
-          pagination={{ pageSize: 10 }}
-          footer={(table) => (
-            pagination ?? (
-              <div className="flex h-10 items-center justify-between border-t px-3 text-xs text-muted-foreground">
-                <span>{totalCount ?? data.length} results</span>
-                <DataGridPaginationPages table={table} />
-              </div>
-            )
-          )}
-        />
-      </div>
-    </div>
+      <DataPage.Content className="px-6 pb-6 pt-1">
+        <DataPage.Group className="h-full">
+          <DataPage.GroupToolbar>
+            <div className="relative">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <Input placeholder="Search…" className="pl-8 h-8 w-52 text-xs" />
+            </div>
+            <DataPage.Actions>
+              {actions ?? (
+                <>
+                  <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
+                    <Download className="h-3.5 w-3.5" />Export
+                  </Button>
+                  <Button size="sm" className="h-8 gap-1.5 text-xs">
+                    <Plus className="h-3.5 w-3.5" />Add User
+                  </Button>
+                </>
+              )}
+            </DataPage.Actions>
+          </DataPage.GroupToolbar>
+
+          <DataPage.GroupBody className="h-[calc(100%-2.75rem)]">
+          <DataGrid
+            data={data}
+            columns={gridColumns}
+            getRowId={(row, index) => String(row[rowKey] ?? index)}
+            tableHeight="100%"
+            rowHeight={36}
+            bordered
+            enableSorting
+            tableWidthMode="fill-last"
+            pagination={{ pageSize: 10 }}
+            footer={(table) => (
+              pagination ?? (
+                <div className="flex h-9 items-center justify-between px-1 text-xs text-muted-foreground">
+                  <span>{totalCount ?? data.length} results</span>
+                  <DataGridPaginationCompact table={table} />
+                </div>
+              )
+            )}
+          />
+          </DataPage.GroupBody>
+        </DataPage.Group>
+      </DataPage.Content>
+    </DataPage>
   )
 }

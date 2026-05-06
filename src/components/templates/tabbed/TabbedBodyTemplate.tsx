@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { DataPage } from '@/components/templates/datapage/DataPage'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,9 +10,12 @@ import { Search, Plus, CheckCircle2, Clock, AlertCircle, XCircle } from 'lucide-
 // ─── Public API ───────────────────────────────────────────────────────────────
 
 export interface TabbedTab {
-  id:     string
-  label:  string
-  count?: number
+  id:           string
+  label:        string
+  count?:       number
+  title?:       React.ReactNode
+  description?: React.ReactNode
+  actions?:     React.ReactNode
 }
 
 export interface TabbedBodyTemplateProps {
@@ -159,57 +163,56 @@ export function TabbedBodyTemplate({
     if (!controlledTab) setInternalTab(id)
     onTabChange?.(id)
   }
+  const activeTabConfig = tabs.find((tab) => tab.id === activeTab)
 
   return (
-    <div className="layout-tabbed h-full flex flex-col bg-background text-foreground" style={theme}>
-      {/* Toolbar */}
-      <div className="flex items-center gap-2 px-6 py-3 border-b shrink-0">
-        <h1 className="text-sm font-semibold mr-auto">{title}</h1>
-        <div className="relative">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-          <Input placeholder="Search…" className="pl-8 h-8 w-52 text-xs" />
-        </div>
-        {actions ?? (
-          <Button size="sm" className="h-8 gap-1.5 text-xs">
-            <Plus className="h-3.5 w-3.5" />New Incident
-          </Button>
-        )}
-      </div>
+    <DataPage className="layout-tabbed" style={theme}>
+      <DataPage.Header>
+        <DataPage.TitleBlock title={title} />
+      </DataPage.Header>
 
-      {/* Summary */}
       {summary && (
         <div className="px-6 py-4 border-b shrink-0">{summary}</div>
       )}
 
-      {/* Tab bar */}
-      <div className="flex items-center gap-0 px-6 border-b shrink-0">
+      <DataPage.Tabs>
         {tabs.map((tab) => (
-          <button
+          <DataPage.Tab
             key={tab.id}
+            active={tab.id === activeTab}
+            count={tab.count}
             onClick={() => handleTabChange(tab.id)}
-            className={[
-              'flex items-center gap-1.5 px-3 py-2.5 text-xs font-medium border-b-2 transition-colors',
-              tab.id === activeTab
-                ? 'border-primary text-foreground'
-                : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border',
-            ].join(' ')}
           >
             {tab.label}
-            {tab.count !== undefined && (
-              <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">{tab.count}</Badge>
-            )}
-          </button>
+          </DataPage.Tab>
         ))}
-      </div>
+      </DataPage.Tabs>
 
-      {/* Content */}
-      <div className="flex-1 overflow-auto p-6">
-        <Card>
-          <CardContent className="p-0">
+      <DataPage.Content>
+        <DataPage.Group className="min-h-full">
+          <DataPage.GroupHeader
+            title={activeTabConfig?.title}
+            description={activeTabConfig?.description}
+            actions={activeTabConfig?.actions}
+          />
+          <DataPage.GroupToolbar>
+            <div className="relative">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <Input placeholder="Search…" className="pl-8 h-8 w-52 text-xs" />
+            </div>
+            <DataPage.Actions>
+              {actions ?? (
+                <Button size="sm" className="h-8 gap-1.5 text-xs">
+                  <Plus className="h-3.5 w-3.5" />New Incident
+                </Button>
+              )}
+            </DataPage.Actions>
+          </DataPage.GroupToolbar>
+          <DataPage.GroupBody>
             {renderTab(activeTab)}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+          </DataPage.GroupBody>
+        </DataPage.Group>
+      </DataPage.Content>
+    </DataPage>
   )
 }

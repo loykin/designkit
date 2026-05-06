@@ -6,6 +6,8 @@ const STYLE_ID = 'designkit-vars'
 
 function radiusVars(r: number) {
   return `
+  --dk-radius:  ${r}rem;
+  --dg-radius:  ${r}rem;
   --radius:     ${r}rem;
   --radius-sm:  ${(r * 0.6).toFixed(4)}rem;
   --radius-md:  ${(r * 0.8).toFixed(4)}rem;
@@ -16,6 +18,12 @@ function radiusVars(r: number) {
 
 function colorVars(chroma: number, hue: number) {
   return `
+  --dk-primary:             oklch(0.205 ${chroma} ${hue});
+  --dk-primary-foreground:  oklch(0.985 0 0);
+  --dk-ring:                oklch(0.5 ${chroma} ${hue});
+  --dg-primary:             oklch(0.205 ${chroma} ${hue});
+  --dg-primary-foreground:  oklch(0.985 0 0);
+  --dg-ring:                oklch(0.5 ${chroma} ${hue});
   --primary:               oklch(0.205 ${chroma} ${hue});
   --primary-foreground:    oklch(0.985 0 0);
   --color-primary:         oklch(0.205 ${chroma} ${hue});
@@ -68,10 +76,18 @@ export function buildTemplateTheme(
   const r = ov.radius        ?? g.radius
   const c = ov.primaryChroma ?? g.primaryChroma
   return {
+    '--dk-radius':            `${r}rem`,
+    '--dg-radius':            `${r}rem`,
     '--radius':               `${r}rem`,
     '--radius-sm':            `${(r * 0.6).toFixed(4)}rem`,
     '--radius-md':            `${(r * 0.8).toFixed(4)}rem`,
     '--radius-lg':            `${r}rem`,
+    '--dk-primary':           `oklch(0.205 ${c} ${g.primaryHue})`,
+    '--dk-primary-foreground':'oklch(0.985 0 0)',
+    '--dk-ring':              `oklch(0.5 ${c} ${g.primaryHue})`,
+    '--dg-primary':           `oklch(0.205 ${c} ${g.primaryHue})`,
+    '--dg-primary-foreground':'oklch(0.985 0 0)',
+    '--dg-ring':              `oklch(0.5 ${c} ${g.primaryHue})`,
     '--primary':              `oklch(0.205 ${c} ${g.primaryHue})`,
     '--primary-foreground':   'oklch(0.985 0 0)',
     '--color-primary':        `oklch(0.205 ${c} ${g.primaryHue})`,

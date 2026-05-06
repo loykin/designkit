@@ -12,6 +12,21 @@ export { DashboardBodyTemplate } from './dashboard/DashboardBodyTemplate'
 export { CardListBodyTemplate  } from './cardlist/CardListBodyTemplate'
 export { TabbedBodyTemplate    } from './tabbed/TabbedBodyTemplate'
 export { FormBodyTemplate      } from './form/FormBodyTemplate'
+export { DataPage              } from './datapage/DataPage'
+export type {
+  DataPageActionsProps,
+  DataPageContentProps,
+  DataPageFooterProps,
+  DataPageGroupBodyProps,
+  DataPageGroupHeaderProps,
+  DataPageGroupProps,
+  DataPageGroupToolbarProps,
+  DataPageHeaderProps,
+  DataPageProps,
+  DataPageTabProps,
+  DataPageTabsProps,
+  DataPageTitleBlockProps,
+} from './datapage/DataPage'
 
 import { TableBodyTemplate     } from './table/TableBodyTemplate'
 import { DashboardBodyTemplate } from './dashboard/DashboardBodyTemplate'
