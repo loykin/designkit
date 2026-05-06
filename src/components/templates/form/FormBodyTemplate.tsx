@@ -61,7 +61,7 @@ const demoSections: FormSection[] = [
         <div className="space-y-1.5">
           <Label className="text-xs">Bio</Label>
           <textarea
-            className="w-full h-20 rounded-[--radius] border border-input bg-background px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full h-20 rounded-[var(--radius)] border border-input bg-background px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
             defaultValue="Frontend engineer focused on design systems."
           />
         </div>
@@ -108,7 +108,7 @@ const demoSections: FormSection[] = [
             <Input type="password" placeholder="••••••••" className="h-8 text-sm" />
           </div>
         </div>
-        <div className="flex items-center justify-between p-3 rounded-[--radius] border">
+        <div className="flex items-center justify-between p-3 rounded-[var(--radius)] border">
           <div>
             <p className="text-sm font-medium">Two-Factor Authentication</p>
             <p className="text-xs text-muted-foreground">Require OTP on every login</p>
@@ -124,7 +124,7 @@ const demoSections: FormSection[] = [
   {
     key: 'danger', title: 'Danger Zone', description: 'Irreversible actions. Proceed with caution.', danger: true,
     content: (
-      <div className="flex items-center justify-between p-3 rounded-[--radius] border border-destructive/40 bg-destructive/5">
+      <div className="flex items-center justify-between p-3 rounded-[var(--radius)] border border-destructive/40 bg-destructive/5">
         <div>
           <p className="text-sm font-medium">Delete Account</p>
           <p className="text-xs text-muted-foreground">Permanently delete your account and all data.</p>

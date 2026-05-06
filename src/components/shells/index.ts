@@ -1,10 +1,18 @@
 import type { ComponentType } from 'react'
-import type { ShellId } from '@/store/types'
+import type { ShellId, TemplateId } from '@/store/types'
+import type { TemplateNavigationGroup } from '@/components/templates'
+
+export interface ShellComponentProps {
+  children: React.ReactNode
+  navigation?: TemplateNavigationGroup[]
+  activeItemId?: TemplateId
+  onItemSelect?: (id: TemplateId) => void
+}
 
 export interface ShellConfig {
   id: ShellId
   label: string
-  component: ComponentType<{ children: React.ReactNode }>
+  component: ComponentType<ShellComponentProps>
 }
 
 export { SidebarShell } from './SidebarShell'

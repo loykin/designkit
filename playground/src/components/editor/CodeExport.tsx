@@ -40,10 +40,27 @@ function colorVarLines(chroma: number, hue: number): string[] {
   ]
 }
 
+function typographyVarLines(fontScale: number, lineHeight: number): string[] {
+  return [
+    `  --dk-font-scale:  ${fontScale};`,
+    `  --dk-line-height: ${lineHeight};`,
+    `  --dk-text-xs:     calc(0.75rem * ${fontScale});`,
+    `  --dk-text-sm:     calc(0.875rem * ${fontScale});`,
+    `  --dk-text-base:   calc(1rem * ${fontScale});`,
+    `  --dk-text-lg:     calc(1.125rem * ${fontScale});`,
+    `  --dk-leading-xs:  calc(1rem * ${lineHeight});`,
+    `  --dk-leading-sm:  calc(1.25rem * ${lineHeight});`,
+    `  --dk-leading-base:calc(1.5rem * ${lineHeight});`,
+    `  --dk-leading-lg:  calc(1.75rem * ${lineHeight});`,
+  ]
+}
+
 function buildCSSCode(
   globalRadius: number,
   globalChroma: number,
   globalHue: number,
+  fontScale: number,
+  lineHeight: number,
   tmplId: string,
   tmplRadius: number | undefined,
   tmplChroma: number | undefined,
@@ -52,6 +69,7 @@ function buildCSSCode(
     ':root {',
     ...radiusVarLines(globalRadius),
     ...colorVarLines(globalChroma, globalHue),
+    ...typographyVarLines(fontScale, lineHeight),
     '}',
   ].join('\n')
 
@@ -67,11 +85,22 @@ function buildCSSCode(
 }
 
 const componentName: Record<string, string> = {
-  table:     'TableBodyTemplate',
+  table: 'TableBodyTemplate',
+  'table-infinity': 'TableBodyTemplate',
+  'table-drag': 'TableBodyTemplate',
+  'table-card': 'TableBodyTemplate',
+  'table-card-list': 'TableBodyTemplate',
   dashboard: 'DashboardBodyTemplate',
-  cardlist:  'CardListBodyTemplate',
-  tabbed:    'TabbedBodyTemplate',
-  form:      'FormBodyTemplate',
+  typography: 'TypographyBodyTemplate',
+  tabbed: 'TabbedBodyTemplate',
+  form: 'FormBodyTemplate',
+}
+
+const tableVariant: Record<string, string> = {
+  'table-infinity': 'infinity',
+  'table-drag': 'drag',
+  'table-card': 'card',
+  'table-card-list': 'card-list',
 }
 
 function buildComponentCode(
@@ -99,6 +128,9 @@ function buildComponentCode(
   const themeProp = themeEntries.length
     ? `\n  theme={{\n${themeEntries.join('\n')}\n  }}`
     : ''
+  const variantProp = tableVariant[tmplId]
+    ? `${themeProp ? '\n' : ''}  variant="${tableVariant[tmplId]}"`
+    : ''
 
   return [
     `import { ${name} } from '${pkg}'`,
@@ -106,7 +138,7 @@ function buildComponentCode(
     '',
     `export function MyPage() {`,
     `  return (`,
-    `    <${name}${themeProp}`,
+    `    <${name}${themeProp}${variantProp}`,
     `      // replace with your data and columns`,
     `    />`,
     `  )`,
@@ -149,6 +181,7 @@ export function CodeExport() {
 
   const cssCode = buildCSSCode(
     g.radius, g.primaryChroma, g.primaryHue,
+    g.fontScale, g.lineHeight,
     activeTemplate, ov.radius, ov.primaryChroma,
   )
 
@@ -206,6 +239,10 @@ export function CodeExport() {
                   <span>{g.primaryHue}°</span>
                   <span>Intensity</span>
                   <span>{g.primaryChroma.toFixed(3)}</span>
+                  <span>Font scale</span>
+                  <span>{g.fontScale.toFixed(2)}</span>
+                  <span>Line height</span>
+                  <span>{g.lineHeight.toFixed(2)}</span>
                 </div>
               </div>
             </TabsContent>

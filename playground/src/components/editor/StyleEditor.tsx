@@ -26,7 +26,7 @@ function NumInput({
         const n = parseFloat(e.target.value)
         if (!isNaN(n)) onChange(Math.min(max, Math.max(min, n)))
       }}
-      className="w-14 h-6 rounded-[--radius] border border-input bg-background px-1.5 text-xs tabular-nums text-right focus:outline-none focus:ring-1 focus:ring-ring"
+      className="w-14 h-6 rounded-[var(--radius)] border border-input bg-background px-1.5 text-xs tabular-nums text-right focus:outline-none focus:ring-1 focus:ring-ring"
     />
   )
 }
@@ -88,6 +88,18 @@ export function StyleControls() {
             <SliderRow label="Radius"
               value={g.radius} min={0} max={2} step={0.0625}
               onChange={(n) => setGlobal({ radius: n })} />
+          </div>
+
+          <Separator />
+
+          <div className="space-y-3">
+            <p className="text-xs font-semibold">Typography</p>
+            <SliderRow label="Size"
+              value={g.fontScale} min={0.8} max={1.25} step={0.01}
+              onChange={(n) => setGlobal({ fontScale: n })} />
+            <SliderRow label="Leading"
+              value={g.lineHeight} min={0.85} max={1.25} step={0.01}
+              onChange={(n) => setGlobal({ lineHeight: n })} />
           </div>
 
           <Separator />

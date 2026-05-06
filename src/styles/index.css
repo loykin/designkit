@@ -31,6 +31,16 @@
   --dk-page-padding-y: 1rem;
   --dk-panel-gap: 1rem;
   --dk-toolbar-height: 2.75rem;
+  --dk-font-scale: 1;
+  --dk-line-height: 1;
+  --dk-text-xs: 0.75rem;
+  --dk-text-sm: 0.875rem;
+  --dk-text-base: 1rem;
+  --dk-text-lg: 1.125rem;
+  --dk-leading-xs: 1rem;
+  --dk-leading-sm: 1.25rem;
+  --dk-leading-base: 1.5rem;
+  --dk-leading-lg: 1.75rem;
 }
 
 .dark {
@@ -80,4 +90,38 @@
   --dg-radius: var(--dk-radius);
   --dg-card-gap: var(--dk-panel-gap);
   --dg-card-padding: calc(1rem * var(--dk-density));
+}
+
+/* typography adapter */
+:root,
+.designkit-theme {
+  --text-xs: var(--dk-text-xs);
+  --text-sm: var(--dk-text-sm);
+  --text-base: var(--dk-text-base);
+  --text-lg: var(--dk-text-lg);
+  --text-xs--line-height: var(--dk-leading-xs);
+  --text-sm--line-height: var(--dk-leading-sm);
+  --text-base--line-height: var(--dk-leading-base);
+  --text-lg--line-height: var(--dk-leading-lg);
+}
+
+.designkit-theme .dg-table,
+.designkit-theme .dg-empty,
+.designkit-theme .dg-error {
+  font-size: var(--dk-text-sm);
+  line-height: var(--dk-leading-sm);
+}
+
+.designkit-theme .dg-header-cell,
+.designkit-theme .dg-filter-cell,
+.designkit-theme .dg-btn,
+.designkit-theme .dg-input,
+.designkit-theme .dg-select {
+  font-size: var(--dk-text-xs);
+  line-height: var(--dk-leading-xs);
+}
+
+.designkit-theme .dg-cell {
+  font-size: var(--dk-text-sm);
+  line-height: var(--dk-leading-sm);
 }

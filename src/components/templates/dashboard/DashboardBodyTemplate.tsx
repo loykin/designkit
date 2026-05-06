@@ -105,7 +105,7 @@ export function DashboardBodyTemplate({
               <div className="flex gap-1">
                 {['1h','6h','24h','7d'].map((t) => (
                   <button key={t} className={[
-                    'px-2 py-0.5 text-xs rounded-[--radius] transition-colors',
+                    'px-2 py-0.5 text-xs rounded-[var(--radius)] transition-colors',
                     t === '24h' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent',
                   ].join(' ')}>{t}</button>
                 ))}
@@ -117,7 +117,7 @@ export function DashboardBodyTemplate({
                   <div className="flex items-end gap-0.5 h-28">
                     {bars.map((h, i) => (
                       <div key={i}
-                        className="flex-1 rounded-t-[--radius] bg-primary/20 hover:bg-primary/50 transition-colors"
+                        className="flex-1 rounded-t-[var(--radius)] bg-primary/20 hover:bg-primary/50 transition-colors"
                         style={{ height: `${h}%` }} />
                     ))}
                   </div>

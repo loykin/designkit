@@ -34,6 +34,28 @@ function colorVars(chroma: number, hue: number) {
   --color-sidebar-primary: oklch(0.488 ${chroma} ${hue});`
 }
 
+function typographyVars(fontScale: number, lineHeight: number) {
+  return `
+  --dk-font-scale:  ${fontScale};
+  --dk-line-height: ${lineHeight};
+  --dk-text-xs:     calc(0.75rem * ${fontScale});
+  --dk-text-sm:     calc(0.875rem * ${fontScale});
+  --dk-text-base:   calc(1rem * ${fontScale});
+  --dk-text-lg:     calc(1.125rem * ${fontScale});
+  --dk-leading-xs:  calc(1rem * ${lineHeight});
+  --dk-leading-sm:  calc(1.25rem * ${lineHeight});
+  --dk-leading-base:calc(1.5rem * ${lineHeight});
+  --dk-leading-lg:  calc(1.75rem * ${lineHeight});
+  --text-xs:        var(--dk-text-xs);
+  --text-sm:        var(--dk-text-sm);
+  --text-base:      var(--dk-text-base);
+  --text-lg:        var(--dk-text-lg);
+  --text-xs--line-height:   var(--dk-leading-xs);
+  --text-sm--line-height:   var(--dk-leading-sm);
+  --text-base--line-height: var(--dk-leading-base);
+  --text-lg--line-height:   var(--dk-leading-lg);`
+}
+
 export function useStyleInjector() {
   const g  = useThemeStore((s) => s.global)
   const ov = useThemeStore((s) => s.overrides)
@@ -47,7 +69,7 @@ export function useStyleInjector() {
     }
 
     // :root = global (affects shell/toolbar)
-    const rootBlock = `:root {${radiusVars(g.radius)}${colorVars(g.primaryChroma, g.primaryHue)}\n}`
+    const rootBlock = `:root {${radiusVars(g.radius)}${colorVars(g.primaryChroma, g.primaryHue)}${typographyVars(g.fontScale, g.lineHeight)}\n}`
 
     // .layout-{id} = template-specific overrides
     const tmplBlocks = (Object.entries(ov) as [TemplateId, typeof ov[TemplateId]][])
@@ -70,11 +92,13 @@ export function useStyleInjector() {
 
 /** Returns CSS custom properties for a template — used as inline style for external usage */
 export function buildTemplateTheme(
-  g: { radius: number; primaryHue: number; primaryChroma: number },
+  g: { radius: number; primaryHue: number; primaryChroma: number; fontScale?: number; lineHeight?: number },
   ov: { radius?: number; primaryChroma?: number },
 ): React.CSSProperties {
   const r = ov.radius        ?? g.radius
   const c = ov.primaryChroma ?? g.primaryChroma
+  const fontScale = g.fontScale ?? 1
+  const lineHeight = g.lineHeight ?? 1
   return {
     '--dk-radius':            `${r}rem`,
     '--dg-radius':            `${r}rem`,
@@ -93,5 +117,15 @@ export function buildTemplateTheme(
     '--color-primary':        `oklch(0.205 ${c} ${g.primaryHue})`,
     '--ring':                 `oklch(0.5 ${c} ${g.primaryHue})`,
     '--color-ring':           `oklch(0.5 ${c} ${g.primaryHue})`,
+    '--dk-font-scale':        fontScale,
+    '--dk-line-height':       lineHeight,
+    '--dk-text-xs':           `calc(0.75rem * ${fontScale})`,
+    '--dk-text-sm':           `calc(0.875rem * ${fontScale})`,
+    '--dk-text-base':         `calc(1rem * ${fontScale})`,
+    '--dk-text-lg':           `calc(1.125rem * ${fontScale})`,
+    '--dk-leading-xs':        `calc(1rem * ${lineHeight})`,
+    '--dk-leading-sm':        `calc(1.25rem * ${lineHeight})`,
+    '--dk-leading-base':      `calc(1.5rem * ${lineHeight})`,
+    '--dk-leading-lg':        `calc(1.75rem * ${lineHeight})`,
   } as React.CSSProperties
 }

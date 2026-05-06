@@ -89,9 +89,9 @@ function Header({ children, className }: DataPageHeaderProps) {
   return (
     <header
       data-slot="data-page-header"
-      className={cn('shrink-0 px-6 pb-2 pt-4', className)}
+      className={cn('shrink-0 px-6 pb-3 pt-5', className)}
     >
-      <div className="flex min-h-8 items-end justify-between gap-4">
+      <div className="flex min-h-10 items-end justify-between gap-4">
         {children}
       </div>
     </header>
@@ -104,8 +104,8 @@ function TitleBlock({ title, description, breadcrumb, className }: DataPageTitle
   return (
     <div data-slot="data-page-title-block" className={cn('min-w-0 flex-1', className)}>
       {breadcrumb && <div className="mb-1 text-xs text-muted-foreground">{breadcrumb}</div>}
-      {title && <h1 className="truncate text-sm font-semibold">{title}</h1>}
-      {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
+      {title && <h1 className="truncate text-lg font-semibold">{title}</h1>}
+      {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
     </div>
   )
 }
@@ -183,8 +183,8 @@ function Group({ children, className, surface = 'none' }: DataPageGroupProps) {
       data-surface={surface}
       className={cn(
         'min-h-0',
-        surface === 'bordered' && 'overflow-hidden rounded-[--radius] border bg-background',
-        surface === 'card' && 'overflow-hidden rounded-[--radius] border bg-card text-card-foreground shadow-sm',
+        surface === 'bordered' && 'overflow-hidden rounded-[var(--radius)] border bg-background',
+        surface === 'card' && 'overflow-hidden rounded-[var(--radius)] border bg-card text-card-foreground shadow-sm',
         className,
       )}
     >

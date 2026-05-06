@@ -1,10 +1,21 @@
 export type ShellId    = 'sidebar' | 'header'
-export type TemplateId = 'table' | 'dashboard' | 'cardlist' | 'tabbed' | 'form'
+export type TemplateId =
+  | 'table'
+  | 'table-infinity'
+  | 'table-drag'
+  | 'table-card'
+  | 'table-card-list'
+  | 'dashboard'
+  | 'typography'
+  | 'tabbed'
+  | 'form'
 
 export interface GlobalTheme {
   radius:        number
   primaryHue:    number
   primaryChroma: number
+  fontScale:     number
+  lineHeight:    number
   darkMode:      boolean
 }
 
