@@ -121,11 +121,11 @@ function buildCSSCode(
 }
 
 const componentName: Record<string, string> = {
-  table: 'TableBodyTemplate',
-  'table-infinity': 'TableBodyTemplate',
-  'table-drag': 'TableBodyTemplate',
-  'table-card': 'TableBodyTemplate',
-  'table-card-list': 'TableBodyTemplate',
+  table: 'DataGridView',
+  'table-infinity': 'DataGridView',
+  'table-drag': 'DataGridView',
+  'table-card': 'DataGridView',
+  'table-card-list': 'DataGridView',
   dashboard: 'DashboardBodyTemplate',
   typography: 'TypographyBodyTemplate',
   databody: 'DataBodyTemplate',
@@ -168,6 +168,39 @@ function buildComponentCode(
   const variantProp = tableVariant[tmplId]
     ? `${themeProp ? '\n' : ''}  variant="${tableVariant[tmplId]}"`
     : ''
+  const gridVariantProp = tableVariant[tmplId]
+    ? `\n        variant="${tableVariant[tmplId]}"`
+    : ''
+
+  if (name === 'DataGridView') {
+    return [
+      `import { DataBodyTemplate, DataGridView, type DataGridColumnDef } from '${pkg}'`,
+      `import '${pkg}/styles'`,
+      '',
+      `type User = { id: string; name: string; email: string }`,
+      ``,
+      `const data: User[] = []`,
+      `const columns: DataGridColumnDef<User>[] = [`,
+      `  { id: 'name', accessorKey: 'name', header: 'Name' },`,
+      `  { id: 'email', accessorKey: 'email', header: 'Email' },`,
+      `]`,
+      '',
+      `export function MyPage() {`,
+      `  return (`,
+      `    <DataBodyTemplate${themeProp}`,
+      `      breadcrumb="Data / Users"`,
+      `      title="Users"`,
+      `    >`,
+      `      <DataGridView${gridVariantProp}`,
+      `        data={data}`,
+      `        columns={columns}`,
+      `        getRowId={(row) => row.id}`,
+      `      />`,
+      `    </DataBodyTemplate>`,
+      `  )`,
+      `}`,
+    ].join('\n')
+  }
 
   return [
     `import { ${name} } from '${pkg}'`,

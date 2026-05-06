@@ -23,12 +23,11 @@ export interface TemplateNavigationGroup {
 }
 
 export {
-  TableBodyTemplate,
-  type TableBodyTemplateProps,
-  type TableBodyVariant,
-  type TableColumn,
-  type TableVariantTab,
-} from './table/TableBodyTemplate'
+  DataGridView,
+  type DataGridViewProps,
+  type DataGridColumnDef,
+  type DataGridViewVariant,
+} from './table/DataGridView'
 export { DashboardBodyTemplate } from './dashboard/DashboardBodyTemplate'
 export { CardListBodyTemplate  } from './cardlist/CardListBodyTemplate'
 export { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
@@ -52,25 +51,27 @@ export type {
   DataPageTitleBlockProps,
 } from './datapage/DataPage'
 
-import { TableBodyTemplate     } from './table/TableBodyTemplate'
+import { DataGridTemplateDemo } from './table/DataGridTemplateDemo'
+import type { DataGridViewVariant } from './table/DataGridView'
 import { DashboardBodyTemplate } from './dashboard/DashboardBodyTemplate'
 import { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
 import { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
 import { TabbedBodyTemplate    } from './tabbed/TabbedBodyTemplate'
 import { FormBodyTemplate      } from './form/FormBodyTemplate'
 
-function StandardTableTemplate({ theme }: { theme?: React.CSSProperties }) {
-  return createElement(TableBodyTemplate, {
-    theme,
-    variant: 'standard',
-    layoutClassName: 'layout-table',
-    breadcrumb: 'Data / Table',
-    title: 'Users',
-  })
+function DataGridTemplate(props: {
+  theme?: React.CSSProperties
+  variant: DataGridViewVariant
+  layoutClassName: string
+  breadcrumb: React.ReactNode
+  title: React.ReactNode
+  description?: React.ReactNode
+}) {
+  return createElement(DataGridTemplateDemo, props)
 }
 
 function InfinityTableTemplate({ theme }: { theme?: React.CSSProperties }) {
-  return createElement(TableBodyTemplate, {
+  return createElement(DataGridTemplateDemo, {
     theme,
     variant: 'infinity',
     layoutClassName: 'layout-table-infinity',
@@ -81,7 +82,7 @@ function InfinityTableTemplate({ theme }: { theme?: React.CSSProperties }) {
 }
 
 function DragTableTemplate({ theme }: { theme?: React.CSSProperties }) {
-  return createElement(TableBodyTemplate, {
+  return createElement(DataGridTemplateDemo, {
     theme,
     variant: 'drag',
     layoutClassName: 'layout-table-drag',
@@ -92,7 +93,7 @@ function DragTableTemplate({ theme }: { theme?: React.CSSProperties }) {
 }
 
 function CardTableTemplate({ theme }: { theme?: React.CSSProperties }) {
-  return createElement(TableBodyTemplate, {
+  return createElement(DataGridTemplateDemo, {
     theme,
     variant: 'card',
     layoutClassName: 'layout-table-card',
@@ -103,13 +104,23 @@ function CardTableTemplate({ theme }: { theme?: React.CSSProperties }) {
 }
 
 function CardListTableTemplate({ theme }: { theme?: React.CSSProperties }) {
-  return createElement(TableBodyTemplate, {
+  return createElement(DataGridTemplateDemo, {
     theme,
     variant: 'card-list',
     layoutClassName: 'layout-table-card-list',
     breadcrumb: 'Data / Table / Card List',
     title: 'User Cards',
     description: 'gridkit DataGridCard list mode',
+  })
+}
+
+function StandardTableTemplate({ theme }: { theme?: React.CSSProperties }) {
+  return createElement(DataGridTemplate, {
+    theme,
+    variant: 'standard',
+    layoutClassName: 'layout-table',
+    breadcrumb: 'Data / Table',
+    title: 'Users',
   })
 }
 
