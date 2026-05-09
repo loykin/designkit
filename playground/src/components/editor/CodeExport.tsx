@@ -11,9 +11,10 @@ import {
   TabsList,
   TabsTrigger,
   Button,
+  getTemplateDefinition,
 } from '@loykin/designkit'
 import { Code2, Copy, Check } from 'lucide-react'
-import type { DensityId } from '@loykin/designkit'
+import type { DensityId, TemplateDefinition, TemplateId, TemplateOverride } from '@loykin/designkit'
 
 function radiusVarLines(r: number): string[] {
   return [
@@ -29,13 +30,13 @@ function radiusVarLines(r: number): string[] {
 
 function colorVarLines(chroma: number, hue: number): string[] {
   return [
-    `  --dk-primary:            oklch(0.205 ${chroma} ${hue});`,
+    `  --dk-primary:            oklch(0.52 ${chroma} ${hue});`,
     `  --dk-primary-foreground: oklch(0.985 0 0);`,
     `  --dk-ring:               oklch(0.5 ${chroma} ${hue});`,
-    `  --dg-primary:            oklch(0.205 ${chroma} ${hue});`,
+    `  --dg-primary:            oklch(0.52 ${chroma} ${hue});`,
     `  --dg-primary-foreground: oklch(0.985 0 0);`,
     `  --dg-ring:               oklch(0.5 ${chroma} ${hue});`,
-    `  --primary:             oklch(0.205 ${chroma} ${hue});`,
+    `  --primary:             oklch(0.52 ${chroma} ${hue});`,
     `  --primary-foreground:  oklch(0.985 0 0);`,
     `  --ring:                oklch(0.5 ${chroma} ${hue});`,
   ]
@@ -58,7 +59,10 @@ function typographyVarLines(fontScale: number, lineHeight: number): string[] {
   ]
 }
 
-function densityVarLines(density: DensityId): string[] {
+function densityVarLines(
+  density: DensityId,
+  overrides: Pick<TemplateOverride, 'pagePaddingY' | 'panelGap' | 'toolbarHeight'> = {},
+): string[] {
   const values = {
     compact: {
       density: 0.85,
@@ -83,9 +87,9 @@ function densityVarLines(density: DensityId): string[] {
   return [
     `  --dk-density:        ${values.density};`,
     `  --dk-page-padding-x: 1.5rem;`,
-    `  --dk-page-padding-y: ${values.pagePaddingY};`,
-    `  --dk-panel-gap:      ${values.panelGap};`,
-    `  --dk-toolbar-height: ${values.toolbarHeight};`,
+    `  --dk-page-padding-y: ${overrides.pagePaddingY ?? values.pagePaddingY};`,
+    `  --dk-panel-gap:      ${overrides.panelGap ?? values.panelGap};`,
+    `  --dk-toolbar-height: ${overrides.toolbarHeight ?? values.toolbarHeight};`,
   ]
 }
 
@@ -96,9 +100,8 @@ function buildCSSCode(
   fontScale: number,
   lineHeight: number,
   density: DensityId,
-  tmplId: string,
-  tmplRadius: number | undefined,
-  tmplChroma: number | undefined,
+  layoutClassName: string,
+  ov: TemplateOverride,
 ): string {
   const global = [
     ':root {',
@@ -110,106 +113,133 @@ function buildCSSCode(
   ].join('\n')
 
   const overrideLines: string[] = []
-  if (tmplRadius !== undefined)  overrideLines.push(...radiusVarLines(tmplRadius))
-  if (tmplChroma !== undefined)  overrideLines.push(...colorVarLines(tmplChroma, globalHue))
+  if (ov.radius !== undefined) overrideLines.push(...radiusVarLines(ov.radius))
+  if (ov.primaryChroma !== undefined) overrideLines.push(...colorVarLines(ov.primaryChroma, globalHue))
+  if (
+    ov.density !== undefined ||
+    ov.pagePaddingY !== undefined ||
+    ov.panelGap !== undefined ||
+    ov.toolbarHeight !== undefined
+  ) {
+    overrideLines.push(...densityVarLines(ov.density ?? density, ov))
+  }
 
   const override = overrideLines.length
-    ? ['\n' + `.layout-${tmplId} {`, ...overrideLines, '}'].join('\n')
+    ? ['\n' + `.${layoutClassName} {`, ...overrideLines, '}'].join('\n')
     : ''
 
   return global + override
 }
 
-const componentName: Record<string, string> = {
-  table: 'DataGridView',
-  'table-infinity': 'DataGridView',
-  'table-drag': 'DataGridView',
-  'table-card': 'DataGridView',
-  'table-card-list': 'DataGridView',
-  dashboard: 'DashboardBodyTemplate',
-  typography: 'TypographyBodyTemplate',
-  databody: 'DataBodyTemplate',
-  tabbed: 'TabbedBodyTemplate',
-  form: 'FormBodyTemplate',
-}
-
-const tableVariant: Record<string, string> = {
-  'table-infinity': 'infinity',
-  'table-drag': 'drag',
-  'table-card': 'card',
-  'table-card-list': 'card-list',
-}
-
-function buildComponentCode(
-  tmplId: string,
-  tmplRadius: number | undefined,
-  tmplChroma: number | undefined,
-  globalChroma: number,
+function buildThemeProp(
+  ov: TemplateOverride,
   globalHue: number,
 ): string {
-  const name = componentName[tmplId]
-  const pkg  = `@loykin/designkit`
-
   const themeEntries: string[] = []
-  if (tmplRadius !== undefined) {
-    themeEntries.push(`    '--dk-radius': '${tmplRadius}rem',`)
-    themeEntries.push(`    '--dg-radius': '${tmplRadius}rem',`)
-    themeEntries.push(`    '--radius': '${tmplRadius}rem',`)
+  if (ov.radius !== undefined) {
+    themeEntries.push(`    '--dk-radius': '${ov.radius}rem',`)
+    themeEntries.push(`    '--dg-radius': '${ov.radius}rem',`)
+    themeEntries.push(`    '--radius': '${ov.radius}rem',`)
   }
-  if (tmplChroma !== undefined) {
-    themeEntries.push(`    '--dk-primary': 'oklch(0.205 ${tmplChroma} ${globalHue})',`)
-    themeEntries.push(`    '--dg-primary': 'oklch(0.205 ${tmplChroma} ${globalHue})',`)
-    themeEntries.push(`    '--primary': 'oklch(0.205 ${tmplChroma} ${globalHue})',`)
+  if (ov.primaryChroma !== undefined) {
+    themeEntries.push(`    '--dk-primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
+    themeEntries.push(`    '--dg-primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
+    themeEntries.push(`    '--primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
+  }
+  if (ov.density !== undefined) {
+    themeEntries.push(`    '--dk-density': '${ov.density === 'compact' ? 0.85 : ov.density === 'comfortable' ? 1.15 : 1}',`)
+  }
+  if (ov.pagePaddingY !== undefined) {
+    themeEntries.push(`    '--dk-page-padding-y': '${ov.pagePaddingY}',`)
+  }
+  if (ov.panelGap !== undefined) {
+    themeEntries.push(`    '--dk-panel-gap': '${ov.panelGap}',`)
+  }
+  if (ov.toolbarHeight !== undefined) {
+    themeEntries.push(`    '--dk-toolbar-height': '${ov.toolbarHeight}',`)
   }
 
-  const themeProp = themeEntries.length
+  return themeEntries.length
     ? `\n  theme={{\n${themeEntries.join('\n')}\n  }}`
     : ''
-  const variantProp = tableVariant[tmplId]
-    ? `${themeProp ? '\n' : ''}  variant="${tableVariant[tmplId]}"`
-    : ''
-  const gridVariantProp = tableVariant[tmplId]
-    ? `\n        variant="${tableVariant[tmplId]}"`
-    : ''
+}
 
-  if (name === 'DataGridView') {
-    return [
-      `import { DataBodyTemplate, DataGridView, type DataGridColumnDef } from '${pkg}'`,
-      `import '${pkg}/styles'`,
+function buildDataGridCode(definition: TemplateDefinition, themeProp: string) {
+  const variant = definition.preview?.variant
+  const variantProp = variant && variant !== 'standard'
+    ? `\n        variant="${variant}"`
+    : ''
+  const cardRenderCode = definition.exportKind === 'data-grid-card'
+    ? [
       '',
-      `type User = { id: string; name: string; email: string }`,
-      ``,
-      `const data: User[] = []`,
-      `const columns: DataGridColumnDef<User>[] = [`,
-      `  { id: 'name', accessorKey: 'name', header: 'Name' },`,
-      `  { id: 'email', accessorKey: 'email', header: 'Email' },`,
-      `]`,
-      '',
-      `export function MyPage() {`,
+      `function renderCard(row: { original: User }) {`,
+      `  const user = row.original`,
       `  return (`,
-      `    <DataBodyTemplate${themeProp}`,
-      `      breadcrumb="Data / Users"`,
-      `      title="Users"`,
-      `    >`,
-      `      <DataGridView${gridVariantProp}`,
-      `        data={data}`,
-      `        columns={columns}`,
-      `        getRowId={(row) => row.id}`,
-      `      />`,
-      `    </DataBodyTemplate>`,
+      `    <div className="rounded-[var(--radius)] border bg-card p-3 text-card-foreground">`,
+      `      <p className="text-sm font-medium">{user.name}</p>`,
+      `      <p className="text-xs text-muted-foreground">{user.email}</p>`,
+      `    </div>`,
       `  )`,
       `}`,
     ].join('\n')
-  }
+    : ''
+  const cardProp = definition.exportKind === 'data-grid-card'
+    ? `\n        card={{ renderCard }}`
+    : ''
 
   return [
-    `import { ${name} } from '${pkg}'`,
-    `import '${pkg}/styles'`,
+    `import { DataBodyTemplate, DataGridView, type DataGridColumnDef } from '@loykin/designkit'`,
+    `import '@loykin/designkit/styles'`,
+    '',
+    `type User = Record<string, unknown> & { id: string; name: string; email: string }`,
+    ``,
+    `const data: User[] = []`,
+    `const columns: DataGridColumnDef<User>[] = [`,
+    `  { id: 'name', accessorKey: 'name', header: 'Name' },`,
+    `  { id: 'email', accessorKey: 'email', header: 'Email' },`,
+    `]`,
+    cardRenderCode,
     '',
     `export function MyPage() {`,
     `  return (`,
-    `    <${name}${themeProp}${variantProp}`,
-    `      // replace with your data and columns`,
+    `    <DataBodyTemplate${themeProp}`,
+    `      breadcrumb="Data / Users"`,
+    `      title="Users"`,
+    `    >`,
+    `      <DataGridView${variantProp}`,
+    `        data={data}`,
+    `        columns={columns}`,
+    `        getRowId={(row) => row.id}${cardProp}`,
+    `      />`,
+    `    </DataBodyTemplate>`,
+    `  )`,
+    `}`,
+  ].filter(Boolean).join('\n')
+}
+
+function buildComponentCode(
+  tmplId: TemplateId,
+  ov: TemplateOverride,
+  globalHue: number,
+): string {
+  const definition = getTemplateDefinition(tmplId)
+  if (!definition) return ''
+
+  const themeProp = buildThemeProp(ov, globalHue)
+
+  if (definition.exportKind === 'data-grid' || definition.exportKind === 'data-grid-card') {
+    return buildDataGridCode(definition, themeProp)
+  }
+
+  const name = definition.exportComponent
+  return [
+    `import { ${name} } from '@loykin/designkit'`,
+    `import '@loykin/designkit/styles'`,
+    '',
+    `export function MyPage() {`,
+    `  return (`,
+    `    <${name}${themeProp}`,
+    `      // pass your content/data props here`,
     `    />`,
     `  )`,
     `}`,
@@ -248,16 +278,18 @@ function CodeBlock({ code }: { code: string }) {
 export function CodeExport() {
   const { global: g, overrides, activeTemplate } = useThemeStore()
   const ov = overrides[activeTemplate]
+  const definition = getTemplateDefinition(activeTemplate)
+  const layoutClassName = definition?.layoutClassName ?? `layout-${activeTemplate}`
 
   const cssCode = buildCSSCode(
     g.radius, g.primaryChroma, g.primaryHue,
     g.fontScale, g.lineHeight, g.density,
-    activeTemplate, ov.radius, ov.primaryChroma,
+    layoutClassName, ov,
   )
 
   const componentCode = buildComponentCode(
-    activeTemplate, ov.radius, ov.primaryChroma,
-    g.primaryChroma, g.primaryHue,
+    activeTemplate, ov,
+    g.primaryHue,
   )
 
   return (
@@ -305,9 +337,17 @@ export function CodeExport() {
                     <span>{activeTemplate} radius</span>
                     <span>{ov.radius}rem</span>
                   </>}
+                  {ov.density !== undefined && <>
+                    <span>{activeTemplate} density</span>
+                    <span>{ov.density}</span>
+                  </>}
+                  {ov.panelGap !== undefined && <>
+                    <span>{activeTemplate} gap</span>
+                    <span>{ov.panelGap}</span>
+                  </>}
                   <span>Hue</span>
                   <span>{g.primaryHue}°</span>
-                  <span>Intensity</span>
+                  <span>Chroma</span>
                   <span>{g.primaryChroma.toFixed(3)}</span>
                   <span>Font scale</span>
                   <span>{g.fontScale.toFixed(2)}</span>

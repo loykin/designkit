@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { createTemplateOverrides } from '@/components/templates/definitions'
 import type { ThemeState } from './types'
 
 export const useThemeStore = create<ThemeState>((set) => ({
@@ -11,18 +12,7 @@ export const useThemeStore = create<ThemeState>((set) => ({
     density:       'default',
     darkMode:      false,
   },
-  overrides: {
-    table:          { radius: 0.125 },
-    'table-infinity': { radius: 0.125 },
-    'table-drag':     { radius: 0.125 },
-    'table-card':     { radius: 0.375 },
-    'table-card-list': { radius: 0.375 },
-    dashboard:      { radius: 0.125 },
-    typography:     { radius: 0.375 },
-    databody:       { radius: 0.375 },
-    tabbed:         { radius: 0.375 },
-    form:           { radius: 0.5   },
-  },
+  overrides: createTemplateOverrides(),
   activeShell:    'sidebar',
   activeTemplate: 'table',
   setGlobal:   (patch) => set((s) => ({ global: { ...s.global, ...patch } })),

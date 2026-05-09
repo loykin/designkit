@@ -7,10 +7,11 @@ export type TemplateId =
   | 'table-card'
   | 'table-card-list'
   | 'dashboard'
-  | 'typography'
-  | 'databody'
+  | 'cardlist'
   | 'tabbed'
   | 'form'
+  | 'typography'
+  | 'databody'
 
 export interface GlobalTheme {
   radius:        number
@@ -25,6 +26,10 @@ export interface GlobalTheme {
 export interface TemplateOverride {
   radius?:        number
   primaryChroma?: number
+  density?:       DensityId
+  pagePaddingY?:  string
+  panelGap?:      string
+  toolbarHeight?: string
 }
 
 export interface ThemeState {

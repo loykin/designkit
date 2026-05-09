@@ -91,7 +91,7 @@ function Header({ children, className }: DataPageHeaderProps) {
       data-slot="data-page-header"
       className={cn('shrink-0 px-[var(--dk-page-padding-x)] pb-[var(--dk-page-padding-y)] pt-[var(--dk-page-padding-y)]', className)}
     >
-      <div className="flex min-h-14 items-end justify-between gap-4">
+      <div className="flex min-h-[calc(var(--dk-toolbar-height)*1.25)] items-end justify-between gap-[var(--dk-panel-gap)]">
         {children}
       </div>
     </header>
@@ -114,7 +114,7 @@ function Actions({ children, className }: DataPageActionsProps) {
   if (!children) return null
 
   return (
-    <div data-slot="data-page-actions" className={cn('flex shrink-0 items-center gap-2', className)}>
+    <div data-slot="data-page-actions" className={cn('flex shrink-0 items-center gap-[calc(var(--dk-panel-gap)*0.5)]', className)}>
       {children}
     </div>
   )
@@ -223,7 +223,7 @@ function GroupToolbar({ children, className }: DataPageGroupToolbarProps) {
   return (
     <div
       data-slot="data-page-group-toolbar"
-      className={cn('flex min-h-[var(--dk-toolbar-height)] items-center justify-between gap-3 pb-[calc(var(--dk-panel-gap)*0.75)]', className)}
+      className={cn('flex min-h-[var(--dk-toolbar-height)] items-center justify-between gap-[calc(var(--dk-panel-gap)*0.75)] pb-[calc(var(--dk-panel-gap)*0.75)]', className)}
     >
       {children}
     </div>

@@ -4,6 +4,7 @@
 @import "@fontsource-variable/geist";
 
 @source "../../src";
+@source "@loykin/designkit";
 
 @custom-variant dark (&:is(.dark *));
 

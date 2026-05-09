@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { getTemplateDefinition } from '@/components/templates/definitions'
 import { useThemeStore } from '@/store/themeStore'
 import type { DensityId, TemplateId } from '@/store/types'
 
@@ -11,6 +12,9 @@ interface DesignTokenInput {
   fontScale: number
   lineHeight: number
   density?: DensityId
+  pagePaddingY?: string
+  panelGap?: string
+  toolbarHeight?: string
 }
 
 type TokenMap = Record<`--${string}`, string | number>
@@ -21,7 +25,32 @@ function buildTokenMap({
   primaryChroma,
   fontScale,
   lineHeight,
+  density = 'default',
+  pagePaddingY,
+  panelGap,
+  toolbarHeight,
 }: DesignTokenInput): TokenMap {
+  const densityValues = {
+    compact: {
+      density: 0.85,
+      pagePaddingY: '0.75rem',
+      panelGap: '0.75rem',
+      toolbarHeight: '2.5rem',
+    },
+    default: {
+      density: 1,
+      pagePaddingY: '1rem',
+      panelGap: '1rem',
+      toolbarHeight: '2.75rem',
+    },
+    comfortable: {
+      density: 1.15,
+      pagePaddingY: '1.25rem',
+      panelGap: '1.25rem',
+      toolbarHeight: '3rem',
+    },
+  }[density]
+
   return {
     '--dk-radius': `${radius}rem`,
     '--dg-radius': `${radius}rem`,
@@ -32,15 +61,15 @@ function buildTokenMap({
     '--radius-xl': `${(radius * 1.4).toFixed(4)}rem`,
     '--radius-2xl': `${(radius * 1.8).toFixed(4)}rem`,
 
-    '--dk-primary': `oklch(0.205 ${primaryChroma} ${primaryHue})`,
+    '--dk-primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
     '--dk-primary-foreground': 'oklch(0.985 0 0)',
     '--dk-ring': `oklch(0.5 ${primaryChroma} ${primaryHue})`,
-    '--dg-primary': `oklch(0.205 ${primaryChroma} ${primaryHue})`,
+    '--dg-primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
     '--dg-primary-foreground': 'oklch(0.985 0 0)',
     '--dg-ring': `oklch(0.5 ${primaryChroma} ${primaryHue})`,
-    '--primary': `oklch(0.205 ${primaryChroma} ${primaryHue})`,
+    '--primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
     '--primary-foreground': 'oklch(0.985 0 0)',
-    '--color-primary': `oklch(0.205 ${primaryChroma} ${primaryHue})`,
+    '--color-primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
     '--color-primary-foreground': 'oklch(0.985 0 0)',
     '--ring': `oklch(0.5 ${primaryChroma} ${primaryHue})`,
     '--color-ring': `oklch(0.5 ${primaryChroma} ${primaryHue})`,
@@ -49,6 +78,10 @@ function buildTokenMap({
 
     '--dk-font-scale': fontScale,
     '--dk-line-height': lineHeight,
+    '--dk-density': densityValues.density,
+    '--dk-page-padding-y': pagePaddingY ?? densityValues.pagePaddingY,
+    '--dk-panel-gap': panelGap ?? densityValues.panelGap,
+    '--dk-toolbar-height': toolbarHeight ?? densityValues.toolbarHeight,
     '--dk-text-xs': `calc(0.75rem * ${fontScale})`,
     '--dk-text-sm': `calc(0.875rem * ${fontScale})`,
     '--dk-text-base': `calc(1rem * ${fontScale})`,
@@ -95,13 +128,25 @@ export function useStyleInjector() {
     // .layout-{id} = template-specific overrides
     const tmplBlocks = (Object.entries(ov) as [TemplateId, typeof ov[TemplateId]][])
       .map(([id, o]) => {
-        if (o.radius === undefined && o.primaryChroma === undefined) return ''
+        if (
+          o.radius === undefined &&
+          o.primaryChroma === undefined &&
+          o.density === undefined &&
+          o.pagePaddingY === undefined &&
+          o.panelGap === undefined &&
+          o.toolbarHeight === undefined
+        ) return ''
         const tokens = buildTokenMap({
           ...g,
           radius: o.radius ?? g.radius,
           primaryChroma: o.primaryChroma ?? g.primaryChroma,
+          density: o.density ?? g.density,
+          pagePaddingY: o.pagePaddingY,
+          panelGap: o.panelGap,
+          toolbarHeight: o.toolbarHeight,
         })
-        return `.layout-${id} {\n${tokenMapToCss(tokens)}\n}`
+        const layoutClassName = getTemplateDefinition(id)?.layoutClassName ?? `layout-${id}`
+        return `.${layoutClassName} {\n${tokenMapToCss(tokens)}\n}`
       })
       .filter(Boolean)
 
@@ -124,13 +169,17 @@ export function useStyleInjector() {
 
 /** Returns CSS custom properties for a template — used as inline style for external usage */
 export function buildTemplateTheme(
-  g: { radius: number; primaryHue: number; primaryChroma: number; fontScale?: number; lineHeight?: number },
-  ov: { radius?: number; primaryChroma?: number },
+  g: { radius: number; primaryHue: number; primaryChroma: number; density?: DensityId; fontScale?: number; lineHeight?: number },
+  ov: { radius?: number; primaryChroma?: number; density?: DensityId; pagePaddingY?: string; panelGap?: string; toolbarHeight?: string },
 ): React.CSSProperties {
   return buildTokenMap({
     radius: ov.radius ?? g.radius,
     primaryHue: g.primaryHue,
     primaryChroma: ov.primaryChroma ?? g.primaryChroma,
+    density: ov.density ?? g.density,
+    pagePaddingY: ov.pagePaddingY,
+    panelGap: ov.panelGap,
+    toolbarHeight: ov.toolbarHeight,
     fontScale: g.fontScale ?? 1,
     lineHeight: g.lineHeight ?? 1,
   }) as React.CSSProperties
