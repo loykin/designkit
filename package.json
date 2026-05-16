@@ -43,24 +43,24 @@
     "@tanstack/react-virtual": "^3.13.24",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.14.0",
-    "tailwind-merge": "^3.5.0",
-    "zustand": "^5.0.12"
+    "lucide-react": "^1.16.0",
+    "tailwind-merge": "^3.6.0",
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.8.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitest/coverage-v8": "^4.1.4",
+    "@vitest/coverage-v8": "^4.1.6",
     "concurrently": "^9.2.1",
-    "eslint": "^10.2.1",
+    "eslint": "^10.4.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "prettier": "^3.8.2",
     "tsup": "^8.4.0",
     "typescript": "~6.0.2",
-    "typescript-eslint": "^8.58.2",
-    "vitest": "^4.1.4"
+    "typescript-eslint": "^8.59.3",
+    "vitest": "^4.1.6"
   },
   "keywords": [
     "react",
