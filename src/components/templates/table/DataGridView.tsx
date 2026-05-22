@@ -43,8 +43,8 @@ export interface DataGridViewProps<T extends Record<string, unknown>> {
   enableSorting?: boolean
   enableColumnFilters?: boolean
   emptyMessage?: string
-  leftFilters?: DataGridViewFilter<T>
-  rightFilters?: DataGridViewFilter<T>
+  headerLeft?: DataGridViewFilter<T>
+  headerRight?: DataGridViewFilter<T>
   pagination?: { pageSize?: number } | false
   footer?: (table: TanStackTable<T>) => React.ReactNode
   infinity?: DataGridViewInfinityProps<T>
@@ -65,8 +65,8 @@ export function DataGridView<T extends Record<string, unknown>>({
   enableSorting = true,
   enableColumnFilters,
   emptyMessage = 'No rows found',
-  leftFilters,
-  rightFilters,
+  headerLeft,
+  headerRight,
   pagination,
   footer,
   infinity,
@@ -111,8 +111,8 @@ export function DataGridView<T extends Record<string, unknown>>({
         enableSorting={enableSorting}
         enableColumnFilters={enableColumnFilters}
         tableWidthMode={tableWidthMode}
-        leftFilters={leftFilters}
-        rightFilters={rightFilters}
+        headerLeft={headerLeft}
+        headerRight={headerRight}
         hasNextPage={infinity?.hasNextPage ?? false}
         isFetchingNextPage={infinity?.isFetchingNextPage ?? false}
         fetchNextPage={infinity?.fetchNextPage ?? (() => undefined)}
@@ -133,8 +133,8 @@ export function DataGridView<T extends Record<string, unknown>>({
         rowHeight={rowHeight}
         columnSizing={{ drag: dragColumnSize }}
         tableWidthMode={tableWidthMode}
-        leftFilters={leftFilters}
-        rightFilters={rightFilters}
+        headerLeft={headerLeft}
+        headerRight={headerRight}
         emptyMessage={emptyMessage}
         classNames={{
           cell: '[&[data-col-id=drag]]:px-1',
@@ -159,8 +159,8 @@ export function DataGridView<T extends Record<string, unknown>>({
         enableSorting={enableSorting}
         enableColumnFilters={enableColumnFilters}
         tableWidthMode={tableWidthMode}
-        leftFilters={leftFilters}
-        rightFilters={rightFilters}
+        headerLeft={headerLeft}
+        headerRight={headerRight}
         cardColumns={card?.cardColumns ?? (variant === 'card-list' ? 1 : undefined)}
         minCardWidth={card?.minCardWidth ?? 220}
         minColumns={card?.minColumns ?? (variant === 'card-list' ? 1 : 2)}
@@ -179,8 +179,8 @@ export function DataGridView<T extends Record<string, unknown>>({
       enableSorting={enableSorting}
       enableColumnFilters={enableColumnFilters}
       tableWidthMode={tableWidthMode}
-      leftFilters={leftFilters}
-      rightFilters={rightFilters}
+      headerLeft={headerLeft}
+      headerRight={headerRight}
       pagination={pagination === false ? undefined : pagination}
       footer={footer}
       emptyMessage={emptyMessage}

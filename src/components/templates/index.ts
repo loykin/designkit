@@ -12,6 +12,8 @@ export type {
   TemplateExportKind,
   TemplateGroup,
   TemplateNavigationGroupId,
+  TemplateOptionSpec,
+  TemplateOptionChoice,
 } from './definitions'
 
 export interface TemplateConfig {
@@ -49,8 +51,14 @@ export { DataBodyTemplate } from './databody/DataBodyTemplate'
 export { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
 export { TabbedBodyTemplate    } from './tabbed/TabbedBodyTemplate'
 export { TabbedBodyTemplateDemo } from './tabbed/TabbedBodyTemplateDemo'
-export { FormBodyTemplate      } from './form/FormBodyTemplate'
-export { FormBodyTemplateDemo  } from './form/FormBodyTemplateDemo'
+export { FormBodyTemplate           } from './form/FormBodyTemplate'
+export { FormBodyTemplateDemo       } from './form/FormBodyTemplateDemo'
+export { FormStackedBodyTemplate    } from './form/FormStackedBodyTemplate'
+export { FormStackedBodyTemplateDemo } from './form/FormStackedBodyTemplateDemo'
+export { FormWizardBodyTemplate     } from './form/FormWizardBodyTemplate'
+export { FormWizardBodyTemplateDemo } from './form/FormWizardBodyTemplateDemo'
+export { FormInlineBodyTemplate     } from './form/FormInlineBodyTemplate'
+export { FormInlineBodyTemplateDemo } from './form/FormInlineBodyTemplateDemo'
 export { DataPage              } from './datapage/DataPage'
 export type {
   DataPageActionsProps,
@@ -74,7 +82,10 @@ import { CardListBodyTemplateDemo  } from './cardlist/CardListBodyTemplateDemo'
 import { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
 import { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
 import { TabbedBodyTemplateDemo } from './tabbed/TabbedBodyTemplateDemo'
-import { FormBodyTemplateDemo   } from './form/FormBodyTemplateDemo'
+import { FormBodyTemplateDemo         } from './form/FormBodyTemplateDemo'
+import { FormStackedBodyTemplateDemo  } from './form/FormStackedBodyTemplateDemo'
+import { FormWizardBodyTemplateDemo   } from './form/FormWizardBodyTemplateDemo'
+import { FormInlineBodyTemplateDemo   } from './form/FormInlineBodyTemplateDemo'
 
 function DataGridTemplatePreview(props: {
   theme?: React.CSSProperties
@@ -116,6 +127,9 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   databody: DataBodyTemplateDemo,
   tabbed: TabbedBodyTemplateDemo,
   form: FormBodyTemplateDemo,
+  'form-stacked': FormStackedBodyTemplateDemo,
+  'form-wizard': FormWizardBodyTemplateDemo,
+  'form-inline': FormInlineBodyTemplateDemo,
 }
 
 export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
@@ -143,18 +157,25 @@ export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrd
 
   return {
     label,
-    items: parentDefinitions.map((definition) => ({
-      id: definition.id,
-      label: definition.group === 'Table' ? 'Table' : definition.label,
-      icon: iconById[definition.id],
-      children: definitions
-        .filter((child) => child.navigationParent === definition.id || (
-          definition.id === 'table' && child.id === 'table'
-        ))
-        .map((child) => ({
-          id: child.id,
-          label: child.label,
-        })),
-    })),
+    items: parentDefinitions.map((definition) => {
+      const childDefs = definitions.filter((d) => d.navigationParent === definition.id)
+      const hasChildren = childDefs.length > 0
+      const groupLabel =
+        definition.group === 'Table' ? 'Table' :
+        definition.id === 'form'     ? 'Form'  :
+        definition.label
+
+      return {
+        id: definition.id,
+        label: groupLabel,
+        icon: iconById[definition.id],
+        children: hasChildren
+          ? [
+              { id: definition.id, label: definition.label },
+              ...childDefs.map((child) => ({ id: child.id, label: child.label })),
+            ]
+          : [],
+      }
+    }),
   }
 }).filter((group) => group.items.length > 0)

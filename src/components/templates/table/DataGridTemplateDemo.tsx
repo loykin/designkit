@@ -94,11 +94,11 @@ const demoColumns: DataGridColumnDef<DemoRow>[] = [
   },
 ]
 
-const leftFilters = (table: TanStackTable<DemoRow>) => (
+const headerLeft = (table: TanStackTable<DemoRow>) => (
   <GlobalSearch table={table} placeholder="Search..." />
 )
 
-const rightFilters = () => (
+const headerRight = () => (
   <div className="flex items-center gap-2">
     <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
       <Download className="h-3.5 w-3.5" />Export
@@ -208,8 +208,8 @@ export function DataGridTemplateDemo({
             getRowId={(row) => row.id}
             variant={variant}
             enableColumnFilters={variant === 'infinity' || variant === 'card' || variant === 'card-list'}
-            leftFilters={leftFilters}
-            rightFilters={rightFilters}
+            headerLeft={headerLeft}
+            headerRight={headerRight}
             pagination={{ pageSize: 10 }}
             footer={(table) => (
               <div className="flex h-9 items-center justify-between px-1 text-xs text-muted-foreground">

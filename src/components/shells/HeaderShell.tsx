@@ -33,7 +33,7 @@ function NavigationHeaderContent({
   return (
     <>
       <div className="mr-5 flex items-center gap-2">
-        <div className="flex h-7 w-7 items-center justify-center rounded-[var(--radius)] bg-primary text-xs font-bold text-primary-foreground">
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">
           D
         </div>
         <span className="text-sm font-semibold">DesignKit</span>
@@ -52,7 +52,7 @@ function NavigationHeaderContent({
                     type="button"
                     onClick={() => !item.children?.length && onItemSelect?.(item.id)}
                     className={[
-                      'flex h-8 items-center gap-1.5 rounded-[var(--radius)] px-2.5 text-sm transition-colors',
+                      'flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-sm transition-colors',
                       active && !item.children?.length
                         ? 'bg-accent text-foreground font-medium'
                         : 'text-muted-foreground hover:bg-accent hover:text-foreground',
@@ -70,7 +70,7 @@ function NavigationHeaderContent({
                           type="button"
                           onClick={() => onItemSelect?.(child.id)}
                           className={[
-                            'h-7 rounded-[var(--radius)] px-2 text-xs transition-colors',
+                            'h-7 rounded-lg px-2 text-xs transition-colors',
                             child.id === activeItemId
                               ? 'bg-accent text-foreground font-medium'
                               : 'text-muted-foreground hover:bg-accent hover:text-foreground',
@@ -96,11 +96,11 @@ function NavigationHeaderContent({
 function HeaderActions() {
   return (
     <div className="ml-auto flex items-center gap-2">
-      <button className="relative flex h-8 w-8 items-center justify-center rounded-[var(--radius)] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+      <button className="relative flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
         <Bell className="h-4 w-4" />
         <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary" />
       </button>
-      <button className="flex h-8 w-8 items-center justify-center rounded-[var(--radius)] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
+      <button className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">
         <Settings className="h-4 w-4" />
       </button>
       <Separator orientation="vertical" className="h-5" />
@@ -116,7 +116,7 @@ function DemoHeaderContent() {
     <>
       {/* Logo */}
       <div className="flex items-center gap-2 mr-6">
-        <div className="h-7 w-7 rounded-[var(--radius)] bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">
+        <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">
           A
         </div>
         <span className="text-sm font-semibold">Acme Corp</span>
@@ -128,7 +128,7 @@ function DemoHeaderContent() {
           <button
             key={item}
             className={[
-              'px-3 py-1.5 text-sm rounded-[var(--radius)] transition-colors',
+              'px-3 py-1.5 text-sm rounded-lg transition-colors',
               item === 'Users'
                 ? 'bg-accent text-foreground font-medium'
                 : 'text-muted-foreground hover:text-foreground hover:bg-accent',
@@ -150,7 +150,7 @@ function DemoHeaderContent() {
 export function HeaderShell({ header, navigation, activeItemId, onItemSelect, children }: HeaderShellProps) {
   return (
     <div className="h-full flex flex-col">
-      <header className="flex h-12 shrink-0 items-center border-b px-4 bg-background">
+      <header className="flex h-12 shrink-0 items-center border-b px-4 bg-(--dk-header) backdrop-blur-sm">
         {header ?? (
           <NavigationHeaderContent
             navigation={navigation}

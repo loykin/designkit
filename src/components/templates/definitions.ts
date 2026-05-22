@@ -10,6 +10,19 @@ export type TemplateExportKind =
   | 'typography'
   | 'databody'
 
+export interface TemplateOptionChoice {
+  value: string
+  label: string
+}
+
+export interface TemplateOptionSpec {
+  key: string
+  label: string
+  type: 'select'
+  choices: TemplateOptionChoice[]
+  defaultValue: string
+}
+
 export interface TemplateDefinition {
   id: TemplateId
   label: string
@@ -20,6 +33,7 @@ export interface TemplateDefinition {
   exportComponent: string
   exportKind: TemplateExportKind
   preset: TemplateOverride
+  options?: TemplateOptionSpec[]
   preview?: {
     variant?: DataGridViewVariant
     breadcrumb?: React.ReactNode
@@ -164,13 +178,94 @@ export const TEMPLATE_DEFINITIONS = [
   },
   {
     id: 'form',
-    label: 'Form',
+    label: 'Standard',
     group: 'Pages',
     navigationGroup: 'Workflow',
     layoutClassName: 'layout-form',
     exportComponent: 'FormBodyTemplate',
     exportKind: 'body-template',
     preset: { radius: 0.5 },
+    options: [
+      {
+        key: 'variant',
+        label: 'Variant',
+        type: 'select',
+        choices: [
+          { value: 'card',  label: 'Card'  },
+          { value: 'plain', label: 'Plain' },
+        ],
+        defaultValue: 'card',
+      },
+    ],
+  },
+  {
+    id: 'form-stacked',
+    label: 'Stacked',
+    group: 'Pages',
+    navigationGroup: 'Workflow',
+    navigationParent: 'form',
+    layoutClassName: 'layout-form-stacked',
+    exportComponent: 'FormStackedBodyTemplate',
+    exportKind: 'body-template',
+    preset: { radius: 0.5 },
+    options: [
+      {
+        key: 'variant',
+        label: 'Variant',
+        type: 'select',
+        choices: [
+          { value: 'plain', label: 'Plain' },
+          { value: 'card',  label: 'Card'  },
+        ],
+        defaultValue: 'plain',
+      },
+    ],
+  },
+  {
+    id: 'form-wizard',
+    label: 'Wizard',
+    group: 'Pages',
+    navigationGroup: 'Workflow',
+    navigationParent: 'form',
+    layoutClassName: 'layout-form-wizard',
+    exportComponent: 'FormWizardBodyTemplate',
+    exportKind: 'body-template',
+    preset: { radius: 0.5 },
+    options: [
+      {
+        key: 'variant',
+        label: 'Variant',
+        type: 'select',
+        choices: [
+          { value: 'plain', label: 'Plain' },
+          { value: 'card',  label: 'Card'  },
+        ],
+        defaultValue: 'plain',
+      },
+    ],
+  },
+  {
+    id: 'form-inline',
+    label: 'Inline',
+    group: 'Pages',
+    navigationGroup: 'Workflow',
+    navigationParent: 'form',
+    layoutClassName: 'layout-form-inline',
+    exportComponent: 'FormInlineBodyTemplate',
+    exportKind: 'body-template',
+    preset: { radius: 0.25 },
+    options: [
+      {
+        key: 'variant',
+        label: 'Variant',
+        type: 'select',
+        choices: [
+          { value: 'bordered', label: 'Bordered' },
+          { value: 'plain',    label: 'Plain'    },
+        ],
+        defaultValue: 'bordered',
+      },
+    ],
   },
 ] satisfies TemplateDefinition[]
 

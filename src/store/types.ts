@@ -10,6 +10,9 @@ export type TemplateId =
   | 'cardlist'
   | 'tabbed'
   | 'form'
+  | 'form-stacked'
+  | 'form-wizard'
+  | 'form-inline'
   | 'typography'
   | 'databody'
 

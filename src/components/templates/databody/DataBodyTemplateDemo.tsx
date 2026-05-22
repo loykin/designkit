@@ -71,11 +71,11 @@ const userColumns: DataGridColumnDef<User>[] = [
   },
 ]
 
-const leftFilters = (table: TanStackTable<User>) => (
+const headerLeft = (table: TanStackTable<User>) => (
   <GlobalSearch table={table} placeholder="Search..." />
 )
 
-const rightFilters = () => (
+const headerRight = () => (
   <Button size="sm" className="h-8 gap-1.5 text-xs">
     <Plus className="h-3.5 w-3.5" />
     Add User
@@ -92,8 +92,8 @@ function UserTable() {
       rowHeight={36}
       enableSorting
       tableWidthMode="fill-last"
-      leftFilters={leftFilters}
-      rightFilters={rightFilters}
+      headerLeft={headerLeft}
+      headerRight={headerRight}
       pagination={{ pageSize: 10 }}
       footer={(table) => (
         <div className="flex h-9 items-center justify-between px-1 text-xs text-muted-foreground">
@@ -115,8 +115,8 @@ function UserCards() {
       rowHeight={36}
       enableSorting
       tableWidthMode="fill-last"
-      leftFilters={leftFilters}
-      rightFilters={rightFilters}
+      headerLeft={headerLeft}
+      headerRight={headerRight}
       minCardWidth={220}
       minColumns={2}
       renderCard={(row) => (
