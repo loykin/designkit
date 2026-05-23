@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { CheckCircle2, Clock, AlertCircle, XCircle, Plus, Search } from 'lucide-react'
+import type { TemplateCodeContext } from '../code'
 
 type Status   = 'open' | 'in-progress' | 'resolved' | 'closed'
 type Priority = 'critical' | 'high' | 'medium' | 'low'
@@ -141,4 +142,31 @@ export function TabbedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
       </DataBodyTemplate.Tab>
     </DataBodyTemplate>
   )
+}
+
+export function buildTabbedBodyTemplateCode({
+  themeProp,
+  layoutClassName,
+}: TemplateCodeContext) {
+  return [
+    `import { DataBodyTemplate } from '@loykin/designkit'`,
+    `import '@loykin/designkit/styles'`,
+    '',
+    `export function MyPage() {`,
+    `  return (`,
+    `    <DataBodyTemplate${themeProp}`,
+    `      className="${layoutClassName}"`,
+    `      title="Incidents"`,
+    `    >`,
+    `      <DataBodyTemplate.Summary>`,
+    `        {/* summary content */}`,
+    `      </DataBodyTemplate.Summary>`,
+    ``,
+    `      <DataBodyTemplate.Tab id="all" label="All">`,
+    `        {/* tab content */}`,
+    `      </DataBodyTemplate.Tab>`,
+    `    </DataBodyTemplate>`,
+    `  )`,
+    `}`,
+  ].join('\n')
 }

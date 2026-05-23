@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Download, Plus } from 'lucide-react'
 import { DataGridView, type DataGridViewVariant } from './DataGridView'
+import type { TemplateCodeContext } from '../code'
 
 export interface DataGridTemplateDemoProps {
   theme?: React.CSSProperties
@@ -230,4 +231,62 @@ export function DataGridTemplateDemo({
       </DataPage.Group>
     </DataBodyTemplate>
   )
+}
+
+export function buildDataGridTemplateCode({
+  definition,
+  themeProp,
+  layoutClassName,
+}: TemplateCodeContext) {
+  const variant = definition.preview?.variant
+  const variantProp = variant && variant !== 'standard'
+    ? `\n        variant="${variant}"`
+    : ''
+  const cardRenderCode = definition.exportKind === 'data-grid-card'
+    ? [
+        '',
+        `function renderCard(row: { original: User }) {`,
+        `  const user = row.original`,
+        `  return (`,
+        `    <div className="rounded-(--radius) border bg-card p-3 text-card-foreground">`,
+        `      <p className="text-sm font-medium">{user.name}</p>`,
+        `      <p className="text-xs text-muted-foreground">{user.email}</p>`,
+        `    </div>`,
+        `  )`,
+        `}`,
+      ].join('\n')
+    : ''
+  const cardProp = definition.exportKind === 'data-grid-card'
+    ? `\n        card={{ renderCard }}`
+    : ''
+
+  return [
+    `import { DataBodyTemplate, DataGridView, type DataGridColumnDef } from '@loykin/designkit'`,
+    `import '@loykin/designkit/styles'`,
+    '',
+    `type User = Record<string, unknown> & { id: string; name: string; email: string }`,
+    ``,
+    `const data: User[] = []`,
+    `const columns: DataGridColumnDef<User>[] = [`,
+    `  { id: 'name', accessorKey: 'name', header: 'Name' },`,
+    `  { id: 'email', accessorKey: 'email', header: 'Email' },`,
+    `]`,
+    cardRenderCode,
+    '',
+    `export function MyPage() {`,
+    `  return (`,
+    `    <DataBodyTemplate${themeProp}`,
+    `      className="${layoutClassName}"`,
+    `      breadcrumb="Data / Users"`,
+    `      title="Users"`,
+    `    >`,
+    `      <DataGridView${variantProp}`,
+    `        data={data}`,
+    `        columns={columns}`,
+    `        getRowId={(row) => row.id}${cardProp}`,
+    `      />`,
+    `    </DataBodyTemplate>`,
+    `  )`,
+    `}`,
+  ].filter(Boolean).join('\n')
 }

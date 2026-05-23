@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Plus } from 'lucide-react'
+import type { TemplateCodeContext } from '../code'
 
 export interface DataBodyTemplateDemoProps {
   theme?: React.CSSProperties
@@ -182,4 +183,27 @@ export function DataBodyTemplateDemo({ theme }: DataBodyTemplateDemoProps) {
       </DataBodyTemplate.Tab>
     </DataBodyTemplate>
   )
+}
+
+export function buildDataBodyTemplateCode({
+  themeProp,
+  layoutClassName,
+}: TemplateCodeContext) {
+  return [
+    `import { DataBodyTemplate } from '@loykin/designkit'`,
+    `import '@loykin/designkit/styles'`,
+    '',
+    `export function MyPage() {`,
+    `  return (`,
+    `    <DataBodyTemplate${themeProp}`,
+    `      className="${layoutClassName}"`,
+    `      title="Page Title"`,
+    `    >`,
+    `      <DataBodyTemplate.Group layout="horizontal" title="Section">`,
+    `        {/* content */}`,
+    `      </DataBodyTemplate.Group>`,
+    `    </DataBodyTemplate>`,
+    `  )`,
+    `}`,
+  ].join('\n')
 }

@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import type { TemplateCodeContext } from '../code'
 
 export function FormBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
   return (
@@ -117,4 +118,27 @@ export function FormBodyTemplateDemo({ theme }: { theme?: React.CSSProperties })
       </DataBodyTemplate.Group>
     </DataBodyTemplate>
   )
+}
+
+export function buildFormBodyTemplateCode({
+  themeProp,
+  layoutClassName,
+}: TemplateCodeContext) {
+  return [
+    `import { DataBodyTemplate } from '@loykin/designkit'`,
+    `import '@loykin/designkit/styles'`,
+    '',
+    `export function MyPage() {`,
+    `  return (`,
+    `    <DataBodyTemplate${themeProp}`,
+    `      className="${layoutClassName}"`,
+    `      title="Account Settings"`,
+    `    >`,
+    `      <DataBodyTemplate.Group layout="horizontal" title="Profile">`,
+    `        {/* form fields */}`,
+    `      </DataBodyTemplate.Group>`,
+    `    </DataBodyTemplate>`,
+    `  )`,
+    `}`,
+  ].join('\n')
 }

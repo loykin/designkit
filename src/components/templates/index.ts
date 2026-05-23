@@ -2,6 +2,7 @@ import { createElement, type ComponentType } from 'react'
 import type { TemplateId } from '@/store/types'
 import { FileText, LayoutDashboard, Table2, Layers } from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
+import type { TemplateCodeBuilder } from './code'
 export {
   TEMPLATE_DEFINITIONS,
   createTemplateOverrides,
@@ -20,6 +21,7 @@ export interface TemplateConfig {
   id: TemplateId
   label: string
   component: ComponentType<{ theme?: React.CSSProperties }>
+  buildCode?: TemplateCodeBuilder
   group?: string
   description?: string
 }
@@ -67,6 +69,10 @@ export type {
   DataPageTitleBlockProps,
 } from './datapage/DataPage'
 export type {
+  TemplateCodeBuilder,
+  TemplateCodeContext,
+} from './code'
+export type {
   DataBodyTabProps,
   DataBodySummaryProps,
   DataBodyGroupProps,
@@ -76,14 +82,14 @@ export type {
   GroupVariant,
 } from './databody/DataBodyTemplate'
 
-import { DataGridTemplateDemo } from './table/DataGridTemplateDemo'
+import { DataGridTemplateDemo, buildDataGridTemplateCode } from './table/DataGridTemplateDemo'
 import type { DataGridViewVariant } from './table/DataGridView'
-import { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
-import { TabbedBodyTemplateDemo } from './tabbed/TabbedBodyTemplateDemo'
-import { FormBodyTemplateDemo } from './form/FormBodyTemplateDemo'
-import { FormStackedBodyTemplateDemo } from './form/FormStackedBodyTemplateDemo'
-import { FormWizardBodyTemplateDemo } from './form/FormWizardBodyTemplateDemo'
-import { FormInlineBodyTemplateDemo } from './form/FormInlineBodyTemplateDemo'
+import { DataBodyTemplateDemo, buildDataBodyTemplateCode } from './databody/DataBodyTemplateDemo'
+import { TabbedBodyTemplateDemo, buildTabbedBodyTemplateCode } from './tabbed/TabbedBodyTemplateDemo'
+import { FormBodyTemplateDemo, buildFormBodyTemplateCode } from './form/FormBodyTemplateDemo'
+import { FormStackedBodyTemplateDemo, buildFormStackedBodyTemplateCode } from './form/FormStackedBodyTemplateDemo'
+import { FormWizardBodyTemplateDemo, buildFormWizardBodyTemplateCode } from './form/FormWizardBodyTemplateDemo'
+import { FormInlineBodyTemplateDemo, buildFormInlineBodyTemplateCode } from './form/FormInlineBodyTemplateDemo'
 
 function DataGridTemplatePreview(props: {
   theme?: React.CSSProperties
@@ -124,11 +130,26 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   'form-inline': FormInlineBodyTemplateDemo,
 }
 
+const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
+  table: buildDataGridTemplateCode,
+  'table-infinity': buildDataGridTemplateCode,
+  'table-drag': buildDataGridTemplateCode,
+  'table-card': buildDataGridTemplateCode,
+  'table-card-list': buildDataGridTemplateCode,
+  databody: buildDataBodyTemplateCode,
+  tabbed: buildTabbedBodyTemplateCode,
+  form: buildFormBodyTemplateCode,
+  'form-stacked': buildFormStackedBodyTemplateCode,
+  'form-wizard': buildFormWizardBodyTemplateCode,
+  'form-inline': buildFormInlineBodyTemplateCode,
+}
+
 export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
   id: definition.id,
   label: definition.label,
   group: definition.group,
   component: previewComponents[definition.id],
+  buildCode: codeBuilders[definition.id],
 }))
 
 const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>>> = {

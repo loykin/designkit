@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import type { TemplateCodeContext } from '../code'
 
 export function FormStackedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
   return (
@@ -103,4 +104,27 @@ export function FormStackedBodyTemplateDemo({ theme }: { theme?: React.CSSProper
       </DataBodyTemplate.Group>
     </DataBodyTemplate>
   )
+}
+
+export function buildFormStackedBodyTemplateCode({
+  themeProp,
+  layoutClassName,
+}: TemplateCodeContext) {
+  return [
+    `import { DataBodyTemplate } from '@loykin/designkit'`,
+    `import '@loykin/designkit/styles'`,
+    '',
+    `export function MyPage() {`,
+    `  return (`,
+    `    <DataBodyTemplate${themeProp}`,
+    `      className="${layoutClassName}"`,
+    `      title="Settings"`,
+    `    >`,
+    `      <DataBodyTemplate.Group layout="stacked" title="Profile">`,
+    `        {/* form fields */}`,
+    `      </DataBodyTemplate.Group>`,
+    `    </DataBodyTemplate>`,
+    `  )`,
+    `}`,
+  ].join('\n')
 }

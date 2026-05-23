@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
+import type { TemplateCodeContext } from '../code'
 
 export function FormInlineBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
   return (
@@ -92,4 +93,29 @@ export function FormInlineBodyTemplateDemo({ theme }: { theme?: React.CSSPropert
       </DataBodyTemplate.Group>
     </DataBodyTemplate>
   )
+}
+
+export function buildFormInlineBodyTemplateCode({
+  themeProp,
+  layoutClassName,
+}: TemplateCodeContext) {
+  return [
+    `import { DataBodyTemplate } from '@loykin/designkit'`,
+    `import '@loykin/designkit/styles'`,
+    '',
+    `export function MyPage() {`,
+    `  return (`,
+    `    <DataBodyTemplate${themeProp}`,
+    `      className="${layoutClassName}"`,
+    `      title="Edit User"`,
+    `    >`,
+    `      <DataBodyTemplate.Group layout="inline" title="Identity">`,
+    `        <DataBodyTemplate.Row label="Field">`,
+    `          {/* input */}`,
+    `        </DataBodyTemplate.Row>`,
+    `      </DataBodyTemplate.Group>`,
+    `    </DataBodyTemplate>`,
+    `  )`,
+    `}`,
+  ].join('\n')
 }

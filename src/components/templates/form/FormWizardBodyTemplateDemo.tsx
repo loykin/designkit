@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { FormWizardBodyTemplate, type FormWizardStep, type FormWizardVariant } from './FormWizardBodyTemplate'
+import { FormWizardBodyTemplate, type FormWizardStep, type FormWizardVariant } from '@/components/templates'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
+import type { TemplateCodeContext } from '../code'
 
 const steps: FormWizardStep[] = [
   {
@@ -185,4 +186,34 @@ export function FormWizardBodyTemplateDemo({ theme, variant }: { theme?: React.C
       onFinish={() => setActiveStep(0)}
     />
   )
+}
+
+export function buildFormWizardBodyTemplateCode({
+  themeProp,
+}: TemplateCodeContext) {
+  return [
+    `import { useState } from 'react'`,
+    `import { FormWizardBodyTemplate, type FormWizardStep } from '@loykin/designkit'`,
+    `import '@loykin/designkit/styles'`,
+    '',
+    `const steps: FormWizardStep[] = [`,
+    `  { key: 'info',   title: 'Basic Info',    content: <div>{/* step 1 */}</div> },`,
+    `  { key: 'config', title: 'Configuration', content: <div>{/* step 2 */}</div> },`,
+    `  { key: 'review', title: 'Review',         content: <div>{/* step 3 */}</div> },`,
+    `]`,
+    '',
+    `export function MyPage() {`,
+    `  const [step, setStep] = useState(0)`,
+    `  return (`,
+    `    <FormWizardBodyTemplate${themeProp}`,
+    `      title="Setup Wizard"`,
+    `      steps={steps}`,
+    `      activeStep={step}`,
+    `      onNext={() => setStep((s) => Math.min(s + 1, steps.length - 1))}`,
+    `      onBack={() => setStep((s) => Math.max(s - 1, 0))}`,
+    `      onFinish={() => { /* handle finish */ }}`,
+    `    />`,
+    `  )`,
+    `}`,
+  ].join('\n')
 }
