@@ -137,16 +137,6 @@ export const TEMPLATE_DEFINITIONS = [
     preset: { radius: 0.75 },
   },
   {
-    id: 'cardlist',
-    label: 'Card List',
-    group: 'Pages',
-    navigationGroup: 'Data',
-    layoutClassName: 'layout-cardlist',
-    exportComponent: 'CardListBodyTemplate',
-    exportKind: 'body-template',
-    preset: { radius: 0.5 },
-  },
-  {
     id: 'typography',
     label: 'Typography',
     group: 'Design',

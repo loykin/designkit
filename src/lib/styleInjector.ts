@@ -170,7 +170,7 @@ export function useStyleInjector() {
 /** Returns CSS custom properties for a template — used as inline style for external usage */
 export function buildTemplateTheme(
   g: { radius: number; primaryHue: number; primaryChroma: number; density?: DensityId; fontScale?: number; lineHeight?: number },
-  ov: { radius?: number; primaryChroma?: number; density?: DensityId; pagePaddingY?: string; panelGap?: string; toolbarHeight?: string },
+  ov: { radius?: number; primaryChroma?: number; density?: DensityId; pagePaddingY?: string; panelGap?: string; toolbarHeight?: string } = {},
 ): React.CSSProperties {
   return buildTokenMap({
     radius: ov.radius ?? g.radius,

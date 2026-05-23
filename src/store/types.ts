@@ -7,7 +7,6 @@ export type TemplateId =
   | 'table-card'
   | 'table-card-list'
   | 'dashboard'
-  | 'cardlist'
   | 'tabbed'
   | 'form'
   | 'form-stacked'

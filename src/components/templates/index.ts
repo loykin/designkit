@@ -44,8 +44,6 @@ export {
 } from './table/DataGridView'
 export { DashboardBodyTemplate } from './dashboard/DashboardBodyTemplate'
 export { DashboardBodyTemplateDemo } from './dashboard/DashboardBodyTemplateDemo'
-export { CardListBodyTemplate     } from './cardlist/CardListBodyTemplate'
-export { CardListBodyTemplateDemo } from './cardlist/CardListBodyTemplateDemo'
 export { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
 export { DataBodyTemplate } from './databody/DataBodyTemplate'
 export { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
@@ -78,7 +76,6 @@ export type {
 import { DataGridTemplateDemo } from './table/DataGridTemplateDemo'
 import type { DataGridViewVariant } from './table/DataGridView'
 import { DashboardBodyTemplateDemo } from './dashboard/DashboardBodyTemplateDemo'
-import { CardListBodyTemplateDemo  } from './cardlist/CardListBodyTemplateDemo'
 import { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
 import { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
 import { TabbedBodyTemplateDemo } from './tabbed/TabbedBodyTemplateDemo'
@@ -119,7 +116,6 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   'table-card': createDataGridPreview('table-card'),
   'table-card-list': createDataGridPreview('table-card-list'),
   dashboard: DashboardBodyTemplateDemo,
-  cardlist: CardListBodyTemplateDemo,
   typography: (props) => createElement(TypographyBodyTemplate, {
     ...props,
     breadcrumb: 'Design / Typography',
@@ -142,7 +138,6 @@ export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition)
 const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>>> = {
   table: Table2,
   dashboard: LayoutDashboard,
-  cardlist: CreditCard,
   typography: Type,
   databody: LayoutDashboard,
   tabbed: CreditCard,

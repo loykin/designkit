@@ -1,81 +1,105 @@
-import { useState } from 'react'
+import { Children, useMemo, useState } from 'react'
 import { DataPage } from '@/components/templates/datapage/DataPage'
 
-export interface TabbedTab {
+export interface TabbedBodyTemplateTabProps {
   id: string
-  label: string
+  label: React.ReactNode
   count?: number
-  title?: React.ReactNode
-  description?: React.ReactNode
-  actions?: React.ReactNode
+  disabled?: boolean
+  children?: React.ReactNode
+}
+
+export interface TabbedBodyTemplateSummaryProps {
+  children?: React.ReactNode
 }
 
 export interface TabbedBodyTemplateProps {
   theme?: React.CSSProperties
-  title?: string
+  title?: React.ReactNode
   description?: React.ReactNode
   breadcrumb?: React.ReactNode
-  tabs?: TabbedTab[]
-  activeTab?: string
-  onTabChange?: (id: string) => void
-  renderTab?: (id: string) => React.ReactNode
+  actions?: React.ReactNode
   toolbarLeft?: React.ReactNode
   toolbarRight?: React.ReactNode
-  summary?: React.ReactNode
+  activeTab?: string
+  defaultTab?: string
+  onTabChange?: (id: string) => void
+  children?: React.ReactNode
 }
 
-export function TabbedBodyTemplate({
+function Tab(_props: TabbedBodyTemplateTabProps) {
+  return null
+}
+
+function Summary(_props: TabbedBodyTemplateSummaryProps) {
+  return null
+}
+
+function isTab(node: React.ReactNode): node is React.ReactElement<TabbedBodyTemplateTabProps> {
+  return Boolean(node && typeof node === 'object' && 'type' in node && node.type === Tab)
+}
+
+function isSummary(node: React.ReactNode): node is React.ReactElement<TabbedBodyTemplateSummaryProps> {
+  return Boolean(node && typeof node === 'object' && 'type' in node && node.type === Summary)
+}
+
+function Root({
   theme,
   title,
   description,
   breadcrumb,
-  tabs = [],
-  activeTab: controlledTab,
-  onTabChange,
-  renderTab,
+  actions,
   toolbarLeft,
   toolbarRight,
-  summary,
+  activeTab: controlledTab,
+  defaultTab,
+  onTabChange,
+  children,
 }: TabbedBodyTemplateProps) {
-  const [internalTab, setInternalTab] = useState(tabs[0]?.id ?? '')
+  const childArray = useMemo(() => Children.toArray(children), [children])
+  const tabs = childArray.filter(isTab)
+  const summaryEl = childArray.find(isSummary)
 
+  const [internalTab, setInternalTab] = useState(defaultTab ?? tabs[0]?.props.id ?? '')
   const activeTab = controlledTab ?? internalTab
+  const activeTabNode = tabs.find((t) => t.props.id === activeTab) ?? tabs[0]
+
   const handleTabChange = (id: string) => {
-    if (!controlledTab) setInternalTab(id)
+    if (controlledTab === undefined) setInternalTab(id)
     onTabChange?.(id)
   }
-  const activeTabConfig = tabs.find((tab) => tab.id === activeTab)
 
   return (
     <DataPage className="layout-tabbed" style={theme}>
       <DataPage.Header>
         <DataPage.TitleBlock title={title} description={description} breadcrumb={breadcrumb} />
+        <DataPage.Actions>{actions}</DataPage.Actions>
       </DataPage.Header>
 
-      {summary && (
-        <div className="px-[var(--dk-page-padding-x)] py-[var(--dk-panel-gap)] border-b shrink-0">{summary}</div>
+      {summaryEl && (
+        <div className="shrink-0 border-b px-[var(--dk-page-padding-x)] py-[var(--dk-panel-gap)]">
+          {summaryEl.props.children}
+        </div>
       )}
 
-      <DataPage.Tabs>
-        {tabs.map((tab) => (
-          <DataPage.Tab
-            key={tab.id}
-            active={tab.id === activeTab}
-            count={tab.count}
-            onClick={() => handleTabChange(tab.id)}
-          >
-            {tab.label}
-          </DataPage.Tab>
-        ))}
-      </DataPage.Tabs>
+      {tabs.length > 0 && (
+        <DataPage.Tabs>
+          {tabs.map((tab) => (
+            <DataPage.Tab
+              key={tab.props.id}
+              active={tab.props.id === activeTabNode?.props.id}
+              count={tab.props.count}
+              disabled={tab.props.disabled}
+              onClick={() => handleTabChange(tab.props.id)}
+            >
+              {tab.props.label}
+            </DataPage.Tab>
+          ))}
+        </DataPage.Tabs>
+      )}
 
       <DataPage.Content>
-        <DataPage.Group className="min-h-full">
-          <DataPage.GroupHeader
-            title={activeTabConfig?.title}
-            description={activeTabConfig?.description}
-            actions={activeTabConfig?.actions}
-          />
+        <DataPage.Group>
           {(toolbarLeft || toolbarRight) && (
             <DataPage.GroupToolbar>
               <div className="flex min-w-0 items-center gap-2">{toolbarLeft}</div>
@@ -83,10 +107,15 @@ export function TabbedBodyTemplate({
             </DataPage.GroupToolbar>
           )}
           <DataPage.GroupBody>
-            {renderTab?.(activeTab)}
+            {activeTabNode?.props.children}
           </DataPage.GroupBody>
         </DataPage.Group>
       </DataPage.Content>
     </DataPage>
   )
 }
+
+export const TabbedBodyTemplate = Object.assign(Root, {
+  Tab,
+  Summary,
+})

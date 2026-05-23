@@ -1,4 +1,4 @@
-import { TabbedBodyTemplate, type TabbedTab } from './TabbedBodyTemplate'
+import { TabbedBodyTemplate } from './TabbedBodyTemplate'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -86,39 +86,6 @@ const counts = {
   closed:        issues.filter((i) => i.status === 'closed').length,
 }
 
-const demoTabs: TabbedTab[] = [
-  { id: 'all',         label: 'All',         count: issues.length         },
-  { id: 'open',        label: 'Open',        count: counts.open           },
-  { id: 'in-progress', label: 'In Progress', count: counts['in-progress'] },
-  { id: 'resolved',    label: 'Resolved',    count: counts.resolved       },
-]
-
-const demoSummary = (
-  <div className="grid grid-cols-4 gap-[var(--dk-panel-gap)]">
-    {([
-      { label: 'Open',        count: counts.open,           Icon: AlertCircle,  cls: 'text-destructive'      },
-      { label: 'In Progress', count: counts['in-progress'], Icon: Clock,        cls: 'text-yellow-500'       },
-      { label: 'Resolved',    count: counts.resolved,       Icon: CheckCircle2, cls: 'text-primary'          },
-      { label: 'Closed',      count: counts.closed,         Icon: XCircle,      cls: 'text-muted-foreground' },
-    ] as const).map(({ label, count, Icon, cls }) => (
-      <Card key={label}>
-        <CardContent className="p-[calc(var(--dk-panel-gap)*0.75)] flex items-center gap-[calc(var(--dk-panel-gap)*0.75)]">
-          <Icon className={`h-5 w-5 ${cls}`} />
-          <div>
-            <p className="text-xl font-bold tabular-nums">{count}</p>
-            <p className="text-xs text-muted-foreground">{label}</p>
-          </div>
-        </CardContent>
-      </Card>
-    ))}
-  </div>
-)
-
-function demoRenderTab(id: string) {
-  const filtered = id === 'all' ? issues : issues.filter((i) => i.status === id)
-  return <IssueTable rows={filtered} />
-}
-
 export function TabbedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
   return (
     <TabbedBodyTemplate
@@ -126,9 +93,6 @@ export function TabbedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
       breadcrumb="Pages / Tabbed"
       title="Incidents"
       description="Incident queue grouped by status"
-      tabs={demoTabs}
-      renderTab={demoRenderTab}
-      summary={demoSummary}
       toolbarLeft={
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
@@ -141,6 +105,40 @@ export function TabbedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
           New Incident
         </Button>
       }
-    />
+    >
+      <TabbedBodyTemplate.Summary>
+        <div className="grid grid-cols-4 gap-[var(--dk-panel-gap)]">
+          {([
+            { label: 'Open',        count: counts.open,           Icon: AlertCircle,  cls: 'text-destructive'      },
+            { label: 'In Progress', count: counts['in-progress'], Icon: Clock,        cls: 'text-yellow-500'       },
+            { label: 'Resolved',    count: counts.resolved,       Icon: CheckCircle2, cls: 'text-primary'          },
+            { label: 'Closed',      count: counts.closed,         Icon: XCircle,      cls: 'text-muted-foreground' },
+          ] as const).map(({ label, count, Icon, cls }) => (
+            <Card key={label}>
+              <CardContent className="flex items-center gap-[calc(var(--dk-panel-gap)*0.75)] p-[calc(var(--dk-panel-gap)*0.75)]">
+                <Icon className={`h-5 w-5 ${cls}`} />
+                <div>
+                  <p className="text-xl font-bold tabular-nums">{count}</p>
+                  <p className="text-xs text-muted-foreground">{label}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </TabbedBodyTemplate.Summary>
+
+      <TabbedBodyTemplate.Tab id="all"         label="All"         count={issues.length}>
+        <IssueTable rows={issues} />
+      </TabbedBodyTemplate.Tab>
+      <TabbedBodyTemplate.Tab id="open"        label="Open"        count={counts.open}>
+        <IssueTable rows={issues.filter((i) => i.status === 'open')} />
+      </TabbedBodyTemplate.Tab>
+      <TabbedBodyTemplate.Tab id="in-progress" label="In Progress" count={counts['in-progress']}>
+        <IssueTable rows={issues.filter((i) => i.status === 'in-progress')} />
+      </TabbedBodyTemplate.Tab>
+      <TabbedBodyTemplate.Tab id="resolved"    label="Resolved"    count={counts.resolved}>
+        <IssueTable rows={issues.filter((i) => i.status === 'resolved')} />
+      </TabbedBodyTemplate.Tab>
+    </TabbedBodyTemplate>
   )
 }
