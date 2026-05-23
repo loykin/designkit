@@ -6,12 +6,12 @@ import {
   type DataGridColumnDef,
 } from '@loykin/gridkit'
 import type { Table as TanStackTable } from '@tanstack/react-table'
-import { useState } from 'react'
 import { DataBodyTemplate } from './DataBodyTemplate'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Plus } from 'lucide-react'
+import { Plus, Users, Search, RefreshCw } from 'lucide-react'
+import { EmptyState } from '@/components/ui/empty-state'
 import type { TemplateCodeContext } from '../code'
 
 export interface DataBodyTemplateDemoProps {
@@ -165,69 +165,7 @@ function CustomContent() {
   )
 }
 
-function SplitList({
-  activeUser,
-  onUserSelect,
-}: {
-  activeUser: User
-  onUserSelect: (user: User) => void
-}) {
-  return (
-    <div className="space-y-1 p-2">
-      {users.map((user) => {
-        const active = user.id === activeUser.id
-        return (
-          <button
-            key={user.id}
-            type="button"
-            className={[
-              'block w-full rounded-lg px-3 py-2 text-left transition-colors',
-              active ? 'bg-accent text-accent-foreground' : 'hover:bg-muted',
-            ].join(' ')}
-            onClick={() => onUserSelect(user)}
-          >
-            <span className="block truncate text-sm font-medium">{user.name}</span>
-            <span className="block truncate text-xs text-muted-foreground">{user.email}</span>
-          </button>
-        )
-      })}
-    </div>
-  )
-}
-
-function SplitDetail({ activeUser }: { activeUser: User }) {
-  return (
-    <div className="space-y-4 p-(--dk-panel-gap)">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h2 className="text-lg font-semibold">{activeUser.name}</h2>
-          <p className="text-sm text-muted-foreground">{activeUser.email}</p>
-        </div>
-        <Badge variant={statusVariant[activeUser.status]} className="text-xs capitalize">
-          {activeUser.status}
-        </Badge>
-      </div>
-      <div className="grid gap-3 sm:grid-cols-3">
-        <div className="rounded-lg border p-3">
-          <p className="text-xs text-muted-foreground">Role</p>
-          <p className="mt-1 text-sm font-medium">{activeUser.role}</p>
-        </div>
-        <div className="rounded-lg border p-3">
-          <p className="text-xs text-muted-foreground">Joined</p>
-          <p className="mt-1 text-sm font-medium">{activeUser.joined}</p>
-        </div>
-        <div className="rounded-lg border p-3">
-          <p className="text-xs text-muted-foreground">Plan</p>
-          <p className="mt-1 text-sm font-medium">Business</p>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export function DataBodyTemplateDemo({ theme }: DataBodyTemplateDemoProps) {
-  const [activeUser, setActiveUser] = useState(users[0])
-
   return (
     <DataBodyTemplate
       theme={theme}
@@ -244,11 +182,29 @@ export function DataBodyTemplateDemo({ theme }: DataBodyTemplateDemoProps) {
       <DataBodyTemplate.Tab id="custom" label="Custom">
         <CustomContent />
       </DataBodyTemplate.Tab>
-      <DataBodyTemplate.Tab id="split" label="Split">
-        <DataBodyTemplate.Group layout="split">
-          <SplitList activeUser={activeUser} onUserSelect={setActiveUser} />
-          <SplitDetail activeUser={activeUser} />
-        </DataBodyTemplate.Group>
+      <DataBodyTemplate.Tab id="empty" label="Empty">
+        <div className="space-y-6 py-4">
+          <EmptyState
+            icon={Users}
+            title="No users yet"
+            description="Add your first user to get started."
+            action={{ label: 'Add User', onClick: () => {} }}
+          />
+          <div className="border-t" />
+          <EmptyState
+            icon={Search}
+            title="No results found"
+            description="Try adjusting your search or filters."
+            action={{ label: 'Clear filters', variant: 'ghost', onClick: () => {} }}
+          />
+          <div className="border-t" />
+          <EmptyState
+            icon={RefreshCw}
+            title="Something went wrong"
+            description="Failed to load data. Please try again."
+            action={{ label: 'Retry', onClick: () => {} }}
+          />
+        </div>
       </DataBodyTemplate.Tab>
     </DataBodyTemplate>
   )

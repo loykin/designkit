@@ -12,6 +12,8 @@ export type TemplateId =
   | 'form-wizard'
   | 'form-inline'
   | 'databody'
+  | 'databody-detail'
+  | 'databody-split'
   | 'sectioned'
 
 export interface GlobalTheme {

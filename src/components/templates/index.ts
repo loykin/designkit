@@ -83,6 +83,7 @@ export type {
   DataBodySummaryProps,
   DataBodyGroupProps,
   DataBodyRowProps,
+  DataBodyFieldProps,
   DataBodyTemplateProps,
   GroupLayout,
   GroupVariant,
@@ -91,6 +92,8 @@ export type {
 import { DataGridTemplateDemo, buildDataGridTemplateCode } from './table/DataGridTemplateDemo'
 import type { DataGridViewVariant } from './table/DataGridView'
 import { DataBodyTemplateDemo, buildDataBodyTemplateCode } from './databody/DataBodyTemplateDemo'
+import { DetailBodyTemplateDemo, buildDetailBodyTemplateCode } from './databody/DetailBodyTemplateDemo'
+import { SplitBodyTemplateDemo, buildSplitBodyTemplateCode } from './databody/SplitBodyTemplateDemo'
 import { TabbedBodyTemplateDemo, buildTabbedBodyTemplateCode } from './tabbed/TabbedBodyTemplateDemo'
 import { FormBodyTemplateDemo, buildFormBodyTemplateCode } from './form/FormBodyTemplateDemo'
 import { FormStackedBodyTemplateDemo, buildFormStackedBodyTemplateCode } from './form/FormStackedBodyTemplateDemo'
@@ -130,6 +133,8 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   'table-card': createDataGridPreview('table-card'),
   'table-card-list': createDataGridPreview('table-card-list'),
   databody: DataBodyTemplateDemo,
+  'databody-detail': DetailBodyTemplateDemo,
+  'databody-split': SplitBodyTemplateDemo,
   tabbed: TabbedBodyTemplateDemo,
   form: FormBodyTemplateDemo,
   'form-stacked': FormStackedBodyTemplateDemo,
@@ -145,6 +150,8 @@ const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
   'table-card': buildDataGridTemplateCode,
   'table-card-list': buildDataGridTemplateCode,
   databody: buildDataBodyTemplateCode,
+  'databody-detail': buildDetailBodyTemplateCode,
+  'databody-split': buildSplitBodyTemplateCode,
   tabbed: buildTabbedBodyTemplateCode,
   form: buildFormBodyTemplateCode,
   'form-stacked': buildFormStackedBodyTemplateCode,

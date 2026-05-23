@@ -171,6 +171,29 @@ function renderGroupProps(props: DataBodyGroupProps) {
   )
 }
 
+// ─── Field (read-only display) ────────────────────────────────────────────────
+
+export interface DataBodyFieldProps {
+  label: string
+  description?: string
+  children?: React.ReactNode
+}
+
+function DataBodyField({ label, description, children }: DataBodyFieldProps) {
+  return (
+    <div
+      className="grid items-start gap-x-4 px-4 py-3"
+      style={{ gridTemplateColumns: 'var(--dk-form-label-w, 11rem) 1fr' }}
+    >
+      <div className="pt-0.5">
+        <span className="text-xs text-muted-foreground">{label}</span>
+        {description && <p className="mt-0.5 text-xs text-muted-foreground/60">{description}</p>}
+      </div>
+      <div className="min-w-0 text-sm">{children}</div>
+    </div>
+  )
+}
+
 // ─── Row ──────────────────────────────────────────────────────────────────────
 
 export interface DataBodyRowProps {
@@ -314,4 +337,5 @@ export const DataBodyTemplate = Object.assign(Root, {
   Summary: DataBodySummary,
   Group:   DataBodyGroup,
   Row:     DataBodyRow,
+  Field:   DataBodyField,
 })
