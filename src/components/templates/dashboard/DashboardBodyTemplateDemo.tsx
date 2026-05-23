@@ -41,17 +41,14 @@ function DemoChart() {
         <CardTitle className="text-sm">Request Volume</CardTitle>
         <div className="flex gap-1">
           {['1h', '6h', '24h', '7d'].map((t) => (
-            <button
+            <Button
               key={t}
-              className={[
-                'px-2 py-0.5 text-xs rounded-[var(--radius)] transition-colors',
-                t === '24h'
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-muted-foreground hover:bg-accent',
-              ].join(' ')}
+              variant={t === '24h' ? 'default' : 'ghost'}
+              size="sm"
+              className="h-6 px-2 text-xs"
             >
               {t}
-            </button>
+            </Button>
           ))}
         </div>
       </CardHeader>

@@ -1,14 +1,15 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom'
 import type { ComponentType, CSSProperties } from 'react'
 import {
   useStyleInjector,
   buildTemplateTheme,
   useThemeStore,
-  SHELLS,
   TEMPLATES,
   TEMPLATE_NAVIGATION,
   TEMPLATE_DEFINITIONS,
   TooltipProvider,
+  Button,
   Separator,
   Select,
   SelectContent,
@@ -16,7 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@loykin/designkit'
-import type { TemplateId } from '@loykin/designkit'
+import type { TemplateId, ShellId } from '@loykin/designkit'
+import { HeaderShell } from './components/shells/HeaderShell'
+import { SidebarShell } from './components/shells/SidebarShell'
+
+const SHELLS = [
+  { id: 'sidebar' as ShellId, label: 'Sidebar', component: SidebarShell },
+  { id: 'header'  as ShellId, label: 'Header',  component: HeaderShell  },
+]
 import { StyleControls } from './components/editor/StyleEditor'
 import { CodeExport } from './components/editor/CodeExport'
 
@@ -34,13 +42,30 @@ function initTemplateProps(): Partial<Record<TemplateId, Record<string, string>>
   )
 }
 
-export default function App() {
+function AppView() {
   useStyleInjector()
-  const { activeShell, activeTemplate, setShell, setTemplate, global: g, overrides } = useThemeStore()
+
+  const { shell: shellParam = 'sidebar', templateId = 'table' } = useParams()
+  const navigate = useNavigate()
+  const { setShell, setTemplate, global: g, overrides } = useThemeStore()
   const [templateProps, setTemplateProps] = useState(initTemplateProps)
 
-  const shell    = SHELLS.find((s) => s.id === activeShell)!
-  const template = TEMPLATES.find((t) => t.id === activeTemplate)!
+  // Sync URL params → store (for StyleEditor / CodeExport)
+  useEffect(() => {
+    const validShell = SHELLS.find((s) => s.id === shellParam)
+    if (validShell) setShell(shellParam as ShellId)
+  }, [shellParam])
+
+  useEffect(() => {
+    const validTemplate = TEMPLATES.find((t) => t.id === templateId)
+    if (validTemplate) setTemplate(templateId as TemplateId)
+  }, [templateId])
+
+  const activeShell    = shellParam as ShellId
+  const activeTemplate = templateId as TemplateId
+
+  const shell    = SHELLS.find((s) => s.id === activeShell) ?? SHELLS[0]
+  const template = TEMPLATES.find((t) => t.id === activeTemplate) ?? TEMPLATES[0]
   const activeDefinition = TEMPLATE_DEFINITIONS.find((d) => d.id === activeTemplate)
 
   const ShellComponent = shell.component
@@ -58,6 +83,8 @@ export default function App() {
   const activeOptions = activeDefinition?.options ?? []
   const activeProps   = templateProps[activeTemplate] ?? {}
 
+  const handleShellSelect = (id: ShellId) => navigate(`/${id}/${activeTemplate}`)
+
   return (
     <TooltipProvider>
       <div className="h-screen flex flex-col">
@@ -67,22 +94,19 @@ export default function App() {
           {/* Shell selector */}
           <div className="flex items-center gap-0.5" aria-label="Shell">
             {SHELLS.map((s) => (
-              <button
+              <Button
                 key={s.id}
-                onClick={() => setShell(s.id)}
-                className={[
-                  'px-2.5 py-1 text-xs rounded-md transition-colors',
-                  s.id === activeShell
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-accent',
-                ].join(' ')}
+                variant={s.id === activeShell ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => handleShellSelect(s.id)}
+                className="h-7 px-2.5 text-xs"
               >
                 {s.label}
-              </button>
+              </Button>
             ))}
           </div>
 
-          {/* Template-specific options — only rendered when the active template declares options */}
+          {/* Template-specific options */}
           {activeOptions.length > 0 && (
             <>
               <Separator orientation="vertical" className="h-4 shrink-0" />
@@ -118,15 +142,20 @@ export default function App() {
         </header>
 
         <div className="flex-1 overflow-hidden">
-          <ShellComponent
-            navigation={TEMPLATE_NAVIGATION}
-            activeItemId={activeTemplate}
-            onItemSelect={setTemplate}
-          >
+          <ShellComponent navigation={TEMPLATE_NAVIGATION}>
             <BodyComponent theme={templateTheme} {...activeProps} />
           </ShellComponent>
         </div>
       </div>
     </TooltipProvider>
+  )
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/:shell/:templateId" element={<AppView />} />
+      <Route path="*" element={<Navigate to="/sidebar/table" replace />} />
+    </Routes>
   )
 }

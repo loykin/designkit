@@ -1,5 +1,6 @@
 import {
   useThemeStore,
+  Button,
   Slider,
   Popover,
   PopoverContent,
@@ -92,12 +93,14 @@ export function StyleControls() {
 
   return (
     <div className="flex items-center gap-2">
-      <button
+      <Button
+        variant="outline"
+        size="icon"
         onClick={() => setGlobal({ darkMode: !g.darkMode })}
-        className="h-7 w-7 rounded-md border flex items-center justify-center hover:bg-accent transition-colors"
+        className="h-7 w-7"
       >
         {g.darkMode ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-      </button>
+      </Button>
 
       <Popover>
         <PopoverTrigger className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border hover:bg-accent transition-colors text-xs">
@@ -163,7 +166,9 @@ export function StyleControls() {
             <div className="flex items-center justify-between">
               <p className="text-xs font-semibold">{activeLabel} Override</p>
               {hasOverride && (
-                <button
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setOverride(activeTemplate, {
                     radius: undefined,
                     primaryChroma: undefined,
@@ -172,10 +177,10 @@ export function StyleControls() {
                     panelGap: undefined,
                     toolbarHeight: undefined,
                   })}
-                  className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+                  className="h-5 px-1 text-[10px] text-muted-foreground"
                 >
                   reset
-                </button>
+                </Button>
               )}
             </div>
             <SliderRow label="Radius"

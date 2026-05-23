@@ -254,11 +254,10 @@ function CopyButton({ text }: { text: string }) {
     setTimeout(() => setCopied(false), 2000)
   }
   return (
-    <button onClick={copy}
-      className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors">
+    <Button variant="ghost" size="sm" onClick={copy} className="h-7 gap-1.5 text-xs text-muted-foreground">
       {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
       {copied ? 'Copied' : 'Copy'}
-    </button>
+    </Button>
   )
 }
 
