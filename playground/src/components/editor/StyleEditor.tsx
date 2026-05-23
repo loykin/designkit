@@ -2,9 +2,11 @@ import {
   useThemeStore,
   Button,
   Slider,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
   Separator,
 } from '@loykin/designkit'
 import { Sun, Moon, Settings2 } from 'lucide-react'
@@ -102,14 +104,24 @@ export function StyleControls() {
         {g.darkMode ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
       </Button>
 
-      <Popover>
-        <PopoverTrigger className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border hover:bg-accent transition-colors text-xs">
+      <Sheet>
+        <SheetTrigger
+          render={
+            <Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs" />
+          }
+        >
           <Settings2 className="h-3.5 w-3.5" />
           Style
-        </PopoverTrigger>
-        <PopoverContent className="w-80 p-4 space-y-5" align="end">
+        </SheetTrigger>
+        <SheetContent className="data-[side=right]:w-[min(90vw,460px)] data-[side=right]:sm:max-w-[460px] flex flex-col gap-0 p-0">
+          <SheetHeader className="px-6 py-4 border-b shrink-0">
+            <SheetTitle className="text-sm">
+              Style — <span className="capitalize text-muted-foreground font-normal">{activeTemplate}</span>
+            </SheetTitle>
+          </SheetHeader>
 
-          <div className="space-y-3">
+          <div className="flex-1 overflow-auto px-6 py-4 space-y-5">
+            <div className="space-y-3">
             <p className="text-xs font-semibold">Color</p>
             <SliderRow label="Hue"
               value={g.primaryHue} min={0} max={360} step={1}
@@ -120,11 +132,11 @@ export function StyleControls() {
             <SliderRow label="Chroma"
               value={g.primaryChroma} min={0} max={0.3} step={0.005}
               onChange={(n) => setGlobal({ primaryChroma: n })} />
-          </div>
+            </div>
 
-          <Separator />
+            <Separator />
 
-          <div className="space-y-3">
+            <div className="space-y-3">
             <p className="text-xs font-semibold">Layout</p>
             <div className="grid grid-cols-3 gap-1 rounded-md border bg-muted/30 p-1">
               {densityItems.map((item) => (
@@ -146,11 +158,11 @@ export function StyleControls() {
             <SliderRow label="Radius"
               value={g.radius} min={0} max={2} step={0.0625}
               onChange={(n) => setGlobal({ radius: n })} />
-          </div>
+            </div>
 
-          <Separator />
+            <Separator />
 
-          <div className="space-y-3">
+            <div className="space-y-3">
             <p className="text-xs font-semibold">Typography</p>
             <SliderRow label="Size"
               value={g.fontScale} min={0.8} max={1.25} step={0.01}
@@ -158,11 +170,11 @@ export function StyleControls() {
             <SliderRow label="Leading"
               value={g.lineHeight} min={0.85} max={1.25} step={0.01}
               onChange={(n) => setGlobal({ lineHeight: n })} />
-          </div>
+            </div>
 
-          <Separator />
+            <Separator />
 
-          <div className="space-y-3">
+            <div className="space-y-3">
             <div className="flex items-center justify-between">
               <p className="text-xs font-semibold">{activeLabel} Override</p>
               {hasOverride && (
@@ -223,10 +235,10 @@ export function StyleControls() {
               value={remToNumber(ov.toolbarHeight, activeDensityDefaults.toolbarHeight)}
               min={2} max={4} step={0.0625}
               onChange={(n) => setOverride(activeTemplate, { toolbarHeight: remValue(n) })} />
+            </div>
           </div>
-
-        </PopoverContent>
-      </Popover>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

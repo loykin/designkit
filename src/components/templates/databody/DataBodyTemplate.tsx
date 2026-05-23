@@ -33,13 +33,14 @@ function isDataBodySummary(node: React.ReactNode): node is React.ReactElement<Da
 
 // ─── Group ────────────────────────────────────────────────────────────────────
 
-export type GroupLayout  = 'stacked' | 'horizontal' | 'inline'
+export type GroupLayout  = 'stacked' | 'horizontal' | 'inline' | 'split'
 export type GroupVariant = 'card' | 'plain' | 'bordered'
 
 const layoutDefaultVariant: Record<GroupLayout, GroupVariant> = {
   stacked:    'plain',
   horizontal: 'card',
   inline:     'bordered',
+  split:      'bordered',
 }
 
 export interface DataBodyGroupProps {
@@ -52,7 +53,9 @@ export interface DataBodyGroupProps {
   children?: React.ReactNode
 }
 
-function DataBodyGroup(_props: DataBodyGroupProps) { return null }
+function DataBodyGroup(props: DataBodyGroupProps) {
+  return renderGroupProps(props)
+}
 
 function isDataBodyGroup(node: React.ReactNode): node is React.ReactElement<DataBodyGroupProps> {
   return Boolean(node && typeof node === 'object' && 'type' in node && node.type === DataBodyGroup)
@@ -90,8 +93,34 @@ function renderGroups(nodes: React.ReactNode): React.ReactNode {
 }
 
 function renderGroup(group: React.ReactElement<DataBodyGroupProps>) {
-  const { layout = 'stacked', variant: variantProp, title, description, actions, danger, children } = group.props
+  return renderGroupProps(group.props)
+}
+
+function renderGroupProps(props: DataBodyGroupProps) {
+  const { layout = 'stacked', variant: variantProp, title, description, actions, danger, children } = props
   const variant = variantProp ?? layoutDefaultVariant[layout]
+
+  if (layout === 'split') {
+    const panes = Children.toArray(children)
+    return (
+      <div className="py-[var(--dk-panel-gap)]">
+        {(title || description || actions) && (
+          <div className="mb-3 flex items-start justify-between">
+            <div>
+              {title && <h2 className={cn('text-sm font-semibold', danger && 'text-destructive')}>{title}</h2>}
+              {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
+            </div>
+            {actions && <div>{actions}</div>}
+          </div>
+        )}
+        <div className="grid min-h-[26rem] gap-[var(--dk-panel-gap)] lg:grid-cols-[20rem_minmax(0,1fr)]">
+          {panes.map((pane, i) => (
+            <GroupWrapper key={i} layout={layout} variant={variant}>{pane}</GroupWrapper>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   if (layout === 'horizontal') {
     return (

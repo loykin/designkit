@@ -191,6 +191,16 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportKind: 'databody',
     preset: { radius: 0.25 },
   },
+  {
+    id: 'sectioned',
+    label: 'Sectioned',
+    group: 'Pages',
+    navigationGroup: 'DataBodyTemplate',
+    layoutClassName: 'layout-sectioned',
+    exportComponent: 'SectionedBodyTemplate',
+    exportKind: 'body-template',
+    preset: { radius: 0.5 },
+  },
   // ── FormWizardBodyTemplate ────────────────────────────────────────────────────
   {
     id: 'form-wizard',

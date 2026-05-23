@@ -46,6 +46,12 @@ export {
 } from './table/DataGridView'
 export { DataBodyTemplate } from './databody/DataBodyTemplate'
 export { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
+export { SectionedBodyTemplate } from './sectioned/SectionedBodyTemplate'
+export type {
+  SectionedBodyTemplatePanelProps,
+  SectionedBodyTemplateProps,
+  SectionedBodyTemplateSection,
+} from './sectioned/SectionedBodyTemplate'
 export { FormWizardBodyTemplate } from './form/FormWizardBodyTemplate'
 export type {
   FormWizardBodyTemplateProps,
@@ -90,6 +96,7 @@ import { FormBodyTemplateDemo, buildFormBodyTemplateCode } from './form/FormBody
 import { FormStackedBodyTemplateDemo, buildFormStackedBodyTemplateCode } from './form/FormStackedBodyTemplateDemo'
 import { FormWizardBodyTemplateDemo, buildFormWizardBodyTemplateCode } from './form/FormWizardBodyTemplateDemo'
 import { FormInlineBodyTemplateDemo, buildFormInlineBodyTemplateCode } from './form/FormInlineBodyTemplateDemo'
+import { SectionedBodyTemplateDemo, buildSectionedBodyTemplateCode } from './sectioned/SectionedBodyTemplateDemo'
 
 function DataGridTemplatePreview(props: {
   theme?: React.CSSProperties
@@ -128,6 +135,7 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   'form-stacked': FormStackedBodyTemplateDemo,
   'form-wizard': FormWizardBodyTemplateDemo,
   'form-inline': FormInlineBodyTemplateDemo,
+  sectioned: SectionedBodyTemplateDemo,
 }
 
 const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
@@ -142,6 +150,7 @@ const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
   'form-stacked': buildFormStackedBodyTemplateCode,
   'form-wizard': buildFormWizardBodyTemplateCode,
   'form-inline': buildFormInlineBodyTemplateCode,
+  sectioned: buildSectionedBodyTemplateCode,
 }
 
 export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
@@ -156,6 +165,7 @@ const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>
   table:         Table2,
   'table-card':  Layers,
   databody:      LayoutDashboard,
+  sectioned:     FileText,
   form:          FileText,
   'form-wizard': FileText,
 }

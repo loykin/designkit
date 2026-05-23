@@ -12,6 +12,7 @@ export type TemplateId =
   | 'form-wizard'
   | 'form-inline'
   | 'databody'
+  | 'sectioned'
 
 export interface GlobalTheme {
   radius:        number

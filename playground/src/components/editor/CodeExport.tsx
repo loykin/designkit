@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   useThemeStore,
   Sheet,
@@ -14,8 +13,9 @@ import {
   getTemplateDefinition,
   TEMPLATES,
 } from '@loykin/designkit'
-import { Code2, Copy, Check } from 'lucide-react'
+import { Code2 } from 'lucide-react'
 import type { DensityId, TemplateId, TemplateOverride } from '@loykin/designkit'
+import { CodeBlock } from './CodeBlock'
 
 function radiusVarLines(r: number): string[] {
   return [
@@ -183,34 +183,6 @@ function buildComponentCode(
   }) ?? ''
 }
 
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false)
-  const copy = () => {
-    navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-  return (
-    <Button variant="ghost" size="sm" onClick={copy} className="h-7 gap-1.5 text-xs text-muted-foreground">
-      {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
-      {copied ? 'Copied' : 'Copy'}
-    </Button>
-  )
-}
-
-function CodeBlock({ code }: { code: string }) {
-  return (
-    <div className="relative rounded-md border bg-muted/40">
-      <div className="absolute top-2 right-2">
-        <CopyButton text={code} />
-      </div>
-      <pre className="overflow-auto p-4 pt-3 text-xs leading-relaxed font-mono text-foreground">
-        <code>{code}</code>
-      </pre>
-    </div>
-  )
-}
-
 export function CodeExport() {
   const { global: g, overrides, activeTemplate } = useThemeStore()
   const ov = overrides[activeTemplate]
@@ -238,7 +210,7 @@ export function CodeExport() {
         <Code2 className="h-3.5 w-3.5" />
         Code
       </SheetTrigger>
-      <SheetContent className="w-130 sm:max-w-130 flex flex-col gap-0 p-0">
+      <SheetContent className="data-[side=right]:w-[min(90vw,760px)] data-[side=right]:sm:max-w-190 flex flex-col gap-0 p-0">
         <SheetHeader className="px-6 py-4 border-b shrink-0">
           <SheetTitle className="text-sm">
             Export — <span className="capitalize text-muted-foreground font-normal">{activeTemplate}</span>
@@ -256,14 +228,14 @@ export function CodeExport() {
               <p className="text-xs text-muted-foreground">
                 Add to your project's <code className="bg-muted px-1 rounded">globals.css</code> or shadow the variables per-template using <code className="bg-muted px-1 rounded">.layout-{activeTemplate}</code>.
               </p>
-              <CodeBlock code={cssCode} />
+              <CodeBlock code={cssCode} language="css" />
             </TabsContent>
 
             <TabsContent value="component" className="space-y-3 mt-0">
               <p className="text-xs text-muted-foreground">
                 Import the template and pass the <code className="bg-muted px-1 rounded">theme</code> prop with your CSS variable overrides.
               </p>
-              <CodeBlock code={componentCode} />
+              <CodeBlock code={componentCode} language="tsx" />
               <div className="rounded-md border p-3 bg-muted/30 space-y-1">
                 <p className="text-xs font-medium">Current settings</p>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-muted-foreground font-mono mt-1">
