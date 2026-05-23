@@ -47,7 +47,7 @@ export interface TemplateDefinition {
 }
 
 export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
-  // ── DataGridView (DataBodyTemplate 하위) ─────────────────────────────────────
+  // ── DataGridView (nested under DataBodyTemplate) ─────────────────────────────
   {
     id: 'table',
     label: 'Standard',
