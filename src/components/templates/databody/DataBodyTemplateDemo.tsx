@@ -10,7 +10,9 @@ import { DataBodyTemplate } from './DataBodyTemplate'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Plus } from 'lucide-react'
+import { Plus, Users, Search, RefreshCw } from 'lucide-react'
+import { EmptyState } from '@/components/ui/empty-state'
+import type { TemplateCodeContext } from '../code'
 
 export interface DataBodyTemplateDemoProps {
   theme?: React.CSSProperties
@@ -71,11 +73,11 @@ const userColumns: DataGridColumnDef<User>[] = [
   },
 ]
 
-const leftFilters = (table: TanStackTable<User>) => (
+const headerLeft = (table: TanStackTable<User>) => (
   <GlobalSearch table={table} placeholder="Search..." />
 )
 
-const rightFilters = () => (
+const headerRight = () => (
   <Button size="sm" className="h-8 gap-1.5 text-xs">
     <Plus className="h-3.5 w-3.5" />
     Add User
@@ -92,8 +94,8 @@ function UserTable() {
       rowHeight={36}
       enableSorting
       tableWidthMode="fill-last"
-      leftFilters={leftFilters}
-      rightFilters={rightFilters}
+      headerLeft={headerLeft}
+      headerRight={headerRight}
       pagination={{ pageSize: 10 }}
       footer={(table) => (
         <div className="flex h-9 items-center justify-between px-1 text-xs text-muted-foreground">
@@ -115,8 +117,8 @@ function UserCards() {
       rowHeight={36}
       enableSorting
       tableWidthMode="fill-last"
-      leftFilters={leftFilters}
-      rightFilters={rightFilters}
+      headerLeft={headerLeft}
+      headerRight={headerRight}
       minCardWidth={220}
       minColumns={2}
       renderCard={(row) => (
@@ -180,6 +182,60 @@ export function DataBodyTemplateDemo({ theme }: DataBodyTemplateDemoProps) {
       <DataBodyTemplate.Tab id="custom" label="Custom">
         <CustomContent />
       </DataBodyTemplate.Tab>
+      <DataBodyTemplate.Tab id="empty" label="Empty">
+        <div className="space-y-6 py-4">
+          <EmptyState
+            icon={Users}
+            title="No users yet"
+            description="Add your first user to get started."
+            action={{ label: 'Add User', onClick: () => {} }}
+          />
+          <div className="border-t" />
+          <EmptyState
+            icon={Search}
+            title="No results found"
+            description="Try adjusting your search or filters."
+            action={{ label: 'Clear filters', variant: 'ghost', onClick: () => {} }}
+          />
+          <div className="border-t" />
+          <EmptyState
+            icon={RefreshCw}
+            title="Something went wrong"
+            description="Failed to load data. Please try again."
+            action={{ label: 'Retry', onClick: () => {} }}
+          />
+        </div>
+      </DataBodyTemplate.Tab>
     </DataBodyTemplate>
   )
+}
+
+export function buildDataBodyTemplateCode({
+  themeProp,
+  layoutClassName,
+}: TemplateCodeContext) {
+  return [
+    `import { DataBodyTemplate } from '@loykin/designkit'`,
+    `import '@loykin/designkit/styles'`,
+    '',
+    `export function MyPage() {`,
+    `  return (`,
+    `    <DataBodyTemplate${themeProp}`,
+    `      className="${layoutClassName}"`,
+    `      title="Page Title"`,
+    `    >`,
+    `      <DataBodyTemplate.Tab id="table" label="Table">`,
+    `        {/* table content */}`,
+    `      </DataBodyTemplate.Tab>`,
+    ``,
+    `      <DataBodyTemplate.Tab id="split" label="Split">`,
+    `        <DataBodyTemplate.Group layout="split">`,
+    `          <aside>{/* list content */}</aside>`,
+    `          <section>{/* detail content */}</section>`,
+    `        </DataBodyTemplate.Group>`,
+    `      </DataBodyTemplate.Tab>`,
+    `    </DataBodyTemplate>`,
+    `  )`,
+    `}`,
+  ].join('\n')
 }

@@ -1,11 +1,27 @@
 import { createElement, type ComponentType } from 'react'
 import type { TemplateId } from '@/store/types'
-import { CreditCard, FileText, LayoutDashboard, Table2, Type } from 'lucide-react'
+import { FileText, LayoutDashboard, Table2, Layers } from 'lucide-react'
+import { TEMPLATE_DEFINITIONS } from './definitions'
+import type { TemplateCodeBuilder } from './code'
+export {
+  TEMPLATE_DEFINITIONS,
+  createTemplateOverrides,
+  getTemplateDefinition,
+} from './definitions'
+export type {
+  TemplateDefinition,
+  TemplateExportKind,
+  TemplateGroup,
+  TemplateNavigationGroupId,
+  TemplateOptionSpec,
+  TemplateOptionChoice,
+} from './definitions'
 
 export interface TemplateConfig {
   id: TemplateId
   label: string
   component: ComponentType<{ theme?: React.CSSProperties }>
+  buildCode?: TemplateCodeBuilder
   group?: string
   description?: string
 }
@@ -28,14 +44,22 @@ export {
   type DataGridColumnDef,
   type DataGridViewVariant,
 } from './table/DataGridView'
-export { DashboardBodyTemplate } from './dashboard/DashboardBodyTemplate'
-export { CardListBodyTemplate  } from './cardlist/CardListBodyTemplate'
-export { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
 export { DataBodyTemplate } from './databody/DataBodyTemplate'
 export { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
-export { TabbedBodyTemplate    } from './tabbed/TabbedBodyTemplate'
-export { FormBodyTemplate      } from './form/FormBodyTemplate'
-export { DataPage              } from './datapage/DataPage'
+export { SectionedBodyTemplate } from './sectioned/SectionedBodyTemplate'
+export type {
+  SectionedBodyTemplatePanelProps,
+  SectionedBodyTemplateProps,
+  SectionedBodyTemplateSection,
+} from './sectioned/SectionedBodyTemplate'
+export { FormWizardBodyTemplate } from './form/FormWizardBodyTemplate'
+export type {
+  FormWizardBodyTemplateProps,
+  FormWizardStep,
+  FormWizardVariant,
+} from './form/FormWizardBodyTemplate'
+export { FormWizardBodyTemplateDemo } from './form/FormWizardBodyTemplateDemo'
+export { DataPage } from './datapage/DataPage'
 export type {
   DataPageActionsProps,
   DataPageContentProps,
@@ -50,16 +74,34 @@ export type {
   DataPageTabsProps,
   DataPageTitleBlockProps,
 } from './datapage/DataPage'
+export type {
+  TemplateCodeBuilder,
+  TemplateCodeContext,
+} from './code'
+export type {
+  DataBodyTabProps,
+  DataBodySummaryProps,
+  DataBodyGroupProps,
+  DataBodyRowProps,
+  DataBodyFieldProps,
+  DataBodyTemplateProps,
+  GroupLayout,
+  GroupVariant,
+} from './databody/DataBodyTemplate'
 
-import { DataGridTemplateDemo } from './table/DataGridTemplateDemo'
+import { DataGridTemplateDemo, buildDataGridTemplateCode } from './table/DataGridTemplateDemo'
 import type { DataGridViewVariant } from './table/DataGridView'
-import { DashboardBodyTemplate } from './dashboard/DashboardBodyTemplate'
-import { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
-import { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
-import { TabbedBodyTemplate    } from './tabbed/TabbedBodyTemplate'
-import { FormBodyTemplate      } from './form/FormBodyTemplate'
+import { DataBodyTemplateDemo, buildDataBodyTemplateCode } from './databody/DataBodyTemplateDemo'
+import { DetailBodyTemplateDemo, buildDetailBodyTemplateCode } from './databody/DetailBodyTemplateDemo'
+import { SplitBodyTemplateDemo, buildSplitBodyTemplateCode } from './databody/SplitBodyTemplateDemo'
+import { TabbedBodyTemplateDemo, buildTabbedBodyTemplateCode } from './tabbed/TabbedBodyTemplateDemo'
+import { FormBodyTemplateDemo, buildFormBodyTemplateCode } from './form/FormBodyTemplateDemo'
+import { FormStackedBodyTemplateDemo, buildFormStackedBodyTemplateCode } from './form/FormStackedBodyTemplateDemo'
+import { FormWizardBodyTemplateDemo, buildFormWizardBodyTemplateCode } from './form/FormWizardBodyTemplateDemo'
+import { FormInlineBodyTemplateDemo, buildFormInlineBodyTemplateCode } from './form/FormInlineBodyTemplateDemo'
+import { SectionedBodyTemplateDemo, buildSectionedBodyTemplateCode } from './sectioned/SectionedBodyTemplateDemo'
 
-function DataGridTemplate(props: {
+function DataGridTemplatePreview(props: {
   theme?: React.CSSProperties
   variant: DataGridViewVariant
   layoutClassName: string
@@ -70,143 +112,100 @@ function DataGridTemplate(props: {
   return createElement(DataGridTemplateDemo, props)
 }
 
-function InfinityTableTemplate({ theme }: { theme?: React.CSSProperties }) {
-  return createElement(DataGridTemplateDemo, {
-    theme,
-    variant: 'infinity',
-    layoutClassName: 'layout-table-infinity',
-    breadcrumb: 'Data / Table / Infinite Scroll',
-    title: 'Users',
-    description: 'gridkit DataGridInfinity',
-  })
+function createDataGridPreview(id: TemplateId) {
+  const definition = TEMPLATE_DEFINITIONS.find((item) => item.id === id)
+  return function DataGridPreview({ theme }: { theme?: React.CSSProperties }) {
+    return createElement(DataGridTemplatePreview, {
+      theme,
+      variant: definition?.preview?.variant ?? 'standard',
+      layoutClassName: definition?.layoutClassName ?? `layout-${id}`,
+      breadcrumb: definition?.preview?.breadcrumb ?? 'Data / Table',
+      title: definition?.preview?.title ?? 'Users',
+      description: definition?.preview?.description,
+    })
+  }
 }
 
-function DragTableTemplate({ theme }: { theme?: React.CSSProperties }) {
-  return createElement(DataGridTemplateDemo, {
-    theme,
-    variant: 'drag',
-    layoutClassName: 'layout-table-drag',
-    breadcrumb: 'Data / Table / Row Drag',
-    title: 'Services',
-    description: 'gridkit DataGridDrag',
-  })
+const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSProperties }>> = {
+  table: createDataGridPreview('table'),
+  'table-infinity': createDataGridPreview('table-infinity'),
+  'table-drag': createDataGridPreview('table-drag'),
+  'table-card': createDataGridPreview('table-card'),
+  'table-card-list': createDataGridPreview('table-card-list'),
+  databody: DataBodyTemplateDemo,
+  'databody-detail': DetailBodyTemplateDemo,
+  'databody-split': SplitBodyTemplateDemo,
+  tabbed: TabbedBodyTemplateDemo,
+  form: FormBodyTemplateDemo,
+  'form-stacked': FormStackedBodyTemplateDemo,
+  'form-wizard': FormWizardBodyTemplateDemo,
+  'form-inline': FormInlineBodyTemplateDemo,
+  sectioned: SectionedBodyTemplateDemo,
 }
 
-function CardTableTemplate({ theme }: { theme?: React.CSSProperties }) {
-  return createElement(DataGridTemplateDemo, {
-    theme,
-    variant: 'card',
-    layoutClassName: 'layout-table-card',
-    breadcrumb: 'Data / Table / Card Grid',
-    title: 'User Cards',
-    description: 'gridkit DataGridCard',
-  })
+const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
+  table: buildDataGridTemplateCode,
+  'table-infinity': buildDataGridTemplateCode,
+  'table-drag': buildDataGridTemplateCode,
+  'table-card': buildDataGridTemplateCode,
+  'table-card-list': buildDataGridTemplateCode,
+  databody: buildDataBodyTemplateCode,
+  'databody-detail': buildDetailBodyTemplateCode,
+  'databody-split': buildSplitBodyTemplateCode,
+  tabbed: buildTabbedBodyTemplateCode,
+  form: buildFormBodyTemplateCode,
+  'form-stacked': buildFormStackedBodyTemplateCode,
+  'form-wizard': buildFormWizardBodyTemplateCode,
+  'form-inline': buildFormInlineBodyTemplateCode,
+  sectioned: buildSectionedBodyTemplateCode,
 }
 
-function CardListTableTemplate({ theme }: { theme?: React.CSSProperties }) {
-  return createElement(DataGridTemplateDemo, {
-    theme,
-    variant: 'card-list',
-    layoutClassName: 'layout-table-card-list',
-    breadcrumb: 'Data / Table / Card List',
-    title: 'User Cards',
-    description: 'gridkit DataGridCard list mode',
-  })
+export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
+  id: definition.id,
+  label: definition.label,
+  group: definition.group,
+  component: previewComponents[definition.id],
+  buildCode: codeBuilders[definition.id],
+}))
+
+const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>>> = {
+  table:         Table2,
+  'table-card':  Layers,
+  databody:      LayoutDashboard,
+  sectioned:     FileText,
+  form:          FileText,
+  'form-wizard': FileText,
 }
 
-function StandardTableTemplate({ theme }: { theme?: React.CSSProperties }) {
-  return createElement(DataGridTemplate, {
-    theme,
-    variant: 'standard',
-    layoutClassName: 'layout-table',
-    breadcrumb: 'Data / Table',
-    title: 'Users',
-  })
+const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: string }>>> = {
+  DataBodyTemplate:       LayoutDashboard,
+  FormWizardBodyTemplate: Layers,
 }
 
-export const TEMPLATES: TemplateConfig[] = [
-  { id: 'table',          label: 'Standard',        group: 'Table', component: StandardTableTemplate },
-  { id: 'table-infinity', label: 'Infinite Scroll', group: 'Table', component: InfinityTableTemplate },
-  { id: 'table-drag',     label: 'Row Drag',        group: 'Table', component: DragTableTemplate     },
-  { id: 'table-card',     label: 'Card Grid',       group: 'Table', component: CardTableTemplate     },
-  { id: 'table-card-list', label: 'Card List',      group: 'Table', component: CardListTableTemplate },
-  {
-    id: 'dashboard',
-    label: 'Dashboard',
-    group: 'Pages',
-    component: (props) => createElement(DashboardBodyTemplate, {
-      ...props,
-      breadcrumb: 'Pages / Dashboard',
-      description: 'Operational metrics and service health',
+const navigationLabelOrder = ['DataBodyTemplate', 'FormWizardBodyTemplate']
+
+export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder.map((groupId) => {
+  const definitions = TEMPLATE_DEFINITIONS.filter((d) => d.navigationGroup === groupId)
+  const parentDefinitions = definitions.filter((d) => !d.navigationParent)
+  const label = groupId
+
+  return {
+    label,
+    items: parentDefinitions.map((definition) => {
+      const childDefs = definitions.filter((d) => d.navigationParent === definition.id)
+      const hasChildren = childDefs.length > 0
+
+      return {
+        id: definition.id,
+        label: definition.navigationSubgroupLabel ?? definition.navigationLabel ?? definition.label,
+        icon: iconById[definition.id] ?? navigationGroupIcon[label],
+        children: hasChildren
+          ? [
+              { id: definition.id, label: definition.navigationLabel ?? definition.label },
+              ...childDefs.map((child) => ({ id: child.id, label: child.navigationLabel ?? child.label })),
+            ]
+          : [],
+      }
     }),
-  },
-  {
-    id: 'typography',
-    label: 'Typography',
-    group: 'Design',
-    component: (props) => createElement(TypographyBodyTemplate, {
-      ...props,
-      breadcrumb: 'Design / Typography',
-    }),
-  },
-  {
-    id: 'databody',
-    label: 'Body Template',
-    group: 'Design',
-    component: DataBodyTemplateDemo,
-  },
-  {
-    id: 'tabbed',
-    label: 'Tabbed',
-    group: 'Pages',
-    component: (props) => createElement(TabbedBodyTemplate, {
-      ...props,
-      breadcrumb: 'Pages / Tabbed',
-      description: 'Incident queue grouped by status',
-    }),
-  },
-  {
-    id: 'form',
-    label: 'Form',
-    group: 'Pages',
-    component: (props) => createElement(FormBodyTemplate, {
-      ...props,
-      breadcrumb: 'Pages / Form',
-    }),
-  },
-]
-
-export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = [
-  {
-    label: 'Data',
-    items: [
-      {
-        id: 'table',
-        label: 'Table',
-        icon: Table2,
-        children: [
-          { id: 'table',          label: 'Standard'        },
-          { id: 'table-infinity', label: 'Infinite Scroll' },
-          { id: 'table-drag',     label: 'Row Drag'        },
-          { id: 'table-card',     label: 'Card Grid'       },
-          { id: 'table-card-list', label: 'Card List'      },
-        ],
-      },
-      { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    ],
-  },
-  {
-    label: 'Design',
-    items: [
-      { id: 'typography', label: 'Typography', icon: Type },
-      { id: 'databody', label: 'Body Template', icon: LayoutDashboard },
-    ],
-  },
-  {
-    label: 'Workflow',
-    items: [
-      { id: 'tabbed', label: 'Tabbed', icon: CreditCard },
-      { id: 'form',   label: 'Form',   icon: FileText   },
-    ],
-  },
-]
+  }
+}).filter((group) => group.items.length > 0)

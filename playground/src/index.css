@@ -4,6 +4,7 @@
 @import "@fontsource-variable/geist";
 
 @source "../../src";
+@source "@loykin/designkit";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -129,4 +130,38 @@
   html {
     @apply font-sans;
     }
+}
+
+.dk-code-block {
+  background: var(--muted);
+  color: var(--foreground);
+  font-size: 12px;
+}
+
+.dk-code-block .cm-scroller {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  line-height: 1.55;
+}
+
+.dk-code-block .cm-content {
+  padding: 12px 0;
+}
+
+.dk-code-block .cm-line {
+  padding: 0 16px;
+}
+
+.dk-code-block .cm-gutters {
+  background: transparent;
+  color: var(--muted-foreground);
+  border-right: 1px solid var(--border);
+}
+
+.dk-code-block .cm-activeLine,
+.dk-code-block .cm-activeLineGutter {
+  background: transparent;
+}
+
+.dk-code-block.cm-focused {
+  outline: none;
 }

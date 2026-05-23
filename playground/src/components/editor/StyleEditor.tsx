@@ -1,9 +1,12 @@
 import {
   useThemeStore,
+  Button,
   Slider,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
   Separator,
 } from '@loykin/designkit'
 import { Sun, Moon, Settings2 } from 'lucide-react'
@@ -11,6 +14,24 @@ import type { DensityId } from '@loykin/designkit'
 
 function val(v: number | readonly number[]) {
   return Array.isArray(v) ? v[0] : (v as number)
+}
+
+function remToNumber(value: string | undefined, fallback: number) {
+  if (!value) return fallback
+  const n = parseFloat(value.replace('rem', ''))
+  return Number.isFinite(n) ? n : fallback
+}
+
+function remValue(value: number) {
+  return `${Number(value.toFixed(3))}rem`
+}
+
+function densityDefaults(density: DensityId) {
+  return {
+    compact: { pagePaddingY: 0.75, panelGap: 0.75, toolbarHeight: 2.5 },
+    default: { pagePaddingY: 1, panelGap: 1, toolbarHeight: 2.75 },
+    comfortable: { pagePaddingY: 1.25, panelGap: 1.25, toolbarHeight: 3 },
+  }[density]
 }
 
 function NumInput({
@@ -62,25 +83,45 @@ export function StyleControls() {
     .split('-')
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(' ')
-  const hasOverride = ov.radius !== undefined || ov.primaryChroma !== undefined
+  const hasOverride =
+    ov.radius !== undefined ||
+    ov.primaryChroma !== undefined ||
+    ov.density !== undefined ||
+    ov.pagePaddingY !== undefined ||
+    ov.panelGap !== undefined ||
+    ov.toolbarHeight !== undefined
+  const activeDensity = ov.density ?? g.density
+  const activeDensityDefaults = densityDefaults(activeDensity)
 
   return (
     <div className="flex items-center gap-2">
-      <button
+      <Button
+        variant="outline"
+        size="icon"
         onClick={() => setGlobal({ darkMode: !g.darkMode })}
-        className="h-7 w-7 rounded-md border flex items-center justify-center hover:bg-accent transition-colors"
+        className="h-7 w-7"
       >
         {g.darkMode ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-      </button>
+      </Button>
 
-      <Popover>
-        <PopoverTrigger className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border hover:bg-accent transition-colors text-xs">
+      <Sheet>
+        <SheetTrigger
+          render={
+            <Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs" />
+          }
+        >
           <Settings2 className="h-3.5 w-3.5" />
           Style
-        </PopoverTrigger>
-        <PopoverContent className="w-80 p-4 space-y-5" align="end">
+        </SheetTrigger>
+        <SheetContent className="data-[side=right]:w-[min(90vw,460px)] data-[side=right]:sm:max-w-[460px] flex flex-col gap-0 p-0">
+          <SheetHeader className="px-6 py-4 border-b shrink-0">
+            <SheetTitle className="text-sm">
+              Style — <span className="capitalize text-muted-foreground font-normal">{activeTemplate}</span>
+            </SheetTitle>
+          </SheetHeader>
 
-          <div className="space-y-3">
+          <div className="flex-1 overflow-auto px-6 py-4 space-y-5">
+            <div className="space-y-3">
             <p className="text-xs font-semibold">Color</p>
             <SliderRow label="Hue"
               value={g.primaryHue} min={0} max={360} step={1}
@@ -88,14 +129,14 @@ export function StyleControls() {
             <div className="ml-[4.5rem] h-2 rounded-full" style={{
               background: 'linear-gradient(to right,oklch(0.6 0.2 0),oklch(0.6 0.2 60),oklch(0.6 0.2 120),oklch(0.6 0.2 180),oklch(0.6 0.2 240),oklch(0.6 0.2 300),oklch(0.6 0.2 360))'
             }} />
-            <SliderRow label="Intensity"
+            <SliderRow label="Chroma"
               value={g.primaryChroma} min={0} max={0.3} step={0.005}
               onChange={(n) => setGlobal({ primaryChroma: n })} />
-          </div>
+            </div>
 
-          <Separator />
+            <Separator />
 
-          <div className="space-y-3">
+            <div className="space-y-3">
             <p className="text-xs font-semibold">Layout</p>
             <div className="grid grid-cols-3 gap-1 rounded-md border bg-muted/30 p-1">
               {densityItems.map((item) => (
@@ -117,11 +158,11 @@ export function StyleControls() {
             <SliderRow label="Radius"
               value={g.radius} min={0} max={2} step={0.0625}
               onChange={(n) => setGlobal({ radius: n })} />
-          </div>
+            </div>
 
-          <Separator />
+            <Separator />
 
-          <div className="space-y-3">
+            <div className="space-y-3">
             <p className="text-xs font-semibold">Typography</p>
             <SliderRow label="Size"
               value={g.fontScale} min={0.8} max={1.25} step={0.01}
@@ -129,32 +170,75 @@ export function StyleControls() {
             <SliderRow label="Leading"
               value={g.lineHeight} min={0.85} max={1.25} step={0.01}
               onChange={(n) => setGlobal({ lineHeight: n })} />
-          </div>
+            </div>
 
-          <Separator />
+            <Separator />
 
-          <div className="space-y-3">
+            <div className="space-y-3">
             <div className="flex items-center justify-between">
               <p className="text-xs font-semibold">{activeLabel} Override</p>
               {hasOverride && (
-                <button
-                  onClick={() => setOverride(activeTemplate, { radius: undefined, primaryChroma: undefined })}
-                  className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setOverride(activeTemplate, {
+                    radius: undefined,
+                    primaryChroma: undefined,
+                    density: undefined,
+                    pagePaddingY: undefined,
+                    panelGap: undefined,
+                    toolbarHeight: undefined,
+                  })}
+                  className="h-5 px-1 text-[10px] text-muted-foreground"
                 >
                   reset
-                </button>
+                </Button>
               )}
             </div>
             <SliderRow label="Radius"
               value={ov.radius ?? g.radius} min={0} max={2} step={0.0625}
               onChange={(n) => setOverride(activeTemplate, { radius: n })} />
-            <SliderRow label="Intensity"
+            <SliderRow label="Chroma"
               value={ov.primaryChroma ?? g.primaryChroma} min={0} max={0.3} step={0.005}
               onChange={(n) => setOverride(activeTemplate, { primaryChroma: n })} />
+            <div className="grid grid-cols-3 gap-1 rounded-md border bg-muted/30 p-1">
+              {densityItems.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setOverride(activeTemplate, {
+                    density: item.id,
+                    pagePaddingY: undefined,
+                    panelGap: undefined,
+                    toolbarHeight: undefined,
+                  })}
+                  className={[
+                    'h-7 rounded-[calc(var(--radius)-2px)] px-2 text-[11px] transition-colors',
+                    (ov.density ?? g.density) === item.id
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground',
+                  ].join(' ')}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+            <SliderRow label="Page Y"
+              value={remToNumber(ov.pagePaddingY, activeDensityDefaults.pagePaddingY)}
+              min={0.5} max={2} step={0.0625}
+              onChange={(n) => setOverride(activeTemplate, { pagePaddingY: remValue(n) })} />
+            <SliderRow label="Gap"
+              value={remToNumber(ov.panelGap, activeDensityDefaults.panelGap)}
+              min={0.5} max={2} step={0.0625}
+              onChange={(n) => setOverride(activeTemplate, { panelGap: remValue(n) })} />
+            <SliderRow label="Toolbar"
+              value={remToNumber(ov.toolbarHeight, activeDensityDefaults.toolbarHeight)}
+              min={2} max={4} step={0.0625}
+              onChange={(n) => setOverride(activeTemplate, { toolbarHeight: remValue(n) })} />
+            </div>
           </div>
-
-        </PopoverContent>
-      </Popover>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

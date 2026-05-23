@@ -6,11 +6,15 @@ export type TemplateId =
   | 'table-drag'
   | 'table-card'
   | 'table-card-list'
-  | 'dashboard'
-  | 'typography'
-  | 'databody'
   | 'tabbed'
   | 'form'
+  | 'form-stacked'
+  | 'form-wizard'
+  | 'form-inline'
+  | 'databody'
+  | 'databody-detail'
+  | 'databody-split'
+  | 'sectioned'
 
 export interface GlobalTheme {
   radius:        number
@@ -25,6 +29,10 @@ export interface GlobalTheme {
 export interface TemplateOverride {
   radius?:        number
   primaryChroma?: number
+  density?:       DensityId
+  pagePaddingY?:  string
+  panelGap?:      string
+  toolbarHeight?: string
 }
 
 export interface ThemeState {
