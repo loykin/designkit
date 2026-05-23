@@ -15,6 +15,8 @@ export type TemplateId =
   | 'databody-detail'
   | 'databody-split'
   | 'sectioned'
+  | 'typography'
+  | 'colors'
 
 export interface GlobalTheme {
   radius:        number

@@ -59,6 +59,10 @@ export type {
   FormWizardVariant,
 } from './form/FormWizardBodyTemplate'
 export { FormWizardBodyTemplateDemo } from './form/FormWizardBodyTemplateDemo'
+export { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
+export type { TypographyBodyTemplateProps } from './typography/TypographyBodyTemplate'
+export { ColorsBodyTemplate } from './typography/ColorsBodyTemplate'
+export type { ColorsBodyTemplateProps } from './typography/ColorsBodyTemplate'
 export { DataPage } from './datapage/DataPage'
 export type {
   DataPageActionsProps,
@@ -100,6 +104,8 @@ import { FormStackedBodyTemplateDemo, buildFormStackedBodyTemplateCode } from '.
 import { FormWizardBodyTemplateDemo, buildFormWizardBodyTemplateCode } from './form/FormWizardBodyTemplateDemo'
 import { FormInlineBodyTemplateDemo, buildFormInlineBodyTemplateCode } from './form/FormInlineBodyTemplateDemo'
 import { SectionedBodyTemplateDemo, buildSectionedBodyTemplateCode } from './sectioned/SectionedBodyTemplateDemo'
+import { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
+import { ColorsBodyTemplate } from './typography/ColorsBodyTemplate'
 
 function DataGridTemplatePreview(props: {
   theme?: React.CSSProperties
@@ -141,6 +147,8 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   'form-wizard': FormWizardBodyTemplateDemo,
   'form-inline': FormInlineBodyTemplateDemo,
   sectioned: SectionedBodyTemplateDemo,
+  typography: TypographyBodyTemplate,
+  colors: ColorsBodyTemplate,
 }
 
 const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
@@ -182,7 +190,7 @@ const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: st
   FormWizardBodyTemplate: Layers,
 }
 
-const navigationLabelOrder = ['DataBodyTemplate', 'FormWizardBodyTemplate']
+const navigationLabelOrder = ['Common', 'DataBodyTemplate', 'FormWizardBodyTemplate']
 
 export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder.map((groupId) => {
   const definitions = TEMPLATE_DEFINITIONS.filter((d) => d.navigationGroup === groupId)

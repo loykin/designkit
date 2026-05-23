@@ -11,10 +11,10 @@ export interface TypographyBodyTemplateProps {
 }
 
 const scaleRows = [
-  { label: 'Page title', className: 'text-xl font-semibold', sample: 'Customer Operations' },
-  { label: 'Section title', className: 'text-base font-medium', sample: 'Service Health' },
-  { label: 'Body', className: 'text-sm', sample: 'Review active incidents, service status, and recent deployments.' },
-  { label: 'Caption', className: 'text-xs text-muted-foreground', sample: 'Updated 4 minutes ago' },
+  { label: 'Page title',    className: 'text-xl font-semibold',         sample: 'Customer Operations' },
+  { label: 'Section title', className: 'text-base font-medium',         sample: 'Service Health' },
+  { label: 'Body',          className: 'text-sm',                       sample: 'Review active incidents, service status, and recent deployments.' },
+  { label: 'Caption',       className: 'text-xs text-muted-foreground', sample: 'Updated 4 minutes ago' },
 ]
 
 export function TypographyBodyTemplate({ theme, breadcrumb }: TypographyBodyTemplateProps) {
@@ -29,10 +29,10 @@ export function TypographyBodyTemplate({ theme, breadcrumb }: TypographyBodyTemp
       </DataPage.Header>
 
       <DataPage.Content className="grid gap-[var(--dk-panel-gap)] lg:grid-cols-[1fr_22rem]">
-        <div className="space-y-4">
+        <div className="space-y-[var(--dk-panel-gap)]">
           <Card className="rounded-lg border border-border ring-0">
             <CardHeader>
-              <CardTitle>Scale</CardTitle>
+              <CardTitle>Type Scale</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {scaleRows.map((row) => (

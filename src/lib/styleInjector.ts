@@ -51,6 +51,8 @@ function buildTokenMap({
     },
   }[density]
 
+  const c = (factor: number) => (primaryChroma * factor).toFixed(4)
+
   return {
     '--dk-radius': `${radius}rem`,
     '--dg-radius': `${radius}rem`,
@@ -61,20 +63,38 @@ function buildTokenMap({
     '--radius-xl': `${(radius * 1.4).toFixed(4)}rem`,
     '--radius-2xl': `${(radius * 1.8).toFixed(4)}rem`,
 
-    '--dk-primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
-    '--dk-primary-foreground': 'oklch(0.985 0 0)',
-    '--dk-ring': `oklch(0.5 ${primaryChroma} ${primaryHue})`,
-    '--dg-primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
-    '--dg-primary-foreground': 'oklch(0.985 0 0)',
-    '--dg-ring': `oklch(0.5 ${primaryChroma} ${primaryHue})`,
-    '--primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
-    '--primary-foreground': 'oklch(0.985 0 0)',
-    '--color-primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
+    // primary — fully controlled
+    '--dk-primary':              `oklch(0.52 ${primaryChroma} ${primaryHue})`,
+    '--dk-primary-foreground':   'oklch(0.985 0 0)',
+    '--dk-ring':                 `oklch(0.50 ${primaryChroma} ${primaryHue})`,
+    '--dg-primary':              `oklch(0.52 ${primaryChroma} ${primaryHue})`,
+    '--dg-primary-foreground':   'oklch(0.985 0 0)',
+    '--dg-ring':                 `oklch(0.50 ${primaryChroma} ${primaryHue})`,
+    '--primary':                 `oklch(0.52 ${primaryChroma} ${primaryHue})`,
+    '--primary-foreground':      'oklch(0.985 0 0)',
+    '--color-primary':           `oklch(0.52 ${primaryChroma} ${primaryHue})`,
     '--color-primary-foreground': 'oklch(0.985 0 0)',
-    '--ring': `oklch(0.5 ${primaryChroma} ${primaryHue})`,
-    '--color-ring': `oklch(0.5 ${primaryChroma} ${primaryHue})`,
-    '--sidebar-primary': `oklch(0.488 ${primaryChroma} ${primaryHue})`,
-    '--color-sidebar-primary': `oklch(0.488 ${primaryChroma} ${primaryHue})`,
+    '--ring':                    `oklch(0.50 ${primaryChroma} ${primaryHue})`,
+    '--color-ring':              `oklch(0.50 ${primaryChroma} ${primaryHue})`,
+    '--sidebar-primary':         `oklch(0.488 ${primaryChroma} ${primaryHue})`,
+    '--color-sidebar-primary':   `oklch(0.488 ${primaryChroma} ${primaryHue})`,
+
+    // tonal surface — same hue, heavily reduced chroma
+    '--border':              `oklch(0.922 ${c(0.04)} ${primaryHue})`,
+    '--input':               `oklch(0.922 ${c(0.04)} ${primaryHue})`,
+    '--muted':               `oklch(0.970 ${c(0.02)} ${primaryHue})`,
+    '--secondary':           `oklch(0.970 ${c(0.02)} ${primaryHue})`,
+    '--accent':              `oklch(0.970 ${c(0.04)} ${primaryHue})`,
+    '--color-border':        `oklch(0.922 ${c(0.04)} ${primaryHue})`,
+    '--color-input':         `oklch(0.922 ${c(0.04)} ${primaryHue})`,
+    '--color-muted':         `oklch(0.970 ${c(0.02)} ${primaryHue})`,
+    '--color-secondary':     `oklch(0.970 ${c(0.02)} ${primaryHue})`,
+    '--color-accent':        `oklch(0.970 ${c(0.04)} ${primaryHue})`,
+    '--dk-border':           `oklch(0.922 ${c(0.04)} ${primaryHue})`,
+    '--dk-input':            `oklch(0.922 ${c(0.04)} ${primaryHue})`,
+    '--dk-muted':            `oklch(0.970 ${c(0.02)} ${primaryHue})`,
+    '--dg-border':           `oklch(0.922 ${c(0.04)} ${primaryHue})`,
+    '--dg-muted':            `oklch(0.970 ${c(0.02)} ${primaryHue})`,
 
     '--dk-font-scale': fontScale,
     '--dk-line-height': lineHeight,
@@ -105,6 +125,27 @@ function buildTokenMap({
   }
 }
 
+function buildDarkTonalTokens(primaryHue: number, primaryChroma: number): TokenMap {
+  const c = (factor: number) => (primaryChroma * factor).toFixed(4)
+  return {
+    '--border':        `oklch(0.32  ${c(0.06)} ${primaryHue})`,
+    '--input':         `oklch(0.35  ${c(0.06)} ${primaryHue})`,
+    '--muted':         `oklch(0.269 ${c(0.03)} ${primaryHue})`,
+    '--secondary':     `oklch(0.269 ${c(0.02)} ${primaryHue})`,
+    '--accent':        `oklch(0.320 ${c(0.04)} ${primaryHue})`,
+    '--color-border':  `oklch(0.32  ${c(0.06)} ${primaryHue})`,
+    '--color-input':   `oklch(0.35  ${c(0.06)} ${primaryHue})`,
+    '--color-muted':   `oklch(0.269 ${c(0.03)} ${primaryHue})`,
+    '--color-secondary': `oklch(0.269 ${c(0.02)} ${primaryHue})`,
+    '--color-accent':  `oklch(0.320 ${c(0.04)} ${primaryHue})`,
+    '--dk-border':     `oklch(0.32  ${c(0.06)} ${primaryHue})`,
+    '--dk-input':      `oklch(0.35  ${c(0.06)} ${primaryHue})`,
+    '--dk-muted':      `oklch(0.269 ${c(0.03)} ${primaryHue})`,
+    '--dg-border':     `oklch(0.32  ${c(0.06)} ${primaryHue})`,
+    '--dg-muted':      `oklch(0.269 ${c(0.03)} ${primaryHue})`,
+  }
+}
+
 function tokenMapToCss(tokens: TokenMap) {
   return Object.entries(tokens)
     .map(([key, value]) => `  ${key}: ${value};`)
@@ -123,9 +164,9 @@ export function useStyleInjector() {
       document.head.appendChild(el)
     }
 
-    const rootBlock = `:root {\n${tokenMapToCss(buildTokenMap(g))}\n}`
+    const rootBlock     = `:root {\n${tokenMapToCss(buildTokenMap(g))}\n}`
+    const darkTonalBlock = `.dark {\n${tokenMapToCss(buildDarkTonalTokens(g.primaryHue, g.primaryChroma))}\n}`
 
-    // .layout-{id} = template-specific overrides
     const tmplBlocks = (Object.entries(ov) as [TemplateId, typeof ov[TemplateId]][])
       .map(([id, o]) => {
         if (
@@ -150,7 +191,7 @@ export function useStyleInjector() {
       })
       .filter(Boolean)
 
-    el.textContent = [rootBlock, ...tmplBlocks].join('\n\n')
+    el.textContent = [rootBlock, darkTonalBlock, ...tmplBlocks].join('\n\n')
   }, [g, ov])
 
   useEffect(() => {
@@ -162,7 +203,6 @@ export function useStyleInjector() {
       document.documentElement.removeAttribute('data-dk-density')
       return
     }
-
     document.documentElement.dataset.dkDensity = g.density
   }, [g.density])
 }

@@ -2,7 +2,7 @@ import type { TemplateOverride, TemplateId } from '@/store/types'
 import type { DataGridViewVariant } from './table/DataGridView'
 
 export type TemplateGroup = 'Table' | 'Pages' | 'Design'
-export type TemplateNavigationGroupId = 'DataBodyTemplate' | 'FormWizardBodyTemplate'
+export type TemplateNavigationGroupId = 'DataBodyTemplate' | 'FormWizardBodyTemplate' | 'Common'
 export type TemplateExportKind =
   | 'data-grid'
   | 'data-grid-card'
@@ -222,6 +222,29 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportComponent: 'SectionedBodyTemplate',
     exportKind: 'body-template',
     preset: { radius: 0.5 },
+  },
+  // ── Common ───────────────────────────────────────────────────────────────────
+  {
+    id: 'typography',
+    label: 'Typography',
+    navigationSubgroupLabel: 'Typography',
+    group: 'Design',
+    navigationGroup: 'Common',
+    layoutClassName: 'layout-typography',
+    exportComponent: 'TypographyBodyTemplate',
+    exportKind: 'body-template',
+    preset: { radius: 0.375 },
+  },
+  {
+    id: 'colors',
+    label: 'Colors',
+    navigationSubgroupLabel: 'Colors',
+    group: 'Design',
+    navigationGroup: 'Common',
+    layoutClassName: 'layout-colors',
+    exportComponent: 'ColorsBodyTemplate',
+    exportKind: 'body-template',
+    preset: { radius: 0.375 },
   },
   // ── FormWizardBodyTemplate ────────────────────────────────────────────────────
   {
