@@ -1,15 +1,14 @@
-import { FormStackedBodyTemplate, type FormStackedGroupVariant } from './FormStackedBodyTemplate'
+import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 
-export function FormStackedBodyTemplateDemo({ theme, variant }: { theme?: React.CSSProperties; variant?: FormStackedGroupVariant }) {
+export function FormStackedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
   return (
-    <FormStackedBodyTemplate
+    <DataBodyTemplate
       theme={theme}
-      variant={variant}
       breadcrumb="Pages / Form / Stacked"
       title="Settings"
       description="Manage your account and preferences."
@@ -20,7 +19,7 @@ export function FormStackedBodyTemplateDemo({ theme, variant }: { theme?: React.
         </div>
       }
     >
-      <FormStackedBodyTemplate.Group title="Profile" description="How you appear to others on the platform.">
+      <DataBodyTemplate.Group layout="stacked" title="Profile" description="How you appear to others on the platform.">
         <div className="space-y-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Display Name</Label>
@@ -39,9 +38,9 @@ export function FormStackedBodyTemplateDemo({ theme, variant }: { theme?: React.
             />
           </div>
         </div>
-      </FormStackedBodyTemplate.Group>
+      </DataBodyTemplate.Group>
 
-      <FormStackedBodyTemplate.Group title="Appearance" description="Customize how the interface looks for you.">
+      <DataBodyTemplate.Group layout="stacked" title="Appearance" description="Customize how the interface looks for you.">
         <div className="space-y-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Theme</Label>
@@ -73,9 +72,9 @@ export function FormStackedBodyTemplateDemo({ theme, variant }: { theme?: React.
             <Switch />
           </div>
         </div>
-      </FormStackedBodyTemplate.Group>
+      </DataBodyTemplate.Group>
 
-      <FormStackedBodyTemplate.Group title="Privacy & Data" description="Manage how your data is collected and used.">
+      <DataBodyTemplate.Group layout="stacked" title="Privacy & Data" description="Manage how your data is collected and used.">
         <div className="space-y-4">
           {[
             { label: 'Usage analytics',  desc: 'Share anonymous usage data to improve the product.', on: true  },
@@ -91,9 +90,9 @@ export function FormStackedBodyTemplateDemo({ theme, variant }: { theme?: React.
             </div>
           ))}
         </div>
-      </FormStackedBodyTemplate.Group>
+      </DataBodyTemplate.Group>
 
-      <FormStackedBodyTemplate.Group title="Danger Zone" description="Irreversible actions. Proceed with caution." danger>
+      <DataBodyTemplate.Group layout="stacked" title="Danger Zone" description="Irreversible actions. Proceed with caution." danger>
         <div className="flex items-center justify-between rounded-[var(--radius)] border border-destructive/40 bg-destructive/5 px-4 py-3">
           <div>
             <p className="text-sm font-medium">Delete Account</p>
@@ -101,7 +100,7 @@ export function FormStackedBodyTemplateDemo({ theme, variant }: { theme?: React.
           </div>
           <Button variant="destructive" size="sm" className="ml-4 h-8 shrink-0 text-xs">Delete</Button>
         </div>
-      </FormStackedBodyTemplate.Group>
-    </FormStackedBodyTemplate>
+      </DataBodyTemplate.Group>
+    </DataBodyTemplate>
   )
 }

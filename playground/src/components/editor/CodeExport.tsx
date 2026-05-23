@@ -164,7 +164,7 @@ function buildThemeProp(
     : ''
 }
 
-function buildDataGridCode(definition: TemplateDefinition, themeProp: string) {
+function buildDataGridCode(definition: TemplateDefinition, themeProp: string, layoutClassName: string) {
   const variant = definition.preview?.variant
   const variantProp = variant && variant !== 'standard'
     ? `\n        variant="${variant}"`
@@ -175,7 +175,7 @@ function buildDataGridCode(definition: TemplateDefinition, themeProp: string) {
       `function renderCard(row: { original: User }) {`,
       `  const user = row.original`,
       `  return (`,
-      `    <div className="rounded-[var(--radius)] border bg-card p-3 text-card-foreground">`,
+      `    <div className="rounded-(--radius) border bg-card p-3 text-card-foreground">`,
       `      <p className="text-sm font-medium">{user.name}</p>`,
       `      <p className="text-xs text-muted-foreground">{user.email}</p>`,
       `    </div>`,
@@ -203,6 +203,7 @@ function buildDataGridCode(definition: TemplateDefinition, themeProp: string) {
     `export function MyPage() {`,
     `  return (`,
     `    <DataBodyTemplate${themeProp}`,
+    `      className="${layoutClassName}"`,
     `      breadcrumb="Data / Users"`,
     `      title="Users"`,
     `    >`,
@@ -227,23 +228,87 @@ function buildComponentCode(
 
   const themeProp = buildThemeProp(ov, globalHue)
 
+  const layoutClassName = definition.layoutClassName
+
   if (definition.exportKind === 'data-grid' || definition.exportKind === 'data-grid-card') {
-    return buildDataGridCode(definition, themeProp)
+    return buildDataGridCode(definition, themeProp, layoutClassName)
   }
 
   const name = definition.exportComponent
-  return [
-    `import { ${name} } from '@loykin/designkit'`,
-    `import '@loykin/designkit/styles'`,
-    '',
-    `export function MyPage() {`,
-    `  return (`,
-    `    <${name}${themeProp}`,
-    `      // pass your content/data props here`,
-    `    />`,
-    `  )`,
-    `}`,
-  ].join('\n')
+
+  if (definition.exportKind === 'databody') {
+    const groupExample =
+      tmplId === 'tabbed'
+        ? [
+            `      <${name}.Tab id="tab1" label="Tab 1">`,
+            `        {/* tab content */}`,
+            `      </${name}.Tab>`,
+          ]
+        : tmplId === 'form-stacked'
+        ? [
+            `      <${name}.Group layout="stacked" title="Section">`,
+            `        {/* form fields */}`,
+            `      </${name}.Group>`,
+          ]
+        : tmplId === 'form-inline'
+        ? [
+            `      <${name}.Group layout="inline" title="Section">`,
+            `        <${name}.Row label="Field">`,
+            `          {/* input */}`,
+            `        </${name}.Row>`,
+            `      </${name}.Group>`,
+          ]
+        : [
+            `      <${name}.Group layout="horizontal" title="Section">`,
+            `        {/* form fields */}`,
+            `      </${name}.Group>`,
+          ]
+    return [
+      `import { ${name} } from '@loykin/designkit'`,
+      `import '@loykin/designkit/styles'`,
+      '',
+      `export function MyPage() {`,
+      `  return (`,
+      `    <${name}${themeProp}`,
+      `      className="${layoutClassName}"`,
+      `      title="Page Title"`,
+      `    >`,
+      ...groupExample,
+      `    </${name}>`,
+      `  )`,
+      `}`,
+    ].join('\n')
+  }
+
+  if (definition.exportKind === 'body-template') {
+    return [
+      `import { useState } from 'react'`,
+      `import { ${name}, type FormWizardStep } from '@loykin/designkit'`,
+      `import '@loykin/designkit/styles'`,
+      '',
+      `const steps: FormWizardStep[] = [`,
+      `  { key: 'info',   title: 'Basic Info',    content: <div>{/* step 1 */}</div> },`,
+      `  { key: 'config', title: 'Configuration', content: <div>{/* step 2 */}</div> },`,
+      `  { key: 'review', title: 'Review',         content: <div>{/* step 3 */}</div> },`,
+      `]`,
+      '',
+      `export function MyPage() {`,
+      `  const [step, setStep] = useState(0)`,
+      `  return (`,
+      `    <${name}${themeProp}`,
+      `      title="Setup Wizard"`,
+      `      steps={steps}`,
+      `      activeStep={step}`,
+      `      onNext={() => setStep((s) => Math.min(s + 1, steps.length - 1))}`,
+      `      onBack={() => setStep((s) => Math.max(s - 1, 0))}`,
+      `      onFinish={() => { /* handle finish */ }}`,
+      `    />`,
+      `  )`,
+      `}`,
+    ].join('\n')
+  }
+
+  return ''
 }
 
 function CopyButton({ text }: { text: string }) {

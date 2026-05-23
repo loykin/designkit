@@ -6,13 +6,11 @@ export type TemplateId =
   | 'table-drag'
   | 'table-card'
   | 'table-card-list'
-  | 'dashboard'
   | 'tabbed'
   | 'form'
   | 'form-stacked'
   | 'form-wizard'
   | 'form-inline'
-  | 'typography'
   | 'databody'
 
 export interface GlobalTheme {

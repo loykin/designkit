@@ -1,4 +1,4 @@
-import { TabbedBodyTemplate } from './TabbedBodyTemplate'
+import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -88,7 +88,7 @@ const counts = {
 
 export function TabbedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
   return (
-    <TabbedBodyTemplate
+    <DataBodyTemplate
       theme={theme}
       breadcrumb="Pages / Tabbed"
       title="Incidents"
@@ -106,7 +106,7 @@ export function TabbedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
         </Button>
       }
     >
-      <TabbedBodyTemplate.Summary>
+      <DataBodyTemplate.Summary>
         <div className="grid grid-cols-4 gap-[var(--dk-panel-gap)]">
           {([
             { label: 'Open',        count: counts.open,           Icon: AlertCircle,  cls: 'text-destructive'      },
@@ -125,20 +125,20 @@ export function TabbedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
             </Card>
           ))}
         </div>
-      </TabbedBodyTemplate.Summary>
+      </DataBodyTemplate.Summary>
 
-      <TabbedBodyTemplate.Tab id="all"         label="All"         count={issues.length}>
+      <DataBodyTemplate.Tab id="all"         label="All"         count={issues.length}>
         <IssueTable rows={issues} />
-      </TabbedBodyTemplate.Tab>
-      <TabbedBodyTemplate.Tab id="open"        label="Open"        count={counts.open}>
+      </DataBodyTemplate.Tab>
+      <DataBodyTemplate.Tab id="open"        label="Open"        count={counts.open}>
         <IssueTable rows={issues.filter((i) => i.status === 'open')} />
-      </TabbedBodyTemplate.Tab>
-      <TabbedBodyTemplate.Tab id="in-progress" label="In Progress" count={counts['in-progress']}>
+      </DataBodyTemplate.Tab>
+      <DataBodyTemplate.Tab id="in-progress" label="In Progress" count={counts['in-progress']}>
         <IssueTable rows={issues.filter((i) => i.status === 'in-progress')} />
-      </TabbedBodyTemplate.Tab>
-      <TabbedBodyTemplate.Tab id="resolved"    label="Resolved"    count={counts.resolved}>
+      </DataBodyTemplate.Tab>
+      <DataBodyTemplate.Tab id="resolved"    label="Resolved"    count={counts.resolved}>
         <IssueTable rows={issues.filter((i) => i.status === 'resolved')} />
-      </TabbedBodyTemplate.Tab>
-    </TabbedBodyTemplate>
+      </DataBodyTemplate.Tab>
+    </DataBodyTemplate>
   )
 }

@@ -1,4 +1,4 @@
-import { FormBodyTemplate, type FormGroupVariant } from './FormBodyTemplate'
+import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -6,11 +6,10 @@ import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 
-export function FormBodyTemplateDemo({ theme, variant }: { theme?: React.CSSProperties; variant?: FormGroupVariant }) {
+export function FormBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
   return (
-    <FormBodyTemplate
+    <DataBodyTemplate
       theme={theme}
-      variant={variant}
       breadcrumb="Pages / Form"
       title="Account Settings"
       description="Manage your account preferences and security."
@@ -21,7 +20,7 @@ export function FormBodyTemplateDemo({ theme, variant }: { theme?: React.CSSProp
         </div>
       }
     >
-      <FormBodyTemplate.Group title="Profile" description="Your public-facing name and contact info.">
+      <DataBodyTemplate.Group layout="horizontal" title="Profile" description="Your public-facing name and contact info.">
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
@@ -56,9 +55,9 @@ export function FormBodyTemplateDemo({ theme, variant }: { theme?: React.CSSProp
             />
           </div>
         </div>
-      </FormBodyTemplate.Group>
+      </DataBodyTemplate.Group>
 
-      <FormBodyTemplate.Group title="Notifications" description="Choose when and how you get notified.">
+      <DataBodyTemplate.Group layout="horizontal" title="Notifications" description="Choose when and how you get notified.">
         <div className="divide-y">
           {[
             { label: 'Comments on your posts', sub: 'When someone replies to a thread', on: true  },
@@ -76,9 +75,9 @@ export function FormBodyTemplateDemo({ theme, variant }: { theme?: React.CSSProp
             </div>
           ))}
         </div>
-      </FormBodyTemplate.Group>
+      </DataBodyTemplate.Group>
 
-      <FormBodyTemplate.Group title="Security" description="Password and authentication settings.">
+      <DataBodyTemplate.Group layout="horizontal" title="Security" description="Password and authentication settings.">
         <div className="space-y-4">
           <div className="space-y-1.5">
             <Label className="text-xs">Current Password</Label>
@@ -105,9 +104,9 @@ export function FormBodyTemplateDemo({ theme, variant }: { theme?: React.CSSProp
             </div>
           </div>
         </div>
-      </FormBodyTemplate.Group>
+      </DataBodyTemplate.Group>
 
-      <FormBodyTemplate.Group title="Danger Zone" description="Irreversible actions. Proceed with caution." danger>
+      <DataBodyTemplate.Group layout="horizontal" title="Danger Zone" description="Irreversible actions. Proceed with caution." danger>
         <div className="flex items-center justify-between p-3 rounded-[var(--radius)] border border-destructive/40 bg-destructive/5">
           <div>
             <p className="text-sm font-medium">Delete Account</p>
@@ -115,7 +114,7 @@ export function FormBodyTemplateDemo({ theme, variant }: { theme?: React.CSSProp
           </div>
           <Button variant="destructive" size="sm" className="h-8 text-xs">Delete Account</Button>
         </div>
-      </FormBodyTemplate.Group>
-    </FormBodyTemplate>
+      </DataBodyTemplate.Group>
+    </DataBodyTemplate>
   )
 }

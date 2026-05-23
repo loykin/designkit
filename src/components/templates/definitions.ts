@@ -2,7 +2,7 @@ import type { TemplateOverride, TemplateId } from '@/store/types'
 import type { DataGridViewVariant } from './table/DataGridView'
 
 export type TemplateGroup = 'Table' | 'Pages' | 'Design'
-export type TemplateNavigationGroupId = 'Data' | 'Design' | 'Workflow'
+export type TemplateNavigationGroupId = 'DataBodyTemplate' | 'FormWizardBodyTemplate'
 export type TemplateExportKind =
   | 'data-grid'
   | 'data-grid-card'
@@ -26,6 +26,10 @@ export interface TemplateOptionSpec {
 export interface TemplateDefinition {
   id: TemplateId
   label: string
+  /** Short label used only in nav sub-menu (omit to fall back to label) */
+  navigationLabel?: string
+  /** Section-header label for the nav group this item anchors (omit to fall back to label) */
+  navigationSubgroupLabel?: string
   group: TemplateGroup
   navigationGroup: TemplateNavigationGroupId
   navigationParent?: TemplateId
@@ -42,12 +46,14 @@ export interface TemplateDefinition {
   }
 }
 
-export const TEMPLATE_DEFINITIONS = [
+export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
+  // ── DataGridView (DataBodyTemplate 하위) ─────────────────────────────────────
   {
     id: 'table',
     label: 'Standard',
+    navigationSubgroupLabel: 'Table',
     group: 'Table',
-    navigationGroup: 'Data',
+    navigationGroup: 'DataBodyTemplate',
     layoutClassName: 'layout-table',
     exportComponent: 'DataGridView',
     exportKind: 'data-grid',
@@ -62,7 +68,7 @@ export const TEMPLATE_DEFINITIONS = [
     id: 'table-infinity',
     label: 'Infinite Scroll',
     group: 'Table',
-    navigationGroup: 'Data',
+    navigationGroup: 'DataBodyTemplate',
     navigationParent: 'table',
     layoutClassName: 'layout-table-infinity',
     exportComponent: 'DataGridView',
@@ -79,7 +85,7 @@ export const TEMPLATE_DEFINITIONS = [
     id: 'table-drag',
     label: 'Row Drag',
     group: 'Table',
-    navigationGroup: 'Data',
+    navigationGroup: 'DataBodyTemplate',
     navigationParent: 'table',
     layoutClassName: 'layout-table-drag',
     exportComponent: 'DataGridView',
@@ -95,9 +101,9 @@ export const TEMPLATE_DEFINITIONS = [
   {
     id: 'table-card',
     label: 'Card Grid',
+    navigationSubgroupLabel: 'Card',
     group: 'Table',
-    navigationGroup: 'Data',
-    navigationParent: 'table',
+    navigationGroup: 'DataBodyTemplate',
     layoutClassName: 'layout-table-card',
     exportComponent: 'DataGridView',
     exportKind: 'data-grid-card',
@@ -113,8 +119,8 @@ export const TEMPLATE_DEFINITIONS = [
     id: 'table-card-list',
     label: 'Card List',
     group: 'Table',
-    navigationGroup: 'Data',
-    navigationParent: 'table',
+    navigationGroup: 'DataBodyTemplate',
+    navigationParent: 'table-card',
     layoutClassName: 'layout-table-card-list',
     exportComponent: 'DataGridView',
     exportKind: 'data-grid-card',
@@ -126,31 +132,13 @@ export const TEMPLATE_DEFINITIONS = [
       description: 'gridkit DataGridCard list mode',
     },
   },
-  {
-    id: 'dashboard',
-    label: 'Dashboard',
-    group: 'Pages',
-    navigationGroup: 'Data',
-    layoutClassName: 'layout-dashboard',
-    exportComponent: 'DashboardBodyTemplate',
-    exportKind: 'body-template',
-    preset: { radius: 0.75 },
-  },
-  {
-    id: 'typography',
-    label: 'Typography',
-    group: 'Design',
-    navigationGroup: 'Design',
-    layoutClassName: 'layout-typography',
-    exportComponent: 'TypographyBodyTemplate',
-    exportKind: 'typography',
-    preset: { radius: 0.375 },
-  },
+  // ── DataBodyTemplate ─────────────────────────────────────────────────────────
   {
     id: 'databody',
-    label: 'Body Template',
-    group: 'Design',
-    navigationGroup: 'Design',
+    label: 'Standard',
+    navigationSubgroupLabel: 'Data View',
+    group: 'Pages',
+    navigationGroup: 'DataBodyTemplate',
     layoutClassName: 'layout-databody',
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
@@ -160,104 +148,61 @@ export const TEMPLATE_DEFINITIONS = [
     id: 'tabbed',
     label: 'Tabbed',
     group: 'Pages',
-    navigationGroup: 'Workflow',
+    navigationGroup: 'DataBodyTemplate',
+    navigationParent: 'databody',
     layoutClassName: 'layout-tabbed',
-    exportComponent: 'TabbedBodyTemplate',
-    exportKind: 'body-template',
+    exportComponent: 'DataBodyTemplate',
+    exportKind: 'databody',
     preset: { radius: 0.375 },
   },
   {
     id: 'form',
-    label: 'Standard',
+    label: 'Form Horizontal',
+    navigationLabel: 'Horizontal',
+    navigationSubgroupLabel: 'Form',
     group: 'Pages',
-    navigationGroup: 'Workflow',
+    navigationGroup: 'DataBodyTemplate',
     layoutClassName: 'layout-form',
-    exportComponent: 'FormBodyTemplate',
-    exportKind: 'body-template',
+    exportComponent: 'DataBodyTemplate',
+    exportKind: 'databody',
     preset: { radius: 0.5 },
-    options: [
-      {
-        key: 'variant',
-        label: 'Variant',
-        type: 'select',
-        choices: [
-          { value: 'card',  label: 'Card'  },
-          { value: 'plain', label: 'Plain' },
-        ],
-        defaultValue: 'card',
-      },
-    ],
   },
   {
     id: 'form-stacked',
-    label: 'Stacked',
+    label: 'Form Stacked',
+    navigationLabel: 'Stacked',
     group: 'Pages',
-    navigationGroup: 'Workflow',
+    navigationGroup: 'DataBodyTemplate',
     navigationParent: 'form',
     layoutClassName: 'layout-form-stacked',
-    exportComponent: 'FormStackedBodyTemplate',
-    exportKind: 'body-template',
+    exportComponent: 'DataBodyTemplate',
+    exportKind: 'databody',
     preset: { radius: 0.5 },
-    options: [
-      {
-        key: 'variant',
-        label: 'Variant',
-        type: 'select',
-        choices: [
-          { value: 'plain', label: 'Plain' },
-          { value: 'card',  label: 'Card'  },
-        ],
-        defaultValue: 'plain',
-      },
-    ],
   },
+  {
+    id: 'form-inline',
+    label: 'Form Inline',
+    navigationLabel: 'Inline',
+    group: 'Pages',
+    navigationGroup: 'DataBodyTemplate',
+    navigationParent: 'form',
+    layoutClassName: 'layout-form-inline',
+    exportComponent: 'DataBodyTemplate',
+    exportKind: 'databody',
+    preset: { radius: 0.25 },
+  },
+  // ── FormWizardBodyTemplate ────────────────────────────────────────────────────
   {
     id: 'form-wizard',
     label: 'Wizard',
     group: 'Pages',
-    navigationGroup: 'Workflow',
-    navigationParent: 'form',
+    navigationGroup: 'FormWizardBodyTemplate',
     layoutClassName: 'layout-form-wizard',
     exportComponent: 'FormWizardBodyTemplate',
     exportKind: 'body-template',
     preset: { radius: 0.5 },
-    options: [
-      {
-        key: 'variant',
-        label: 'Variant',
-        type: 'select',
-        choices: [
-          { value: 'plain', label: 'Plain' },
-          { value: 'card',  label: 'Card'  },
-        ],
-        defaultValue: 'plain',
-      },
-    ],
   },
-  {
-    id: 'form-inline',
-    label: 'Inline',
-    group: 'Pages',
-    navigationGroup: 'Workflow',
-    navigationParent: 'form',
-    layoutClassName: 'layout-form-inline',
-    exportComponent: 'FormInlineBodyTemplate',
-    exportKind: 'body-template',
-    preset: { radius: 0.25 },
-    options: [
-      {
-        key: 'variant',
-        label: 'Variant',
-        type: 'select',
-        choices: [
-          { value: 'bordered', label: 'Bordered' },
-          { value: 'plain',    label: 'Plain'    },
-        ],
-        defaultValue: 'bordered',
-      },
-    ],
-  },
-] satisfies TemplateDefinition[]
+]
 
 export function getTemplateDefinition(id: TemplateId) {
   return TEMPLATE_DEFINITIONS.find((definition) => definition.id === id)

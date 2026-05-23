@@ -1,6 +1,6 @@
 import { createElement, type ComponentType } from 'react'
 import type { TemplateId } from '@/store/types'
-import { CreditCard, FileText, LayoutDashboard, Table2, Type } from 'lucide-react'
+import { FileText, LayoutDashboard, Table2, Layers } from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
 export {
   TEMPLATE_DEFINITIONS,
@@ -42,22 +42,16 @@ export {
   type DataGridColumnDef,
   type DataGridViewVariant,
 } from './table/DataGridView'
-export { DashboardBodyTemplate } from './dashboard/DashboardBodyTemplate'
-export { DashboardBodyTemplateDemo } from './dashboard/DashboardBodyTemplateDemo'
-export { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
 export { DataBodyTemplate } from './databody/DataBodyTemplate'
 export { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
-export { TabbedBodyTemplate    } from './tabbed/TabbedBodyTemplate'
-export { TabbedBodyTemplateDemo } from './tabbed/TabbedBodyTemplateDemo'
-export { FormBodyTemplate           } from './form/FormBodyTemplate'
-export { FormBodyTemplateDemo       } from './form/FormBodyTemplateDemo'
-export { FormStackedBodyTemplate    } from './form/FormStackedBodyTemplate'
-export { FormStackedBodyTemplateDemo } from './form/FormStackedBodyTemplateDemo'
-export { FormWizardBodyTemplate     } from './form/FormWizardBodyTemplate'
+export { FormWizardBodyTemplate } from './form/FormWizardBodyTemplate'
+export type {
+  FormWizardBodyTemplateProps,
+  FormWizardStep,
+  FormWizardVariant,
+} from './form/FormWizardBodyTemplate'
 export { FormWizardBodyTemplateDemo } from './form/FormWizardBodyTemplateDemo'
-export { FormInlineBodyTemplate     } from './form/FormInlineBodyTemplate'
-export { FormInlineBodyTemplateDemo } from './form/FormInlineBodyTemplateDemo'
-export { DataPage              } from './datapage/DataPage'
+export { DataPage } from './datapage/DataPage'
 export type {
   DataPageActionsProps,
   DataPageContentProps,
@@ -72,17 +66,24 @@ export type {
   DataPageTabsProps,
   DataPageTitleBlockProps,
 } from './datapage/DataPage'
+export type {
+  DataBodyTabProps,
+  DataBodySummaryProps,
+  DataBodyGroupProps,
+  DataBodyRowProps,
+  DataBodyTemplateProps,
+  GroupLayout,
+  GroupVariant,
+} from './databody/DataBodyTemplate'
 
 import { DataGridTemplateDemo } from './table/DataGridTemplateDemo'
 import type { DataGridViewVariant } from './table/DataGridView'
-import { DashboardBodyTemplateDemo } from './dashboard/DashboardBodyTemplateDemo'
-import { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
 import { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
 import { TabbedBodyTemplateDemo } from './tabbed/TabbedBodyTemplateDemo'
-import { FormBodyTemplateDemo         } from './form/FormBodyTemplateDemo'
-import { FormStackedBodyTemplateDemo  } from './form/FormStackedBodyTemplateDemo'
-import { FormWizardBodyTemplateDemo   } from './form/FormWizardBodyTemplateDemo'
-import { FormInlineBodyTemplateDemo   } from './form/FormInlineBodyTemplateDemo'
+import { FormBodyTemplateDemo } from './form/FormBodyTemplateDemo'
+import { FormStackedBodyTemplateDemo } from './form/FormStackedBodyTemplateDemo'
+import { FormWizardBodyTemplateDemo } from './form/FormWizardBodyTemplateDemo'
+import { FormInlineBodyTemplateDemo } from './form/FormInlineBodyTemplateDemo'
 
 function DataGridTemplatePreview(props: {
   theme?: React.CSSProperties
@@ -115,11 +116,6 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   'table-drag': createDataGridPreview('table-drag'),
   'table-card': createDataGridPreview('table-card'),
   'table-card-list': createDataGridPreview('table-card-list'),
-  dashboard: DashboardBodyTemplateDemo,
-  typography: (props) => createElement(TypographyBodyTemplate, {
-    ...props,
-    breadcrumb: 'Design / Typography',
-  }),
   databody: DataBodyTemplateDemo,
   tabbed: TabbedBodyTemplateDemo,
   form: FormBodyTemplateDemo,
@@ -136,38 +132,39 @@ export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition)
 }))
 
 const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>>> = {
-  table: Table2,
-  dashboard: LayoutDashboard,
-  typography: Type,
-  databody: LayoutDashboard,
-  tabbed: CreditCard,
-  form: FileText,
+  table:         Table2,
+  'table-card':  Layers,
+  databody:      LayoutDashboard,
+  form:          FileText,
+  'form-wizard': FileText,
 }
 
-const navigationLabelOrder: TemplateNavigationGroup['label'][] = ['Data', 'Design', 'Workflow']
+const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: string }>>> = {
+  DataBodyTemplate:       LayoutDashboard,
+  FormWizardBodyTemplate: Layers,
+}
 
-export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder.map((label) => {
-  const definitions = TEMPLATE_DEFINITIONS.filter((definition) => definition.navigationGroup === label)
-  const parentDefinitions = definitions.filter((definition) => !definition.navigationParent)
+const navigationLabelOrder = ['DataBodyTemplate', 'FormWizardBodyTemplate']
+
+export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder.map((groupId) => {
+  const definitions = TEMPLATE_DEFINITIONS.filter((d) => d.navigationGroup === groupId)
+  const parentDefinitions = definitions.filter((d) => !d.navigationParent)
+  const label = groupId
 
   return {
     label,
     items: parentDefinitions.map((definition) => {
       const childDefs = definitions.filter((d) => d.navigationParent === definition.id)
       const hasChildren = childDefs.length > 0
-      const groupLabel =
-        definition.group === 'Table' ? 'Table' :
-        definition.id === 'form'     ? 'Form'  :
-        definition.label
 
       return {
         id: definition.id,
-        label: groupLabel,
-        icon: iconById[definition.id],
+        label: definition.navigationSubgroupLabel ?? definition.navigationLabel ?? definition.label,
+        icon: iconById[definition.id] ?? navigationGroupIcon[label],
         children: hasChildren
           ? [
-              { id: definition.id, label: definition.label },
-              ...childDefs.map((child) => ({ id: child.id, label: child.label })),
+              { id: definition.id, label: definition.navigationLabel ?? definition.label },
+              ...childDefs.map((child) => ({ id: child.id, label: child.navigationLabel ?? child.label })),
             ]
           : [],
       }
