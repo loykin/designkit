@@ -4,5 +4,3 @@ packages:
 allowBuilds:
   esbuild: true
   msw: true
-auditConfig:
-  minimumReleaseAge: '0 seconds'
