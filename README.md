@@ -5,10 +5,17 @@ React page template library. Provides ready-to-use page layouts for admin and da
 ## Installation
 
 ```bash
-npm install @loykin/designkit
+npm install @loykin/designkit @loykin/gridkit
 ```
 
-Requires React 19 as a peer dependency.
+Requires React 19 and Tailwind CSS v4. UI components are based on [shadcn/ui](https://ui.shadcn.com) — if your app has shadcn set up, theming integrates automatically via shared CSS variables (`--primary`, `--background`, `--radius`, etc.). You can customize every token through shadcn's theme without touching designkit directly.
+
+Add the following to your global CSS so Tailwind scans the designkit bundle:
+
+```css
+/* globals.css */
+@source "node_modules/@loykin/designkit/dist/index.js";
+```
 
 ## Quick Start
 
@@ -326,7 +333,20 @@ import { Users } from 'lucide-react'
 
 ## Theming
 
-Control the global theme via CSS variables. Add to `globals.css`.
+Designkit maps shadcn/ui CSS variables (`--primary`, `--background`, `--radius`, etc.) onto its own `--dk-*` tokens. Changing your shadcn theme automatically updates all designkit components.
+
+For additional control, override `--dk-*` variables directly in `globals.css`.
+
+### Customization scope
+
+| What | How | Supported |
+|---|---|---|
+| Colors, radius, typography | shadcn/ui theme variables | ✓ |
+| Spacing, density, padding | `--dk-density`, `--dk-page-padding-*` etc. | ✓ |
+| Per-page overrides | `className` or `theme` prop | ✓ |
+| Replacing internal components (e.g. swapping the Button) | — | ✗ |
+
+Internal UI components (Button, Input, etc.) are bundled with the library. They share your shadcn CSS variables, so colors and shape follow your theme automatically — but structural customization beyond CSS variables is not supported.
 
 ```css
 :root {

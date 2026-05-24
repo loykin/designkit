@@ -36,11 +36,11 @@
   },
   "peerDependencies": {
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "@loykin/gridkit": ">=0.1.20"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
-    "@loykin/gridkit": "0.1.20",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.24",
     "class-variance-authority": "^0.7.1",
