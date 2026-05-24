@@ -4,6 +4,7 @@ import {
   type FormWizardStep,
   type FormWizardVariant,
 } from '@/components/templates'
+import { buildTopBar } from '@/components/templates/datapage/PageTopBar'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -188,9 +189,15 @@ const steps: FormWizardStep[] = [
 export function FormWizardBodyTemplateDemo({
   theme,
   variant,
+  topBarShow,
+  topBarVariant,
+  topBarBg,
 }: {
   theme?: React.CSSProperties
   variant?: FormWizardVariant
+  topBarShow?: string
+  topBarVariant?: string
+  topBarBg?: string
 }) {
   const [activeStep, setActiveStep] = useState(0)
 
@@ -198,7 +205,7 @@ export function FormWizardBodyTemplateDemo({
     <FormWizardBodyTemplate
       theme={theme}
       variant={variant}
-      breadcrumb="Pages / Form / Wizard"
+      topBar={buildTopBar({ topBarShow, topBarVariant, topBarBg, left: 'Pages / Form / Wizard' })}
       title="Create Account"
       steps={steps}
       activeStep={activeStep}

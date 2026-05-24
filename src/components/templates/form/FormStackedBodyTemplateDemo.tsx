@@ -1,4 +1,5 @@
 import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
+import { buildTopBar } from '@/components/templates/datapage/PageTopBar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,11 +13,11 @@ import {
 import { Switch } from '@/components/ui/switch'
 import type { TemplateCodeContext } from '../code'
 
-export function FormStackedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
+export function FormStackedBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBarBg }: { theme?: React.CSSProperties; topBarShow?: string; topBarVariant?: string; topBarBg?: string }) {
   return (
     <DataBodyTemplate
       theme={theme}
-      breadcrumb="Pages / Form / Stacked"
+      topBar={buildTopBar({ topBarShow, topBarVariant, topBarBg, left: 'Pages / Form / Stacked' })}
       title="Settings"
       description="Manage your account and preferences."
       actions={

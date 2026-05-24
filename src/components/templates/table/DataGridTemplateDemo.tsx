@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { DataGridPaginationCompact, GlobalSearch, type DataGridColumnDef } from '@loykin/gridkit'
 import type { Row, Table as TanStackTable } from '@tanstack/react-table'
 import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
+import { PageTopBar, buildTopBar } from '@/components/templates/datapage/PageTopBar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -13,9 +14,12 @@ export interface DataGridTemplateDemoProps {
   theme?: React.CSSProperties
   variant?: DataGridViewVariant
   layoutClassName?: string
-  breadcrumb?: React.ReactNode
+  topBar?: React.ReactNode
   title?: React.ReactNode
   description?: React.ReactNode
+  topBarShow?: string
+  topBarVariant?: string
+  topBarBg?: string
 }
 
 type DemoRow = {
@@ -241,10 +245,17 @@ export function DataGridTemplateDemo({
   theme,
   variant = 'standard',
   layoutClassName = getDefaultLayoutClassName(variant),
-  breadcrumb = 'Data / Table',
+  topBar,
   title = 'Users',
   description,
+  topBarShow,
+  topBarVariant,
+  topBarBg,
 }: DataGridTemplateDemoProps) {
+  const resolvedTopBar =
+    topBarShow !== undefined || topBarVariant !== undefined || topBarBg !== undefined
+      ? buildTopBar({ topBarShow, topBarVariant, topBarBg, left: 'Data / Table' })
+      : topBar ?? <PageTopBar left="Data / Table" />
   const [visibleCount, setVisibleCount] = useState(40)
   const [isFetching, setIsFetching] = useState(false)
   const visibleData = demoInfiniteData.slice(0, visibleCount)
@@ -267,7 +278,7 @@ export function DataGridTemplateDemo({
     <DataBodyTemplate
       theme={{ '--dg-card-padding': '0px', ...theme } as React.CSSProperties}
       className={layoutClassName}
-      breadcrumb={breadcrumb}
+      topBar={resolvedTopBar}
       title={title}
       description={description}
       contentClassName={variant === 'infinity' ? 'pb-0' : undefined}
@@ -331,7 +342,7 @@ export function buildDataGridTemplateCode({
     definition.exportKind === 'data-grid-card' ? `\n        card={{ renderCard }}` : ''
 
   return [
-    `import { DataBodyTemplate, DataGridView, type DataGridColumnDef } from '@loykin/designkit'`,
+    `import { DataBodyTemplate, DataGridView, PageTopBar, type DataGridColumnDef } from '@loykin/designkit'`,
     `import '@loykin/designkit/styles'`,
     '',
     `type User = Record<string, unknown> & { id: string; name: string; email: string }`,
@@ -347,7 +358,7 @@ export function buildDataGridTemplateCode({
     `  return (`,
     `    <DataBodyTemplate${themeProp}`,
     `      className="${layoutClassName}"`,
-    `      breadcrumb="Data / Users"`,
+    `      topBar={<PageTopBar left="Data / Users" />}`,
     `      title="Users"`,
     `    >`,
     `      <DataBodyTemplate.Body>`,

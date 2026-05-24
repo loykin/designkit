@@ -1,6 +1,6 @@
 import { createElement, type ComponentType } from 'react'
 import type { TemplateId } from '@/store/types'
-import { FileText, LayoutDashboard, Table2, Layers } from 'lucide-react'
+import { FileText, LayoutDashboard, Table2, Layers, Type, Palette } from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
 import type { TemplateCodeBuilder } from './code'
 export { TEMPLATE_DEFINITIONS, createTemplateOverrides, getTemplateDefinition } from './definitions'
@@ -54,6 +54,8 @@ export type { TypographyBodyTemplateProps } from './typography/TypographyBodyTem
 export { ColorsBodyTemplate } from './typography/ColorsBodyTemplate'
 export type { ColorsBodyTemplateProps } from './typography/ColorsBodyTemplate'
 export { DataPage } from './datapage/DataPage'
+export { PageTopBar, buildTopBar, PageBreadcrumb } from './datapage/PageTopBar'
+export type { PageTopBarProps, PageTopBarVariant, PageBreadcrumbItem } from './datapage/PageTopBar'
 export type {
   DataPageActionsProps,
   DataPageContentProps,
@@ -118,23 +120,37 @@ function DataGridTemplatePreview(props: {
   theme?: React.CSSProperties
   variant: DataGridViewVariant
   layoutClassName: string
-  breadcrumb: React.ReactNode
   title: React.ReactNode
   description?: React.ReactNode
+  topBarShow?: string
+  topBarVariant?: string
+  topBarBg?: string
 }) {
   return createElement(DataGridTemplateDemo, props)
 }
 
 function createDataGridPreview(id: TemplateId) {
   const definition = TEMPLATE_DEFINITIONS.find((item) => item.id === id)
-  return function DataGridPreview({ theme }: { theme?: React.CSSProperties }) {
+  return function DataGridPreview({
+    theme,
+    topBarShow,
+    topBarVariant,
+    topBarBg,
+  }: {
+    theme?: React.CSSProperties
+    topBarShow?: string
+    topBarVariant?: string
+    topBarBg?: string
+  }) {
     return createElement(DataGridTemplatePreview, {
       theme,
       variant: definition?.preview?.variant ?? 'standard',
       layoutClassName: definition?.layoutClassName ?? `layout-${id}`,
-      breadcrumb: definition?.preview?.breadcrumb ?? 'Data / Table',
       title: definition?.preview?.title ?? 'Users',
       description: definition?.preview?.description,
+      topBarShow,
+      topBarVariant,
+      topBarBg,
     })
   }
 }
@@ -175,14 +191,6 @@ const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
   sectioned: buildSectionedBodyTemplateCode,
 }
 
-export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
-  id: definition.id,
-  label: definition.label,
-  group: definition.group,
-  component: previewComponents[definition.id],
-  buildCode: codeBuilders[definition.id],
-}))
-
 const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>>> = {
   table: Table2,
   'table-card': Layers,
@@ -190,6 +198,8 @@ const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>
   sectioned: FileText,
   form: FileText,
   'form-wizard': FileText,
+  typography: Type,
+  colors: Palette,
 }
 
 const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: string }>>> = {
@@ -198,8 +208,7 @@ const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: st
 }
 
 const navigationLabelOrder = ['Common', 'DataBodyTemplate', 'FormWizardBodyTemplate']
-
-export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder
+navigationLabelOrder
   .map((groupId) => {
     const definitions = TEMPLATE_DEFINITIONS.filter((d) => d.navigationGroup === groupId)
     const parentDefinitions = definitions.filter((d) => !d.navigationParent)
@@ -218,12 +227,12 @@ export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrd
           icon: iconById[definition.id] ?? navigationGroupIcon[label],
           children: hasChildren
             ? [
-                { id: definition.id, label: definition.navigationLabel ?? definition.label },
-                ...childDefs.map((child) => ({
-                  id: child.id,
-                  label: child.navigationLabel ?? child.label,
-                })),
-              ]
+              { id: definition.id, label: definition.navigationLabel ?? definition.label },
+              ...childDefs.map((child) => ({
+                id: child.id,
+                label: child.navigationLabel ?? child.label,
+              })),
+            ]
             : [],
         }
       }),

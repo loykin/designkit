@@ -1,4 +1,5 @@
 import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
+import { buildTopBar } from '@/components/templates/datapage/PageTopBar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -148,11 +149,11 @@ const counts = {
   closed: issues.filter((i) => i.status === 'closed').length,
 }
 
-export function TabbedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
+export function TabbedBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBarBg }: { theme?: React.CSSProperties; topBarShow?: string; topBarVariant?: string; topBarBg?: string }) {
   return (
     <DataBodyTemplate
       theme={theme}
-      breadcrumb="Pages / Tabbed"
+      topBar={buildTopBar({ topBarShow, topBarVariant, topBarBg, left: 'Pages / Tabbed' })}
       title="Incidents"
       description="Incident queue grouped by status"
       toolbarLeft={
@@ -169,7 +170,7 @@ export function TabbedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
       }
     >
       <DataBodyTemplate.Summary>
-        <div className="grid grid-cols-4 gap-[var(--dk-panel-gap)]">
+        <div className="grid grid-cols-4 gap-(--dk-panel-gap)">
           {(
             [
               { label: 'Open', count: counts.open, Icon: AlertCircle, cls: 'text-destructive' },

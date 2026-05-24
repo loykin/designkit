@@ -1,4 +1,5 @@
 import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
+import { buildTopBar } from '@/components/templates/datapage/PageTopBar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,11 +14,11 @@ import {
 import { Switch } from '@/components/ui/switch'
 import type { TemplateCodeContext } from '../code'
 
-export function FormBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
+export function FormBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBarBg }: { theme?: React.CSSProperties; topBarShow?: string; topBarVariant?: string; topBarBg?: string }) {
   return (
     <DataBodyTemplate
       theme={theme}
-      breadcrumb="Pages / Form"
+      topBar={buildTopBar({ topBarShow, topBarVariant, topBarBg, left: 'Pages / Form' })}
       title="Account Settings"
       description="Manage your account preferences and security."
       actions={
@@ -67,7 +68,7 @@ export function FormBodyTemplateDemo({ theme }: { theme?: React.CSSProperties })
           <div className="space-y-1.5">
             <Label className="text-xs">Bio</Label>
             <textarea
-              className="w-full h-20 rounded-[var(--radius)] border border-input bg-background px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full h-20 rounded-(--radius) border border-input bg-background px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
               defaultValue="Frontend engineer focused on design systems."
             />
           </div>
@@ -118,7 +119,7 @@ export function FormBodyTemplateDemo({ theme }: { theme?: React.CSSProperties })
               <Input type="password" placeholder="••••••••" className="h-8 text-sm" />
             </div>
           </div>
-          <div className="flex items-center justify-between p-3 rounded-[var(--radius)] border">
+          <div className="flex items-center justify-between p-3 rounded-(--radius) border">
             <div>
               <p className="text-sm font-medium">Two-Factor Authentication</p>
               <p className="text-xs text-muted-foreground">Require OTP on every login</p>
@@ -141,7 +142,7 @@ export function FormBodyTemplateDemo({ theme }: { theme?: React.CSSProperties })
         description="Irreversible actions. Proceed with caution."
         danger
       >
-        <div className="flex items-center justify-between p-3 rounded-[var(--radius)] border border-destructive/40 bg-destructive/5">
+        <div className="flex items-center justify-between p-3 rounded-(--radius) border border-destructive/40 bg-destructive/5">
           <div>
             <p className="text-sm font-medium">Delete Account</p>
             <p className="text-xs text-muted-foreground">

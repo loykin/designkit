@@ -17,7 +17,7 @@ export interface FormWizardStep {
 export interface FormWizardBodyTemplateProps {
   theme?: React.CSSProperties
   title?: string
-  breadcrumb?: React.ReactNode
+  topBar?: React.ReactNode
   variant?: FormWizardVariant
   steps: FormWizardStep[]
   activeStep: number
@@ -29,7 +29,7 @@ export interface FormWizardBodyTemplateProps {
 export function FormWizardBodyTemplate({
   theme,
   title,
-  breadcrumb,
+  topBar,
   variant = 'plain',
   steps,
   activeStep,
@@ -42,8 +42,9 @@ export function FormWizardBodyTemplate({
 
   return (
     <DataPage className="layout-form-wizard" style={theme}>
+      {topBar && <div className="shrink-0">{topBar}</div>}
       <DataPage.Header>
-        <DataPage.TitleBlock title={title} breadcrumb={breadcrumb} />
+        <DataPage.TitleBlock title={title} />
       </DataPage.Header>
 
       {/* Step indicator */}

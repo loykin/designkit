@@ -303,7 +303,7 @@ function DataBodyRow({ label, description, required, children }: DataBodyRowProp
 export interface DataBodyTemplateProps {
   theme?: React.CSSProperties
   className?: string
-  breadcrumb?: React.ReactNode
+  topBar?: React.ReactNode
   title?: React.ReactNode
   description?: React.ReactNode
   actions?: React.ReactNode
@@ -316,10 +316,15 @@ export interface DataBodyTemplateProps {
   contentClassName?: string
 }
 
+function TopBarSlot({ topBar }: { topBar?: React.ReactNode }) {
+  if (!topBar) return null
+  return <div className="shrink-0">{topBar}</div>
+}
+
 function Root({
   theme,
   className,
-  breadcrumb,
+  topBar,
   title,
   description,
   actions,
@@ -361,8 +366,9 @@ function Root({
     const bodyEl = bodySlots[0]
     return (
       <DataPage className={cn('layout-databody', className)} style={theme}>
+        <TopBarSlot topBar={topBar} />
         <DataPage.Header>
-          <DataPage.TitleBlock breadcrumb={breadcrumb} title={title} description={description} />
+          <DataPage.TitleBlock title={title} description={description} />
           <DataPage.Actions>{actions}</DataPage.Actions>
         </DataPage.Header>
 
@@ -388,8 +394,9 @@ function Root({
     const activeSection = sections.find((s) => s.props.id === activeId) ?? sections[0]
     return (
       <DataPage className={cn('layout-sectioned', className)} style={theme}>
+        <TopBarSlot topBar={topBar} />
         <DataPage.Header>
-          <DataPage.TitleBlock breadcrumb={breadcrumb} title={title} description={description} />
+          <DataPage.TitleBlock title={title} description={description} />
           <DataPage.Actions>{actions}</DataPage.Actions>
         </DataPage.Header>
 
@@ -440,8 +447,9 @@ function Root({
 
   return (
     <DataPage className={cn('layout-databody', className)} style={theme}>
+      <TopBarSlot topBar={topBar} />
       <DataPage.Header>
-        <DataPage.TitleBlock breadcrumb={breadcrumb} title={title} description={description} />
+        <DataPage.TitleBlock title={title} description={description} />
         <DataPage.Actions>{actions}</DataPage.Actions>
       </DataPage.Header>
 

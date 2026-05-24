@@ -93,11 +93,11 @@ function Header({ children, className }: DataPageHeaderProps) {
     <header
       data-slot="data-page-header"
       className={cn(
-        'shrink-0 px-[var(--dk-page-padding-x)] pb-[var(--dk-page-padding-y)] pt-[var(--dk-page-padding-y)]',
+        'shrink-0 px-[var(--dk-page-padding-x)] pt-[var(--dk-page-padding-y)]',
         className,
       )}
     >
-      <div className="flex min-h-[calc(var(--dk-toolbar-height)*1.25)] items-end justify-between gap-[var(--dk-panel-gap)]">
+      <div className="flex items-center justify-between gap-[var(--dk-panel-gap)]">
         {children}
       </div>
     </header>

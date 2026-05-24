@@ -46,6 +46,40 @@ export interface TemplateDefinition {
   }
 }
 
+const topBarOptions: TemplateOptionSpec[] = [
+  {
+    key: 'topBarShow',
+    label: 'Top Bar',
+    type: 'select',
+    choices: [
+      { value: 'show', label: 'Show' },
+      { value: 'hide', label: 'Hide' },
+    ],
+    defaultValue: 'show',
+  },
+  {
+    key: 'topBarVariant',
+    label: 'Border',
+    type: 'select',
+    choices: [
+      { value: 'ghost', label: 'None' },
+      { value: 'default', label: 'Line' },
+    ],
+    defaultValue: 'ghost',
+  },
+  {
+    key: 'topBarBg',
+    label: 'Background',
+    type: 'select',
+    choices: [
+      { value: 'transparent', label: 'Default' },
+      { value: 'muted', label: 'Muted' },
+      { value: 'card', label: 'Card' },
+    ],
+    defaultValue: 'transparent',
+  },
+]
+
 export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
   // ── DataGridView (nested under DataBodyTemplate) ─────────────────────────────
   {
@@ -58,6 +92,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportComponent: 'DataGridView',
     exportKind: 'data-grid',
     preset: { radius: 0.125 },
+    options: topBarOptions,
     preview: {
       variant: 'standard',
       breadcrumb: 'Data / Table',
@@ -80,6 +115,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
       title: 'Users',
       description: 'gridkit DataGridInfinity',
     },
+    options: topBarOptions,
   },
   {
     id: 'table-drag',
@@ -97,6 +133,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
       title: 'Services',
       description: 'gridkit DataGridDrag',
     },
+    options: topBarOptions,
   },
   {
     id: 'table-card',
@@ -114,6 +151,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
       title: 'User Cards',
       description: 'gridkit DataGridCard',
     },
+    options: topBarOptions,
   },
   {
     id: 'table-card-list',
@@ -131,6 +169,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
       title: 'User Cards',
       description: 'gridkit DataGridCard list mode',
     },
+    options: topBarOptions,
   },
   // ── DataBodyTemplate ─────────────────────────────────────────────────────────
   {
@@ -143,6 +182,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
     preset: { radius: 0.375 },
+    options: topBarOptions,
   },
   {
     id: 'databody-detail',
@@ -154,6 +194,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
     preset: { radius: 0.375 },
+    options: topBarOptions,
   },
   {
     id: 'databody-split',
@@ -165,6 +206,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
     preset: { radius: 0.375 },
+    options: topBarOptions,
   },
   {
     id: 'tabbed',
@@ -176,6 +218,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
     preset: { radius: 0.375 },
+    options: topBarOptions,
   },
   {
     id: 'form',
@@ -188,6 +231,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
     preset: { radius: 0.5 },
+    options: topBarOptions,
   },
   {
     id: 'form-stacked',
@@ -200,6 +244,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
     preset: { radius: 0.5 },
+    options: topBarOptions,
   },
   {
     id: 'form-inline',
@@ -212,6 +257,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
     preset: { radius: 0.25 },
+    options: topBarOptions,
   },
   {
     id: 'sectioned',
@@ -222,6 +268,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportComponent: 'DataBodyTemplate',
     exportKind: 'body-template',
     preset: { radius: 0.5 },
+    options: topBarOptions,
   },
   // ── Common ───────────────────────────────────────────────────────────────────
   {
@@ -256,6 +303,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportComponent: 'FormWizardBodyTemplate',
     exportKind: 'body-template',
     preset: { radius: 0.5 },
+    options: topBarOptions,
   },
 ]
 

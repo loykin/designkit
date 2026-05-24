@@ -7,6 +7,7 @@ import {
 } from '@loykin/gridkit'
 import type { Table as TanStackTable } from '@tanstack/react-table'
 import { DataBodyTemplate } from './DataBodyTemplate'
+import { buildTopBar } from '@/components/templates/datapage/PageTopBar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -14,9 +15,13 @@ import { Switch } from '@/components/ui/switch'
 import { Plus, Users, Search, RefreshCw } from 'lucide-react'
 import { EmptyState } from '@/components/ui/empty-state'
 import type { TemplateCodeContext } from '../code'
+import React from 'react'
 
 export interface DataBodyTemplateDemoProps {
   theme?: React.CSSProperties
+  topBarShow?: string
+  topBarVariant?: string
+  topBarBg?: string
 }
 
 type User = {
@@ -279,11 +284,11 @@ function CustomContent() {
   )
 }
 
-export function DataBodyTemplateDemo({ theme }: DataBodyTemplateDemoProps) {
+export function DataBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBarBg }: DataBodyTemplateDemoProps) {
   return (
     <DataBodyTemplate
       theme={theme}
-      breadcrumb="Design / Body Template"
+      topBar={buildTopBar({ topBarShow, topBarVariant, topBarBg, left: 'Design / Body Template' })}
       title="Body Template"
       description="Compound body shell with optional tabs and arbitrary content"
     >

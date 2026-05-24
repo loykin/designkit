@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { DataBodyTemplate } from './DataBodyTemplate'
+import { buildTopBar } from '@/components/templates/datapage/PageTopBar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import type { TemplateCodeContext } from '../code'
@@ -21,13 +22,13 @@ const users: User[] = [
 
 const statusVariant = { active: 'default', pending: 'secondary', inactive: 'outline' } as const
 
-export function SplitBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
+export function SplitBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBarBg }: { theme?: React.CSSProperties; topBarShow?: string; topBarVariant?: string; topBarBg?: string }) {
   const [active, setActive] = useState(users[0])
 
   return (
     <DataBodyTemplate
       theme={theme}
-      breadcrumb="Users"
+      topBar={buildTopBar({ topBarShow, topBarVariant, topBarBg, left: 'Users' })}
       title="Users"
       actions={
         <Button size="sm" className="h-8 text-xs">

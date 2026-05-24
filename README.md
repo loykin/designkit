@@ -13,16 +13,22 @@ Requires React 19 as a peer dependency.
 ## Quick Start
 
 ```tsx
-import { DataBodyTemplate } from '@loykin/designkit'
+import { DataBodyTemplate, DataGridView, type DataGridColumnDef } from '@loykin/designkit'
 import '@loykin/designkit/styles'
+
+type User = { id: string; name: string; email: string }
+
+const columns: DataGridColumnDef<User>[] = [
+  { id: 'name',  accessorKey: 'name',  header: 'Name'  },
+  { id: 'email', accessorKey: 'email', header: 'Email' },
+]
 
 export function UsersPage() {
   return (
-    <DataBodyTemplate
-      breadcrumb="Admin / Users"
-      title="Users"
-    >
-      {/* content */}
+    <DataBodyTemplate breadcrumb="Admin / Users" title="Users">
+      <DataBodyTemplate.Body>
+        <DataGridView data={data} columns={columns} getRowId={(row) => row.id} />
+      </DataBodyTemplate.Body>
     </DataBodyTemplate>
   )
 }
@@ -34,7 +40,7 @@ export function UsersPage() {
 
 ### DataBodyTemplate
 
-The general-purpose page shell. Provides slots for header, tabs, groups, and toolbar.
+The general-purpose page shell. Accepts three kinds of child slots — `.Body`, `.Tab`, and `.Section` — which determine the layout mode automatically.
 
 ```tsx
 <DataBodyTemplate
@@ -42,16 +48,58 @@ The general-purpose page shell. Provides slots for header, tabs, groups, and too
   title="Users"
   description="Manage your team members."
   actions={<Button>Add User</Button>}
-  toolbarLeft={<SearchInput />}
-  toolbarRight={<FilterButton />}
 >
-  {/* children */}
+  {/* .Body | .Tab | .Section */}
+</DataBodyTemplate>
+```
+
+#### DataBodyTemplate.Body
+
+Single-pane content. No navigation. Use for full-height grid or custom layouts.
+
+```tsx
+<DataBodyTemplate title="Users">
+  <DataBodyTemplate.Body>
+    <DataGridView data={data} columns={columns} getRowId={(row) => row.id} />
+  </DataBodyTemplate.Body>
+</DataBodyTemplate>
+```
+
+#### DataBodyTemplate.Tab
+
+Creates a tabbed page layout. Add multiple `.Tab` children to enable the tab bar.
+
+```tsx
+<DataBodyTemplate title="Users">
+  <DataBodyTemplate.Tab id="list" label="List" count={42}>
+    <DataGridView data={data} columns={columns} getRowId={(row) => row.id} />
+  </DataBodyTemplate.Tab>
+  <DataBodyTemplate.Tab id="settings" label="Settings">
+    <SettingsForm />
+  </DataBodyTemplate.Tab>
+</DataBodyTemplate>
+```
+
+#### DataBodyTemplate.Section
+
+Settings-style layout with left navigation and right content panel. Add multiple `.Section` children to enable the side nav.
+
+```tsx
+<DataBodyTemplate title="Settings">
+  <DataBodyTemplate.Section id="general" label="General" description="Workspace basics">
+    <DataBodyTemplate.Group layout="horizontal" title="Workspace">
+      <DataBodyTemplate.Row label="Name"><Input defaultValue="Acme Corp" /></DataBodyTemplate.Row>
+    </DataBodyTemplate.Group>
+  </DataBodyTemplate.Section>
+  <DataBodyTemplate.Section id="security" label="Security">
+    <SecuritySettings />
+  </DataBodyTemplate.Section>
 </DataBodyTemplate>
 ```
 
 #### DataBodyTemplate.Group
 
-Groups content into sections. The `layout` prop controls the visual structure.
+Groups content within a tab or section. The `layout` prop controls the visual structure.
 
 | layout | Use case | Default wrapper |
 |---|---|---|
@@ -61,7 +109,7 @@ Groups content into sections. The `layout` prop controls the visual structure.
 | `split` | Left list + right detail | bordered |
 
 ```tsx
-<DataBodyTemplate title="Edit User">
+<DataBodyTemplate.Tab id="settings" label="Settings">
   <DataBodyTemplate.Group layout="horizontal" title="Identity" description="Basic information">
     <DataBodyTemplate.Row label="Name" required>
       <Input defaultValue="Sarah Kim" />
@@ -70,7 +118,7 @@ Groups content into sections. The `layout` prop controls the visual structure.
       <Input type="email" defaultValue="sarah@acme.com" />
     </DataBodyTemplate.Row>
   </DataBodyTemplate.Group>
-</DataBodyTemplate>
+</DataBodyTemplate.Tab>
 ```
 
 #### DataBodyTemplate.Field
@@ -78,32 +126,15 @@ Groups content into sections. The `layout` prop controls the visual structure.
 Read-only key-value display. Use with `Group layout="inline"` for detail pages.
 
 ```tsx
-<DataBodyTemplate title="Sarah Kim">
-  <DataBodyTemplate.Group layout="inline" title="Identity">
-    <DataBodyTemplate.Field label="Email">sarah@acme.com</DataBodyTemplate.Field>
-    <DataBodyTemplate.Field label="Role"><Badge>Admin</Badge></DataBodyTemplate.Field>
-  </DataBodyTemplate.Group>
-</DataBodyTemplate>
-```
-
-#### DataBodyTemplate.Tab
-
-Creates a tabbed page layout.
-
-```tsx
-<DataBodyTemplate title="Users">
-  <DataBodyTemplate.Tab id="list" label="List" count={42}>
-    <UserTable />
-  </DataBodyTemplate.Tab>
-  <DataBodyTemplate.Tab id="settings" label="Settings">
-    <SettingsForm />
-  </DataBodyTemplate.Tab>
-</DataBodyTemplate>
+<DataBodyTemplate.Group layout="inline" title="Identity">
+  <DataBodyTemplate.Field label="Email">sarah@acme.com</DataBodyTemplate.Field>
+  <DataBodyTemplate.Field label="Role"><Badge>Admin</Badge></DataBodyTemplate.Field>
+</DataBodyTemplate.Group>
 ```
 
 #### DataBodyTemplate.Summary
 
-A pinned summary area below the header.
+A pinned summary area below the header, above tabs.
 
 ```tsx
 <DataBodyTemplate title="Overview">
@@ -118,7 +149,15 @@ A pinned summary area below the header.
 
 ### DataGridView
 
-Data table page. Use inside `DataBodyTemplate`.
+Data table component. Use inside `DataBodyTemplate.Body` or any `.Tab` / `.Section`.
+
+| variant | Description |
+|---|---|
+| `standard` (default) | Standard data table with pagination |
+| `infinity` | Infinite scroll |
+| `drag` | Row drag-to-reorder |
+| `card` | Card grid |
+| `card-list` | Card list |
 
 ```tsx
 import { DataBodyTemplate, DataGridView, type DataGridColumnDef } from '@loykin/designkit'
@@ -133,53 +172,15 @@ const columns: DataGridColumnDef<User>[] = [
 export function UsersPage() {
   return (
     <DataBodyTemplate breadcrumb="Admin / Users" title="Users">
-      <DataGridView
-        data={data}
-        columns={columns}
-        getRowId={(row) => row.id}
-      />
+      <DataBodyTemplate.Body>
+        <DataGridView
+          data={data}
+          columns={columns}
+          getRowId={(row) => row.id}
+          tableHeight={420}
+        />
+      </DataBodyTemplate.Body>
     </DataBodyTemplate>
-  )
-}
-```
-
-| variant | Description |
-|---|---|
-| `standard` (default) | Standard data table |
-| `infinity` | Infinite scroll |
-| `drag` | Row drag-to-reorder |
-| `card` | Card grid |
-| `card-list` | Card list |
-
----
-
-### SectionedBodyTemplate
-
-Settings-style page with left navigation and right content panel.
-
-```tsx
-import { SectionedBodyTemplate } from '@loykin/designkit'
-
-const sections = [
-  { id: 'general',  label: 'General'  },
-  { id: 'security', label: 'Security' },
-  { id: 'billing',  label: 'Billing'  },
-]
-
-export function SettingsPage() {
-  return (
-    <SectionedBodyTemplate
-      title="Settings"
-      sections={sections}
-      defaultSection="general"
-    >
-      <SectionedBodyTemplate.Panel id="general">
-        <GeneralSettings />
-      </SectionedBodyTemplate.Panel>
-      <SectionedBodyTemplate.Panel id="security">
-        <SecuritySettings />
-      </SectionedBodyTemplate.Panel>
-    </SectionedBodyTemplate>
   )
 }
 ```

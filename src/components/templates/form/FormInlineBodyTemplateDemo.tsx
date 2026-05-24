@@ -1,4 +1,5 @@
 import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
+import { buildTopBar } from '@/components/templates/datapage/PageTopBar'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -12,11 +13,11 @@ import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import type { TemplateCodeContext } from '../code'
 
-export function FormInlineBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
+export function FormInlineBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBarBg }: { theme?: React.CSSProperties; topBarShow?: string; topBarVariant?: string; topBarBg?: string }) {
   return (
     <DataBodyTemplate
       theme={theme}
-      breadcrumb="Pages / Form / Inline"
+      topBar={buildTopBar({ topBarShow, topBarVariant, topBarBg, left: 'Pages / Form / Inline' })}
       title="Edit User"
       description="Update user profile and access settings."
       actions={
