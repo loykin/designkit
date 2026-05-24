@@ -152,7 +152,7 @@ export function SidebarShell({ navigation, children }: SidebarShellProps) {
   const { shell: shellId = 'sidebar', templateId } = useParams()
 
   return (
-    <div className="h-full" style={{ transform: 'translateZ(0)' }}>
+    <div className="h-full">
       <SidebarProvider className="h-full min-h-0!">
         <Sidebar>
           <NavigationSidebarContent
