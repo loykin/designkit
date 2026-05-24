@@ -3,11 +3,7 @@ import type { TemplateId } from '@/store/types'
 import { FileText, LayoutDashboard, Table2, Layers } from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
 import type { TemplateCodeBuilder } from './code'
-export {
-  TEMPLATE_DEFINITIONS,
-  createTemplateOverrides,
-  getTemplateDefinition,
-} from './definitions'
+export { TEMPLATE_DEFINITIONS, createTemplateOverrides, getTemplateDefinition } from './definitions'
 export type {
   TemplateDefinition,
   TemplateExportKind,
@@ -72,10 +68,7 @@ export type {
   DataPageTabsProps,
   DataPageTitleBlockProps,
 } from './datapage/DataPage'
-export type {
-  TemplateCodeBuilder,
-  TemplateCodeContext,
-} from './code'
+export type { TemplateCodeBuilder, TemplateCodeContext } from './code'
 export type {
   DataBodyTabProps,
   DataBodySectionProps,
@@ -91,14 +84,32 @@ export type {
 import { DataGridTemplateDemo, buildDataGridTemplateCode } from './table/DataGridTemplateDemo'
 import type { DataGridViewVariant } from './table/DataGridView'
 import { DataBodyTemplateDemo, buildDataBodyTemplateCode } from './databody/DataBodyTemplateDemo'
-import { DetailBodyTemplateDemo, buildDetailBodyTemplateCode } from './databody/DetailBodyTemplateDemo'
+import {
+  DetailBodyTemplateDemo,
+  buildDetailBodyTemplateCode,
+} from './databody/DetailBodyTemplateDemo'
 import { SplitBodyTemplateDemo, buildSplitBodyTemplateCode } from './databody/SplitBodyTemplateDemo'
-import { TabbedBodyTemplateDemo, buildTabbedBodyTemplateCode } from './tabbed/TabbedBodyTemplateDemo'
+import {
+  TabbedBodyTemplateDemo,
+  buildTabbedBodyTemplateCode,
+} from './tabbed/TabbedBodyTemplateDemo'
 import { FormBodyTemplateDemo, buildFormBodyTemplateCode } from './form/FormBodyTemplateDemo'
-import { FormStackedBodyTemplateDemo, buildFormStackedBodyTemplateCode } from './form/FormStackedBodyTemplateDemo'
-import { FormWizardBodyTemplateDemo, buildFormWizardBodyTemplateCode } from './form/FormWizardBodyTemplateDemo'
-import { FormInlineBodyTemplateDemo, buildFormInlineBodyTemplateCode } from './form/FormInlineBodyTemplateDemo'
-import { SectionedBodyTemplateDemo, buildSectionedBodyTemplateCode } from './sectioned/SectionedBodyTemplateDemo'
+import {
+  FormStackedBodyTemplateDemo,
+  buildFormStackedBodyTemplateCode,
+} from './form/FormStackedBodyTemplateDemo'
+import {
+  FormWizardBodyTemplateDemo,
+  buildFormWizardBodyTemplateCode,
+} from './form/FormWizardBodyTemplateDemo'
+import {
+  FormInlineBodyTemplateDemo,
+  buildFormInlineBodyTemplateCode,
+} from './form/FormInlineBodyTemplateDemo'
+import {
+  SectionedBodyTemplateDemo,
+  buildSectionedBodyTemplateCode,
+} from './sectioned/SectionedBodyTemplateDemo'
 import { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
 import { ColorsBodyTemplate } from './typography/ColorsBodyTemplate'
 
@@ -172,43 +183,49 @@ export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition)
 }))
 
 const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>>> = {
-  table:         Table2,
-  'table-card':  Layers,
-  databody:      LayoutDashboard,
-  sectioned:     FileText,
-  form:          FileText,
+  table: Table2,
+  'table-card': Layers,
+  databody: LayoutDashboard,
+  sectioned: FileText,
+  form: FileText,
   'form-wizard': FileText,
 }
 
 const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: string }>>> = {
-  DataBodyTemplate:       LayoutDashboard,
+  DataBodyTemplate: LayoutDashboard,
   FormWizardBodyTemplate: Layers,
 }
 
 const navigationLabelOrder = ['Common', 'DataBodyTemplate', 'FormWizardBodyTemplate']
 
-export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder.map((groupId) => {
-  const definitions = TEMPLATE_DEFINITIONS.filter((d) => d.navigationGroup === groupId)
-  const parentDefinitions = definitions.filter((d) => !d.navigationParent)
-  const label = groupId
+export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder
+  .map((groupId) => {
+    const definitions = TEMPLATE_DEFINITIONS.filter((d) => d.navigationGroup === groupId)
+    const parentDefinitions = definitions.filter((d) => !d.navigationParent)
+    const label = groupId
 
-  return {
-    label,
-    items: parentDefinitions.map((definition) => {
-      const childDefs = definitions.filter((d) => d.navigationParent === definition.id)
-      const hasChildren = childDefs.length > 0
+    return {
+      label,
+      items: parentDefinitions.map((definition) => {
+        const childDefs = definitions.filter((d) => d.navigationParent === definition.id)
+        const hasChildren = childDefs.length > 0
 
-      return {
-        id: definition.id,
-        label: definition.navigationSubgroupLabel ?? definition.navigationLabel ?? definition.label,
-        icon: iconById[definition.id] ?? navigationGroupIcon[label],
-        children: hasChildren
-          ? [
-              { id: definition.id, label: definition.navigationLabel ?? definition.label },
-              ...childDefs.map((child) => ({ id: child.id, label: child.navigationLabel ?? child.label })),
-            ]
-          : [],
-      }
-    }),
-  }
-}).filter((group) => group.items.length > 0)
+        return {
+          id: definition.id,
+          label:
+            definition.navigationSubgroupLabel ?? definition.navigationLabel ?? definition.label,
+          icon: iconById[definition.id] ?? navigationGroupIcon[label],
+          children: hasChildren
+            ? [
+                { id: definition.id, label: definition.navigationLabel ?? definition.label },
+                ...childDefs.map((child) => ({
+                  id: child.id,
+                  label: child.navigationLabel ?? child.label,
+                })),
+              ]
+            : [],
+        }
+      }),
+    }
+  })
+  .filter((group) => group.items.length > 0)

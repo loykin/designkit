@@ -61,14 +61,14 @@
   --dk-header: oklch(0.22 0 0 / 0.88);
 }
 
-[data-dk-density="compact"] {
+[data-dk-density='compact'] {
   --dk-density: 0.85;
   --dk-page-padding-y: 0.75rem;
   --dk-panel-gap: 0.75rem;
   --dk-toolbar-height: 2.5rem;
 }
 
-[data-dk-density="comfortable"] {
+[data-dk-density='comfortable'] {
   --dk-density: 1.15;
   --dk-page-padding-y: 1.25rem;
   --dk-panel-gap: 1.25rem;

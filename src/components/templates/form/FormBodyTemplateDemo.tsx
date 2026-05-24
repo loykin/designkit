@@ -3,7 +3,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import type { TemplateCodeContext } from '../code'
 
@@ -16,12 +22,20 @@ export function FormBodyTemplateDemo({ theme }: { theme?: React.CSSProperties })
       description="Manage your account preferences and security."
       actions={
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="h-8 text-xs">Cancel</Button>
-          <Button size="sm" className="h-8 text-xs">Save Changes</Button>
+          <Button variant="outline" size="sm" className="h-8 text-xs">
+            Cancel
+          </Button>
+          <Button size="sm" className="h-8 text-xs">
+            Save Changes
+          </Button>
         </div>
       }
     >
-      <DataBodyTemplate.Group layout="horizontal" title="Profile" description="Your public-facing name and contact info.">
+      <DataBodyTemplate.Group
+        layout="horizontal"
+        title="Profile"
+        description="Your public-facing name and contact info."
+      >
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
@@ -40,7 +54,9 @@ export function FormBodyTemplateDemo({ theme }: { theme?: React.CSSProperties })
           <div className="space-y-1.5">
             <Label className="text-xs">Role</Label>
             <Select defaultValue="admin">
-              <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="h-8 text-sm">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="admin">Admin</SelectItem>
                 <SelectItem value="editor">Editor</SelectItem>
@@ -58,14 +74,18 @@ export function FormBodyTemplateDemo({ theme }: { theme?: React.CSSProperties })
         </div>
       </DataBodyTemplate.Group>
 
-      <DataBodyTemplate.Group layout="horizontal" title="Notifications" description="Choose when and how you get notified.">
+      <DataBodyTemplate.Group
+        layout="horizontal"
+        title="Notifications"
+        description="Choose when and how you get notified."
+      >
         <div className="divide-y">
           {[
-            { label: 'Comments on your posts', sub: 'When someone replies to a thread', on: true  },
-            { label: 'Mentions',               sub: 'When someone @mentions you',        on: true  },
-            { label: 'Weekly digest',          sub: 'A weekly summary of activity',      on: false },
-            { label: 'Security alerts',        sub: 'Login from new device',             on: true  },
-            { label: 'Product updates',        sub: 'New features and improvements',     on: false },
+            { label: 'Comments on your posts', sub: 'When someone replies to a thread', on: true },
+            { label: 'Mentions', sub: 'When someone @mentions you', on: true },
+            { label: 'Weekly digest', sub: 'A weekly summary of activity', on: false },
+            { label: 'Security alerts', sub: 'Login from new device', on: true },
+            { label: 'Product updates', sub: 'New features and improvements', on: false },
           ].map((item) => (
             <div key={item.label} className="flex items-center justify-between py-3">
               <div>
@@ -78,7 +98,11 @@ export function FormBodyTemplateDemo({ theme }: { theme?: React.CSSProperties })
         </div>
       </DataBodyTemplate.Group>
 
-      <DataBodyTemplate.Group layout="horizontal" title="Security" description="Password and authentication settings.">
+      <DataBodyTemplate.Group
+        layout="horizontal"
+        title="Security"
+        description="Password and authentication settings."
+      >
         <div className="space-y-4">
           <div className="space-y-1.5">
             <Label className="text-xs">Current Password</Label>
@@ -100,30 +124,40 @@ export function FormBodyTemplateDemo({ theme }: { theme?: React.CSSProperties })
               <p className="text-xs text-muted-foreground">Require OTP on every login</p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs">Disabled</Badge>
-              <Button size="sm" className="h-8 text-xs">Enable</Button>
+              <Badge variant="outline" className="text-xs">
+                Disabled
+              </Badge>
+              <Button size="sm" className="h-8 text-xs">
+                Enable
+              </Button>
             </div>
           </div>
         </div>
       </DataBodyTemplate.Group>
 
-      <DataBodyTemplate.Group layout="horizontal" title="Danger Zone" description="Irreversible actions. Proceed with caution." danger>
+      <DataBodyTemplate.Group
+        layout="horizontal"
+        title="Danger Zone"
+        description="Irreversible actions. Proceed with caution."
+        danger
+      >
         <div className="flex items-center justify-between p-3 rounded-[var(--radius)] border border-destructive/40 bg-destructive/5">
           <div>
             <p className="text-sm font-medium">Delete Account</p>
-            <p className="text-xs text-muted-foreground">Permanently delete your account and all data.</p>
+            <p className="text-xs text-muted-foreground">
+              Permanently delete your account and all data.
+            </p>
           </div>
-          <Button variant="destructive" size="sm" className="h-8 text-xs">Delete Account</Button>
+          <Button variant="destructive" size="sm" className="h-8 text-xs">
+            Delete Account
+          </Button>
         </div>
       </DataBodyTemplate.Group>
     </DataBodyTemplate>
   )
 }
 
-export function buildFormBodyTemplateCode({
-  themeProp,
-  layoutClassName,
-}: TemplateCodeContext) {
+export function buildFormBodyTemplateCode({ themeProp, layoutClassName }: TemplateCodeContext) {
   return [
     `import { DataBodyTemplate } from '@loykin/designkit'`,
     `import '@loykin/designkit/styles'`,

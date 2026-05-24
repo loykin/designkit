@@ -12,10 +12,18 @@ export function SectionedBodyTemplateDemo({ theme }: { theme?: React.CSSProperti
       breadcrumb="Pages / Sectioned"
       title="Workspace Settings"
       description="Section navigation connected to body panels."
-      actions={<Button size="sm" className="h-8 text-xs">Save</Button>}
+      actions={
+        <Button size="sm" className="h-8 text-xs">
+          Save
+        </Button>
+      }
     >
       <DataBodyTemplate.Section id="profile" label="Profile" description="Identity and contact">
-        <DataBodyTemplate.Group layout="stacked" title="Profile" description="Public workspace details.">
+        <DataBodyTemplate.Group
+          layout="stacked"
+          title="Profile"
+          description="Public workspace details."
+        >
           <div className="space-y-3">
             <div className="space-y-1.5">
               <Label className="text-xs">Workspace Name</Label>
@@ -24,7 +32,9 @@ export function SectionedBodyTemplateDemo({ theme }: { theme?: React.CSSProperti
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium">Public profile</p>
-                <p className="text-xs text-muted-foreground">Allow discovery in organization search.</p>
+                <p className="text-xs text-muted-foreground">
+                  Allow discovery in organization search.
+                </p>
               </div>
               <Switch defaultChecked />
             </div>
@@ -33,7 +43,11 @@ export function SectionedBodyTemplateDemo({ theme }: { theme?: React.CSSProperti
       </DataBodyTemplate.Section>
 
       <DataBodyTemplate.Section id="security" label="Security" description="Password and access">
-        <DataBodyTemplate.Group layout="stacked" title="Security" description="Password and authentication.">
+        <DataBodyTemplate.Group
+          layout="stacked"
+          title="Security"
+          description="Password and authentication."
+        >
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium">Require two-factor authentication</p>
             <Switch />
@@ -42,15 +56,24 @@ export function SectionedBodyTemplateDemo({ theme }: { theme?: React.CSSProperti
       </DataBodyTemplate.Section>
 
       <DataBodyTemplate.Section id="billing" label="Billing" description="Plan and invoices">
-        <DataBodyTemplate.Group layout="stacked" title="Billing" description="Plan and invoice settings.">
-          <Button variant="outline" size="sm" className="h-8 text-xs">Manage Plan</Button>
+        <DataBodyTemplate.Group
+          layout="stacked"
+          title="Billing"
+          description="Plan and invoice settings."
+        >
+          <Button variant="outline" size="sm" className="h-8 text-xs">
+            Manage Plan
+          </Button>
         </DataBodyTemplate.Group>
       </DataBodyTemplate.Section>
     </DataBodyTemplate>
   )
 }
 
-export function buildSectionedBodyTemplateCode({ themeProp, layoutClassName }: TemplateCodeContext) {
+export function buildSectionedBodyTemplateCode({
+  themeProp,
+  layoutClassName,
+}: TemplateCodeContext) {
   return [
     `import { DataBodyTemplate } from '@loykin/designkit'`,
     `import '@loykin/designkit/styles'`,

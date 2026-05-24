@@ -1,8 +1,18 @@
 import { useState } from 'react'
-import { FormWizardBodyTemplate, type FormWizardStep, type FormWizardVariant } from '@/components/templates'
+import {
+  FormWizardBodyTemplate,
+  type FormWizardStep,
+  type FormWizardVariant,
+} from '@/components/templates'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
@@ -121,8 +131,8 @@ const steps: FormWizardStep[] = [
         <div className="space-y-3 pt-1">
           {[
             { label: 'Email notifications', desc: 'Get notified of important activity.', on: true },
-            { label: 'Weekly digest',        desc: 'A weekly summary email every Monday.', on: false },
-            { label: 'Browser push',         desc: 'Real-time desktop notifications.',    on: true  },
+            { label: 'Weekly digest', desc: 'A weekly summary email every Monday.', on: false },
+            { label: 'Browser push', desc: 'Real-time desktop notifications.', on: true },
           ].map((item) => (
             <div key={item.label} className="flex items-center justify-between">
               <div>
@@ -144,25 +154,30 @@ const steps: FormWizardStep[] = [
       <div className="space-y-4">
         <div className="rounded-lg border divide-y">
           {[
-            { label: 'Name',       value: 'Sarah Kim' },
-            { label: 'Email',      value: 'sarah@acme.com' },
+            { label: 'Name', value: 'Sarah Kim' },
+            { label: 'Email', value: 'sarah@acme.com' },
             { label: 'Department', value: 'Engineering' },
-            { label: 'Timezone',   value: 'Asia / Seoul' },
+            { label: 'Timezone', value: 'Asia / Seoul' },
           ].map((row) => (
             <div key={row.label} className="flex items-center justify-between px-4 py-2.5">
               <span className="text-xs text-muted-foreground w-28 shrink-0">{row.label}</span>
               <span className="text-sm font-medium flex-1">{row.value}</span>
-              <Badge variant="outline" className="text-[10px] h-5">Edit</Badge>
+              <Badge variant="outline" className="text-[10px] h-5">
+                Edit
+              </Badge>
             </div>
           ))}
         </div>
         <div className="flex items-start gap-2.5 pt-1">
           <Checkbox id="terms" className="mt-0.5" />
-          <Label htmlFor="terms" className="text-xs text-muted-foreground leading-relaxed cursor-pointer">
+          <Label
+            htmlFor="terms"
+            className="text-xs text-muted-foreground leading-relaxed cursor-pointer"
+          >
             I agree to the{' '}
-            <span className="text-foreground underline underline-offset-2">Terms of Service</span>
-            {' '}and{' '}
-            <span className="text-foreground underline underline-offset-2">Privacy Policy</span>.
+            <span className="text-foreground underline underline-offset-2">Terms of Service</span>{' '}
+            and <span className="text-foreground underline underline-offset-2">Privacy Policy</span>
+            .
           </Label>
         </div>
       </div>
@@ -170,7 +185,13 @@ const steps: FormWizardStep[] = [
   },
 ]
 
-export function FormWizardBodyTemplateDemo({ theme, variant }: { theme?: React.CSSProperties; variant?: FormWizardVariant }) {
+export function FormWizardBodyTemplateDemo({
+  theme,
+  variant,
+}: {
+  theme?: React.CSSProperties
+  variant?: FormWizardVariant
+}) {
   const [activeStep, setActiveStep] = useState(0)
 
   return (
@@ -188,9 +209,7 @@ export function FormWizardBodyTemplateDemo({ theme, variant }: { theme?: React.C
   )
 }
 
-export function buildFormWizardBodyTemplateCode({
-  themeProp,
-}: TemplateCodeContext) {
+export function buildFormWizardBodyTemplateCode({ themeProp }: TemplateCodeContext) {
   return [
     `import { useState } from 'react'`,
     `import { FormWizardBodyTemplate, type FormWizardStep } from '@loykin/designkit'`,

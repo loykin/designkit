@@ -80,20 +80,23 @@ export function DataGridView<T extends Record<string, unknown>>({
   }, [data])
 
   const dragColumnSize = drag?.dragColumnSize ?? 28
-  const dragColumns = useMemo<DataGridColumnDef<T>[]>(() => ([
-    {
-      id: 'drag',
-      size: dragColumnSize,
-      minSize: dragColumnSize,
-      maxSize: dragColumnSize,
-      enableResizing: false,
-      enableSorting: false,
-      header: () => null,
-      cell: () => <DragHandleCell />,
-      meta: { align: 'center' },
-    },
-    ...columns,
-  ]), [columns, dragColumnSize])
+  const dragColumns = useMemo<DataGridColumnDef<T>[]>(
+    () => [
+      {
+        id: 'drag',
+        size: dragColumnSize,
+        minSize: dragColumnSize,
+        maxSize: dragColumnSize,
+        enableResizing: false,
+        enableSorting: false,
+        header: () => null,
+        cell: () => <DragHandleCell />,
+        meta: { align: 'center' },
+      },
+      ...columns,
+    ],
+    [columns, dragColumnSize],
+  )
 
   const handleRowReorder = (rows: T[]) => {
     setOrderedData(rows)

@@ -60,14 +60,20 @@ export function CardListBodyTemplate({
           <DataPage.GroupBody>
             <div className={`grid gap-[var(--dk-panel-gap)] ${colClass[columns]}`}>
               {items.map((item) => (
-                <Card key={item.id} className="flex flex-col hover:shadow-md transition-shadow cursor-pointer">
+                <Card
+                  key={item.id}
+                  className="flex flex-col hover:shadow-md transition-shadow cursor-pointer"
+                >
                   <CardContent className="p-[var(--dk-panel-gap)] flex-1">
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <p className="text-sm font-semibold truncate">{item.title}</p>
                       {item.badge && (
                         <div className="flex items-center gap-1 shrink-0">
                           {item.badgeColor && (
-                            <div className="h-2 w-2 rounded-full" style={{ background: item.badgeColor }} />
+                            <div
+                              className="h-2 w-2 rounded-full"
+                              style={{ background: item.badgeColor }}
+                            />
                           )}
                           <span className="text-[10px] text-muted-foreground">{item.badge}</span>
                         </div>
@@ -79,21 +85,28 @@ export function CardListBodyTemplate({
                     {item.tags && (
                       <div className="flex flex-wrap gap-1">
                         {item.tags.map((tag) => (
-                          <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">{tag}</Badge>
+                          <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">
+                            {tag}
+                          </Badge>
                         ))}
                       </div>
                     )}
                   </CardContent>
                   {(item.meta || item.footer) && (
                     <CardFooter className="border-t px-[var(--dk-panel-gap)] py-[calc(var(--dk-panel-gap)*0.75)] flex items-center gap-[calc(var(--dk-panel-gap)*0.75)] text-[10px] text-muted-foreground">
-                      {item.footer ?? item.meta?.map((m, i) => (
-                        <span
-                          key={i}
-                          className={['flex items-center gap-1', i === (item.meta!.length - 1) ? 'ml-auto' : ''].join(' ')}
-                        >
-                          {m.icon}{m.label}
-                        </span>
-                      ))}
+                      {item.footer ??
+                        item.meta?.map((m, i) => (
+                          <span
+                            key={i}
+                            className={[
+                              'flex items-center gap-1',
+                              i === item.meta!.length - 1 ? 'ml-auto' : '',
+                            ].join(' ')}
+                          >
+                            {m.icon}
+                            {m.label}
+                          </span>
+                        ))}
                     </CardFooter>
                   )}
                 </Card>

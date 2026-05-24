@@ -2,7 +2,13 @@ import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTempla
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import type { TemplateCodeContext } from '../code'
 
@@ -15,12 +21,20 @@ export function FormStackedBodyTemplateDemo({ theme }: { theme?: React.CSSProper
       description="Manage your account and preferences."
       actions={
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="h-8 text-xs">Reset</Button>
-          <Button size="sm" className="h-8 text-xs">Save Changes</Button>
+          <Button variant="outline" size="sm" className="h-8 text-xs">
+            Reset
+          </Button>
+          <Button size="sm" className="h-8 text-xs">
+            Save Changes
+          </Button>
         </div>
       }
     >
-      <DataBodyTemplate.Group layout="stacked" title="Profile" description="How you appear to others on the platform.">
+      <DataBodyTemplate.Group
+        layout="stacked"
+        title="Profile"
+        description="How you appear to others on the platform."
+      >
         <div className="space-y-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Display Name</Label>
@@ -29,7 +43,9 @@ export function FormStackedBodyTemplateDemo({ theme }: { theme?: React.CSSProper
           <div className="space-y-1.5">
             <Label className="text-xs">Email</Label>
             <Input type="email" defaultValue="sarah@acme.com" className="h-8 text-sm" disabled />
-            <p className="text-xs text-muted-foreground">Contact support to change your email address.</p>
+            <p className="text-xs text-muted-foreground">
+              Contact support to change your email address.
+            </p>
           </div>
           <div className="space-y-1.5">
             <Label className="text-xs">Bio</Label>
@@ -41,12 +57,18 @@ export function FormStackedBodyTemplateDemo({ theme }: { theme?: React.CSSProper
         </div>
       </DataBodyTemplate.Group>
 
-      <DataBodyTemplate.Group layout="stacked" title="Appearance" description="Customize how the interface looks for you.">
+      <DataBodyTemplate.Group
+        layout="stacked"
+        title="Appearance"
+        description="Customize how the interface looks for you."
+      >
         <div className="space-y-3">
           <div className="space-y-1.5">
             <Label className="text-xs">Theme</Label>
             <Select defaultValue="system">
-              <SelectTrigger className="h-8 text-sm w-44"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="h-8 text-sm w-44">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="system">System</SelectItem>
                 <SelectItem value="light">Light</SelectItem>
@@ -57,7 +79,9 @@ export function FormStackedBodyTemplateDemo({ theme }: { theme?: React.CSSProper
           <div className="space-y-1.5">
             <Label className="text-xs">Language</Label>
             <Select defaultValue="en">
-              <SelectTrigger className="h-8 text-sm w-44"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="h-8 text-sm w-44">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="en">English</SelectItem>
                 <SelectItem value="ko">한국어</SelectItem>
@@ -75,12 +99,28 @@ export function FormStackedBodyTemplateDemo({ theme }: { theme?: React.CSSProper
         </div>
       </DataBodyTemplate.Group>
 
-      <DataBodyTemplate.Group layout="stacked" title="Privacy & Data" description="Manage how your data is collected and used.">
+      <DataBodyTemplate.Group
+        layout="stacked"
+        title="Privacy & Data"
+        description="Manage how your data is collected and used."
+      >
         <div className="space-y-4">
           {[
-            { label: 'Usage analytics',  desc: 'Share anonymous usage data to improve the product.', on: true  },
-            { label: 'Crash reports',    desc: 'Automatically send crash logs to our team.',          on: true  },
-            { label: 'Marketing emails', desc: 'Receive updates on new features and promotions.',     on: false },
+            {
+              label: 'Usage analytics',
+              desc: 'Share anonymous usage data to improve the product.',
+              on: true,
+            },
+            {
+              label: 'Crash reports',
+              desc: 'Automatically send crash logs to our team.',
+              on: true,
+            },
+            {
+              label: 'Marketing emails',
+              desc: 'Receive updates on new features and promotions.',
+              on: false,
+            },
           ].map((item) => (
             <div key={item.label} className="flex items-center justify-between">
               <div>
@@ -93,13 +133,20 @@ export function FormStackedBodyTemplateDemo({ theme }: { theme?: React.CSSProper
         </div>
       </DataBodyTemplate.Group>
 
-      <DataBodyTemplate.Group layout="stacked" title="Danger Zone" description="Irreversible actions. Proceed with caution." danger>
+      <DataBodyTemplate.Group
+        layout="stacked"
+        title="Danger Zone"
+        description="Irreversible actions. Proceed with caution."
+        danger
+      >
         <div className="flex items-center justify-between rounded-[var(--radius)] border border-destructive/40 bg-destructive/5 px-4 py-3">
           <div>
             <p className="text-sm font-medium">Delete Account</p>
             <p className="text-xs text-muted-foreground">Permanently remove all your data.</p>
           </div>
-          <Button variant="destructive" size="sm" className="ml-4 h-8 shrink-0 text-xs">Delete</Button>
+          <Button variant="destructive" size="sm" className="ml-4 h-8 shrink-0 text-xs">
+            Delete
+          </Button>
         </div>
       </DataBodyTemplate.Group>
     </DataBodyTemplate>

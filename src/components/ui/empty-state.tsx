@@ -34,11 +34,7 @@ function EmptyState({ icon: Icon, title, description, action, className }: Empty
         )}
       </div>
       {action && (
-        <Button
-          variant={action.variant ?? 'outline'}
-          size="sm"
-          onClick={action.onClick}
-        >
+        <Button variant={action.variant ?? 'outline'} size="sm" onClick={action.onClick}>
           {action.label}
         </Button>
       )}

@@ -52,7 +52,12 @@ export function FormWizardBodyTemplate({
           {steps.map((step, i) => (
             <Fragment key={step.key}>
               {i > 0 && (
-                <div className={cn('mx-3 h-px flex-1', i <= activeStep ? 'bg-primary/50' : 'bg-border')} />
+                <div
+                  className={cn(
+                    'mx-3 h-px flex-1',
+                    i <= activeStep ? 'bg-primary/50' : 'bg-border',
+                  )}
+                />
               )}
               <div className="flex items-center gap-2">
                 <div
@@ -61,8 +66,8 @@ export function FormWizardBodyTemplate({
                     i < activeStep
                       ? 'bg-primary text-primary-foreground'
                       : i === activeStep
-                      ? 'bg-primary text-primary-foreground ring-2 ring-primary/30 ring-offset-1'
-                      : 'bg-muted text-muted-foreground',
+                        ? 'bg-primary text-primary-foreground ring-2 ring-primary/30 ring-offset-1'
+                        : 'bg-muted text-muted-foreground',
                   )}
                 >
                   {i < activeStep ? <Check className="h-3 w-3" /> : i + 1}
@@ -82,8 +87,8 @@ export function FormWizardBodyTemplate({
       </div>
 
       <DataPage.Content>
-        {current && (
-          variant === 'card' ? (
+        {current &&
+          (variant === 'card' ? (
             <Card>
               <CardContent className="p-[var(--dk-panel-gap)]">
                 <div className="mb-5">
@@ -105,8 +110,7 @@ export function FormWizardBodyTemplate({
               </div>
               {current.content}
             </div>
-          )
-        )}
+          ))}
       </DataPage.Content>
 
       <DataPage.Footer>

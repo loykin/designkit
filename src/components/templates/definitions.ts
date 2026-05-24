@@ -264,8 +264,11 @@ export function getTemplateDefinition(id: TemplateId) {
 }
 
 export function createTemplateOverrides(): Record<TemplateId, TemplateOverride> {
-  return TEMPLATE_DEFINITIONS.reduce((acc, definition) => {
-    acc[definition.id] = { ...definition.preset }
-    return acc
-  }, {} as Record<TemplateId, TemplateOverride>)
+  return TEMPLATE_DEFINITIONS.reduce(
+    (acc, definition) => {
+      acc[definition.id] = { ...definition.preset }
+      return acc
+    },
+    {} as Record<TemplateId, TemplateOverride>,
+  )
 }

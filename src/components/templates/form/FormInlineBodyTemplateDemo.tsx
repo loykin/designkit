@@ -1,7 +1,13 @@
 import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import type { TemplateCodeContext } from '../code'
@@ -15,8 +21,12 @@ export function FormInlineBodyTemplateDemo({ theme }: { theme?: React.CSSPropert
       description="Update user profile and access settings."
       actions={
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="h-8 text-xs">Cancel</Button>
-          <Button size="sm" className="h-8 text-xs">Save</Button>
+          <Button variant="outline" size="sm" className="h-8 text-xs">
+            Cancel
+          </Button>
+          <Button size="sm" className="h-8 text-xs">
+            Save
+          </Button>
         </div>
       }
     >
@@ -27,13 +37,19 @@ export function FormInlineBodyTemplateDemo({ theme }: { theme?: React.CSSPropert
             <Input defaultValue="Kim" className="h-8 text-sm" placeholder="Last" />
           </div>
         </DataBodyTemplate.Row>
-        <DataBodyTemplate.Row label="Email" description="Used for login and notifications." required>
+        <DataBodyTemplate.Row
+          label="Email"
+          description="Used for login and notifications."
+          required
+        >
           <Input type="email" defaultValue="sarah@acme.com" className="h-8 text-sm" />
         </DataBodyTemplate.Row>
         <DataBodyTemplate.Row label="Username">
           <div className="flex items-center gap-2">
             <Input defaultValue="sarah.kim" className="h-8 text-sm" />
-            <Badge variant="outline" className="text-[10px] h-6 shrink-0">Available</Badge>
+            <Badge variant="outline" className="text-[10px] h-6 shrink-0">
+              Available
+            </Badge>
           </div>
         </DataBodyTemplate.Row>
         <DataBodyTemplate.Row label="Phone">
@@ -44,7 +60,9 @@ export function FormInlineBodyTemplateDemo({ theme }: { theme?: React.CSSPropert
       <DataBodyTemplate.Group layout="inline" title="Role & Access">
         <DataBodyTemplate.Row label="Role" required>
           <Select defaultValue="admin">
-            <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="h-8 text-sm">
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="admin">Admin</SelectItem>
               <SelectItem value="editor">Editor</SelectItem>
@@ -55,7 +73,9 @@ export function FormInlineBodyTemplateDemo({ theme }: { theme?: React.CSSPropert
         </DataBodyTemplate.Row>
         <DataBodyTemplate.Row label="Department">
           <Select defaultValue="engineering">
-            <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="h-8 text-sm">
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="engineering">Engineering</SelectItem>
               <SelectItem value="design">Design</SelectItem>
@@ -75,7 +95,9 @@ export function FormInlineBodyTemplateDemo({ theme }: { theme?: React.CSSPropert
       <DataBodyTemplate.Group layout="inline" title="Address">
         <DataBodyTemplate.Row label="Country">
           <Select defaultValue="kr">
-            <SelectTrigger className="h-8 text-sm"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="h-8 text-sm">
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="kr">South Korea</SelectItem>
               <SelectItem value="us">United States</SelectItem>

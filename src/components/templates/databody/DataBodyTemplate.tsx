@@ -1,4 +1,4 @@
-import { Children, Fragment, useMemo, useState } from 'react'
+import React, { Children, Fragment, useMemo, useState } from 'react'
 import { DataPage } from '@/components/templates/datapage/DataPage'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
@@ -13,7 +13,9 @@ export interface DataBodyTabProps {
   children: React.ReactNode
 }
 
-function DataBodyTab(_props: DataBodyTabProps) { return null }
+function DataBodyTab(_props: DataBodyTabProps) {
+  return null
+}
 
 function isDataBodyTab(node: React.ReactNode): node is React.ReactElement<DataBodyTabProps> {
   return Boolean(node && typeof node === 'object' && 'type' in node && node.type === DataBodyTab)
@@ -29,10 +31,16 @@ export interface DataBodySectionProps {
   children?: React.ReactNode
 }
 
-function DataBodySection(_props: DataBodySectionProps) { return null }
+function DataBodySection(_props: DataBodySectionProps) {
+  return null
+}
 
-function isDataBodySection(node: React.ReactNode): node is React.ReactElement<DataBodySectionProps> {
-  return Boolean(node && typeof node === 'object' && 'type' in node && node.type === DataBodySection)
+function isDataBodySection(
+  node: React.ReactNode,
+): node is React.ReactElement<DataBodySectionProps> {
+  return Boolean(
+    node && typeof node === 'object' && 'type' in node && node.type === DataBodySection,
+  )
 }
 
 // ─── Summary ──────────────────────────────────────────────────────────────────
@@ -41,22 +49,28 @@ export interface DataBodySummaryProps {
   children?: React.ReactNode
 }
 
-function DataBodySummary(_props: DataBodySummaryProps) { return null }
+function DataBodySummary(_props: DataBodySummaryProps) {
+  return null
+}
 
-function isDataBodySummary(node: React.ReactNode): node is React.ReactElement<DataBodySummaryProps> {
-  return Boolean(node && typeof node === 'object' && 'type' in node && node.type === DataBodySummary)
+function isDataBodySummary(
+  node: React.ReactNode,
+): node is React.ReactElement<DataBodySummaryProps> {
+  return Boolean(
+    node && typeof node === 'object' && 'type' in node && node.type === DataBodySummary,
+  )
 }
 
 // ─── Group ────────────────────────────────────────────────────────────────────
 
-export type GroupLayout  = 'stacked' | 'horizontal' | 'inline' | 'split'
+export type GroupLayout = 'stacked' | 'horizontal' | 'inline' | 'split'
 export type GroupVariant = 'card' | 'plain' | 'bordered'
 
 const layoutDefaultVariant: Record<GroupLayout, GroupVariant> = {
-  stacked:    'plain',
+  stacked: 'plain',
   horizontal: 'card',
-  inline:     'bordered',
-  split:      'bordered',
+  inline: 'bordered',
+  split: 'bordered',
 }
 
 export interface DataBodyGroupProps {
@@ -77,19 +91,29 @@ function isDataBodyGroup(node: React.ReactNode): node is React.ReactElement<Data
   return Boolean(node && typeof node === 'object' && 'type' in node && node.type === DataBodyGroup)
 }
 
-function GroupWrapper({ layout, variant, children }: {
+function GroupWrapper({
+  layout,
+  variant,
+  children,
+}: {
   layout: GroupLayout
   variant: GroupVariant
   children: React.ReactNode
 }) {
   if (variant === 'card') {
-    return <Card><CardContent className="p-[var(--dk-panel-gap)]">{children}</CardContent></Card>
+    return (
+      <Card>
+        <CardContent className="p-(--dk-panel-gap)">{children}</CardContent>
+      </Card>
+    )
   }
   if (variant === 'bordered') {
     if (layout === 'inline') {
-      return <div className="overflow-hidden rounded-[var(--radius)] border divide-y">{children}</div>
+      return (
+        <div className="overflow-hidden rounded-(--radius) border divide-y">{children}</div>
+      )
     }
-    return <div className="rounded-[var(--radius)] border p-[var(--dk-panel-gap)]">{children}</div>
+    return <div className="rounded-(--radius) border p-(--dk-panel-gap)">{children}</div>
   }
   return <>{children}</>
 }
@@ -100,9 +124,7 @@ function renderGroups(nodes: React.ReactNode): React.ReactNode {
   return (
     <>
       {childArray.map((child, i) => (
-        <Fragment key={i}>
-          {isDataBodyGroup(child) ? renderGroup(child) : child}
-        </Fragment>
+        <Fragment key={i}>{isDataBodyGroup(child) ? renderGroup(child) : child}</Fragment>
       ))}
     </>
   )
@@ -113,25 +135,39 @@ function renderGroup(group: React.ReactElement<DataBodyGroupProps>) {
 }
 
 function renderGroupProps(props: DataBodyGroupProps) {
-  const { layout = 'stacked', variant: variantProp, title, description, actions, danger, children } = props
+  const {
+    layout = 'stacked',
+    variant: variantProp,
+    title,
+    description,
+    actions,
+    danger,
+    children,
+  } = props
   const variant = variantProp ?? layoutDefaultVariant[layout]
 
   if (layout === 'split') {
     const panes = Children.toArray(children)
     return (
-      <div className="py-[var(--dk-panel-gap)]">
+      <div className="py-(--dk-panel-gap)">
         {(title || description || actions) && (
           <div className="mb-3 flex items-start justify-between">
             <div>
-              {title && <h2 className={cn('text-sm font-semibold', danger && 'text-destructive')}>{title}</h2>}
+              {title && (
+                <h2 className={cn('text-sm font-semibold', danger && 'text-destructive')}>
+                  {title}
+                </h2>
+              )}
               {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
             </div>
             {actions && <div>{actions}</div>}
           </div>
         )}
-        <div className="grid min-h-[26rem] gap-[var(--dk-panel-gap)] lg:grid-cols-[20rem_minmax(0,1fr)]">
+        <div className="grid min-h-104 gap-(--dk-panel-gap) lg:grid-cols-[20rem_minmax(0,1fr)]">
           {panes.map((pane, i) => (
-            <GroupWrapper key={i} layout={layout} variant={variant}>{pane}</GroupWrapper>
+            <GroupWrapper key={i} layout={layout} variant={variant}>
+              {pane}
+            </GroupWrapper>
           ))}
         </div>
       </div>
@@ -140,14 +176,16 @@ function renderGroupProps(props: DataBodyGroupProps) {
 
   if (layout === 'horizontal') {
     return (
-      <div className="grid grid-cols-3 gap-[calc(var(--dk-panel-gap)*2)] py-[var(--dk-panel-gap)]">
+      <div className="grid grid-cols-3 gap-[calc(var(--dk-panel-gap)*2)] py-(--dk-panel-gap)">
         <div>
           <p className={cn('text-sm font-medium', danger && 'text-destructive')}>{title}</p>
           {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
           {actions && <div className="mt-2">{actions}</div>}
         </div>
         <div className="col-span-2">
-          <GroupWrapper layout={layout} variant={variant}>{children}</GroupWrapper>
+          <GroupWrapper layout={layout} variant={variant}>
+            {children}
+          </GroupWrapper>
         </div>
       </div>
     )
@@ -155,24 +193,30 @@ function renderGroupProps(props: DataBodyGroupProps) {
 
   if (layout === 'inline') {
     return (
-      <div className="py-[var(--dk-panel-gap)]">
+      <div className="py-(--dk-panel-gap)">
         {(title || description) && (
           <div className="mb-2 flex items-start justify-between">
             <div>
-              {title && <h2 className={cn('text-sm font-semibold', danger && 'text-destructive')}>{title}</h2>}
+              {title && (
+                <h2 className={cn('text-sm font-semibold', danger && 'text-destructive')}>
+                  {title}
+                </h2>
+              )}
               {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
             </div>
             {actions && <div>{actions}</div>}
           </div>
         )}
-        <GroupWrapper layout={layout} variant={variant}>{children}</GroupWrapper>
+        <GroupWrapper layout={layout} variant={variant}>
+          {children}
+        </GroupWrapper>
       </div>
     )
   }
 
   // stacked (default)
   return (
-    <div className="py-[var(--dk-panel-gap)]">
+    <div className="py-(--dk-panel-gap)">
       <div className="flex items-start justify-between">
         <div>
           <h2 className={cn('text-sm font-semibold', danger && 'text-destructive')}>{title}</h2>
@@ -181,7 +225,9 @@ function renderGroupProps(props: DataBodyGroupProps) {
         {actions && <div>{actions}</div>}
       </div>
       <div className="mt-4">
-        <GroupWrapper layout={layout} variant={variant}>{children}</GroupWrapper>
+        <GroupWrapper layout={layout} variant={variant}>
+          {children}
+        </GroupWrapper>
       </div>
     </div>
   )
@@ -232,9 +278,7 @@ function DataBodyRow({ label, description, required, children }: DataBodyRowProp
         </div>
         {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
       </div>
-      <div className={cn('min-w-0', !description && 'flex items-center')}>
-        {children}
-      </div>
+      <div className={cn('min-w-0', !description && 'flex items-center')}>{children}</div>
     </div>
   )
 }
@@ -272,20 +316,22 @@ function Root({
   children,
   contentClassName,
 }: DataBodyTemplateProps) {
-  const childArray    = useMemo(() => Children.toArray(children), [children])
-  const tabs          = childArray.filter(isDataBodyTab)
-  const sections      = childArray.filter(isDataBodySection)
-  const summaryEl     = childArray.find(isDataBodySummary)
-  const bodyChildren  = childArray.filter((c) => !isDataBodyTab(c) && !isDataBodySummary(c) && !isDataBodySection(c))
-  const rest          = bodyChildren.filter((c) => !isDataBodyGroup(c))
+  const childArray = useMemo(() => Children.toArray(children), [children])
+  const tabs = childArray.filter(isDataBodyTab)
+  const sections = childArray.filter(isDataBodySection)
+  const summaryEl = childArray.find(isDataBodySummary)
+  const bodyChildren = childArray.filter(
+    (c) => !isDataBodyTab(c) && !isDataBodySummary(c) && !isDataBodySection(c),
+  )
+  const rest = bodyChildren.filter((c) => !isDataBodyGroup(c))
 
-  const hasTabs     = tabs.length > 0
+  const hasTabs = tabs.length > 0
   const hasSections = sections.length > 0
-  const hasGroups   = bodyChildren.some(isDataBodyGroup)
+  const hasGroups = bodyChildren.some(isDataBodyGroup)
 
   const navItems = hasSections ? sections : tabs
   const [internalActive, setInternalActive] = useState(defaultTab ?? navItems[0]?.props.id ?? '')
-  const activeId   = controlledActive ?? internalActive
+  const activeId = controlledActive ?? internalActive
   const handleChange = (id: string) => {
     if (controlledActive === undefined) setInternalActive(id)
     onTabChange?.(id)
@@ -302,13 +348,13 @@ function Root({
         </DataPage.Header>
 
         {summaryEl && (
-          <div className="shrink-0 border-b px-[var(--dk-page-padding-x)] py-[var(--dk-panel-gap)]">
+          <div className="shrink-0 border-b px-(--dk-page-padding-x) py-(--dk-panel-gap)">
             {summaryEl.props.children}
           </div>
         )}
 
         <DataPage.Content className={contentClassName}>
-          <div className="grid gap-[var(--dk-panel-gap)] lg:grid-cols-[16rem_minmax(0,1fr)]">
+          <div className="grid gap-(--dk-panel-gap) lg:grid-cols-[16rem_minmax(0,1fr)]">
             <nav className="space-y-1">
               {sections.map((section) => {
                 const active = section.props.id === activeSection?.props.id
@@ -318,7 +364,7 @@ function Root({
                     type="button"
                     disabled={section.props.disabled}
                     className={cn(
-                      'block w-full rounded-[var(--radius)] px-3 py-2 text-left transition-colors',
+                      'block w-full rounded-(--radius) px-3 py-2 text-left transition-colors',
                       active ? 'bg-accent text-accent-foreground' : 'hover:bg-muted',
                       section.props.disabled && 'pointer-events-none opacity-50',
                     )}
@@ -326,13 +372,15 @@ function Root({
                   >
                     <span className="block text-sm font-medium">{section.props.label}</span>
                     {section.props.description && (
-                      <span className="mt-0.5 block text-xs text-muted-foreground">{section.props.description}</span>
+                      <span className="mt-0.5 block text-xs text-muted-foreground">
+                        {section.props.description}
+                      </span>
                     )}
                   </button>
                 )
               })}
             </nav>
-            <div className="min-w-0 space-y-[var(--dk-panel-gap)]">
+            <div className="min-w-0 space-y-(--dk-panel-gap)">
               {renderGroups(activeSection?.props.children)}
             </div>
           </div>
@@ -387,9 +435,7 @@ function Root({
         ) : hasGroups ? (
           <DataPage.GroupBody>
             {bodyChildren.map((child, i) => (
-              <Fragment key={i}>
-                {isDataBodyGroup(child) ? renderGroup(child) : child}
-              </Fragment>
+              <Fragment key={i}>{isDataBodyGroup(child) ? renderGroup(child) : child}</Fragment>
             ))}
           </DataPage.GroupBody>
         ) : (
@@ -403,10 +449,10 @@ function Root({
 }
 
 export const DataBodyTemplate = Object.assign(Root, {
-  Tab:     DataBodyTab,
+  Tab: DataBodyTab,
   Section: DataBodySection,
   Summary: DataBodySummary,
-  Group:   DataBodyGroup,
-  Row:     DataBodyRow,
-  Field:   DataBodyField,
+  Group: DataBodyGroup,
+  Row: DataBodyRow,
+  Field: DataBodyField,
 })

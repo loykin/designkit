@@ -97,7 +97,9 @@ function NavigationHeaderContent({
                         <NavigationMenuTrigger
                           className={cn(
                             'h-8 text-sm',
-                            active ? 'text-foreground font-medium' : 'text-muted-foreground font-normal',
+                            active
+                              ? 'text-foreground font-medium'
+                              : 'text-muted-foreground font-normal',
                           )}
                         >
                           {item.label}
@@ -126,7 +128,9 @@ function NavigationHeaderContent({
                         onClick={() => handleSelect(item.id)}
                         className={cn(
                           'h-8 px-2.5 py-1.5 text-sm',
-                          active ? 'bg-accent text-foreground font-medium' : 'text-muted-foreground',
+                          active
+                            ? 'bg-accent text-foreground font-medium'
+                            : 'text-muted-foreground',
                         )}
                       >
                         {item.label}
@@ -161,7 +165,9 @@ function DemoHeaderContent() {
             key={item}
             variant="ghost"
             size="sm"
-            className={item === 'Users' ? 'bg-accent text-foreground font-medium' : 'text-muted-foreground'}
+            className={
+              item === 'Users' ? 'bg-accent text-foreground font-medium' : 'text-muted-foreground'
+            }
           >
             {item}
           </Button>
@@ -175,7 +181,13 @@ function DemoHeaderContent() {
 
 // ─── Shell ────────────────────────────────────────────────────────────────────
 
-export function HeaderShell({ header, navigation, activeItemId, onItemSelect, children }: HeaderShellProps) {
+export function HeaderShell({
+  header,
+  navigation,
+  activeItemId,
+  onItemSelect,
+  children,
+}: HeaderShellProps) {
   return (
     <div className="h-full flex flex-col">
       <header className="flex h-12 shrink-0 items-center border-b px-4 bg-(--dk-header) backdrop-blur-sm">
@@ -187,9 +199,7 @@ export function HeaderShell({ header, navigation, activeItemId, onItemSelect, ch
           />
         )}
       </header>
-      <div className="flex-1 overflow-hidden">
-        {children}
-      </div>
+      <div className="flex-1 overflow-hidden">{children}</div>
     </div>
   )
 }

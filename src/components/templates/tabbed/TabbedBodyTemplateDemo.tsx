@@ -3,11 +3,18 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { CheckCircle2, Clock, AlertCircle, XCircle, Plus, Search } from 'lucide-react'
 import type { TemplateCodeContext } from '../code'
 
-type Status   = 'open' | 'in-progress' | 'resolved' | 'closed'
+type Status = 'open' | 'in-progress' | 'resolved' | 'closed'
 type Priority = 'critical' | 'high' | 'medium' | 'low'
 
 interface Issue {
@@ -20,24 +27,76 @@ interface Issue {
 }
 
 const issues: Issue[] = [
-  { id:'INC-001', title:'API gateway returning 502 on /auth endpoints',  status:'open',        priority:'critical', assignee:'Sarah K.',   created:'2h ago'  },
-  { id:'INC-002', title:'Memory leak in data-processor worker threads',  status:'in-progress', priority:'high',     assignee:'Marcus L.',  created:'5h ago'  },
-  { id:'INC-003', title:'Dashboard charts not rendering in Safari 17',   status:'open',        priority:'medium',   assignee:'Ji-Yeon P.', created:'1d ago'  },
-  { id:'INC-004', title:'Slow query on users table (>3s)',               status:'resolved',    priority:'high',     assignee:'Alex C.',    created:'2d ago'  },
-  { id:'INC-005', title:'Email notifications not sent for new signups',  status:'in-progress', priority:'medium',   assignee:'Dana W.',    created:'3d ago'  },
-  { id:'INC-006', title:'CORS error on POST /api/v2/upload from mobile', status:'open',        priority:'high',     assignee:'Leo T.',     created:'4d ago'  },
-  { id:'INC-007', title:'Cron expression parsing failure on scheduler',  status:'closed',      priority:'low',      assignee:'Mina S.',    created:'1w ago'  },
+  {
+    id: 'INC-001',
+    title: 'API gateway returning 502 on /auth endpoints',
+    status: 'open',
+    priority: 'critical',
+    assignee: 'Sarah K.',
+    created: '2h ago',
+  },
+  {
+    id: 'INC-002',
+    title: 'Memory leak in data-processor worker threads',
+    status: 'in-progress',
+    priority: 'high',
+    assignee: 'Marcus L.',
+    created: '5h ago',
+  },
+  {
+    id: 'INC-003',
+    title: 'Dashboard charts not rendering in Safari 17',
+    status: 'open',
+    priority: 'medium',
+    assignee: 'Ji-Yeon P.',
+    created: '1d ago',
+  },
+  {
+    id: 'INC-004',
+    title: 'Slow query on users table (>3s)',
+    status: 'resolved',
+    priority: 'high',
+    assignee: 'Alex C.',
+    created: '2d ago',
+  },
+  {
+    id: 'INC-005',
+    title: 'Email notifications not sent for new signups',
+    status: 'in-progress',
+    priority: 'medium',
+    assignee: 'Dana W.',
+    created: '3d ago',
+  },
+  {
+    id: 'INC-006',
+    title: 'CORS error on POST /api/v2/upload from mobile',
+    status: 'open',
+    priority: 'high',
+    assignee: 'Leo T.',
+    created: '4d ago',
+  },
+  {
+    id: 'INC-007',
+    title: 'Cron expression parsing failure on scheduler',
+    status: 'closed',
+    priority: 'low',
+    assignee: 'Mina S.',
+    created: '1w ago',
+  },
 ]
 
 const statusIcon: Record<Status, React.ReactNode> = {
-  'open':        <AlertCircle  className="h-3.5 w-3.5 text-destructive"      />,
-  'in-progress': <Clock        className="h-3.5 w-3.5 text-yellow-500"       />,
-  'resolved':    <CheckCircle2 className="h-3.5 w-3.5 text-primary"          />,
-  'closed':      <XCircle      className="h-3.5 w-3.5 text-muted-foreground" />,
+  open: <AlertCircle className="h-3.5 w-3.5 text-destructive" />,
+  'in-progress': <Clock className="h-3.5 w-3.5 text-yellow-500" />,
+  resolved: <CheckCircle2 className="h-3.5 w-3.5 text-primary" />,
+  closed: <XCircle className="h-3.5 w-3.5 text-muted-foreground" />,
 }
 
 const priorityVariant: Record<Priority, 'destructive' | 'default' | 'secondary' | 'outline'> = {
-  critical: 'destructive', high: 'default', medium: 'secondary', low: 'outline',
+  critical: 'destructive',
+  high: 'default',
+  medium: 'secondary',
+  low: 'outline',
 }
 
 function IssueTable({ rows }: { rows: Issue[] }) {
@@ -71,7 +130,9 @@ function IssueTable({ rows }: { rows: Issue[] }) {
             <TableCell className="text-xs text-muted-foreground">{issue.assignee}</TableCell>
             <TableCell className="text-xs text-muted-foreground">{issue.created}</TableCell>
             <TableCell>
-              <Button variant="ghost" size="sm" className="h-7 text-xs">View</Button>
+              <Button variant="ghost" size="sm" className="h-7 text-xs">
+                View
+              </Button>
             </TableCell>
           </TableRow>
         ))}
@@ -81,10 +142,10 @@ function IssueTable({ rows }: { rows: Issue[] }) {
 }
 
 const counts = {
-  open:          issues.filter((i) => i.status === 'open').length,
+  open: issues.filter((i) => i.status === 'open').length,
   'in-progress': issues.filter((i) => i.status === 'in-progress').length,
-  resolved:      issues.filter((i) => i.status === 'resolved').length,
-  closed:        issues.filter((i) => i.status === 'closed').length,
+  resolved: issues.filter((i) => i.status === 'resolved').length,
+  closed: issues.filter((i) => i.status === 'closed').length,
 }
 
 export function TabbedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
@@ -109,12 +170,29 @@ export function TabbedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
     >
       <DataBodyTemplate.Summary>
         <div className="grid grid-cols-4 gap-[var(--dk-panel-gap)]">
-          {([
-            { label: 'Open',        count: counts.open,           Icon: AlertCircle,  cls: 'text-destructive'      },
-            { label: 'In Progress', count: counts['in-progress'], Icon: Clock,        cls: 'text-yellow-500'       },
-            { label: 'Resolved',    count: counts.resolved,       Icon: CheckCircle2, cls: 'text-primary'          },
-            { label: 'Closed',      count: counts.closed,         Icon: XCircle,      cls: 'text-muted-foreground' },
-          ] as const).map(({ label, count, Icon, cls }) => (
+          {(
+            [
+              { label: 'Open', count: counts.open, Icon: AlertCircle, cls: 'text-destructive' },
+              {
+                label: 'In Progress',
+                count: counts['in-progress'],
+                Icon: Clock,
+                cls: 'text-yellow-500',
+              },
+              {
+                label: 'Resolved',
+                count: counts.resolved,
+                Icon: CheckCircle2,
+                cls: 'text-primary',
+              },
+              {
+                label: 'Closed',
+                count: counts.closed,
+                Icon: XCircle,
+                cls: 'text-muted-foreground',
+              },
+            ] as const
+          ).map(({ label, count, Icon, cls }) => (
             <Card key={label}>
               <CardContent className="flex items-center gap-[calc(var(--dk-panel-gap)*0.75)] p-[calc(var(--dk-panel-gap)*0.75)]">
                 <Icon className={`h-5 w-5 ${cls}`} />
@@ -128,26 +206,23 @@ export function TabbedBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
         </div>
       </DataBodyTemplate.Summary>
 
-      <DataBodyTemplate.Tab id="all"         label="All"         count={issues.length}>
+      <DataBodyTemplate.Tab id="all" label="All" count={issues.length}>
         <IssueTable rows={issues} />
       </DataBodyTemplate.Tab>
-      <DataBodyTemplate.Tab id="open"        label="Open"        count={counts.open}>
+      <DataBodyTemplate.Tab id="open" label="Open" count={counts.open}>
         <IssueTable rows={issues.filter((i) => i.status === 'open')} />
       </DataBodyTemplate.Tab>
       <DataBodyTemplate.Tab id="in-progress" label="In Progress" count={counts['in-progress']}>
         <IssueTable rows={issues.filter((i) => i.status === 'in-progress')} />
       </DataBodyTemplate.Tab>
-      <DataBodyTemplate.Tab id="resolved"    label="Resolved"    count={counts.resolved}>
+      <DataBodyTemplate.Tab id="resolved" label="Resolved" count={counts.resolved}>
         <IssueTable rows={issues.filter((i) => i.status === 'resolved')} />
       </DataBodyTemplate.Tab>
     </DataBodyTemplate>
   )
 }
 
-export function buildTabbedBodyTemplateCode({
-  themeProp,
-  layoutClassName,
-}: TemplateCodeContext) {
+export function buildTabbedBodyTemplateCode({ themeProp, layoutClassName }: TemplateCodeContext) {
   return [
     `import { DataBodyTemplate } from '@loykin/designkit'`,
     `import '@loykin/designkit/styles'`,

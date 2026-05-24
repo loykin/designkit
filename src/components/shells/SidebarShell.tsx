@@ -1,8 +1,20 @@
 import {
-  Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
-  SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton,
-  SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
-  SidebarProvider, SidebarRail,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
 } from '@/components/ui/sidebar'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import type { TemplateId } from '@/store/types'
@@ -23,20 +35,22 @@ export interface SidebarShellProps {
 // ─── Demo sidebar ─────────────────────────────────────────────────────────────
 
 const demoNav = [
-  { icon: Table2,         label: 'Users',     active: true  },
-  { icon: LayoutDashboard,label: 'Overview',  active: false },
-  { icon: LayoutGrid,     label: 'Products',  active: false },
-  { icon: Layers,         label: 'Reports',   active: false },
-  { icon: FileText,       label: 'Documents', active: false },
+  { icon: Table2, label: 'Users', active: true },
+  { icon: LayoutDashboard, label: 'Overview', active: false },
+  { icon: LayoutGrid, label: 'Products', active: false },
+  { icon: Layers, label: 'Reports', active: false },
+  { icon: FileText, label: 'Documents', active: false },
 ]
 
 const demoSystem = [
-  { icon: Bell,     label: 'Alerts',   active: false },
+  { icon: Bell, label: 'Alerts', active: false },
   { icon: Settings, label: 'Settings', active: false },
 ]
 
 function itemIsActive(item: TemplateNavigationItem, activeItemId?: TemplateId) {
-  return item.id === activeItemId || item.children?.some((child) => child.id === activeItemId) === true
+  return (
+    item.id === activeItemId || item.children?.some((child) => child.id === activeItemId) === true
+  )
 }
 
 function NavigationSidebarContent({
@@ -125,7 +139,8 @@ function DemoSidebarContent() {
               {demoNav.map((item) => (
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton isActive={item.active}>
-                    <item.icon /><span>{item.label}</span>
+                    <item.icon />
+                    <span>{item.label}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -140,7 +155,8 @@ function DemoSidebarContent() {
               {demoSystem.map((item) => (
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton isActive={item.active}>
-                    <item.icon /><span>{item.label}</span>
+                    <item.icon />
+                    <span>{item.label}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -166,7 +182,13 @@ function DemoSidebarContent() {
 
 // ─── Shell ────────────────────────────────────────────────────────────────────
 
-export function SidebarShell({ sidebar, navigation, activeItemId, onItemSelect, children }: SidebarShellProps) {
+export function SidebarShell({
+  sidebar,
+  navigation,
+  activeItemId,
+  onItemSelect,
+  children,
+}: SidebarShellProps) {
   return (
     <div className="h-full" style={{ transform: 'translateZ(0)' }}>
       <SidebarProvider className="h-full min-h-0!">
@@ -181,9 +203,7 @@ export function SidebarShell({ sidebar, navigation, activeItemId, onItemSelect, 
           <SidebarRail />
         </Sidebar>
 
-        <SidebarInset className="overflow-hidden">
-          {children}
-        </SidebarInset>
+        <SidebarInset className="overflow-hidden">{children}</SidebarInset>
       </SidebarProvider>
     </div>
   )

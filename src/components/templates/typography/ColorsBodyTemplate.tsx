@@ -8,20 +8,71 @@ export interface ColorsBodyTemplateProps {
 }
 
 const tonalTokenDefs = [
-  { name: 'border',    bg: 'bg-border',    fg: 'text-foreground',           variable: '--border',    lightL: 0.922, darkL: 0.32,  lightF: 0.04, darkF: 0.06 },
-  { name: 'input',     bg: 'bg-input',     fg: 'text-foreground',           variable: '--input',     lightL: 0.922, darkL: 0.35,  lightF: 0.04, darkF: 0.06 },
-  { name: 'muted',     bg: 'bg-muted',     fg: 'text-muted-foreground',     variable: '--muted',     lightL: 0.970, darkL: 0.269, lightF: 0.02, darkF: 0.03 },
-  { name: 'secondary', bg: 'bg-secondary', fg: 'text-secondary-foreground', variable: '--secondary', lightL: 0.970, darkL: 0.269, lightF: 0.02, darkF: 0.02 },
-  { name: 'accent',    bg: 'bg-accent',    fg: 'text-accent-foreground',    variable: '--accent',    lightL: 0.970, darkL: 0.320, lightF: 0.04, darkF: 0.04 },
+  {
+    name: 'border',
+    bg: 'bg-border',
+    fg: 'text-foreground',
+    variable: '--border',
+    lightL: 0.922,
+    darkL: 0.32,
+    lightF: 0.04,
+    darkF: 0.06,
+  },
+  {
+    name: 'input',
+    bg: 'bg-input',
+    fg: 'text-foreground',
+    variable: '--input',
+    lightL: 0.922,
+    darkL: 0.35,
+    lightF: 0.04,
+    darkF: 0.06,
+  },
+  {
+    name: 'muted',
+    bg: 'bg-muted',
+    fg: 'text-muted-foreground',
+    variable: '--muted',
+    lightL: 0.97,
+    darkL: 0.269,
+    lightF: 0.02,
+    darkF: 0.03,
+  },
+  {
+    name: 'secondary',
+    bg: 'bg-secondary',
+    fg: 'text-secondary-foreground',
+    variable: '--secondary',
+    lightL: 0.97,
+    darkL: 0.269,
+    lightF: 0.02,
+    darkF: 0.02,
+  },
+  {
+    name: 'accent',
+    bg: 'bg-accent',
+    fg: 'text-accent-foreground',
+    variable: '--accent',
+    lightL: 0.97,
+    darkL: 0.32,
+    lightF: 0.04,
+    darkF: 0.04,
+  },
 ]
 
 const fixedNeutralTokens = [
-  { name: 'background', bg: 'bg-background', fg: 'text-foreground',        variable: '--background' },
-  { name: 'foreground', bg: 'bg-foreground', fg: 'text-background',        variable: '--foreground' },
-  { name: 'card',       bg: 'bg-card',       fg: 'text-card-foreground',   variable: '--card' },
+  { name: 'background', bg: 'bg-background', fg: 'text-foreground', variable: '--background' },
+  { name: 'foreground', bg: 'bg-foreground', fg: 'text-background', variable: '--foreground' },
+  { name: 'card', bg: 'bg-card', fg: 'text-card-foreground', variable: '--card' },
 ]
 
-function ColorSwatch({ bg, fg, name, variable, formula }: {
+function ColorSwatch({
+  bg,
+  fg,
+  name,
+  variable,
+  formula,
+}: {
   bg: string
   fg: string
   name: string
@@ -87,7 +138,6 @@ export function ColorsBodyTemplate({ theme, breadcrumb }: ColorsBodyTemplateProp
       </DataPage.Header>
 
       <DataPage.Content className="space-y-[var(--dk-panel-gap)]">
-
         {/* Primary derived chain */}
         <Card className="rounded-lg border border-border ring-0">
           <CardHeader>
@@ -126,7 +176,9 @@ export function ColorsBodyTemplate({ theme, breadcrumb }: ColorsBodyTemplateProp
                 formula="oklch(0.577 0.245 27.3)"
               />
             </div>
-            <p className="mt-3 text-xs text-muted-foreground">Fixed at hue 27 (red). Not affected by theme controls.</p>
+            <p className="mt-3 text-xs text-muted-foreground">
+              Fixed at hue 27 (red). Not affected by theme controls.
+            </p>
           </CardContent>
         </Card>
 
@@ -147,16 +199,23 @@ export function ColorsBodyTemplate({ theme, breadcrumb }: ColorsBodyTemplateProp
                 <span>dark</span>
               </div>
               {tonalTokenDefs.map((t) => (
-                <div key={t.name} className="grid grid-cols-[7rem_1fr_1fr] items-center gap-x-3 px-3 py-2">
+                <div
+                  key={t.name}
+                  className="grid grid-cols-[7rem_1fr_1fr] items-center gap-x-3 px-3 py-2"
+                >
                   <div className="flex items-center gap-2">
                     <div className={`${t.bg} h-5 w-5 shrink-0 rounded border`} />
                     <span className="font-medium text-foreground">{t.name}</span>
                   </div>
                   <span className="text-muted-foreground">
-                    oklch({t.lightL} <span className="text-foreground">{(primaryChroma * t.lightF).toFixed(4)}</span> {primaryHue})
+                    oklch({t.lightL}{' '}
+                    <span className="text-foreground">{(primaryChroma * t.lightF).toFixed(4)}</span>{' '}
+                    {primaryHue})
                   </span>
                   <span className="text-muted-foreground">
-                    oklch({t.darkL} <span className="text-foreground">{(primaryChroma * t.darkF).toFixed(4)}</span> {primaryHue})
+                    oklch({t.darkL}{' '}
+                    <span className="text-foreground">{(primaryChroma * t.darkF).toFixed(4)}</span>{' '}
+                    {primaryHue})
                   </span>
                 </div>
               ))}
@@ -180,7 +239,6 @@ export function ColorsBodyTemplate({ theme, breadcrumb }: ColorsBodyTemplateProp
             </p>
           </CardContent>
         </Card>
-
       </DataPage.Content>
     </DataPage>
   )

@@ -32,7 +32,9 @@ function Panel(_props: SectionedBodyTemplatePanelProps) {
   return null
 }
 
-function isPanel(node: React.ReactNode): node is React.ReactElement<SectionedBodyTemplatePanelProps> {
+function isPanel(
+  node: React.ReactNode,
+): node is React.ReactElement<SectionedBodyTemplatePanelProps> {
   return Boolean(node && typeof node === 'object' && 'type' in node && node.type === Panel)
 }
 
@@ -51,7 +53,9 @@ function Root({
 }: SectionedBodyTemplateProps) {
   const panels = useMemo(() => Children.toArray(children).filter(isPanel), [children])
   const firstEnabled = sections.find((section) => !section.disabled)
-  const [internalSection, setInternalSection] = useState(defaultSection ?? firstEnabled?.id ?? sections[0]?.id ?? '')
+  const [internalSection, setInternalSection] = useState(
+    defaultSection ?? firstEnabled?.id ?? sections[0]?.id ?? '',
+  )
   const activeSection = controlledSection ?? internalSection
   const activePanel = panels.find((panel) => panel.props.id === activeSection) ?? panels[0]
 
@@ -86,15 +90,15 @@ function Root({
                 >
                   <span className="block text-sm font-medium">{section.label}</span>
                   {section.description && (
-                    <span className="mt-0.5 block text-xs text-muted-foreground">{section.description}</span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">
+                      {section.description}
+                    </span>
                   )}
                 </button>
               )
             })}
           </nav>
-          <div className="min-w-0 space-y-[var(--dk-panel-gap)]">
-            {activePanel?.props.children}
-          </div>
+          <div className="min-w-0 space-y-[var(--dk-panel-gap)]">{activePanel?.props.children}</div>
         </div>
       </DataPage.Content>
     </DataPage>

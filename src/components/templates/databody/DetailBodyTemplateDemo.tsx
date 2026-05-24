@@ -12,8 +12,12 @@ export function DetailBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
       description="sarah@acme.com"
       actions={
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="h-8 text-xs">Delete</Button>
-          <Button size="sm" className="h-8 text-xs">Edit</Button>
+          <Button variant="outline" size="sm" className="h-8 text-xs">
+            Delete
+          </Button>
+          <Button size="sm" className="h-8 text-xs">
+            Edit
+          </Button>
         </div>
       }
     >
@@ -21,7 +25,9 @@ export function DetailBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
         <DataBodyTemplate.Field label="Full name">Sarah Kim</DataBodyTemplate.Field>
         <DataBodyTemplate.Field label="Email">sarah@acme.com</DataBodyTemplate.Field>
         <DataBodyTemplate.Field label="Role">
-          <Badge variant="outline" className="text-xs font-normal">Admin</Badge>
+          <Badge variant="outline" className="text-xs font-normal">
+            Admin
+          </Badge>
         </DataBodyTemplate.Field>
         <DataBodyTemplate.Field label="Status">
           <Badge className="text-xs capitalize">Active</Badge>
@@ -38,7 +44,11 @@ export function DetailBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
 
       <DataBodyTemplate.Group layout="inline" title="Danger zone" danger>
         <DataBodyTemplate.Field label="Deactivate account">
-          <Button variant="ghost" size="sm" className="h-7 text-xs text-destructive hover:text-destructive">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 text-xs text-destructive hover:text-destructive"
+          >
             Deactivate
           </Button>
         </DataBodyTemplate.Field>

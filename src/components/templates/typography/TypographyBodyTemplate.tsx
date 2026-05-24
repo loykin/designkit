@@ -11,10 +11,14 @@ export interface TypographyBodyTemplateProps {
 }
 
 const scaleRows = [
-  { label: 'Page title',    className: 'text-xl font-semibold',         sample: 'Customer Operations' },
-  { label: 'Section title', className: 'text-base font-medium',         sample: 'Service Health' },
-  { label: 'Body',          className: 'text-sm',                       sample: 'Review active incidents, service status, and recent deployments.' },
-  { label: 'Caption',       className: 'text-xs text-muted-foreground', sample: 'Updated 4 minutes ago' },
+  { label: 'Page title', className: 'text-xl font-semibold', sample: 'Customer Operations' },
+  { label: 'Section title', className: 'text-base font-medium', sample: 'Service Health' },
+  {
+    label: 'Body',
+    className: 'text-sm',
+    sample: 'Review active incidents, service status, and recent deployments.',
+  },
+  { label: 'Caption', className: 'text-xs text-muted-foreground', sample: 'Updated 4 minutes ago' },
 ]
 
 export function TypographyBodyTemplate({ theme, breadcrumb }: TypographyBodyTemplateProps) {
@@ -51,16 +55,25 @@ export function TypographyBodyTemplate({ theme, breadcrumb }: TypographyBodyTemp
             <CardContent className="space-y-3">
               <div className="flex items-center gap-2">
                 <Input className="h-8 max-w-64 text-sm" value="Search deployments" readOnly />
-                <Button size="sm" className="h-8 text-xs">Apply</Button>
-                <Button variant="outline" size="sm" className="h-8 text-xs">Reset</Button>
+                <Button size="sm" className="h-8 text-xs">
+                  Apply
+                </Button>
+                <Button variant="outline" size="sm" className="h-8 text-xs">
+                  Reset
+                </Button>
               </div>
               <Separator />
               <div className="grid gap-2">
                 {['API Gateway', 'Billing Worker', 'Notification Queue'].map((item, index) => (
-                  <div key={item} className="flex items-center justify-between rounded-lg border px-3 py-2">
+                  <div
+                    key={item}
+                    className="flex items-center justify-between rounded-lg border px-3 py-2"
+                  >
                     <div>
                       <p className="text-sm font-medium">{item}</p>
-                      <p className="text-xs text-muted-foreground">p95 latency {42 + index * 18}ms</p>
+                      <p className="text-xs text-muted-foreground">
+                        p95 latency {42 + index * 18}ms
+                      </p>
                     </div>
                     <Badge variant={index === 1 ? 'secondary' : 'outline'} className="text-xs">
                       {index === 1 ? 'Watching' : 'Healthy'}
@@ -77,17 +90,19 @@ export function TypographyBodyTemplate({ theme, breadcrumb }: TypographyBodyTemp
             <CardTitle>Sidebar Sample</CardTitle>
           </CardHeader>
           <CardContent className="space-y-1">
-            {['Dashboard', 'Table', 'Infinite Scroll', 'Card List', 'Typography'].map((item, index) => (
-              <div
-                key={item}
-                className={[
-                  'flex h-8 items-center rounded-[var(--radius)] px-2 text-sm',
-                  index === 4 ? 'bg-accent font-medium text-foreground' : 'text-muted-foreground',
-                ].join(' ')}
-              >
-                {item}
-              </div>
-            ))}
+            {['Dashboard', 'Table', 'Infinite Scroll', 'Card List', 'Typography'].map(
+              (item, index) => (
+                <div
+                  key={item}
+                  className={[
+                    'flex h-8 items-center rounded-[var(--radius)] px-2 text-sm',
+                    index === 4 ? 'bg-accent font-medium text-foreground' : 'text-muted-foreground',
+                  ].join(' ')}
+                >
+                  {item}
+                </div>
+              ),
+            )}
           </CardContent>
         </Card>
       </DataPage.Content>

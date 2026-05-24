@@ -77,7 +77,10 @@ function Root({ children, className, style }: DataPageProps) {
   return (
     <div
       data-slot="data-page"
-      className={cn('designkit-theme h-full min-h-0 flex flex-col bg-background text-foreground', className)}
+      className={cn(
+        'designkit-theme h-full min-h-0 flex flex-col bg-background text-foreground',
+        className,
+      )}
       style={style}
     >
       {children}
@@ -89,7 +92,10 @@ function Header({ children, className }: DataPageHeaderProps) {
   return (
     <header
       data-slot="data-page-header"
-      className={cn('shrink-0 px-[var(--dk-page-padding-x)] pb-[var(--dk-page-padding-y)] pt-[var(--dk-page-padding-y)]', className)}
+      className={cn(
+        'shrink-0 px-[var(--dk-page-padding-x)] pb-[var(--dk-page-padding-y)] pt-[var(--dk-page-padding-y)]',
+        className,
+      )}
     >
       <div className="flex min-h-[calc(var(--dk-toolbar-height)*1.25)] items-end justify-between gap-[var(--dk-panel-gap)]">
         {children}
@@ -114,7 +120,10 @@ function Actions({ children, className }: DataPageActionsProps) {
   if (!children) return null
 
   return (
-    <div data-slot="data-page-actions" className={cn('flex shrink-0 items-center gap-[calc(var(--dk-panel-gap)*0.5)]', className)}>
+    <div
+      data-slot="data-page-actions"
+      className={cn('flex shrink-0 items-center gap-[calc(var(--dk-panel-gap)*0.5)]', className)}
+    >
       {children}
     </div>
   )
@@ -125,9 +134,7 @@ function Tabs({ children, className }: DataPageTabsProps) {
 
   return (
     <div data-slot="data-page-tabs" className={cn('shrink-0 border-b px-6', className)}>
-      <div className="flex items-center gap-0 overflow-x-auto">
-        {children}
-      </div>
+      <div className="flex items-center gap-0 overflow-x-auto">{children}</div>
     </div>
   )
 }
@@ -165,7 +172,8 @@ function Content({ children, className, padding = 'default' }: DataPageContentPr
       data-slot="data-page-content"
       className={cn(
         'min-h-0 flex-1 overflow-auto',
-        padding === 'default' && 'px-[var(--dk-page-padding-x)] pb-[var(--dk-page-padding-y)] pt-[var(--dk-page-padding-y)]',
+        padding === 'default' &&
+          'px-[var(--dk-page-padding-x)] pb-[var(--dk-page-padding-y)] pt-[var(--dk-page-padding-y)]',
         padding === 'compact' && 'p-[calc(var(--dk-page-padding-y)*0.875)]',
         padding === 'none' && 'p-0',
         className,
@@ -184,7 +192,8 @@ function Group({ children, className, surface = 'none' }: DataPageGroupProps) {
       className={cn(
         'min-h-0',
         surface === 'bordered' && 'overflow-hidden rounded-[var(--radius)] border bg-background',
-        surface === 'card' && 'overflow-hidden rounded-[var(--radius)] border bg-card text-card-foreground shadow-sm',
+        surface === 'card' &&
+          'overflow-hidden rounded-[var(--radius)] border bg-card text-card-foreground shadow-sm',
         className,
       )}
     >
@@ -205,7 +214,10 @@ function GroupHeader({
   return (
     <div
       data-slot="data-page-group-header"
-      className={cn('flex items-start justify-between gap-4 px-0 pb-[calc(var(--dk-panel-gap)*0.75)]', className)}
+      className={cn(
+        'flex items-start justify-between gap-4 px-0 pb-[calc(var(--dk-panel-gap)*0.75)]',
+        className,
+      )}
     >
       <div className="min-w-0">
         {title && <h2 className="text-sm font-medium">{title}</h2>}
@@ -223,7 +235,10 @@ function GroupToolbar({ children, className }: DataPageGroupToolbarProps) {
   return (
     <div
       data-slot="data-page-group-toolbar"
-      className={cn('flex min-h-[var(--dk-toolbar-height)] items-center justify-between gap-[calc(var(--dk-panel-gap)*0.75)] pb-[calc(var(--dk-panel-gap)*0.75)]', className)}
+      className={cn(
+        'flex min-h-[var(--dk-toolbar-height)] items-center justify-between gap-[calc(var(--dk-panel-gap)*0.75)] pb-[calc(var(--dk-panel-gap)*0.75)]',
+        className,
+      )}
     >
       {children}
     </div>

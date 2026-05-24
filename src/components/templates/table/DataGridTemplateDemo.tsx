@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  DataGridPaginationCompact,
-  GlobalSearch,
-  type DataGridColumnDef,
-} from '@loykin/gridkit'
+import { DataGridPaginationCompact, GlobalSearch, type DataGridColumnDef } from '@loykin/gridkit'
 import type { Row, Table as TanStackTable } from '@tanstack/react-table'
 import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
 import { DataPage } from '@/components/templates/datapage/DataPage'
@@ -33,16 +29,86 @@ type DemoRow = {
 }
 
 const demoData: DemoRow[] = [
-  { id: '1',  name: 'Sarah Kim',    email: 'sarah@acme.com',   role: 'Admin',  status: 'active',   joined: 'Jan 12, 2024' },
-  { id: '2',  name: 'Marcus Lee',   email: 'marcus@acme.com',  role: 'Editor', status: 'active',   joined: 'Feb 3, 2024'  },
-  { id: '3',  name: 'Ji-Yeon Park', email: 'jiyeon@acme.com',  role: 'Viewer', status: 'inactive', joined: 'Mar 18, 2024' },
-  { id: '4',  name: 'Alex Chen',    email: 'alex@acme.com',    role: 'Editor', status: 'active',   joined: 'Apr 7, 2024'  },
-  { id: '5',  name: 'Dana White',   email: 'dana@acme.com',    role: 'Viewer', status: 'pending',  joined: 'Apr 29, 2024' },
-  { id: '6',  name: 'Leo Torres',   email: 'leo@acme.com',     role: 'Admin',  status: 'inactive', joined: 'May 1, 2024'  },
-  { id: '7',  name: 'Mina Seo',     email: 'mina@acme.com',    role: 'Editor', status: 'active',   joined: 'May 2, 2024'  },
-  { id: '8',  name: 'Ryan Patel',   email: 'ryan@acme.com',    role: 'Viewer', status: 'active',   joined: 'May 15, 2024' },
-  { id: '9',  name: 'Yuna Choi',    email: 'yuna@acme.com',    role: 'Editor', status: 'pending',  joined: 'Jun 3, 2024'  },
-  { id: '10', name: 'Tom Fischer',  email: 'tom@acme.com',     role: 'Viewer', status: 'active',   joined: 'Jun 20, 2024' },
+  {
+    id: '1',
+    name: 'Sarah Kim',
+    email: 'sarah@acme.com',
+    role: 'Admin',
+    status: 'active',
+    joined: 'Jan 12, 2024',
+  },
+  {
+    id: '2',
+    name: 'Marcus Lee',
+    email: 'marcus@acme.com',
+    role: 'Editor',
+    status: 'active',
+    joined: 'Feb 3, 2024',
+  },
+  {
+    id: '3',
+    name: 'Ji-Yeon Park',
+    email: 'jiyeon@acme.com',
+    role: 'Viewer',
+    status: 'inactive',
+    joined: 'Mar 18, 2024',
+  },
+  {
+    id: '4',
+    name: 'Alex Chen',
+    email: 'alex@acme.com',
+    role: 'Editor',
+    status: 'active',
+    joined: 'Apr 7, 2024',
+  },
+  {
+    id: '5',
+    name: 'Dana White',
+    email: 'dana@acme.com',
+    role: 'Viewer',
+    status: 'pending',
+    joined: 'Apr 29, 2024',
+  },
+  {
+    id: '6',
+    name: 'Leo Torres',
+    email: 'leo@acme.com',
+    role: 'Admin',
+    status: 'inactive',
+    joined: 'May 1, 2024',
+  },
+  {
+    id: '7',
+    name: 'Mina Seo',
+    email: 'mina@acme.com',
+    role: 'Editor',
+    status: 'active',
+    joined: 'May 2, 2024',
+  },
+  {
+    id: '8',
+    name: 'Ryan Patel',
+    email: 'ryan@acme.com',
+    role: 'Viewer',
+    status: 'active',
+    joined: 'May 15, 2024',
+  },
+  {
+    id: '9',
+    name: 'Yuna Choi',
+    email: 'yuna@acme.com',
+    role: 'Editor',
+    status: 'pending',
+    joined: 'Jun 3, 2024',
+  },
+  {
+    id: '10',
+    name: 'Tom Fischer',
+    email: 'tom@acme.com',
+    role: 'Viewer',
+    status: 'active',
+    joined: 'Jun 20, 2024',
+  },
 ]
 
 const demoInfiniteData: DemoRow[] = Array.from({ length: 120 }, (_, index) => {
@@ -75,7 +141,11 @@ const demoColumns: DataGridColumnDef<DemoRow>[] = [
     id: 'role',
     accessorKey: 'role',
     header: 'Role',
-    cell: ({ row }) => <Badge variant="outline" className="text-xs font-normal">{row.original.role}</Badge>,
+    cell: ({ row }) => (
+      <Badge variant="outline" className="text-xs font-normal">
+        {row.original.role}
+      </Badge>
+    ),
   },
   {
     id: 'status',
@@ -102,10 +172,12 @@ const headerLeft = (table: TanStackTable<DemoRow>) => (
 const headerRight = () => (
   <div className="flex items-center gap-2">
     <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
-      <Download className="h-3.5 w-3.5" />Export
+      <Download className="h-3.5 w-3.5" />
+      Export
     </Button>
     <Button size="sm" className="h-8 gap-1.5 text-xs">
-      <Plus className="h-3.5 w-3.5" />Add User
+      <Plus className="h-3.5 w-3.5" />
+      Add User
     </Button>
   </div>
 )
@@ -208,7 +280,9 @@ export function DataGridTemplateDemo({
             columns={demoColumns}
             getRowId={(row) => row.id}
             variant={variant}
-            enableColumnFilters={variant === 'infinity' || variant === 'card' || variant === 'card-list'}
+            enableColumnFilters={
+              variant === 'infinity' || variant === 'card' || variant === 'card-list'
+            }
             headerLeft={headerLeft}
             headerRight={headerRight}
             pagination={{ pageSize: 10 }}
@@ -239,26 +313,24 @@ export function buildDataGridTemplateCode({
   layoutClassName,
 }: TemplateCodeContext) {
   const variant = definition.preview?.variant
-  const variantProp = variant && variant !== 'standard'
-    ? `\n        variant="${variant}"`
-    : ''
-  const cardRenderCode = definition.exportKind === 'data-grid-card'
-    ? [
-        '',
-        `function renderCard(row: { original: User }) {`,
-        `  const user = row.original`,
-        `  return (`,
-        `    <div className="rounded-lg border bg-card p-3 text-card-foreground">`,
-        `      <p className="text-sm font-medium">{user.name}</p>`,
-        `      <p className="text-xs text-muted-foreground">{user.email}</p>`,
-        `    </div>`,
-        `  )`,
-        `}`,
-      ].join('\n')
-    : ''
-  const cardProp = definition.exportKind === 'data-grid-card'
-    ? `\n        card={{ renderCard }}`
-    : ''
+  const variantProp = variant && variant !== 'standard' ? `\n        variant="${variant}"` : ''
+  const cardRenderCode =
+    definition.exportKind === 'data-grid-card'
+      ? [
+          '',
+          `function renderCard(row: { original: User }) {`,
+          `  const user = row.original`,
+          `  return (`,
+          `    <div className="rounded-lg border bg-card p-3 text-card-foreground">`,
+          `      <p className="text-sm font-medium">{user.name}</p>`,
+          `      <p className="text-xs text-muted-foreground">{user.email}</p>`,
+          `    </div>`,
+          `  )`,
+          `}`,
+        ].join('\n')
+      : ''
+  const cardProp =
+    definition.exportKind === 'data-grid-card' ? `\n        card={{ renderCard }}` : ''
 
   return [
     `import { DataBodyTemplate, DataGridView, type DataGridColumnDef } from '@loykin/designkit'`,
@@ -289,5 +361,7 @@ export function buildDataGridTemplateCode({
     `    </DataBodyTemplate>`,
     `  )`,
     `}`,
-  ].filter(Boolean).join('\n')
+  ]
+    .filter(Boolean)
+    .join('\n')
 }

@@ -28,10 +28,38 @@ type User = {
 }
 
 const users: User[] = [
-  { id: '1', name: 'Sarah Kim', email: 'sarah@acme.com', role: 'Admin', status: 'active', joined: 'Jan 12, 2024' },
-  { id: '2', name: 'Marcus Lee', email: 'marcus@acme.com', role: 'Editor', status: 'active', joined: 'Feb 3, 2024' },
-  { id: '3', name: 'Ji-Yeon Park', email: 'jiyeon@acme.com', role: 'Viewer', status: 'inactive', joined: 'Mar 18, 2024' },
-  { id: '4', name: 'Alex Chen', email: 'alex@acme.com', role: 'Editor', status: 'pending', joined: 'Apr 7, 2024' },
+  {
+    id: '1',
+    name: 'Sarah Kim',
+    email: 'sarah@acme.com',
+    role: 'Admin',
+    status: 'active',
+    joined: 'Jan 12, 2024',
+  },
+  {
+    id: '2',
+    name: 'Marcus Lee',
+    email: 'marcus@acme.com',
+    role: 'Editor',
+    status: 'active',
+    joined: 'Feb 3, 2024',
+  },
+  {
+    id: '3',
+    name: 'Ji-Yeon Park',
+    email: 'jiyeon@acme.com',
+    role: 'Viewer',
+    status: 'inactive',
+    joined: 'Mar 18, 2024',
+  },
+  {
+    id: '4',
+    name: 'Alex Chen',
+    email: 'alex@acme.com',
+    role: 'Editor',
+    status: 'pending',
+    joined: 'Apr 7, 2024',
+  },
 ]
 
 const statusVariant = { active: 'default', pending: 'secondary', inactive: 'outline' } as const
@@ -53,7 +81,11 @@ const userColumns: DataGridColumnDef<User>[] = [
     id: 'role',
     accessorKey: 'role',
     header: 'Role',
-    cell: ({ row }) => <Badge variant="outline" className="text-xs font-normal">{row.original.role}</Badge>,
+    cell: ({ row }) => (
+      <Badge variant="outline" className="text-xs font-normal">
+        {row.original.role}
+      </Badge>
+    ),
   },
   {
     id: 'status',
@@ -210,10 +242,7 @@ export function DataBodyTemplateDemo({ theme }: DataBodyTemplateDemoProps) {
   )
 }
 
-export function buildDataBodyTemplateCode({
-  themeProp,
-  layoutClassName,
-}: TemplateCodeContext) {
+export function buildDataBodyTemplateCode({ themeProp, layoutClassName }: TemplateCodeContext) {
   return [
     `import { DataBodyTemplate } from '@loykin/designkit'`,
     `import '@loykin/designkit/styles'`,

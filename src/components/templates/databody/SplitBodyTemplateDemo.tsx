@@ -4,13 +4,19 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import type { TemplateCodeContext } from '../code'
 
-type User = { id: string; name: string; email: string; role: string; status: 'active' | 'inactive' | 'pending' }
+type User = {
+  id: string
+  name: string
+  email: string
+  role: string
+  status: 'active' | 'inactive' | 'pending'
+}
 
 const users: User[] = [
-  { id: '1', name: 'Sarah Kim',   email: 'sarah@acme.com',  role: 'Admin',  status: 'active'   },
-  { id: '2', name: 'Marcus Lee',  email: 'marcus@acme.com', role: 'Editor', status: 'active'   },
-  { id: '3', name: 'Ji-Yeon Park',email: 'jiyeon@acme.com', role: 'Viewer', status: 'inactive' },
-  { id: '4', name: 'Alex Chen',   email: 'alex@acme.com',   role: 'Editor', status: 'pending'  },
+  { id: '1', name: 'Sarah Kim', email: 'sarah@acme.com', role: 'Admin', status: 'active' },
+  { id: '2', name: 'Marcus Lee', email: 'marcus@acme.com', role: 'Editor', status: 'active' },
+  { id: '3', name: 'Ji-Yeon Park', email: 'jiyeon@acme.com', role: 'Viewer', status: 'inactive' },
+  { id: '4', name: 'Alex Chen', email: 'alex@acme.com', role: 'Editor', status: 'pending' },
 ]
 
 const statusVariant = { active: 'default', pending: 'secondary', inactive: 'outline' } as const
@@ -23,7 +29,11 @@ export function SplitBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }
       theme={theme}
       breadcrumb="Users"
       title="Users"
-      actions={<Button size="sm" className="h-8 text-xs">Add User</Button>}
+      actions={
+        <Button size="sm" className="h-8 text-xs">
+          Add User
+        </Button>
+      }
     >
       <DataBodyTemplate.Group layout="split">
         <div className="space-y-0.5 p-2">
