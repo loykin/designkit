@@ -40,6 +40,12 @@ export function FormWizardBodyTemplate({
   const current = steps[activeStep]
   const isLast = activeStep === steps.length - 1
 
+  function handleStepSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    if (isLast) onFinish?.()
+    else onNext?.()
+  }
+
   return (
     <DataPage className="layout-form-wizard" style={theme}>
       {topBar && <div className="shrink-0">{topBar}</div>}
@@ -48,7 +54,7 @@ export function FormWizardBodyTemplate({
       </DataPage.Header>
 
       {/* Step indicator */}
-      <div className="shrink-0 px-[var(--dk-page-padding-x)] pb-4">
+      <div className="shrink-0 px-(--dk-page-padding-x) pb-4">
         <div className="flex items-center">
           {steps.map((step, i) => (
             <Fragment key={step.key}>
@@ -88,21 +94,23 @@ export function FormWizardBodyTemplate({
       </div>
 
       <DataPage.Content>
-        {current &&
-          (variant === 'card' ? (
+        {current && (
+          variant === 'card' ? (
             <Card>
-              <CardContent className="p-[var(--dk-panel-gap)]">
-                <div className="mb-5">
-                  <h2 className="text-sm font-semibold">{current.title}</h2>
-                  {current.description && (
-                    <p className="mt-1 text-xs text-muted-foreground">{current.description}</p>
-                  )}
-                </div>
-                {current.content}
+              <CardContent className="p-(--dk-panel-gap)">
+                <form id={current.key} onSubmit={handleStepSubmit}>
+                  <div className="mb-5">
+                    <h2 className="text-sm font-semibold">{current.title}</h2>
+                    {current.description && (
+                      <p className="mt-1 text-xs text-muted-foreground">{current.description}</p>
+                    )}
+                  </div>
+                  {current.content}
+                </form>
               </CardContent>
             </Card>
           ) : (
-            <div>
+            <form id={current.key} onSubmit={handleStepSubmit}>
               <div className="mb-5">
                 <h2 className="text-sm font-semibold">{current.title}</h2>
                 {current.description && (
@@ -110,13 +118,15 @@ export function FormWizardBodyTemplate({
                 )}
               </div>
               {current.content}
-            </div>
-          ))}
+            </form>
+          )
+        )}
       </DataPage.Content>
 
       <DataPage.Footer>
         <div className="flex items-center justify-between">
           <Button
+            type="button"
             variant="outline"
             size="sm"
             className="h-8 text-xs"
@@ -129,15 +139,9 @@ export function FormWizardBodyTemplate({
             <span className="text-xs text-muted-foreground">
               Step {activeStep + 1} of {steps.length}
             </span>
-            {isLast ? (
-              <Button size="sm" className="h-8 text-xs" onClick={onFinish}>
-                Finish
-              </Button>
-            ) : (
-              <Button size="sm" className="h-8 text-xs" onClick={onNext}>
-                Continue
-              </Button>
-            )}
+            <Button type="submit" form={current?.key} size="sm" className="h-8 text-xs">
+              {isLast ? 'Finish' : 'Continue'}
+            </Button>
           </div>
         </div>
       </DataPage.Footer>

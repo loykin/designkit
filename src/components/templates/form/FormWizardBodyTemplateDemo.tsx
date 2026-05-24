@@ -28,26 +28,26 @@ const steps: FormWizardStep[] = [
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1.5">
-            <Label className="text-xs">First Name</Label>
-            <Input defaultValue="Sarah" className="h-8 text-sm" />
+            <Label htmlFor="wiz-first-name" className="text-xs">First Name</Label>
+            <Input id="wiz-first-name" defaultValue="Sarah" className="h-8 text-sm" />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Last Name</Label>
-            <Input defaultValue="Kim" className="h-8 text-sm" />
+            <Label htmlFor="wiz-last-name" className="text-xs">Last Name</Label>
+            <Input id="wiz-last-name" defaultValue="Kim" className="h-8 text-sm" />
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label className="text-xs">Work Email</Label>
-          <Input type="email" defaultValue="sarah@acme.com" className="h-8 text-sm" />
+          <Label htmlFor="wiz-email" className="text-xs">Work Email</Label>
+          <Input id="wiz-email" type="email" defaultValue="sarah@acme.com" className="h-8 text-sm" />
         </div>
         <div className="space-y-1.5">
-          <Label className="text-xs">Password</Label>
-          <Input type="password" placeholder="••••••••" className="h-8 text-sm" />
+          <Label htmlFor="wiz-password" className="text-xs">Password</Label>
+          <Input id="wiz-password" type="password" placeholder="••••••••" className="h-8 text-sm" />
           <p className="text-xs text-muted-foreground">At least 8 characters.</p>
         </div>
         <div className="space-y-1.5">
-          <Label className="text-xs">Confirm Password</Label>
-          <Input type="password" placeholder="••••••••" className="h-8 text-sm" />
+          <Label htmlFor="wiz-confirm-password" className="text-xs">Confirm Password</Label>
+          <Input id="wiz-confirm-password" type="password" placeholder="••••••••" className="h-8 text-sm" />
         </div>
       </div>
     ),
@@ -59,11 +59,11 @@ const steps: FormWizardStep[] = [
     content: (
       <div className="space-y-3">
         <div className="space-y-1.5">
-          <Label className="text-xs">Job Title</Label>
-          <Input defaultValue="Senior Frontend Engineer" className="h-8 text-sm" />
+          <Label htmlFor="wiz-job-title" className="text-xs">Job Title</Label>
+          <Input id="wiz-job-title" defaultValue="Senior Frontend Engineer" className="h-8 text-sm" />
         </div>
         <div className="space-y-1.5">
-          <Label className="text-xs">Department</Label>
+          <Label htmlFor="wiz-department" className="text-xs">Department</Label>
           <Select defaultValue="engineering">
             <SelectTrigger className="h-8 text-sm">
               <SelectValue />
@@ -78,9 +78,9 @@ const steps: FormWizardStep[] = [
           </Select>
         </div>
         <div className="space-y-1.5">
-          <Label className="text-xs">Team Size</Label>
+          <Label htmlFor="wiz-team-size" className="text-xs">Team Size</Label>
           <Select defaultValue="11-50">
-            <SelectTrigger className="h-8 text-sm">
+            <SelectTrigger id="wiz-team-size" className="h-8 text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

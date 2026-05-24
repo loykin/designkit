@@ -13,11 +13,6 @@ export function SectionedBodyTemplateDemo({ theme, topBarShow, topBarVariant, to
       topBar={buildTopBar({ topBarShow, topBarVariant, topBarBg, left: 'Pages / Sectioned' })}
       title="Workspace Settings"
       description="Section navigation connected to body panels."
-      actions={
-        <Button size="sm" className="h-8 text-xs">
-          Save
-        </Button>
-      }
     >
       <DataBodyTemplate.Section id="profile" label="Profile" description="Identity and contact">
         <DataBodyTemplate.Group
@@ -25,10 +20,10 @@ export function SectionedBodyTemplateDemo({ theme, topBarShow, topBarVariant, to
           title="Profile"
           description="Public workspace details."
         >
-          <div className="space-y-3">
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-3">
             <div className="space-y-1.5">
-              <Label className="text-xs">Workspace Name</Label>
-              <Input defaultValue="Acme Corp" className="h-8 text-sm" />
+              <Label htmlFor="workspace-name" className="text-xs">Workspace Name</Label>
+              <Input id="workspace-name" defaultValue="Acme Corp" className="h-8 text-sm" />
             </div>
             <div className="flex items-center justify-between">
               <div>
@@ -39,7 +34,10 @@ export function SectionedBodyTemplateDemo({ theme, topBarShow, topBarVariant, to
               </div>
               <Switch defaultChecked />
             </div>
-          </div>
+            <div className="flex justify-end">
+              <Button type="submit" size="sm" className="h-8 text-xs">Save</Button>
+            </div>
+          </form>
         </DataBodyTemplate.Group>
       </DataBodyTemplate.Section>
 

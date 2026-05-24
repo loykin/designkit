@@ -21,41 +21,31 @@ export function FormBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBarB
       topBar={buildTopBar({ topBarShow, topBarVariant, topBarBg, left: 'Pages / Form' })}
       title="Account Settings"
       description="Manage your account preferences and security."
-      actions={
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="h-8 text-xs">
-            Cancel
-          </Button>
-          <Button size="sm" className="h-8 text-xs">
-            Save Changes
-          </Button>
-        </div>
-      }
     >
       <DataBodyTemplate.Group
         layout="horizontal"
         title="Profile"
         description="Your public-facing name and contact info."
       >
-        <div className="space-y-4">
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label className="text-xs">First Name</Label>
-              <Input defaultValue="Sarah" className="h-8 text-sm" />
+              <Label htmlFor="first-name" className="text-xs">First Name</Label>
+              <Input id="first-name" defaultValue="Sarah" className="h-8 text-sm" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-xs">Last Name</Label>
-              <Input defaultValue="Kim" className="h-8 text-sm" />
+              <Label htmlFor="last-name" className="text-xs">Last Name</Label>
+              <Input id="last-name" defaultValue="Kim" className="h-8 text-sm" />
             </div>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Email</Label>
-            <Input type="email" defaultValue="sarah@acme.com" className="h-8 text-sm" />
+            <Label htmlFor="profile-email" className="text-xs">Email</Label>
+            <Input id="profile-email" type="email" defaultValue="sarah@acme.com" className="h-8 text-sm" />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Role</Label>
+            <Label htmlFor="profile-role" className="text-xs">Role</Label>
             <Select defaultValue="admin">
-              <SelectTrigger className="h-8 text-sm">
+              <SelectTrigger id="profile-role" className="h-8 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -66,13 +56,17 @@ export function FormBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBarB
             </Select>
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Bio</Label>
+            <Label htmlFor="profile-bio" className="text-xs">Bio</Label>
             <textarea
+              id="profile-bio"
               className="w-full h-20 rounded-(--radius) border border-input bg-background px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
               defaultValue="Frontend engineer focused on design systems."
             />
           </div>
-        </div>
+          <div className="flex justify-end">
+            <Button type="submit" size="sm" className="h-8 text-xs">Save Profile</Button>
+          </div>
+        </form>
       </DataBodyTemplate.Group>
 
       <DataBodyTemplate.Group
@@ -105,32 +99,33 @@ export function FormBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBarB
         description="Password and authentication settings."
       >
         <div className="space-y-4">
-          <div className="space-y-1.5">
-            <Label className="text-xs">Current Password</Label>
-            <Input type="password" placeholder="••••••••" className="h-8 text-sm" />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
             <div className="space-y-1.5">
-              <Label className="text-xs">New Password</Label>
-              <Input type="password" placeholder="••••••••" className="h-8 text-sm" />
+              <Label htmlFor="current-password" className="text-xs">Current Password</Label>
+              <Input id="current-password" type="password" placeholder="••••••••" className="h-8 text-sm" />
             </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Confirm</Label>
-              <Input type="password" placeholder="••••••••" className="h-8 text-sm" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label htmlFor="new-password" className="text-xs">New Password</Label>
+                <Input id="new-password" type="password" placeholder="••••••••" className="h-8 text-sm" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="confirm-password" className="text-xs">Confirm</Label>
+                <Input id="confirm-password" type="password" placeholder="••••••••" className="h-8 text-sm" />
+              </div>
             </div>
-          </div>
+            <div className="flex justify-end">
+              <Button type="submit" size="sm" className="h-8 text-xs">Update Password</Button>
+            </div>
+          </form>
           <div className="flex items-center justify-between p-3 rounded-(--radius) border">
             <div>
               <p className="text-sm font-medium">Two-Factor Authentication</p>
               <p className="text-xs text-muted-foreground">Require OTP on every login</p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="outline" className="text-xs">
-                Disabled
-              </Badge>
-              <Button size="sm" className="h-8 text-xs">
-                Enable
-              </Button>
+              <Badge variant="outline" className="text-xs">Disabled</Badge>
+              <Button type="button" size="sm" className="h-8 text-xs">Enable</Button>
             </div>
           </div>
         </div>
@@ -149,7 +144,7 @@ export function FormBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBarB
               Permanently delete your account and all data.
             </p>
           </div>
-          <Button variant="destructive" size="sm" className="h-8 text-xs">
+          <Button type="button" variant="destructive" size="sm" className="h-8 text-xs">
             Delete Account
           </Button>
         </div>
@@ -170,7 +165,10 @@ export function buildFormBodyTemplateCode({ themeProp, layoutClassName }: Templa
     `      title="Account Settings"`,
     `    >`,
     `      <DataBodyTemplate.Group layout="horizontal" title="Profile">`,
-    `        {/* form fields */}`,
+    `        <form onSubmit={handleSubmit}>`,
+    `          {/* form fields */}`,
+    `          <button type="submit">Save Profile</button>`,
+    `        </form>`,
     `      </DataBodyTemplate.Group>`,
     `    </DataBodyTemplate>`,
     `  )`,
