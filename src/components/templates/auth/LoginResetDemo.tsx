@@ -29,7 +29,7 @@ export function LoginResetDemo({
       bg={(loginBg as LoginBg) ?? 'default'}
       cardWidth={(loginCardWidth as LoginCardWidth) ?? 'sm'}
     >
-      <div className="space-y-6">
+      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
         <div className="space-y-1.5">
           <h1 className="text-2xl font-semibold tracking-tight">Set new password</h1>
           <p className="text-sm text-muted-foreground">
@@ -39,12 +39,12 @@ export function LoginResetDemo({
 
         <div className="space-y-3">
           <div className="space-y-1.5">
-            <Label className="text-xs">New Password</Label>
-            <Input type="password" placeholder="••••••••" className="h-9" />
+            <Label htmlFor="new-password" className="text-xs">New Password</Label>
+            <Input id="new-password" type="password" placeholder="••••••••" className="h-9" />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs">Confirm Password</Label>
-            <Input type="password" placeholder="••••••••" className="h-9" />
+            <Label htmlFor="confirm-password" className="text-xs">Confirm Password</Label>
+            <Input id="confirm-password" type="password" placeholder="••••••••" className="h-9" />
           </div>
           <div className="space-y-1.5 pt-1">
             {['At least 8 characters', 'One uppercase letter', 'One number'].map((rule) => (
@@ -56,8 +56,8 @@ export function LoginResetDemo({
           </div>
         </div>
 
-        <Button className="w-full h-9">Update password</Button>
-      </div>
+        <Button type="submit" className="w-full h-9">Update password</Button>
+      </form>
     </LoginBodyTemplate>
   )
 }

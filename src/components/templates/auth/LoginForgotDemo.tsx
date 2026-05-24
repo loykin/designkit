@@ -29,7 +29,7 @@ export function LoginForgotDemo({
       bg={(loginBg as LoginBg) ?? 'default'}
       cardWidth={(loginCardWidth as LoginCardWidth) ?? 'sm'}
     >
-      <div className="space-y-6">
+      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
         <div className="space-y-1.5">
           <h1 className="text-2xl font-semibold tracking-tight">Forgot password?</h1>
           <p className="text-sm text-muted-foreground">
@@ -39,12 +39,12 @@ export function LoginForgotDemo({
 
         <div className="space-y-3">
           <div className="space-y-1.5">
-            <Label className="text-xs">Email</Label>
-            <Input type="email" placeholder="you@example.com" className="h-9" />
+            <Label htmlFor="email" className="text-xs">Email</Label>
+            <Input id="email" type="email" placeholder="you@example.com" className="h-9" />
           </div>
         </div>
 
-        <Button className="w-full h-9">Send reset link</Button>
+        <Button type="submit" className="w-full h-9">Send reset link</Button>
 
         <a
           href="#"
@@ -53,7 +53,7 @@ export function LoginForgotDemo({
           <ArrowLeft className="h-3.5 w-3.5" />
           Back to sign in
         </a>
-      </div>
+      </form>
     </LoginBodyTemplate>
   )
 }

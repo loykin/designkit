@@ -29,7 +29,7 @@ export function LoginBodyTemplateDemo({
       bg={(loginBg as LoginBg) ?? 'default'}
       cardWidth={(loginCardWidth as LoginCardWidth) ?? 'sm'}
     >
-      <div className="space-y-6">
+      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
         <div className="space-y-1.5">
           <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
           <p className="text-sm text-muted-foreground">Enter your email and password to continue.</p>
@@ -37,17 +37,17 @@ export function LoginBodyTemplateDemo({
 
         <div className="space-y-3">
           <div className="space-y-1.5">
-            <Label className="text-xs">Email</Label>
-            <Input type="email" placeholder="you@example.com" className="h-9" />
+            <Label htmlFor="email" className="text-xs">Email</Label>
+            <Input id="email" type="email" placeholder="you@example.com" className="h-9" />
           </div>
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <Label className="text-xs">Password</Label>
+              <Label htmlFor="password" className="text-xs">Password</Label>
               <a href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
                 Forgot password?
               </a>
             </div>
-            <Input type="password" placeholder="••••••••" className="h-9" />
+            <Input id="password" type="password" placeholder="••••••••" className="h-9" />
           </div>
           <div className="flex items-center gap-2">
             <Checkbox id="remember" />
@@ -57,7 +57,7 @@ export function LoginBodyTemplateDemo({
           </div>
         </div>
 
-        <Button className="w-full h-9">Sign in</Button>
+        <Button type="submit" className="w-full h-9">Sign in</Button>
 
         <p className="text-center text-xs text-muted-foreground">
           Don't have an account?{' '}
@@ -65,7 +65,7 @@ export function LoginBodyTemplateDemo({
             Sign up
           </a>
         </p>
-      </div>
+      </form>
     </LoginBodyTemplate>
   )
 }

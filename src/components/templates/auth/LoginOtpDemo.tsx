@@ -28,7 +28,7 @@ export function LoginOtpDemo({
       bg={(loginBg as LoginBg) ?? 'default'}
       cardWidth={(loginCardWidth as LoginCardWidth) ?? 'sm'}
     >
-      <div className="space-y-6">
+      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
         <div className="space-y-1.5">
           <h1 className="text-2xl font-semibold tracking-tight">Check your email</h1>
           <p className="text-sm text-muted-foreground">
@@ -57,7 +57,7 @@ export function LoginOtpDemo({
           </p>
         </div>
 
-        <Button className="w-full h-9">Verify</Button>
+        <Button type="submit" className="w-full h-9">Verify</Button>
 
         <a
           href="#"
@@ -66,7 +66,7 @@ export function LoginOtpDemo({
           <ArrowLeft className="h-3.5 w-3.5" />
           Back to sign in
         </a>
-      </div>
+      </form>
     </LoginBodyTemplate>
   )
 }
