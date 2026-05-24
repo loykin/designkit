@@ -1,14 +1,19 @@
 import type { TemplateOverride, TemplateId } from '@/store/types'
 import type { DataGridViewVariant } from './table/DataGridView'
 
-export type TemplateGroup = 'Table' | 'Pages' | 'Design'
-export type TemplateNavigationGroupId = 'DataBodyTemplate' | 'FormWizardBodyTemplate' | 'Common'
+export type TemplateGroup = 'Table' | 'Pages' | 'Design' | 'Auth'
+export type TemplateNavigationGroupId =
+  | 'DataBodyTemplate'
+  | 'FormWizardBodyTemplate'
+  | 'LoginBodyTemplate'
+  | 'Common'
 export type TemplateExportKind =
   | 'data-grid'
   | 'data-grid-card'
   | 'body-template'
   | 'typography'
   | 'databody'
+  | 'login'
 
 export interface TemplateOptionChoice {
   value: string
@@ -77,6 +82,61 @@ const topBarOptions: TemplateOptionSpec[] = [
       { value: 'card', label: 'Card' },
     ],
     defaultValue: 'transparent',
+  },
+]
+
+const loginOptions: TemplateOptionSpec[] = [
+  {
+    key: 'loginLayout',
+    label: 'Layout',
+    type: 'select',
+    choices: [
+      { value: 'centered', label: 'Centered' },
+      { value: 'split', label: 'Split' },
+    ],
+    defaultValue: 'centered',
+  },
+  {
+    key: 'loginSide',
+    label: 'Brand Side',
+    type: 'select',
+    choices: [
+      { value: 'left', label: 'Left' },
+      { value: 'right', label: 'Right' },
+    ],
+    defaultValue: 'left',
+  },
+  {
+    key: 'loginCard',
+    label: 'Card',
+    type: 'select',
+    choices: [
+      { value: 'card', label: 'Card' },
+      { value: 'plain', label: 'None' },
+    ],
+    defaultValue: 'card',
+  },
+  {
+    key: 'loginBg',
+    label: 'Background',
+    type: 'select',
+    choices: [
+      { value: 'default', label: 'Muted' },
+      { value: 'subtle', label: 'Gradient' },
+      { value: 'none', label: 'None' },
+    ],
+    defaultValue: 'default',
+  },
+  {
+    key: 'loginCardWidth',
+    label: 'Width',
+    type: 'select',
+    choices: [
+      { value: 'sm', label: 'Narrow' },
+      { value: 'md', label: 'Medium' },
+      { value: 'lg', label: 'Wide' },
+    ],
+    defaultValue: 'sm',
   },
 ]
 
@@ -304,6 +364,58 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportKind: 'body-template',
     preset: { radius: 0.5 },
     options: topBarOptions,
+  },
+  // ── LoginBodyTemplate ─────────────────────────────────────────────────────────
+  {
+    id: 'login',
+    label: 'Sign In',
+    navigationSubgroupLabel: 'Auth',
+    group: 'Auth',
+    navigationGroup: 'LoginBodyTemplate',
+    layoutClassName: 'layout-login',
+    exportComponent: 'LoginBodyTemplate',
+    exportKind: 'login',
+    preset: { radius: 0.5 },
+    options: loginOptions,
+  },
+  {
+    id: 'login-forgot',
+    label: 'Forgot Password',
+    navigationLabel: 'Forgot',
+    group: 'Auth',
+    navigationGroup: 'LoginBodyTemplate',
+    navigationParent: 'login',
+    layoutClassName: 'layout-login',
+    exportComponent: 'LoginBodyTemplate',
+    exportKind: 'login',
+    preset: { radius: 0.5 },
+    options: loginOptions,
+  },
+  {
+    id: 'login-reset',
+    label: 'Reset Password',
+    navigationLabel: 'Reset',
+    group: 'Auth',
+    navigationGroup: 'LoginBodyTemplate',
+    navigationParent: 'login',
+    layoutClassName: 'layout-login',
+    exportComponent: 'LoginBodyTemplate',
+    exportKind: 'login',
+    preset: { radius: 0.5 },
+    options: loginOptions,
+  },
+  {
+    id: 'login-otp',
+    label: 'OTP Verification',
+    navigationLabel: 'OTP',
+    group: 'Auth',
+    navigationGroup: 'LoginBodyTemplate',
+    navigationParent: 'login',
+    layoutClassName: 'layout-login',
+    exportComponent: 'LoginBodyTemplate',
+    exportKind: 'login',
+    preset: { radius: 0.5 },
+    options: loginOptions,
   },
 ]
 

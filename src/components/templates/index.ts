@@ -1,6 +1,6 @@
 import { createElement, type ComponentType } from 'react'
 import type { TemplateId } from '@/store/types'
-import { FileText, LayoutDashboard, Table2, Layers, Type, Palette } from 'lucide-react'
+import { FileText, LayoutDashboard, Table2, Layers, Type, Palette, KeyRound } from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
 import type { TemplateCodeBuilder } from './code'
 export { TEMPLATE_DEFINITIONS, createTemplateOverrides, getTemplateDefinition } from './definitions'
@@ -54,6 +54,8 @@ export type { TypographyBodyTemplateProps } from './typography/TypographyBodyTem
 export { ColorsBodyTemplate } from './typography/ColorsBodyTemplate'
 export type { ColorsBodyTemplateProps } from './typography/ColorsBodyTemplate'
 export { DataPage } from './datapage/DataPage'
+export { LoginBodyTemplate } from './auth/LoginBodyTemplate'
+export type { LoginBodyTemplateProps, LoginLayout, LoginSide } from './auth/LoginBodyTemplate'
 export { PageTopBar, buildTopBar, PageBreadcrumb } from './datapage/PageTopBar'
 export type { PageTopBarProps, PageTopBarVariant, PageBreadcrumbItem } from './datapage/PageTopBar'
 export type {
@@ -115,6 +117,10 @@ import {
 } from './sectioned/SectionedBodyTemplateDemo'
 import { TypographyBodyTemplate } from './typography/TypographyBodyTemplate'
 import { ColorsBodyTemplate } from './typography/ColorsBodyTemplate'
+import { LoginBodyTemplateDemo, buildLoginBodyTemplateCode } from './auth/LoginBodyTemplateDemo'
+import { LoginForgotDemo, buildLoginForgotCode } from './auth/LoginForgotDemo'
+import { LoginResetDemo, buildLoginResetCode } from './auth/LoginResetDemo'
+import { LoginOtpDemo, buildLoginOtpCode } from './auth/LoginOtpDemo'
 
 function DataGridTemplatePreview(props: {
   theme?: React.CSSProperties
@@ -172,6 +178,10 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   sectioned: SectionedBodyTemplateDemo,
   typography: TypographyBodyTemplate,
   colors: ColorsBodyTemplate,
+  login: LoginBodyTemplateDemo,
+  'login-forgot': LoginForgotDemo,
+  'login-reset': LoginResetDemo,
+  'login-otp': LoginOtpDemo,
 }
 
 const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
@@ -187,9 +197,21 @@ const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
   form: buildFormBodyTemplateCode,
   'form-stacked': buildFormStackedBodyTemplateCode,
   'form-wizard': buildFormWizardBodyTemplateCode,
+  login: buildLoginBodyTemplateCode,
+  'login-forgot': buildLoginForgotCode,
+  'login-reset': buildLoginResetCode,
+  'login-otp': buildLoginOtpCode,
   'form-inline': buildFormInlineBodyTemplateCode,
   sectioned: buildSectionedBodyTemplateCode,
 }
+
+export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
+  id: definition.id,
+  label: definition.label,
+  group: definition.group,
+  component: previewComponents[definition.id],
+  buildCode: codeBuilders[definition.id],
+}))
 
 const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>>> = {
   table: Table2,
@@ -200,15 +222,18 @@ const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>
   'form-wizard': FileText,
   typography: Type,
   colors: Palette,
+  login: KeyRound,
 }
 
 const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: string }>>> = {
   DataBodyTemplate: LayoutDashboard,
   FormWizardBodyTemplate: Layers,
+  LoginBodyTemplate: KeyRound,
 }
 
-const navigationLabelOrder = ['Common', 'DataBodyTemplate', 'FormWizardBodyTemplate']
-navigationLabelOrder
+const navigationLabelOrder = ['Common', 'DataBodyTemplate', 'FormWizardBodyTemplate', 'LoginBodyTemplate']
+
+export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder
   .map((groupId) => {
     const definitions = TEMPLATE_DEFINITIONS.filter((d) => d.navigationGroup === groupId)
     const parentDefinitions = definitions.filter((d) => !d.navigationParent)

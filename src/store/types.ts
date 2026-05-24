@@ -17,6 +17,10 @@ export type TemplateId =
   | 'sectioned'
   | 'typography'
   | 'colors'
+  | 'login'
+  | 'login-forgot'
+  | 'login-reset'
+  | 'login-otp'
 
 export interface GlobalTheme {
   radius: number
