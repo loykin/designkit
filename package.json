@@ -1,6 +1,6 @@
 {
   "name": "@loykin/designkit",
-  "version": "0.0.1",
+  "version": "0.0.0-dev",
   "description": "A React UI component library with theming support.",
   "type": "module",
   "main": "./dist/index.cjs",
