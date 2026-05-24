@@ -7,6 +7,7 @@ export default defineConfig({
   dts:       true,
   sourcemap: true,
   clean:     true,
+  onSuccess: 'node scripts/build-css.mjs && echo \'declare const styles: string; export default styles;\' > dist/styles.d.ts',
   external:  [
     'react',
     'react-dom',

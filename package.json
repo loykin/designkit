@@ -32,7 +32,8 @@
     "format:check": "prettier --check src/",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "pnpm build"
   },
   "peerDependencies": {
     "react": "^19.0.0",
