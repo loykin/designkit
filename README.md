@@ -13,7 +13,7 @@ Requires React 19 as a peer dependency.
 ## Quick Start
 
 ```tsx
-import { DataBodyTemplate, DataGridView, type DataGridColumnDef } from '@loykin/designkit'
+import { DataBodyTemplate, DataGridView, PageTopBar, type DataGridColumnDef } from '@loykin/designkit'
 import '@loykin/designkit/styles'
 
 type User = { id: string; name: string; email: string }
@@ -25,7 +25,10 @@ const columns: DataGridColumnDef<User>[] = [
 
 export function UsersPage() {
   return (
-    <DataBodyTemplate breadcrumb="Admin / Users" title="Users">
+    <DataBodyTemplate
+      topBar={<PageTopBar left="Admin / Users" />}
+      title="Users"
+    >
       <DataBodyTemplate.Body>
         <DataGridView data={data} columns={columns} getRowId={(row) => row.id} />
       </DataBodyTemplate.Body>
@@ -44,7 +47,7 @@ The general-purpose page shell. Accepts three kinds of child slots — `.Body`, 
 
 ```tsx
 <DataBodyTemplate
-  breadcrumb="Admin / Users"
+  topBar={<PageTopBar left="Admin / Users" />}
   title="Users"
   description="Manage your team members."
   actions={<Button>Add User</Button>}
@@ -52,6 +55,16 @@ The general-purpose page shell. Accepts three kinds of child slots — `.Body`, 
   {/* .Body | .Tab | .Section */}
 </DataBodyTemplate>
 ```
+
+| Prop | Type | Description |
+|---|---|---|
+| `topBar` | `ReactNode` | Top breadcrumb bar. Pass `<PageTopBar left="..." />` or omit. |
+| `title` | `ReactNode` | Page title |
+| `description` | `ReactNode` | Subtitle below the title |
+| `actions` | `ReactNode` | Page-level actions (Add, Export, etc.) next to the title. Not for form Save buttons. |
+| `toolbarLeft` / `toolbarRight` | `ReactNode` | Toolbar slots above the content area |
+| `theme` | `CSSProperties` | Inline CSS variable overrides |
+| `className` | `string` | Class applied to the page root |
 
 #### DataBodyTemplate.Body
 
@@ -64,6 +77,8 @@ Single-pane content. No navigation. Use for full-height grid or custom layouts.
   </DataBodyTemplate.Body>
 </DataBodyTemplate>
 ```
+
+> Passing children directly without any slot wrapper also renders as a body, but `.Body` makes the layout intent explicit.
 
 #### DataBodyTemplate.Tab
 
@@ -87,8 +102,12 @@ Settings-style layout with left navigation and right content panel. Add multiple
 ```tsx
 <DataBodyTemplate title="Settings">
   <DataBodyTemplate.Section id="general" label="General" description="Workspace basics">
-    <DataBodyTemplate.Group layout="horizontal" title="Workspace">
-      <DataBodyTemplate.Row label="Name"><Input defaultValue="Acme Corp" /></DataBodyTemplate.Row>
+    <DataBodyTemplate.Group layout="stacked" title="Workspace">
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <Label htmlFor="name">Name</Label>
+        <Input id="name" defaultValue="Acme Corp" />
+        <Button type="submit" size="sm">Save</Button>
+      </form>
     </DataBodyTemplate.Group>
   </DataBodyTemplate.Section>
   <DataBodyTemplate.Section id="security" label="Security">
@@ -160,7 +179,7 @@ Data table component. Use inside `DataBodyTemplate.Body` or any `.Tab` / `.Secti
 | `card-list` | Card list |
 
 ```tsx
-import { DataBodyTemplate, DataGridView, type DataGridColumnDef } from '@loykin/designkit'
+import { DataBodyTemplate, DataGridView, PageTopBar, type DataGridColumnDef } from '@loykin/designkit'
 
 type User = { id: string; name: string; email: string }
 
@@ -171,7 +190,7 @@ const columns: DataGridColumnDef<User>[] = [
 
 export function UsersPage() {
   return (
-    <DataBodyTemplate breadcrumb="Admin / Users" title="Users">
+    <DataBodyTemplate topBar={<PageTopBar left="Admin / Users" />} title="Users">
       <DataBodyTemplate.Body>
         <DataGridView
           data={data}
@@ -189,7 +208,7 @@ export function UsersPage() {
 
 ### FormWizardBodyTemplate
 
-Multi-step input wizard.
+Multi-step input wizard. The template wraps each step's `content` in a `<form>` element automatically, so the Continue / Finish button acts as a submit trigger. Press Enter or click Continue to advance.
 
 ```tsx
 import { useState } from 'react'
@@ -216,6 +235,54 @@ export function OnboardingPage() {
 }
 ```
 
+For per-step validation with `react-hook-form`, call `trigger()` inside `onNext` before advancing:
+
+```tsx
+onNext={async () => {
+  const ok = await trigger(['email', 'password'])
+  if (ok) setStep((s) => s + 1)
+}}
+```
+
+The `variant` prop switches between `'plain'` (default) and `'card'` to wrap each step in a Card.
+
+---
+
+### LoginBodyTemplate
+
+Authentication page shell. Renders centered or split-panel login layouts.
+
+```tsx
+import { LoginBodyTemplate } from '@loykin/designkit'
+
+export function SignInPage() {
+  return (
+    <LoginBodyTemplate layout="centered" card="card">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-1.5">
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" type="email" />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="password">Password</Label>
+          <Input id="password" type="password" />
+        </div>
+        <Button type="submit" className="w-full">Sign In</Button>
+      </form>
+    </LoginBodyTemplate>
+  )
+}
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `layout` | `'centered' \| 'split'` | `'centered'` | Centered card or split-panel with brand side |
+| `card` | `'card' \| 'plain'` | `'plain'` | Wrap the form content in a card border |
+| `cardWidth` | `'sm' \| 'md' \| 'lg'` | `'md'` | Width of the form card |
+| `bg` | `'default' \| 'subtle' \| 'none'` | `'default'` | Background style |
+| `side` | `'left' \| 'right'` | `'left'` | Side the brand panel appears on (split layout only) |
+| `brand` | `ReactNode` | built-in | Custom brand/logo panel content |
+
 ---
 
 ## UI Components
@@ -233,6 +300,9 @@ import {
   Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
   Avatar, AvatarFallback, AvatarImage,
   Separator, Skeleton,
+  Breadcrumb, DropdownMenu, NavigationMenu,
+  Popover, ScrollArea, Sidebar, Table,
+  PageTopBar,
 } from '@loykin/designkit'
 ```
 
