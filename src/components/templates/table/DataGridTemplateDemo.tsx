@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { DataGridPaginationCompact, GlobalSearch, type DataGridColumnDef } from '@loykin/gridkit'
 import type { Row, Table as TanStackTable } from '@tanstack/react-table'
 import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
-import { DataPage } from '@/components/templates/datapage/DataPage'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -273,36 +272,34 @@ export function DataGridTemplateDemo({
       description={description}
       contentClassName={variant === 'infinity' ? 'pb-0' : undefined}
     >
-      <DataPage.Group className="h-full">
-        <DataPage.GroupBody className="h-full [&_.dg-shell]:h-full [&_.dg-table-wrapper]:min-h-0 [&_.dg-table-wrapper]:flex-1">
-          <DataGridView
-            data={variant === 'infinity' ? visibleData : demoData}
-            columns={demoColumns}
-            getRowId={(row) => row.id}
-            variant={variant}
-            enableColumnFilters={
-              variant === 'infinity' || variant === 'card' || variant === 'card-list'
-            }
-            headerLeft={headerLeft}
-            headerRight={headerRight}
-            pagination={{ pageSize: 10 }}
-            footer={(table) => (
-              <div className="flex h-9 items-center justify-between px-1 text-xs text-muted-foreground">
-                <span>{demoData.length} results</span>
-                <DataGridPaginationCompact table={table} />
-              </div>
-            )}
-            infinity={{
-              data: visibleData,
-              hasNextPage,
-              isFetchingNextPage: isFetching,
-              fetchNextPage,
-              tableKey: 'table-infinity-template',
-            }}
-            card={{ renderCard: renderDemoCard(variant) }}
-          />
-        </DataPage.GroupBody>
-      </DataPage.Group>
+      <DataBodyTemplate.Body className="[&_.dg-shell]:h-full [&_.dg-table-wrapper]:min-h-0 [&_.dg-table-wrapper]:flex-1">
+        <DataGridView
+          data={variant === 'infinity' ? visibleData : demoData}
+          columns={demoColumns}
+          getRowId={(row) => row.id}
+          variant={variant}
+          enableColumnFilters={
+            variant === 'infinity' || variant === 'card' || variant === 'card-list'
+          }
+          headerLeft={headerLeft}
+          headerRight={headerRight}
+          pagination={{ pageSize: 10 }}
+          footer={(table) => (
+            <div className="flex h-9 items-center justify-between px-1 text-xs text-muted-foreground">
+              <span>{demoData.length} results</span>
+              <DataGridPaginationCompact table={table} />
+            </div>
+          )}
+          infinity={{
+            data: visibleData,
+            hasNextPage,
+            isFetchingNextPage: isFetching,
+            fetchNextPage,
+            tableKey: 'table-infinity-template',
+          }}
+          card={{ renderCard: renderDemoCard(variant) }}
+        />
+      </DataBodyTemplate.Body>
     </DataBodyTemplate>
   )
 }
@@ -314,6 +311,7 @@ export function buildDataGridTemplateCode({
 }: TemplateCodeContext) {
   const variant = definition.preview?.variant
   const variantProp = variant && variant !== 'standard' ? `\n        variant="${variant}"` : ''
+  const cN = 'className'
   const cardRenderCode =
     definition.exportKind === 'data-grid-card'
       ? [
@@ -321,9 +319,9 @@ export function buildDataGridTemplateCode({
           `function renderCard(row: { original: User }) {`,
           `  const user = row.original`,
           `  return (`,
-          `    <div className="rounded-lg border bg-card p-3 text-card-foreground">`,
-          `      <p className="text-sm font-medium">{user.name}</p>`,
-          `      <p className="text-xs text-muted-foreground">{user.email}</p>`,
+          `    <div ${cN}="rounded-lg border bg-card p-3 text-card-foreground">`,
+          `      <p ${cN}="text-sm font-medium">{user.name}</p>`,
+          `      <p ${cN}="text-xs text-muted-foreground">{user.email}</p>`,
           `    </div>`,
           `  )`,
           `}`,
@@ -352,12 +350,14 @@ export function buildDataGridTemplateCode({
     `      breadcrumb="Data / Users"`,
     `      title="Users"`,
     `    >`,
-    `      <DataGridView${variantProp}`,
-    `        data={data}`,
-    `        columns={columns}`,
-    `        getRowId={(row) => row.id}${cardProp}`,
-    `        tableHeight={420}`,
-    `      />`,
+    `      <DataBodyTemplate.Body>`,
+    `        <DataGridView${variantProp}`,
+    `          data={data}`,
+    `          columns={columns}`,
+    `          getRowId={(row) => row.id}${cardProp}`,
+    `          tableHeight={420}`,
+    `        />`,
+    `      </DataBodyTemplate.Body>`,
     `    </DataBodyTemplate>`,
     `  )`,
     `}`,

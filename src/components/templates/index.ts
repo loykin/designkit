@@ -70,6 +70,7 @@ export type {
 } from './datapage/DataPage'
 export type { TemplateCodeBuilder, TemplateCodeContext } from './code'
 export type {
+  DataBodyBodyProps,
   DataBodyTabProps,
   DataBodySectionProps,
   DataBodySummaryProps,

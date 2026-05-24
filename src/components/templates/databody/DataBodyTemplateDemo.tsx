@@ -10,6 +10,7 @@ import { DataBodyTemplate } from './DataBodyTemplate'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Switch } from '@/components/ui/switch'
 import { Plus, Users, Search, RefreshCw } from 'lucide-react'
 import { EmptyState } from '@/components/ui/empty-state'
 import type { TemplateCodeContext } from '../code'
@@ -182,6 +183,87 @@ function UserCards() {
   )
 }
 
+const recentColumns: DataGridColumnDef<User>[] = [
+  {
+    id: 'name',
+    accessorKey: 'name',
+    header: 'Name',
+    cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+  },
+  {
+    id: 'role',
+    accessorKey: 'role',
+    header: 'Role',
+    cell: ({ row }) => (
+      <Badge variant="outline" className="text-xs font-normal">
+        {row.original.role}
+      </Badge>
+    ),
+  },
+  {
+    id: 'status',
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => (
+      <Badge variant={statusVariant[row.original.status]} className="text-xs capitalize">
+        {row.original.status}
+      </Badge>
+    ),
+  },
+  {
+    id: 'joined',
+    accessorKey: 'joined',
+    header: 'Joined',
+    cell: ({ row }) => <span className="text-xs text-muted-foreground">{row.original.joined}</span>,
+  },
+]
+
+function OverviewContent() {
+  return (
+    <>
+      <DataBodyTemplate.Group
+        layout="horizontal"
+        title="Workspace"
+        description="Basic workspace information and plan details."
+      >
+        <div className="space-y-3">
+          <DataBodyTemplate.Row label="Workspace name">
+            <span className="text-sm">Acme Corp</span>
+          </DataBodyTemplate.Row>
+          <DataBodyTemplate.Row label="Plan">
+            <Badge variant="secondary" className="text-xs">
+              Pro
+            </Badge>
+          </DataBodyTemplate.Row>
+          <DataBodyTemplate.Row label="Region">
+            <span className="text-sm text-muted-foreground">us-east-1</span>
+          </DataBodyTemplate.Row>
+          <DataBodyTemplate.Row label="SSO">
+            <Switch defaultChecked />
+          </DataBodyTemplate.Row>
+        </div>
+      </DataBodyTemplate.Group>
+
+      <DataBodyTemplate.Group layout="stacked" title="Members" description="Recently added members.">
+        <DataGrid
+          data={users}
+          columns={recentColumns}
+          getRowId={(row) => row.id}
+          tableHeight={220}
+          rowHeight={36}
+          tableWidthMode="fill-last"
+          headerRight={() => (
+            <Button size="sm" className="h-8 gap-1.5 text-xs">
+              <Plus className="h-3.5 w-3.5" />
+              Invite
+            </Button>
+          )}
+        />
+      </DataBodyTemplate.Group>
+    </>
+  )
+}
+
 function CustomContent() {
   return (
     <Card className="rounded-lg border border-border ring-0">
@@ -205,6 +287,9 @@ export function DataBodyTemplateDemo({ theme }: DataBodyTemplateDemoProps) {
       title="Body Template"
       description="Compound body shell with optional tabs and arbitrary content"
     >
+      <DataBodyTemplate.Tab id="overview" label="Overview">
+        <OverviewContent />
+      </DataBodyTemplate.Tab>
       <DataBodyTemplate.Tab id="table" label="Table" count={users.length}>
         <UserTable />
       </DataBodyTemplate.Tab>

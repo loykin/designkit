@@ -21,6 +21,21 @@ function isDataBodyTab(node: React.ReactNode): node is React.ReactElement<DataBo
   return Boolean(node && typeof node === 'object' && 'type' in node && node.type === DataBodyTab)
 }
 
+// ─── Body (single pane) ───────────────────────────────────────────────────────
+
+export interface DataBodyBodyProps {
+  children?: React.ReactNode
+  className?: string
+}
+
+function DataBodyBody(_props: DataBodyBodyProps) {
+  return null
+}
+
+function isDataBodyBody(node: React.ReactNode): node is React.ReactElement<DataBodyBodyProps> {
+  return Boolean(node && typeof node === 'object' && 'type' in node && node.type === DataBodyBody)
+}
+
 // ─── Section ──────────────────────────────────────────────────────────────────
 
 export interface DataBodySectionProps {
@@ -319,22 +334,53 @@ function Root({
   const childArray = useMemo(() => Children.toArray(children), [children])
   const tabs = childArray.filter(isDataBodyTab)
   const sections = childArray.filter(isDataBodySection)
+  const bodySlots = childArray.filter(isDataBodyBody)
   const summaryEl = childArray.find(isDataBodySummary)
   const bodyChildren = childArray.filter(
-    (c) => !isDataBodyTab(c) && !isDataBodySummary(c) && !isDataBodySection(c),
+    (c) =>
+      !isDataBodyTab(c) &&
+      !isDataBodySummary(c) &&
+      !isDataBodySection(c) &&
+      !isDataBodyBody(c),
   )
-  const rest = bodyChildren.filter((c) => !isDataBodyGroup(c))
 
   const hasTabs = tabs.length > 0
   const hasSections = sections.length > 0
-  const hasGroups = bodyChildren.some(isDataBodyGroup)
-
+  const hasBody = bodySlots.length > 0
+  bodyChildren.some(isDataBodyGroup)
   const navItems = hasSections ? sections : tabs
   const [internalActive, setInternalActive] = useState(defaultTab ?? navItems[0]?.props.id ?? '')
   const activeId = controlledActive ?? internalActive
   const handleChange = (id: string) => {
     if (controlledActive === undefined) setInternalActive(id)
     onTabChange?.(id)
+  }
+
+  // ── Single-pane body layout ───────────────────────────────────────────────
+  if (hasBody) {
+    const bodyEl = bodySlots[0]
+    return (
+      <DataPage className={cn('layout-databody', className)} style={theme}>
+        <DataPage.Header>
+          <DataPage.TitleBlock breadcrumb={breadcrumb} title={title} description={description} />
+          <DataPage.Actions>{actions}</DataPage.Actions>
+        </DataPage.Header>
+
+        {summaryEl && (
+          <div className="shrink-0 border-b px-(--dk-page-padding-x) py-(--dk-panel-gap)">
+            {summaryEl.props.children}
+          </div>
+        )}
+
+        <DataPage.Content className={contentClassName}>
+          <DataPage.Group className="h-full">
+            <DataPage.GroupBody className={cn('h-full', bodyEl.props.className)}>
+              {bodyEl.props.children}
+            </DataPage.GroupBody>
+          </DataPage.Group>
+        </DataPage.Content>
+      </DataPage>
+    )
   }
 
   // ── Sectioned layout (left nav) ───────────────────────────────────────────
@@ -432,15 +478,11 @@ function Root({
           <DataPage.GroupBody className="min-h-full">
             {renderGroups(activeTabNode?.props.children)}
           </DataPage.GroupBody>
-        ) : hasGroups ? (
+        ) : (
           <DataPage.GroupBody>
             {bodyChildren.map((child, i) => (
               <Fragment key={i}>{isDataBodyGroup(child) ? renderGroup(child) : child}</Fragment>
             ))}
-          </DataPage.GroupBody>
-        ) : (
-          <DataPage.GroupBody className="min-h-full">
-            <>{rest}</>
           </DataPage.GroupBody>
         )}
       </DataPage.Content>
@@ -449,6 +491,7 @@ function Root({
 }
 
 export const DataBodyTemplate = Object.assign(Root, {
+  Body: DataBodyBody,
   Tab: DataBodyTab,
   Section: DataBodySection,
   Summary: DataBodySummary,
