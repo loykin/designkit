@@ -219,7 +219,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     group: 'Pages',
     navigationGroup: 'DataBodyTemplate',
     layoutClassName: 'layout-sectioned',
-    exportComponent: 'SectionedBodyTemplate',
+    exportComponent: 'DataBodyTemplate',
     exportKind: 'body-template',
     preset: { radius: 0.5 },
   },

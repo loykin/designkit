@@ -19,6 +19,22 @@ function isDataBodyTab(node: React.ReactNode): node is React.ReactElement<DataBo
   return Boolean(node && typeof node === 'object' && 'type' in node && node.type === DataBodyTab)
 }
 
+// ─── Section ──────────────────────────────────────────────────────────────────
+
+export interface DataBodySectionProps {
+  id: string
+  label: React.ReactNode
+  description?: React.ReactNode
+  disabled?: boolean
+  children?: React.ReactNode
+}
+
+function DataBodySection(_props: DataBodySectionProps) { return null }
+
+function isDataBodySection(node: React.ReactNode): node is React.ReactElement<DataBodySectionProps> {
+  return Boolean(node && typeof node === 'object' && 'type' in node && node.type === DataBodySection)
+}
+
 // ─── Summary ──────────────────────────────────────────────────────────────────
 
 export interface DataBodySummaryProps {
@@ -250,29 +266,83 @@ function Root({
   actions,
   toolbarLeft,
   toolbarRight,
-  activeTab: controlledTab,
+  activeTab: controlledActive,
   defaultTab,
   onTabChange,
   children,
   contentClassName,
 }: DataBodyTemplateProps) {
-  const childArray   = useMemo(() => Children.toArray(children), [children])
-  const tabs         = childArray.filter(isDataBodyTab)
-  const summaryEl    = childArray.find(isDataBodySummary)
-  const bodyChildren = childArray.filter((c) => !isDataBodyTab(c) && !isDataBodySummary(c))
-  const rest         = bodyChildren.filter((c) => !isDataBodyGroup(c))
+  const childArray    = useMemo(() => Children.toArray(children), [children])
+  const tabs          = childArray.filter(isDataBodyTab)
+  const sections      = childArray.filter(isDataBodySection)
+  const summaryEl     = childArray.find(isDataBodySummary)
+  const bodyChildren  = childArray.filter((c) => !isDataBodyTab(c) && !isDataBodySummary(c) && !isDataBodySection(c))
+  const rest          = bodyChildren.filter((c) => !isDataBodyGroup(c))
 
-  const hasTabs   = tabs.length > 0
-  const hasGroups = bodyChildren.some(isDataBodyGroup)
+  const hasTabs     = tabs.length > 0
+  const hasSections = sections.length > 0
+  const hasGroups   = bodyChildren.some(isDataBodyGroup)
 
-  const [internalTab, setInternalTab] = useState(defaultTab ?? tabs[0]?.props.id ?? '')
-  const activeTab    = controlledTab ?? internalTab
-  const activeTabNode = tabs.find((tab) => tab.props.id === activeTab) ?? tabs[0]
-
-  const handleTabChange = (id: string) => {
-    if (controlledTab === undefined) setInternalTab(id)
+  const navItems = hasSections ? sections : tabs
+  const [internalActive, setInternalActive] = useState(defaultTab ?? navItems[0]?.props.id ?? '')
+  const activeId   = controlledActive ?? internalActive
+  const handleChange = (id: string) => {
+    if (controlledActive === undefined) setInternalActive(id)
     onTabChange?.(id)
   }
+
+  // ── Sectioned layout (left nav) ───────────────────────────────────────────
+  if (hasSections) {
+    const activeSection = sections.find((s) => s.props.id === activeId) ?? sections[0]
+    return (
+      <DataPage className={cn('layout-sectioned', className)} style={theme}>
+        <DataPage.Header>
+          <DataPage.TitleBlock breadcrumb={breadcrumb} title={title} description={description} />
+          <DataPage.Actions>{actions}</DataPage.Actions>
+        </DataPage.Header>
+
+        {summaryEl && (
+          <div className="shrink-0 border-b px-[var(--dk-page-padding-x)] py-[var(--dk-panel-gap)]">
+            {summaryEl.props.children}
+          </div>
+        )}
+
+        <DataPage.Content className={contentClassName}>
+          <div className="grid gap-[var(--dk-panel-gap)] lg:grid-cols-[16rem_minmax(0,1fr)]">
+            <nav className="space-y-1">
+              {sections.map((section) => {
+                const active = section.props.id === activeSection?.props.id
+                return (
+                  <button
+                    key={section.props.id}
+                    type="button"
+                    disabled={section.props.disabled}
+                    className={cn(
+                      'block w-full rounded-[var(--radius)] px-3 py-2 text-left transition-colors',
+                      active ? 'bg-accent text-accent-foreground' : 'hover:bg-muted',
+                      section.props.disabled && 'pointer-events-none opacity-50',
+                    )}
+                    onClick={() => handleChange(section.props.id)}
+                  >
+                    <span className="block text-sm font-medium">{section.props.label}</span>
+                    {section.props.description && (
+                      <span className="mt-0.5 block text-xs text-muted-foreground">{section.props.description}</span>
+                    )}
+                  </button>
+                )
+              })}
+            </nav>
+            <div className="min-w-0 space-y-[var(--dk-panel-gap)]">
+              {renderGroups(activeSection?.props.children)}
+            </div>
+          </div>
+        </DataPage.Content>
+      </DataPage>
+    )
+  }
+
+  // ── Tabbed / plain layout ─────────────────────────────────────────────────
+  const activeTabNode = tabs.find((tab) => tab.props.id === activeId) ?? tabs[0]
 
   return (
     <DataPage className={cn('layout-databody', className)} style={theme}>
@@ -282,7 +352,7 @@ function Root({
       </DataPage.Header>
 
       {summaryEl && (
-        <div className="shrink-0 border-b px-[var(--dk-page-padding-x)] py-[var(--dk-panel-gap)]">
+        <div className="shrink-0 border-b px-(--dk-page-padding-x) py-(--dk-panel-gap)">
           {summaryEl.props.children}
         </div>
       )}
@@ -295,7 +365,7 @@ function Root({
               active={tab.props.id === activeTabNode?.props.id}
               count={tab.props.count}
               disabled={tab.props.disabled}
-              onClick={() => handleTabChange(tab.props.id)}
+              onClick={() => handleChange(tab.props.id)}
             >
               {tab.props.label}
             </DataPage.Tab>
@@ -324,7 +394,7 @@ function Root({
           </DataPage.GroupBody>
         ) : (
           <DataPage.GroupBody className="min-h-full">
-            {rest}
+            <>{rest}</>
           </DataPage.GroupBody>
         )}
       </DataPage.Content>
@@ -334,6 +404,7 @@ function Root({
 
 export const DataBodyTemplate = Object.assign(Root, {
   Tab:     DataBodyTab,
+  Section: DataBodySection,
   Summary: DataBodySummary,
   Group:   DataBodyGroup,
   Row:     DataBodyRow,

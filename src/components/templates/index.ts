@@ -46,12 +46,6 @@ export {
 } from './table/DataGridView'
 export { DataBodyTemplate } from './databody/DataBodyTemplate'
 export { DataBodyTemplateDemo } from './databody/DataBodyTemplateDemo'
-export { SectionedBodyTemplate } from './sectioned/SectionedBodyTemplate'
-export type {
-  SectionedBodyTemplatePanelProps,
-  SectionedBodyTemplateProps,
-  SectionedBodyTemplateSection,
-} from './sectioned/SectionedBodyTemplate'
 export { FormWizardBodyTemplate } from './form/FormWizardBodyTemplate'
 export type {
   FormWizardBodyTemplateProps,
@@ -84,6 +78,7 @@ export type {
 } from './code'
 export type {
   DataBodyTabProps,
+  DataBodySectionProps,
   DataBodySummaryProps,
   DataBodyGroupProps,
   DataBodyRowProps,
