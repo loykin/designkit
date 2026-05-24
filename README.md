@@ -339,14 +339,13 @@ For additional control, override `--dk-*` variables directly in `globals.css`.
 
 ### Customization scope
 
-| What | How | Supported |
-|---|---|---|
-| Colors, radius, typography | shadcn/ui theme variables | ✓ |
-| Spacing, density, padding | `--dk-density`, `--dk-page-padding-*` etc. | ✓ |
-| Per-page overrides | `className` or `theme` prop | ✓ |
-| Replacing internal components (e.g. swapping the Button) | — | ✗ |
+CSS variables are the customization layer. The library is opinionated about structure and ships its own UI components — visual appearance is controlled entirely through tokens.
 
-Internal UI components (Button, Input, etc.) are bundled with the library. They share your shadcn CSS variables, so colors and shape follow your theme automatically — but structural customization beyond CSS variables is not supported.
+| What | How |
+|---|---|
+| Colors, radius, typography | shadcn/ui theme variables (`--primary`, `--radius`, etc.) |
+| Spacing, density, padding | `--dk-density`, `--dk-page-padding-*`, `--dk-panel-gap` |
+| Per-page overrides | `className` or `theme` prop |
 
 ```css
 :root {
