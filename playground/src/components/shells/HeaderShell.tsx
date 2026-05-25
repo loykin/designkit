@@ -9,7 +9,7 @@ import {
   cn,
 } from '@loykin/designkit'
 import type { TemplateId } from '@loykin/designkit'
-import type { TemplateNavigationGroup, TemplateNavigationItem } from '../../templates'
+import type { TemplateNavigationGroup, TemplateNavigationItem } from '~/templates'
 import { Bell, Settings } from 'lucide-react'
 
 export interface HeaderShellProps {

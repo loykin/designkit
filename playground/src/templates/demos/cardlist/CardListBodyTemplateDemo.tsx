@@ -1,13 +1,5 @@
 import { CardListBodyTemplate, type CardItem } from './CardListBodyTemplate'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Button, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@loykin/designkit'
 import { GitFork, Search, Star } from 'lucide-react'
 
 const demoItems: CardItem[] = [

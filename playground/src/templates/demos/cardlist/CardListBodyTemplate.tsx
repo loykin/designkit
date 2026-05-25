@@ -1,6 +1,4 @@
-import { DataPage } from '@/components/templates/datapage/DataPage'
-import { Card, CardContent, CardFooter } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { DataPage, Card, CardContent, CardFooter, Badge } from '@loykin/designkit'
 
 export interface CardItem {
   id: string
