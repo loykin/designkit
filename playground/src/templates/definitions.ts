@@ -332,6 +332,20 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     preset: {},
     options: topBarOptions,
   },
+  // ── BrowseBodyTemplate ───────────────────────────────────────────────────────
+  {
+    id: 'browse',
+    label: 'Browse / Catalog',
+    navigationLabel: 'Browse',
+    navigationSubgroupLabel: 'Browse',
+    group: 'Pages',
+    navigationGroup: 'DataBodyTemplate',
+    layoutClassName: 'layout-browse',
+    exportComponent: 'BrowseBodyTemplate',
+    exportKind: 'databody',
+    preset: {},
+    options: topBarOptions,
+  },
   // ── Common ───────────────────────────────────────────────────────────────────
   {
     id: 'typography',

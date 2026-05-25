@@ -22,6 +22,7 @@ export type TemplateId =
   | 'login-reset'
   | 'login-otp'
   | 'dashboard'
+  | 'browse'
 
 export interface GlobalTheme {
   radius: number

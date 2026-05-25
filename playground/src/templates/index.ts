@@ -62,6 +62,7 @@ import { LoginForgotDemo, buildLoginForgotCode } from './demos/auth/LoginForgotD
 import { LoginResetDemo, buildLoginResetCode } from './demos/auth/LoginResetDemo'
 import { LoginOtpDemo, buildLoginOtpCode } from './demos/auth/LoginOtpDemo'
 import { DashboardBodyTemplateDemo, buildDashboardTemplateCode } from './demos/dashboard/DashboardBodyTemplateDemo'
+import { BrowseBodyTemplateDemo, buildBrowseBodyTemplateCode } from './demos/browse/BrowseBodyTemplateDemo'
 
 function DataGridTemplatePreview(props: {
   theme?: React.CSSProperties
@@ -124,6 +125,7 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   'login-reset': LoginResetDemo,
   'login-otp': LoginOtpDemo,
   dashboard: DashboardBodyTemplateDemo,
+  browse: BrowseBodyTemplateDemo,
 }
 
 const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
@@ -146,6 +148,7 @@ const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
   'form-inline': buildFormInlineBodyTemplateCode,
   sectioned: buildSectionedBodyTemplateCode,
   dashboard: buildDashboardTemplateCode,
+  browse: buildBrowseBodyTemplateCode,
 }
 
 export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
