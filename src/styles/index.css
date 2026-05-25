@@ -7,8 +7,6 @@
  * are wired into the playground.
  */
 
-@source "./index.js";
-
 :root {
   --dk-radius: var(--radius, 0.5rem);
   --dk-background: var(--background, oklch(1 0 0));
