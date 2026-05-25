@@ -5,10 +5,10 @@ React page template library. Provides ready-to-use page layouts for admin and da
 ## Installation
 
 ```bash
-npm install @loykin/designkit @loykin/gridkit
+npm install @loykin/designkit
 ```
 
-Requires React 19 and Tailwind CSS v4. UI components are based on [shadcn/ui](https://ui.shadcn.com) — if your app has shadcn set up, theming integrates automatically via shared CSS variables (`--primary`, `--background`, `--radius`, etc.). You can customize every token through shadcn's theme without touching designkit directly.
+Requires React 19 and Tailwind CSS v4. UI components are based on [shadcn/ui](https://ui.shadcn.com) — if your app has shadcn set up, theming integrates automatically via shared CSS variables (`--primary`, `--background`, `--radius`, etc.).
 
 Import the styles in your global CSS:
 
@@ -22,24 +22,19 @@ This handles Tailwind class scanning automatically — no additional `@source` c
 ## Quick Start
 
 ```tsx
-import { DataBodyTemplate, DataGridView, PageTopBar, type DataGridColumnDef } from '@loykin/designkit'
+import { DataBodyTemplate, PageTopBar, Button } from '@loykin/designkit'
 import '@loykin/designkit/styles'
-
-type User = { id: string; name: string; email: string }
-
-const columns: DataGridColumnDef<User>[] = [
-  { id: 'name',  accessorKey: 'name',  header: 'Name'  },
-  { id: 'email', accessorKey: 'email', header: 'Email' },
-]
 
 export function UsersPage() {
   return (
     <DataBodyTemplate
       topBar={<PageTopBar left="Admin / Users" />}
       title="Users"
+      description="Manage your team members."
+      actions={<Button>Add User</Button>}
     >
       <DataBodyTemplate.Body>
-        <DataGridView data={data} columns={columns} getRowId={(row) => row.id} />
+        {/* your content */}
       </DataBodyTemplate.Body>
     </DataBodyTemplate>
   )
@@ -52,7 +47,7 @@ export function UsersPage() {
 
 ### DataBodyTemplate
 
-The general-purpose page shell. Accepts three kinds of child slots — `.Body`, `.Tab`, and `.Section` — which determine the layout mode automatically.
+General-purpose page shell. Accepts `.Body`, `.Tab`, and `.Section` child slots which determine the layout mode automatically.
 
 ```tsx
 <DataBodyTemplate
@@ -70,33 +65,33 @@ The general-purpose page shell. Accepts three kinds of child slots — `.Body`, 
 | `topBar` | `ReactNode` | Top breadcrumb bar. Pass `<PageTopBar left="..." />` or omit. |
 | `title` | `ReactNode` | Page title |
 | `description` | `ReactNode` | Subtitle below the title |
-| `actions` | `ReactNode` | Page-level actions (Add, Export, etc.) next to the title. Not for form Save buttons. |
+| `actions` | `ReactNode` | Page-level actions (Add, Export, etc.) next to the title |
 | `toolbarLeft` / `toolbarRight` | `ReactNode` | Toolbar slots above the content area |
 | `theme` | `CSSProperties` | Inline CSS variable overrides |
 | `className` | `string` | Class applied to the page root |
 
 #### DataBodyTemplate.Body
 
-Single-pane content. No navigation. Use for full-height grid or custom layouts.
+Single-pane content. Use for full-height layouts.
 
 ```tsx
 <DataBodyTemplate title="Users">
   <DataBodyTemplate.Body>
-    <DataGridView data={data} columns={columns} getRowId={(row) => row.id} />
+    {/* your content */}
   </DataBodyTemplate.Body>
 </DataBodyTemplate>
 ```
 
-> Passing children directly without any slot wrapper also renders as a body, but `.Body` makes the layout intent explicit.
+> Passing children directly without a slot wrapper also renders as a body, but `.Body` makes the intent explicit.
 
 #### DataBodyTemplate.Tab
 
-Creates a tabbed page layout. Add multiple `.Tab` children to enable the tab bar.
+Creates a tabbed page layout.
 
 ```tsx
 <DataBodyTemplate title="Users">
   <DataBodyTemplate.Tab id="list" label="List" count={42}>
-    <DataGridView data={data} columns={columns} getRowId={(row) => row.id} />
+    {/* list content */}
   </DataBodyTemplate.Tab>
   <DataBodyTemplate.Tab id="settings" label="Settings">
     <SettingsForm />
@@ -106,7 +101,7 @@ Creates a tabbed page layout. Add multiple `.Tab` children to enable the tab bar
 
 #### DataBodyTemplate.Section
 
-Settings-style layout with left navigation and right content panel. Add multiple `.Section` children to enable the side nav.
+Settings-style layout with left navigation and right content panel.
 
 ```tsx
 <DataBodyTemplate title="Settings">
@@ -129,12 +124,12 @@ Settings-style layout with left navigation and right content panel. Add multiple
 
 Groups content within a tab or section. The `layout` prop controls the visual structure.
 
-| layout | Use case | Default wrapper |
-|---|---|---|
-| `horizontal` | Label on left, input on right (settings form) | Card |
-| `stacked` | Label above, input below | plain |
-| `inline` | Table-style rows (detail view, inline form) | bordered |
-| `split` | Left list + right detail | bordered |
+| layout | Use case |
+|---|---|
+| `horizontal` | Label on left, input on right (settings form) |
+| `stacked` | Label above, input below |
+| `inline` | Table-style rows (detail view) |
+| `split` | Left list + right detail |
 
 ```tsx
 <DataBodyTemplate.Tab id="settings" label="Settings">
@@ -151,7 +146,7 @@ Groups content within a tab or section. The `layout` prop controls the visual st
 
 #### DataBodyTemplate.Field
 
-Read-only key-value display. Use with `Group layout="inline"` for detail pages.
+Read-only key-value display.
 
 ```tsx
 <DataBodyTemplate.Group layout="inline" title="Identity">
@@ -162,7 +157,7 @@ Read-only key-value display. Use with `Group layout="inline"` for detail pages.
 
 #### DataBodyTemplate.Summary
 
-A pinned summary area below the header, above tabs.
+Pinned summary area below the header, above tabs.
 
 ```tsx
 <DataBodyTemplate title="Overview">
@@ -175,49 +170,115 @@ A pinned summary area below the header, above tabs.
 
 ---
 
-### DataGridView
+### DashboardBodyTemplate
 
-Data table component. Use inside `DataBodyTemplate.Body` or any `.Tab` / `.Section`.
+Dashboard page shell. Provides the chrome — top bar, variable bar, panel grid area — while the app owns panel content and the data engine.
 
-| variant | Description |
-|---|---|
-| `standard` (default) | Standard data table with pagination |
-| `infinity` | Infinite scroll |
-| `drag` | Row drag-to-reorder |
-| `card` | Card grid |
-| `card-list` | Card list |
+Requires [`@loykin/dashboardkit`](https://github.com/loykin/dashboardkit) for the grid and variable system:
+
+```bash
+npm install @loykin/dashboardkit react-grid-layout
+```
+
+Also import the grid layout CSS in your app:
+
+```ts
+import 'react-grid-layout/css/styles.css'
+```
 
 ```tsx
-import { DataBodyTemplate, DataGridView, PageTopBar, type DataGridColumnDef } from '@loykin/designkit'
+import React, { useState, useMemo } from 'react'
+import { DashboardBodyTemplate, DashboardPanel, PageTopBar } from '@loykin/designkit'
+import { createDashboardEngine, builtinVariableTypes, definePanel } from '@loykin/dashboardkit'
+import { useLoadDashboard, useVariable, DashboardGrid } from '@loykin/dashboardkit/react'
+import type { PanelViewerProps } from '@loykin/dashboardkit'
 
-type User = { id: string; name: string; email: string }
+// Register panel types once at module level
+const engine = createDashboardEngine({ variableTypes: builtinVariableTypes })
+engine.registerPanel(definePanel({
+  id: 'stat',
+  name: 'Stat',
+  optionsSchema: {},
+  viewer({ data, loading }: PanelViewerProps<unknown, unknown>) {
+    if (loading) return null
+    return <div className="text-2xl font-bold">{String(data ?? '—')}</div>
+  },
+}))
 
-const columns: DataGridColumnDef<User>[] = [
-  { id: 'name',  accessorKey: 'name',  header: 'Name'  },
-  { id: 'email', accessorKey: 'email', header: 'Email' },
-]
+export function MyDashboard() {
+  useLoadDashboard(engine, config)
+  const envVar = useVariable(engine, 'env')
+  const variables = useMemo(() => ({ env: (envVar.value as string) ?? 'production' }), [envVar.value])
+  const [editable, setEditable] = useState(false)
 
-export function UsersPage() {
   return (
-    <DataBodyTemplate topBar={<PageTopBar left="Admin / Users" />} title="Users">
-      <DataBodyTemplate.Body>
-        <DataGridView
-          data={data}
-          columns={columns}
-          getRowId={(row) => row.id}
-          tableHeight={420}
-        />
-      </DataBodyTemplate.Body>
-    </DataBodyTemplate>
+    <DashboardBodyTemplate
+      topBar={<PageTopBar left="My Dashboard" right={/* controls */} />}
+      variableBar={/* <VariableSelect> components */}
+    >
+      <DashboardGrid engine={engine} editable={editable}>
+        {({ panelType, config, data, rawData, loading, error, ref }) => {
+          const Viewer = engine.getPanelPlugin(panelType)?.viewer as React.FC<PanelViewerProps<unknown, unknown>> | undefined
+          return (
+            <DashboardPanel
+              ref={ref}
+              title={config.title}
+              loading={loading}
+              error={error ?? undefined}
+              editable={editable}
+              style={{ height: '100%' }}
+            >
+              {Viewer && (
+                <Viewer
+                  panel={config} options={config.options}
+                  data={data} rawData={rawData}
+                  width={0} height={0}
+                  loading={loading} error={error}
+                  variables={variables}
+                />
+              )}
+            </DashboardPanel>
+          )
+        }}
+      </DashboardGrid>
+    </DashboardBodyTemplate>
   )
 }
 ```
+
+**DashboardBodyTemplate props:**
+
+| Prop | Type | Description |
+|---|---|---|
+| `topBar` | `ReactNode` | Top bar — breadcrumb, edit/refresh controls |
+| `variableBar` | `ReactNode` | Variable dropdown strip between top bar and panels |
+| `title` | `ReactNode` | Dashboard title (omit if topBar covers it) |
+| `description` | `ReactNode` | Subtitle |
+| `toolbar` | `ReactNode` | Toolbar slot next to the title |
+| `theme` | `CSSProperties` | Inline CSS variable overrides |
+| `className` | `string` | Class applied to the page root |
+| `contentClassName` | `string` | Class applied to the panel grid area |
+
+**DashboardPanel props:**
+
+Panel card component. Wrap your panel viewer in `DashboardPanel` for consistent chrome across all panels.
+
+| Prop | Type | Description |
+|---|---|---|
+| `title` | `string` | Panel title |
+| `description` | `string` | Panel subtitle |
+| `loading` | `boolean` | Shows loading spinner overlay |
+| `error` | `string` | Shows error state, hides children |
+| `editable` | `boolean` | Shows drag handle and edit ring |
+| `headerRight` | `ReactNode` | Action slot in panel header — hidden until hover |
+| `transparent` | `boolean` | Removes card border and background |
+| `ref` | forwarded | Attach `DashboardGrid`'s `ref` for viewport virtualization |
 
 ---
 
 ### FormWizardBodyTemplate
 
-Multi-step input wizard. The template wraps each step's `content` in a `<form>` element automatically, so the Continue / Finish button acts as a submit trigger. Press Enter or click Continue to advance.
+Multi-step input wizard. Wraps each step's `content` in a `<form>` element automatically.
 
 ```tsx
 import { useState } from 'react'
@@ -244,7 +305,7 @@ export function OnboardingPage() {
 }
 ```
 
-For per-step validation with `react-hook-form`, call `trigger()` inside `onNext` before advancing:
+For per-step validation with `react-hook-form`:
 
 ```tsx
 onNext={async () => {
@@ -253,13 +314,13 @@ onNext={async () => {
 }}
 ```
 
-The `variant` prop switches between `'plain'` (default) and `'card'` to wrap each step in a Card.
+The `variant` prop switches between `'plain'` (default) and `'card'`.
 
 ---
 
 ### LoginBodyTemplate
 
-Authentication page shell. Renders centered or split-panel login layouts.
+Authentication page shell.
 
 ```tsx
 import { LoginBodyTemplate } from '@loykin/designkit'
@@ -286,38 +347,45 @@ export function SignInPage() {
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `layout` | `'centered' \| 'split'` | `'centered'` | Centered card or split-panel with brand side |
-| `card` | `'card' \| 'plain'` | `'plain'` | Wrap the form content in a card border |
-| `cardWidth` | `'sm' \| 'md' \| 'lg'` | `'md'` | Width of the form card |
+| `card` | `'card' \| 'plain'` | `'plain'` | Wrap form content in a card border |
+| `cardWidth` | `'sm' \| 'md' \| 'lg'` | `'md'` | Form card width |
 | `bg` | `'default' \| 'subtle' \| 'none'` | `'default'` | Background style |
-| `side` | `'left' \| 'right'` | `'left'` | Side the brand panel appears on (split layout only) |
+| `side` | `'left' \| 'right'` | `'left'` | Brand panel side (split layout only) |
 | `brand` | `ReactNode` | built-in | Custom brand/logo panel content |
 
 ---
 
 ## UI Components
 
-Base components for use within page templates.
-
 ```tsx
 import {
-  Badge, Button, Card, CardContent,
-  Input, Label, Select, SelectTrigger, SelectValue, SelectContent, SelectItem,
-  Switch, Checkbox, Slider,
-  EmptyState,
-  Tabs, TabsList, TabsTrigger, TabsContent,
-  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
-  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
   Avatar, AvatarFallback, AvatarImage,
-  Separator, Skeleton,
-  Breadcrumb, DropdownMenu, NavigationMenu,
-  Popover, ScrollArea, Sidebar, Table,
+  Badge,
+  Button,
+  Card, CardContent, CardHeader, CardTitle,
+  Checkbox,
+  DropdownMenu,
+  EmptyState,
+  Input,
+  Label,
+  NavigationMenu,
+  Popover,
+  ScrollArea,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Separator,
+  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
+  Sidebar,
+  Skeleton,
+  Slider,
+  Switch,
+  Table,
+  Tabs, TabsList, TabsTrigger, TabsContent,
+  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
   PageTopBar,
 } from '@loykin/designkit'
 ```
 
 ### EmptyState
-
-Displays empty data, no search results, or error states.
 
 ```tsx
 import { EmptyState } from '@loykin/designkit'
@@ -335,13 +403,7 @@ import { Users } from 'lucide-react'
 
 ## Theming
 
-Designkit maps shadcn/ui CSS variables (`--primary`, `--background`, `--radius`, etc.) onto its own `--dk-*` tokens. Changing your shadcn theme automatically updates all designkit components.
-
-For additional control, override `--dk-*` variables directly in `globals.css`.
-
-### Customization scope
-
-CSS variables are the customization layer. The library is opinionated about structure and ships its own UI components — visual appearance is controlled entirely through tokens.
+Designkit maps shadcn/ui CSS variables onto its own `--dk-*` tokens. Changing your shadcn theme automatically updates all designkit components.
 
 | What | How |
 |---|---|
@@ -351,48 +413,39 @@ CSS variables are the customization layer. The library is opinionated about stru
 
 ```css
 :root {
-  --dk-radius:  0.375rem;
-  --dk-primary: oklch(0.52 0.2 250);
-
   --dk-density:        1;        /* 0.85 compact / 1 default / 1.15 comfortable */
   --dk-page-padding-x: 1.5rem;
   --dk-page-padding-y: 1rem;
   --dk-panel-gap:      1rem;
-  --dk-toolbar-height: 2.75rem;
 }
 ```
 
-To override per page, combine with `className`:
+Per-page override via `className`:
 
 ```css
-.layout-settings {
-  --dk-radius:  0.5rem;
-  --dk-density: 1.15;
+.layout-dashboard {
+  --dk-density: 0.85;
 }
 ```
 
 ```tsx
-<DataBodyTemplate className="layout-settings" title="Settings">
-  ...
-</DataBodyTemplate>
+<DashboardBodyTemplate className="layout-dashboard" ...>
 ```
 
-Or use the `theme` prop for inline overrides:
+Or via `theme` prop:
 
 ```tsx
 <DataBodyTemplate
-  theme={{ '--dk-radius': '0.5rem', '--dk-density': '1.15' } as React.CSSProperties}
+  theme={{ '--dk-density': '1.15' } as React.CSSProperties}
   title="Settings"
 >
-  ...
-</DataBodyTemplate>
 ```
 
 ---
 
 ## Playground
 
-An interactive development tool to preview templates and generate CSS/component code.
+Interactive development tool to preview templates and generate code.
 
 ```bash
 git clone https://github.com/loykin/designkit
@@ -400,8 +453,6 @@ cd designkit
 pnpm install
 pnpm dev
 ```
-
-Open `http://localhost:5173` to browse templates and export code.
 
 ---
 
