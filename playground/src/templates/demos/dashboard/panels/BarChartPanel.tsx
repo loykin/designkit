@@ -8,6 +8,7 @@ import {
   Tooltip,
   Rectangle,
 } from 'recharts'
+import type { PanelViewerProps, PanelPluginDef } from '@loykin/dashboardkit'
 
 export interface BarChartPanelProps {
   data: { label: string; value: number; color?: string }[]
@@ -85,4 +86,23 @@ export function BarChartPanel({ data, unit, horizontal }: BarChartPanelProps) {
       </BarChart>
     </ResponsiveContainer>
   )
+}
+
+// ─── Plugin ───────────────────────────────────────────────────────────────────
+
+export interface BarChartOptions extends Record<string, unknown> {
+  unit?: string
+  horizontal?: boolean
+  data: { label: string; value: number; color?: string }[]
+}
+
+function BarChartViewer({ options }: PanelViewerProps<BarChartOptions, unknown>) {
+  return <BarChartPanel data={options.data} unit={options.unit} horizontal={options.horizontal} />
+}
+
+export const barChartPlugin: PanelPluginDef<BarChartOptions, unknown> = {
+  id: 'bar',
+  name: 'Bar Chart',
+  optionsSchema: {},
+  viewer: BarChartViewer,
 }

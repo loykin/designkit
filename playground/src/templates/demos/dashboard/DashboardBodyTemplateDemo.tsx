@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import {
   DashboardBodyTemplate,
   DashboardPanel,
@@ -12,46 +12,22 @@ import {
 } from '@loykin/designkit'
 import { createDashboardEngine, builtinVariableTypes } from '@loykin/dashboardkit'
 import { useLoadDashboard, useVariable, DashboardGrid } from '@loykin/dashboardkit/react'
+import type { PanelViewerProps, CoreEngineAPI, DashboardConfig } from '@loykin/dashboardkit'
 import { RefreshCw, Clock, PencilLine, Check, MoreVertical } from 'lucide-react'
-import { StatPanel } from './panels/StatPanel'
-import { TimeSeriesPanel } from './panels/TimeSeriesPanel'
-import { BarChartPanel } from './panels/BarChartPanel'
-import { TablePanel, StatusBadge } from './panels/TablePanel'
-import type { DashboardConfig, CoreEngineAPI } from '@loykin/dashboardkit'
+import { statPlugin } from './panels/StatPanel'
+import { timeSeriesPlugin } from './panels/TimeSeriesPanel'
+import { barChartPlugin } from './panels/BarChartPanel'
+import { tablePlugin } from './panels/TablePanel'
 import type { TemplateCodeContext } from '../../code'
-import type { TimeSeriesPoint } from './panels/TimeSeriesPanel'
 import 'react-grid-layout/css/styles.css'
 
-// ─── Mock data generators ─────────────────────────────────────────────────────
+// ─── Engine (module-level, stable reference) ──────────────────────────────────
 
-function makeTimeSeries(keys: string[], length = 24): TimeSeriesPoint[] {
-  return Array.from({ length }, (_, i) => {
-    const h = String(i).padStart(2, '0')
-    const point: TimeSeriesPoint = { time: `${h}:00` }
-    keys.forEach((k) => {
-      point[k] = Math.round(20 + Math.random() * 60 + (k === 'p99' ? 40 : 0))
-    })
-    return point
-  })
-}
-
-function makeServiceRows(env: string) {
-  const services = ['api-gateway', 'auth-service', 'data-pipeline', 'scheduler', 'notifier']
-  const statusByEnv: Record<string, string[]> = {
-    production: ['healthy', 'healthy', 'warning', 'healthy', 'healthy'],
-    staging: ['healthy', 'healthy', 'healthy', 'error', 'healthy'],
-    development: ['healthy', 'warning', 'healthy', 'healthy', 'healthy'],
-  }
-  const statuses = statusByEnv[env] ?? statusByEnv['production']
-  return services.map((name, i) => ({
-    service: name,
-    status: statuses[i],
-    requests: Math.round(800 + Math.random() * 4000),
-    p99ms: Math.round(40 + Math.random() * 160),
-    errors: Math.round(Math.random() * (statuses[i] === 'error' ? 200 : 8)),
-    uptime: statuses[i] === 'error' ? '96.2%' : statuses[i] === 'warning' ? '99.1%' : '99.9%',
-  }))
-}
+const engine = createDashboardEngine({ variableTypes: builtinVariableTypes })
+engine.registerPanel(statPlugin)
+engine.registerPanel(timeSeriesPlugin)
+engine.registerPanel(barChartPlugin)
+engine.registerPanel(tablePlugin)
 
 // ─── Dashboard config ─────────────────────────────────────────────────────────
 
@@ -72,9 +48,7 @@ const DASHBOARD_CONFIG: DashboardConfig = {
       hide: 'none',
       sort: 'none',
       refreshOnTimeRangeChange: false,
-      options: {
-        values: ['production', 'staging', 'development'],
-      },
+      options: { values: ['production', 'staging', 'development'] },
       dataRequest: undefined,
       permissions: [],
     },
@@ -88,21 +62,107 @@ const DASHBOARD_CONFIG: DashboardConfig = {
       hide: 'none',
       sort: 'none',
       refreshOnTimeRangeChange: false,
-      options: {
-        values: ['5m', '1h', '6h', '24h'],
-      },
+      options: { values: ['5m', '1h', '6h', '24h'] },
       dataRequest: undefined,
       permissions: [],
     },
   ],
   panels: [
-    { id: 'req-rate',    type: 'stat',       title: 'Request Rate',    description: '', gridPos: { x: 0,  y: 0, w: 6,  h: 4 },  dataRequests: [], options: {}, isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [] },
-    { id: 'error-rate',  type: 'stat',       title: 'Error Rate',      description: '', gridPos: { x: 6,  y: 0, w: 6,  h: 4 },  dataRequests: [], options: {}, isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [] },
-    { id: 'p99-latency', type: 'stat',       title: 'P99 Latency',     description: '', gridPos: { x: 12, y: 0, w: 6,  h: 4 },  dataRequests: [], options: {}, isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [] },
-    { id: 'active-svcs', type: 'stat',       title: 'Active Services', description: '', gridPos: { x: 18, y: 0, w: 6,  h: 4 },  dataRequests: [], options: {}, isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [] },
-    { id: 'latency-ts',  type: 'timeseries', title: 'Latency over Time', description: '', gridPos: { x: 0,  y: 4, w: 16, h: 10 }, dataRequests: [], options: {}, isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [] },
-    { id: 'req-by-svc',  type: 'bar',        title: 'Requests by Service', description: '', gridPos: { x: 16, y: 4, w: 8,  h: 10 }, dataRequests: [], options: {}, isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [] },
-    { id: 'svc-table',   type: 'table',      title: 'Service Health',  description: '', gridPos: { x: 0,  y: 14, w: 24, h: 9 },  dataRequests: [], options: {}, isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [] },
+    {
+      id: 'req-rate', type: 'stat', title: 'Request Rate', description: '',
+      gridPos: { x: 0, y: 0, w: 6, h: 4 },
+      dataRequests: [], isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [],
+      options: {
+        unit: 'req/s',
+        dataByEnv: {
+          production:  { value: 12840, change: 4.2,  changeLabel: 'vs yesterday' },
+          staging:     { value: 3201,  change: -1.3, changeLabel: 'vs yesterday' },
+          development: { value: 3201,  change: -1.3, changeLabel: 'vs yesterday' },
+        },
+      },
+    },
+    {
+      id: 'error-rate', type: 'stat', title: 'Error Rate', description: '',
+      gridPos: { x: 6, y: 0, w: 6, h: 4 },
+      dataRequests: [], isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [],
+      options: {
+        unit: '%',
+        threshold: { value: 1, color: 'oklch(0.577 0.245 27)' },
+        dataByEnv: {
+          production:  { value: 0.38, change: -0.05, changeLabel: 'vs yesterday' },
+          staging:     { value: 1.12, change: 0.3,   changeLabel: 'vs yesterday' },
+          development: { value: 1.12, change: 0.3,   changeLabel: 'vs yesterday' },
+        },
+      },
+    },
+    {
+      id: 'p99-latency', type: 'stat', title: 'P99 Latency', description: '',
+      gridPos: { x: 12, y: 0, w: 6, h: 4 },
+      dataRequests: [], isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [],
+      options: {
+        unit: 'ms',
+        threshold: { value: 200, color: 'oklch(0.65 0.2 50)' },
+        dataByEnv: {
+          production:  { value: 142, change: -8,  changeLabel: 'vs yesterday' },
+          staging:     { value: 218, change: 12,  changeLabel: 'vs yesterday' },
+          development: { value: 218, change: 12,  changeLabel: 'vs yesterday' },
+        },
+      },
+    },
+    {
+      id: 'active-svcs', type: 'stat', title: 'Active Services', description: '',
+      gridPos: { x: 18, y: 0, w: 6, h: 4 },
+      dataRequests: [], isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [],
+      options: {
+        unit: 'services',
+        dataByEnv: {
+          production: { value: 5 }, staging: { value: 5 }, development: { value: 5 },
+        },
+      },
+    },
+    {
+      id: 'latency-ts', type: 'timeseries', title: 'Latency over Time', description: '',
+      gridPos: { x: 0, y: 4, w: 16, h: 10 },
+      dataRequests: [], isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [],
+      options: {
+        unit: 'ms',
+        series: [
+          { key: 'p50', label: 'P50', color: 'oklch(0.6 0.15 220)' },
+          { key: 'p95', label: 'P95', color: 'oklch(0.65 0.2 50)' },
+          { key: 'p99', label: 'P99', color: 'oklch(0.55 0.25 27)' },
+        ],
+      },
+    },
+    {
+      id: 'req-by-svc', type: 'bar', title: 'Requests by Service', description: '',
+      gridPos: { x: 16, y: 4, w: 8, h: 10 },
+      dataRequests: [], isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [],
+      options: {
+        unit: ' req',
+        data: [
+          { label: 'api-gw',    value: 4820 },
+          { label: 'auth',      value: 2130 },
+          { label: 'pipeline',  value: 3410 },
+          { label: 'scheduler', value: 980 },
+          { label: 'notifier',  value: 1500 },
+        ],
+      },
+    },
+    {
+      id: 'svc-table', type: 'table', title: 'Service Health', description: '',
+      gridPos: { x: 0, y: 14, w: 24, h: 9 },
+      dataRequests: [], isRow: false, collapsed: false, repeatDirection: 'h', links: [], transparent: false, permissions: [],
+      options: {
+        columns: [
+          { key: 'service',  label: 'Service' },
+          { key: 'status',   label: 'Status',      type: 'status' },
+          { key: 'requests', label: 'Requests/s',  align: 'right', type: 'localeNumber' },
+          { key: 'p99ms',    label: 'P99 (ms)',    align: 'right' },
+          { key: 'errors',   label: 'Errors',      align: 'right', type: 'errors' },
+          { key: 'uptime',   label: 'Uptime',      align: 'right' },
+        ],
+      },
+    },
   ],
   layout: { cols: 24, rowHeight: 30 },
   timeRange: { from: 'now-6h', to: 'now' },
@@ -110,97 +170,6 @@ const DASHBOARD_CONFIG: DashboardConfig = {
   links: [],
   permissions: [],
   annotations: [],
-}
-
-// ─── Panel data ───────────────────────────────────────────────────────────────
-
-type PanelData = {
-  'req-rate':    { value: number; change: number }
-  'error-rate':  { value: number; unit: string; change: number }
-  'p99-latency': { value: number; unit: string; change: number }
-  'active-svcs': { value: number }
-  'latency-ts':  { points: TimeSeriesPoint[]; series: { key: string; label: string; color: string }[] }
-  'req-by-svc':  { data: { label: string; value: number }[] }
-  'svc-table':   { rows: ReturnType<typeof makeServiceRows> }
-}
-
-function buildPanelData(env: string): PanelData {
-  const isProd = env === 'production'
-  return {
-    'req-rate':    { value: isProd ? 12840 : 3201, change: isProd ? +4.2 : -1.3 },
-    'error-rate':  { value: isProd ? 0.38 : 1.12, unit: '%', change: isProd ? -0.05 : +0.3 },
-    'p99-latency': { value: isProd ? 142 : 218, unit: 'ms', change: isProd ? -8 : +12 },
-    'active-svcs': { value: 5 },
-    'latency-ts': {
-      points: makeTimeSeries(['p50', 'p95', 'p99']),
-      series: [
-        { key: 'p50', label: 'P50', color: 'oklch(0.6 0.15 220)' },
-        { key: 'p95', label: 'P95', color: 'oklch(0.65 0.2 50)' },
-        { key: 'p99', label: 'P99', color: 'oklch(0.55 0.25 27)' },
-      ],
-    },
-    'req-by-svc': {
-      data: [
-        { label: 'api-gw',    value: 4820 },
-        { label: 'auth',      value: 2130 },
-        { label: 'pipeline',  value: 3410 },
-        { label: 'scheduler', value: 980 },
-        { label: 'notifier',  value: 1500 },
-      ],
-    },
-    'svc-table': { rows: makeServiceRows(env) },
-  }
-}
-
-// ─── Panel content renderer ───────────────────────────────────────────────────
-
-function renderPanelContent(panelId: string, data: PanelData): React.ReactNode {
-  switch (panelId) {
-    case 'req-rate': {
-      const d = data['req-rate']
-      return <StatPanel value={d.value} unit="req/s" change={d.change} changeLabel="vs yesterday" />
-    }
-    case 'error-rate': {
-      const d = data['error-rate']
-      return <StatPanel value={d.value} unit={d.unit} change={d.change} changeLabel="vs yesterday" color={d.value > 1 ? 'oklch(0.577 0.245 27)' : undefined} />
-    }
-    case 'p99-latency': {
-      const d = data['p99-latency']
-      return <StatPanel value={d.value} unit={d.unit} change={d.change} changeLabel="vs yesterday" color={d.value > 200 ? 'oklch(0.65 0.2 50)' : undefined} />
-    }
-    case 'active-svcs': {
-      const d = data['active-svcs']
-      return <StatPanel value={d.value} unit="services" />
-    }
-    case 'latency-ts': {
-      const d = data['latency-ts']
-      return <TimeSeriesPanel data={d.points} series={d.series} unit="ms" />
-    }
-    case 'req-by-svc': {
-      const d = data['req-by-svc']
-      return <BarChartPanel data={d.data} unit=" req" />
-    }
-    case 'svc-table': {
-      const d = data['svc-table']
-      return (
-        <TablePanel
-          columns={[
-            { key: 'service',  label: 'Service' },
-            { key: 'status',   label: 'Status',      render: (v) => <StatusBadge value={String(v)} /> },
-            { key: 'requests', label: 'Requests/s',  align: 'right', render: (v) => Number(v).toLocaleString() },
-            { key: 'p99ms',    label: 'P99 (ms)',    align: 'right' },
-            { key: 'errors',   label: 'Errors',      align: 'right', render: (v) => (
-              <span className={Number(v) > 50 ? 'text-destructive font-medium' : undefined}>{String(v)}</span>
-            )},
-            { key: 'uptime',   label: 'Uptime',      align: 'right' },
-          ]}
-          rows={d.rows as Record<string, unknown>[]}
-        />
-      )
-    }
-    default:
-      return null
-  }
 }
 
 // ─── Variable toolbar ─────────────────────────────────────────────────────────
@@ -228,19 +197,19 @@ function VariableSelect({ engine, name, className }: {
 // ─── Demo component ───────────────────────────────────────────────────────────
 
 export function DashboardBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
-  const engineRef = useRef(createDashboardEngine({ variableTypes: builtinVariableTypes }))
-  const engine = engineRef.current
-
   useLoadDashboard(engine, DASHBOARD_CONFIG)
 
-  const envVar = useVariable(engine, 'env')
-  const env = (envVar.value as string) ?? 'production'
-  const panelData = useMemo(() => buildPanelData(env), [env])
+  const envVar      = useVariable(engine, 'env')
+  const intervalVar = useVariable(engine, 'interval')
+  const variables   = useMemo<Record<string, string | string[]>>(() => ({
+    env:      (envVar.value      as string) ?? 'production',
+    interval: (intervalVar.value as string) ?? '1h',
+  }), [envVar.value, intervalVar.value])
 
   const [editable, setEditable] = useState(false)
   const [lastRefresh, setLastRefresh] = useState(() => new Date())
   const refresh = () => setLastRefresh(new Date())
-  lastRefresh.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+
   return (
     <DashboardBodyTemplate
       theme={theme}
@@ -252,7 +221,9 @@ export function DashboardBodyTemplateDemo({ theme }: { theme?: React.CSSProperti
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1 text-muted-foreground">
                 <Clock className="h-3.5 w-3.5" />
-                <span className="text-xs">Last 6h</span>
+                <span className="text-xs">
+                  {lastRefresh.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
               </div>
               <Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs" onClick={refresh}>
                 <RefreshCw className="h-3.5 w-3.5" />
@@ -282,13 +253,13 @@ export function DashboardBodyTemplateDemo({ theme }: { theme?: React.CSSProperti
       contentClassName="pb-6"
     >
       <DashboardGrid engine={engine} editable={editable}>
-        {({ panelId, loading, error, ref }) => {
-          const panel = DASHBOARD_CONFIG.panels.find((p) => p.id === panelId)
-          if (!panel) return null
+        {({ panelType, config, data, rawData, loading, error, ref }) => {
+          const plugin = engine.getPanelPlugin(panelType)
+          const Viewer = plugin?.viewer as React.FC<PanelViewerProps<unknown, unknown>> | undefined
           return (
             <DashboardPanel
               ref={ref}
-              title={panel.title}
+              title={config.title}
               loading={loading}
               error={error ?? undefined}
               editable={editable}
@@ -299,7 +270,19 @@ export function DashboardBodyTemplateDemo({ theme }: { theme?: React.CSSProperti
               }
               style={{ height: '100%' }}
             >
-              {renderPanelContent(panelId, panelData)}
+              {Viewer && (
+                <Viewer
+                  panel={config}
+                  options={config.options}
+                  data={data}
+                  rawData={rawData}
+                  width={0}
+                  height={0}
+                  loading={loading}
+                  error={error}
+                  variables={variables}
+                />
+              )}
             </DashboardPanel>
           )
         }}
@@ -313,30 +296,41 @@ export function buildDashboardTemplateCode({ layoutClassName, themeProp }: Templ
     `import { DashboardBodyTemplate, DashboardPanel, PageTopBar } from '@loykin/designkit'`,
     `import { createDashboardEngine, builtinVariableTypes } from '@loykin/dashboardkit'`,
     `import { useLoadDashboard, useVariable, DashboardGrid } from '@loykin/dashboardkit/react'`,
+    `import type { PanelViewerProps } from '@loykin/dashboardkit'`,
     `import '@loykin/designkit/styles'`,
     `import 'react-grid-layout/css/styles.css'`,
     ``,
+    `// Register panel plugins once at module level`,
     `const engine = createDashboardEngine({ variableTypes: builtinVariableTypes })`,
+    `engine.registerPanel(statPlugin)`,
+    `engine.registerPanel(timeSeriesPlugin)`,
+    `// ... register more panel types`,
     ``,
     `export function MyDashboard() {`,
     `  useLoadDashboard(engine, config)`,
     `  const envVar = useVariable(engine, 'env')`,
+    `  const variables = { env: envVar.value ?? 'production' }`,
     `  const [editable, setEditable] = useState(false)`,
     ``,
     `  return (`,
     `    <DashboardBodyTemplate${themeProp}`,
     `      className="${layoutClassName}"`,
-    `      topBar={<PageTopBar left="My Dashboard" />}`,
-    `      title="Overview"`,
-    `      toolbar={/* variable dropdowns, time range, edit/refresh */}`,
+    `      topBar={<PageTopBar left="My Dashboard" right={/* edit / refresh */} />}`,
+    `      variableBar={/* <VariableSelect> components */}`,
     `    >`,
     `      <DashboardGrid engine={engine} editable={editable}>`,
-    `        {({ panelId, loading, error }) => (`,
-    `          <DashboardPanel title={panelId} loading={loading} error={error ?? undefined}`,
-    `            style={{ height: '100%' }}>`,
-    `            {/* your panel content */}`,
-    `          </DashboardPanel>`,
-    `        )}`,
+    `        {({ panelType, config, data, rawData, loading, error, ref }) => {`,
+    `          const plugin = engine.getPanelPlugin(panelType)`,
+    `          const Viewer = plugin?.viewer as React.FC<PanelViewerProps<unknown, unknown>> | undefined`,
+    `          return (`,
+    `            <DashboardPanel ref={ref} title={config.title} loading={loading}`,
+    `              error={error ?? undefined} editable={editable} style={{ height: '100%' }}>`,
+    `              {Viewer && <Viewer panel={config} options={config.options}`,
+    `                data={data} rawData={rawData} width={0} height={0}`,
+    `                loading={loading} error={error} variables={variables} />}`,
+    `            </DashboardPanel>`,
+    `          )`,
+    `        }}`,
     `      </DashboardGrid>`,
     `    </DashboardBodyTemplate>`,
     `  )`,

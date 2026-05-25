@@ -1,5 +1,6 @@
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { cn } from '@loykin/designkit'
+import type { PanelViewerProps, PanelPluginDef } from '@loykin/dashboardkit'
 
 export interface StatPanelProps {
   value: number | string
@@ -42,4 +43,31 @@ export function StatPanel({ value, unit, change, changeLabel, color }: StatPanel
       )}
     </div>
   )
+}
+
+// ─── Plugin ───────────────────────────────────────────────────────────────────
+
+export interface StatPanelOptions extends Record<string, unknown> {
+  unit?: string
+  threshold?: { value: number; color: string }
+  dataByEnv: Record<string, { value: number; change?: number; changeLabel?: string }>
+}
+
+function StatViewer({ options, variables }: PanelViewerProps<StatPanelOptions, unknown>) {
+  const env = (variables.env as string) ?? 'production'
+  const d = options.dataByEnv?.[env] ?? options.dataByEnv?.['production'] ?? { value: 0 }
+  const color =
+    options.threshold && typeof d.value === 'number' && d.value > options.threshold.value
+      ? options.threshold.color
+      : undefined
+  return (
+    <StatPanel value={d.value} unit={options.unit} change={d.change} changeLabel={d.changeLabel} color={color} />
+  )
+}
+
+export const statPlugin: PanelPluginDef<StatPanelOptions, unknown> = {
+  id: 'stat',
+  name: 'Stat',
+  optionsSchema: {},
+  viewer: StatViewer,
 }

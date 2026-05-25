@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {
   ResponsiveContainer,
   LineChart,
@@ -8,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'recharts'
+import type { PanelViewerProps, PanelPluginDef } from '@loykin/dashboardkit'
 
 export interface TimeSeriesPoint {
   time: string
@@ -76,4 +78,34 @@ export function TimeSeriesPanel({ data, series, unit }: TimeSeriesPanelProps) {
       </LineChart>
     </ResponsiveContainer>
   )
+}
+
+// ─── Plugin ───────────────────────────────────────────────────────────────────
+
+function makeTimeSeries(keys: string[], length = 24): TimeSeriesPoint[] {
+  return Array.from({ length }, (_, i) => {
+    const h = String(i).padStart(2, '0')
+    const point: TimeSeriesPoint = { time: `${h}:00` }
+    keys.forEach((k) => {
+      point[k] = Math.round(20 + Math.random() * 60 + (k === 'p99' ? 40 : 0))
+    })
+    return point
+  })
+}
+
+export interface TimeSeriesOptions extends Record<string, unknown> {
+  unit?: string
+  series: TimeSeriesSeries[]
+}
+
+function TimeSeriesViewer({ options }: PanelViewerProps<TimeSeriesOptions, unknown>) {
+  const [data] = useState(() => makeTimeSeries(options.series.map((s) => s.key)))
+  return <TimeSeriesPanel data={data} series={options.series} unit={options.unit} />
+}
+
+export const timeSeriesPlugin: PanelPluginDef<TimeSeriesOptions, unknown> = {
+  id: 'timeseries',
+  name: 'Time Series',
+  optionsSchema: {},
+  viewer: TimeSeriesViewer,
 }

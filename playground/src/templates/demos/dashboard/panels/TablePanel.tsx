@@ -1,5 +1,7 @@
+import { useMemo } from 'react'
 import { Badge } from '@loykin/designkit'
 import { cn } from '@loykin/designkit'
+import type { PanelViewerProps, PanelPluginDef } from '@loykin/dashboardkit'
 
 export interface TableColumn<T> {
   key: keyof T
@@ -60,6 +62,63 @@ export function TablePanel<T extends Record<string, unknown>>({ columns, rows }:
       </table>
     </div>
   )
+}
+
+// ─── Plugin ───────────────────────────────────────────────────────────────────
+
+function makeServiceRows(env: string) {
+  const services = ['api-gateway', 'auth-service', 'data-pipeline', 'scheduler', 'notifier']
+  const statusByEnv: Record<string, string[]> = {
+    production:  ['healthy', 'healthy', 'warning', 'healthy', 'healthy'],
+    staging:     ['healthy', 'healthy', 'healthy', 'error',   'healthy'],
+    development: ['healthy', 'warning', 'healthy', 'healthy', 'healthy'],
+  }
+  const statuses = statusByEnv[env] ?? statusByEnv['production']
+  return services.map((name, i) => ({
+    service:  name,
+    status:   statuses[i],
+    requests: Math.round(800 + Math.random() * 4000),
+    p99ms:    Math.round(40 + Math.random() * 160),
+    errors:   Math.round(Math.random() * (statuses[i] === 'error' ? 200 : 8)),
+    uptime:   statuses[i] === 'error' ? '96.2%' : statuses[i] === 'warning' ? '99.1%' : '99.9%',
+  }))
+}
+
+export interface TableColumnDef {
+  key: string
+  label: string
+  align?: 'left' | 'right' | 'center'
+  /** Rendering hint: 'status' → badge, 'errors' → colored number, 'localeNumber' → toLocaleString */
+  type?: 'status' | 'errors' | 'localeNumber'
+}
+
+export interface TablePanelOptions extends Record<string, unknown> {
+  columns: TableColumnDef[]
+}
+
+function TableViewer({ options, variables }: PanelViewerProps<TablePanelOptions, unknown>) {
+  const env = (variables.env as string) ?? 'production'
+  const rows = useMemo(() => makeServiceRows(env), [env])
+  const columns = options.columns.map((col) => ({
+    key:   col.key as keyof Record<string, unknown>,
+    label: col.label,
+    align: col.align,
+    render:
+      col.type === 'status'      ? (v: unknown) => <StatusBadge value={String(v)} /> :
+      col.type === 'errors'      ? (v: unknown) => (
+        <span className={Number(v) > 50 ? 'text-destructive font-medium' : undefined}>{String(v)}</span>
+      ) :
+      col.type === 'localeNumber'? (v: unknown) => Number(v).toLocaleString() :
+      undefined,
+  }))
+  return <TablePanel columns={columns} rows={rows as Record<string, unknown>[]} />
+}
+
+export const tablePlugin: PanelPluginDef<TablePanelOptions, unknown> = {
+  id: 'table',
+  name: 'Table',
+  optionsSchema: {},
+  viewer: TableViewer,
 }
 
 // ── Status badge helper ────────────────────────────────────────────────────────

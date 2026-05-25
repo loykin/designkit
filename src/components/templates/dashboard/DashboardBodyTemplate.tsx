@@ -129,11 +129,11 @@ export function DashboardBodyTemplate({
         </header>
       )}
       {variableBar && (
-        <div className="shrink-0 flex flex-wrap items-center gap-2 px-(--dk-page-padding-x) py-2">
+        <div className="shrink-0 flex flex-wrap items-center gap-2 px-(--dk-page-padding-x) py-1.5">
           {variableBar}
         </div>
       )}
-      <div className={cn('flex-1 min-h-0 overflow-auto px-(--dk-page-padding-x) py-(--dk-page-padding-y)', contentClassName)}>
+      <div className={cn('flex-1 min-h-0 overflow-auto px-[calc(var(--dk-page-padding-x)-0.5rem)] pt-0 pb-(--dk-page-padding-y)', contentClassName)}>
         {children}
       </div>
     </DataPage>
