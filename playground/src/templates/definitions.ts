@@ -151,7 +151,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-table',
     exportComponent: 'DataGridView',
     exportKind: 'data-grid',
-    preset: { radius: 0.125 },
+    preset: {},
     options: topBarOptions,
     preview: {
       variant: 'standard',
@@ -168,7 +168,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-table-infinity',
     exportComponent: 'DataGridView',
     exportKind: 'data-grid',
-    preset: { radius: 0.125 },
+    preset: {},
     preview: {
       variant: 'infinity',
       breadcrumb: 'Data / Table / Infinite Scroll',
@@ -186,7 +186,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-table-drag',
     exportComponent: 'DataGridView',
     exportKind: 'data-grid',
-    preset: { radius: 0.125 },
+    preset: {},
     preview: {
       variant: 'drag',
       breadcrumb: 'Data / Table / Row Drag',
@@ -204,7 +204,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-table-card',
     exportComponent: 'DataGridView',
     exportKind: 'data-grid-card',
-    preset: { radius: 0.375 },
+    preset: {},
     preview: {
       variant: 'card',
       breadcrumb: 'Data / Table / Card Grid',
@@ -222,7 +222,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-table-card-list',
     exportComponent: 'DataGridView',
     exportKind: 'data-grid-card',
-    preset: { radius: 0.375 },
+    preset: {},
     preview: {
       variant: 'card-list',
       breadcrumb: 'Data / Table / Card List',
@@ -241,7 +241,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-databody',
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
-    preset: { radius: 0.375 },
+    preset: {},
     options: topBarOptions,
   },
   {
@@ -253,7 +253,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-databody-detail',
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
-    preset: { radius: 0.375 },
+    preset: {},
     options: topBarOptions,
   },
   {
@@ -265,7 +265,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-databody-split',
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
-    preset: { radius: 0.375 },
+    preset: {},
     options: topBarOptions,
   },
   {
@@ -277,7 +277,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-tabbed',
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
-    preset: { radius: 0.375 },
+    preset: {},
     options: topBarOptions,
   },
   {
@@ -290,7 +290,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-form',
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
-    preset: { radius: 0.5 },
+    preset: {},
     options: topBarOptions,
   },
   {
@@ -303,7 +303,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-form-stacked',
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
-    preset: { radius: 0.5 },
+    preset: {},
     options: topBarOptions,
   },
   {
@@ -316,7 +316,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-form-inline',
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
-    preset: { radius: 0.25 },
+    preset: {},
     options: topBarOptions,
   },
   {
@@ -327,7 +327,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-sectioned',
     exportComponent: 'DataBodyTemplate',
     exportKind: 'body-template',
-    preset: { radius: 0.5 },
+    preset: {},
     options: topBarOptions,
   },
   // ── Common ───────────────────────────────────────────────────────────────────
@@ -340,7 +340,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-typography',
     exportComponent: 'TypographyBodyTemplate',
     exportKind: 'body-template',
-    preset: { radius: 0.375 },
+    preset: {},
   },
   {
     id: 'colors',
@@ -351,7 +351,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-colors',
     exportComponent: 'ColorsBodyTemplate',
     exportKind: 'body-template',
-    preset: { radius: 0.375 },
+    preset: {},
   },
   // ── FormWizardBodyTemplate ────────────────────────────────────────────────────
   {
@@ -362,7 +362,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-form-wizard',
     exportComponent: 'FormWizardBodyTemplate',
     exportKind: 'body-template',
-    preset: { radius: 0.5 },
+    preset: {},
     options: topBarOptions,
   },
   // ── LoginBodyTemplate ─────────────────────────────────────────────────────────
@@ -375,7 +375,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-login',
     exportComponent: 'LoginBodyTemplate',
     exportKind: 'login',
-    preset: { radius: 0.5 },
+    preset: {},
     options: loginOptions,
   },
   {
@@ -388,7 +388,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-login',
     exportComponent: 'LoginBodyTemplate',
     exportKind: 'login',
-    preset: { radius: 0.5 },
+    preset: {},
     options: loginOptions,
   },
   {
@@ -401,7 +401,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-login',
     exportComponent: 'LoginBodyTemplate',
     exportKind: 'login',
-    preset: { radius: 0.5 },
+    preset: {},
     options: loginOptions,
   },
   {
@@ -414,7 +414,7 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-login',
     exportComponent: 'LoginBodyTemplate',
     exportKind: 'login',
-    preset: { radius: 0.5 },
+    preset: {},
     options: loginOptions,
   },
 ]
