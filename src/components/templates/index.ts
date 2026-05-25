@@ -13,6 +13,8 @@ export interface TemplateNavigationGroup {
   items: TemplateNavigationItem[]
 }
 
+export { DashboardBodyTemplate, DashboardPanel } from './dashboard/DashboardBodyTemplate'
+export type { DashboardBodyTemplateProps, DashboardPanelProps } from './dashboard/DashboardBodyTemplate'
 export { DataBodyTemplate } from './databody/DataBodyTemplate'
 export { FormWizardBodyTemplate } from './form/FormWizardBodyTemplate'
 export type {

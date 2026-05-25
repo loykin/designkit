@@ -124,7 +124,7 @@ function AppView() {
                     <span className="text-xs text-muted-foreground shrink-0">{opt.label}</span>
                     <Select
                       value={activeProps[opt.key] ?? opt.defaultValue}
-                      onValueChange={(v) => setTemplateOption(activeTemplate, opt.key, v)}
+                      onValueChange={(v) => v !== null && setTemplateOption(activeTemplate, opt.key, v)}
                     >
                       <SelectTrigger className="h-7 w-24 text-xs px-2">
                         <SelectValue />

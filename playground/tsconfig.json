@@ -8,6 +8,9 @@
     "strict":           true,
     "skipLibCheck":     true,
     "ignoreDeprecations": "6.0",
+    "allowImportingTsExtensions": true,
+    "allowArbitraryExtensions": true,
+    "noEmit": true,
     "paths": {
       "@loykin/designkit": ["../src/index.ts"],
       "@/*":              ["../src/*"],

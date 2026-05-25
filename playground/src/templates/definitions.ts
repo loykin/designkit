@@ -1,11 +1,12 @@
 import type { TemplateOverride, TemplateId } from '@loykin/designkit'
 import type { DataGridTemplateVariant } from './demos/table/DataGridTemplateDemo'
 
-export type TemplateGroup = 'Table' | 'Pages' | 'Design' | 'Auth'
+export type TemplateGroup = 'Table' | 'Pages' | 'Design' | 'Auth' | 'Dashboard'
 export type TemplateNavigationGroupId =
   | 'DataBodyTemplate'
   | 'FormWizardBodyTemplate'
   | 'LoginBodyTemplate'
+  | 'DashboardBodyTemplate'
   | 'Common'
 export type TemplateExportKind =
   | 'data-grid'
@@ -14,6 +15,7 @@ export type TemplateExportKind =
   | 'typography'
   | 'databody'
   | 'login'
+  | 'dashboard'
 
 export interface TemplateOptionChoice {
   value: string
@@ -416,6 +418,18 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportKind: 'login',
     preset: {},
     options: loginOptions,
+  },
+  // ── DashboardBodyTemplate ─────────────────────────────────────────────────────
+  {
+    id: 'dashboard',
+    label: 'Overview',
+    navigationSubgroupLabel: 'Dashboard',
+    group: 'Dashboard',
+    navigationGroup: 'DashboardBodyTemplate',
+    layoutClassName: 'layout-dashboard',
+    exportComponent: 'DashboardBodyTemplate',
+    exportKind: 'dashboard',
+    preset: {},
   },
 ]
 
