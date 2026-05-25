@@ -253,7 +253,7 @@ export function BrowseBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
         {filteredProducts.length} products
       </span>
       <div className="flex-1" />
-      <Select value={sort} onValueChange={setSort}>
+      <Select value={sort} onValueChange={(v) => v && setSort(v)}>
         <SelectTrigger className="h-8 w-36 text-xs">
           <SelectValue />
         </SelectTrigger>
