@@ -1,5 +1,5 @@
 import type { TemplateOverride, TemplateId } from '@loykin/designkit'
-import type { DataGridViewVariant } from '@loykin/gridkit'
+import type { DataGridTemplateVariant } from './demos/table/DataGridTemplateDemo'
 
 export type TemplateGroup = 'Table' | 'Pages' | 'Design' | 'Auth'
 export type TemplateNavigationGroupId =
@@ -44,7 +44,7 @@ export interface TemplateDefinition {
   preset: TemplateOverride
   options?: TemplateOptionSpec[]
   preview?: {
-    variant?: DataGridViewVariant
+    variant?: DataGridTemplateVariant
     breadcrumb?: React.ReactNode
     title?: React.ReactNode
     description?: React.ReactNode

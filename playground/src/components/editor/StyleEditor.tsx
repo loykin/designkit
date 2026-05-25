@@ -78,7 +78,7 @@ const densityItems: { id: DensityId; label: string }[] = [
 
 export function StyleControls() {
   const { global: g, overrides, activeTemplate, setGlobal, setOverride } = useThemeStore()
-  const ov = overrides[activeTemplate]
+  const ov = overrides[activeTemplate] ?? {}
   const activeLabel = activeTemplate
     .split('-')
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))

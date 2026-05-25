@@ -184,7 +184,7 @@ function buildComponentCode(
 
 export function CodeExport() {
   const { global: g, overrides, activeTemplate } = useThemeStore()
-  const ov = overrides[activeTemplate]
+  const ov = overrides[activeTemplate] ?? {}
   const definition = getTemplateDefinition(activeTemplate)
   const layoutClassName = definition?.layoutClassName ?? `layout-${activeTemplate}`
 

@@ -26,7 +26,7 @@ export { ColorsBodyTemplate } from './typography/ColorsBodyTemplate'
 export type { ColorsBodyTemplateProps } from './typography/ColorsBodyTemplate'
 export { DataPage } from './datapage/DataPage'
 export { LoginBodyTemplate } from './auth/LoginBodyTemplate'
-export type { LoginBodyTemplateProps, LoginLayout, LoginSide } from './auth/LoginBodyTemplate'
+export type { LoginBodyTemplateProps, LoginLayout, LoginSide, LoginCard, LoginBg, LoginCardWidth } from './auth/LoginBodyTemplate'
 export { PageTopBar, buildTopBar, PageBreadcrumb } from './datapage/PageTopBar'
 export type { PageTopBarProps, PageTopBarVariant, PageBreadcrumbItem } from './datapage/PageTopBar'
 export type {

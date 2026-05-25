@@ -28,7 +28,8 @@ export interface TemplateConfig {
 export type { TemplateNavigationItem, TemplateNavigationGroup } from '@loykin/designkit'
 
 import { DataGridTemplateDemo, buildDataGridTemplateCode } from './demos/table/DataGridTemplateDemo'
-import type { DataGridViewVariant } from '@loykin/gridkit'
+import type { TemplateNavigationGroup } from '@loykin/designkit'
+import type { DataGridTemplateVariant } from './demos/table/DataGridTemplateDemo'
 import { DataBodyTemplateDemo, buildDataBodyTemplateCode } from './demos/databody/DataBodyTemplateDemo'
 import {
   DetailBodyTemplateDemo,
@@ -63,7 +64,7 @@ import { LoginOtpDemo, buildLoginOtpCode } from './demos/auth/LoginOtpDemo'
 
 function DataGridTemplatePreview(props: {
   theme?: React.CSSProperties
-  variant: DataGridViewVariant
+  variant: DataGridTemplateVariant
   layoutClassName: string
   title: React.ReactNode
   description?: React.ReactNode
