@@ -5,9 +5,6 @@ import {
   useStyleInjector,
   buildTemplateTheme,
   useThemeStore,
-  TEMPLATES,
-  TEMPLATE_NAVIGATION,
-  TEMPLATE_DEFINITIONS,
   TooltipProvider,
   Button,
   Separator,
@@ -18,6 +15,7 @@ import {
   SelectValue,
 } from '@loykin/designkit'
 import type { TemplateId, ShellId } from '@loykin/designkit'
+import { TEMPLATES, TEMPLATE_NAVIGATION, TEMPLATE_DEFINITIONS } from './templates'
 import { HeaderShell } from './components/shells/HeaderShell'
 import { SidebarShell } from './components/shells/SidebarShell'
 
@@ -47,8 +45,18 @@ function AppView() {
 
   const { shell: shellParam = 'sidebar', templateId = 'table' } = useParams()
   const navigate = useNavigate()
-  const { setShell, setTemplate, global: g, overrides } = useThemeStore()
+  const { setShell, setTemplate, setOverride, global: g, overrides } = useThemeStore()
   const [templateProps, setTemplateProps] = useState(initTemplateProps)
+
+  // Initialize store overrides from template definition presets on first mount
+  useEffect(() => {
+    TEMPLATE_DEFINITIONS.forEach((def) => {
+      if (def.preset && Object.keys(def.preset).length > 0) {
+        setOverride(def.id, def.preset)
+      }
+    })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Sync URL params → store (for StyleEditor / CodeExport)
   useEffect(() => {

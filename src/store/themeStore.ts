@@ -1,6 +1,5 @@
 import { create } from 'zustand'
-import { createTemplateOverrides } from '@/components/templates/definitions'
-import type { ThemeState } from './types'
+import type { ThemeState, TemplateOverride, TemplateId } from './types'
 
 export const useThemeStore = create<ThemeState>((set) => ({
   global: {
@@ -12,7 +11,7 @@ export const useThemeStore = create<ThemeState>((set) => ({
     density: 'default',
     darkMode: false,
   },
-  overrides: createTemplateOverrides(),
+  overrides: {} as Record<TemplateId, TemplateOverride>,
   activeShell: 'sidebar',
   activeTemplate: 'table',
   setGlobal: (patch) => set((s) => ({ global: { ...s.global, ...patch } })),

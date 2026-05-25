@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { DataGridPaginationCompact, GlobalSearch, type DataGridColumnDef } from '@loykin/gridkit'
+import { DataGridView, DataGridPaginationCompact, GlobalSearch, type DataGridColumnDef, type DataGridViewVariant } from '@loykin/gridkit'
 import type { Row, Table as TanStackTable } from '@tanstack/react-table'
-import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
-import { PageTopBar, buildTopBar } from '@/components/templates/datapage/PageTopBar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { DataBodyTemplate, PageTopBar, buildTopBar } from '@loykin/designkit'
+import { Badge, Button, Card, CardContent } from '@loykin/designkit'
 import { Download, Plus } from 'lucide-react'
-import { DataGridView, type DataGridViewVariant } from './DataGridView'
-import type { TemplateCodeContext } from '../code'
+import type { TemplateCodeContext } from '../../code'
 
 export interface DataGridTemplateDemoProps {
   theme?: React.CSSProperties
@@ -342,7 +338,8 @@ export function buildDataGridTemplateCode({
     definition.exportKind === 'data-grid-card' ? `\n        card={{ renderCard }}` : ''
 
   return [
-    `import { DataBodyTemplate, DataGridView, PageTopBar, type DataGridColumnDef } from '@loykin/designkit'`,
+    `import { DataBodyTemplate, PageTopBar } from '@loykin/designkit'`,
+    `import { DataGridView, type DataGridColumnDef } from '@loykin/gridkit'`,
     `import '@loykin/designkit/styles'`,
     '',
     `type User = Record<string, unknown> & { id: string; name: string; email: string }`,

@@ -10,12 +10,14 @@ npm install @loykin/designkit @loykin/gridkit
 
 Requires React 19 and Tailwind CSS v4. UI components are based on [shadcn/ui](https://ui.shadcn.com) — if your app has shadcn set up, theming integrates automatically via shared CSS variables (`--primary`, `--background`, `--radius`, etc.). You can customize every token through shadcn's theme without touching designkit directly.
 
-Add the following to your global CSS so Tailwind scans the designkit bundle:
+Import the styles in your global CSS:
 
 ```css
 /* globals.css */
-@source "node_modules/@loykin/designkit/dist/index.js";
+@import "@loykin/designkit/styles";
 ```
+
+This handles Tailwind class scanning automatically — no additional `@source` configuration needed.
 
 ## Quick Start
 

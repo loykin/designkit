@@ -3,21 +3,10 @@ import {
   FormWizardBodyTemplate,
   type FormWizardStep,
   type FormWizardVariant,
-} from '@/components/templates'
-import { buildTopBar } from '@/components/templates/datapage/PageTopBar'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Badge } from '@/components/ui/badge'
-import type { TemplateCodeContext } from '../code'
+  buildTopBar,
+} from '@loykin/designkit'
+import { Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch, Checkbox, Badge } from '@loykin/designkit'
+import type { TemplateCodeContext } from '../../code'
 
 const steps: FormWizardStep[] = [
   {

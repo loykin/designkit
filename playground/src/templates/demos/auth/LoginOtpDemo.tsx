@@ -1,8 +1,7 @@
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button, Input } from '@loykin/designkit'
 import { ArrowLeft } from 'lucide-react'
-import type { TemplateCodeContext } from '../code'
-import { LoginBodyTemplate, type LoginLayout, type LoginSide, type LoginCard, type LoginBg, type LoginCardWidth } from './LoginBodyTemplate'
+import type { TemplateCodeContext } from '../../code'
+import { LoginBodyTemplate, type LoginLayout, type LoginSide, type LoginCard, type LoginBg, type LoginCardWidth } from '@loykin/designkit'
 
 export function LoginOtpDemo({
   theme,

@@ -1,5 +1,5 @@
-import type { TemplateOverride, TemplateId } from '@/store/types'
-import type { DataGridViewVariant } from './table/DataGridView'
+import type { TemplateOverride, TemplateId } from '@loykin/designkit'
+import type { DataGridViewVariant } from '@loykin/gridkit'
 
 export type TemplateGroup = 'Table' | 'Pages' | 'Design' | 'Auth'
 export type TemplateNavigationGroupId =

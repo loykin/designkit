@@ -1,9 +1,5 @@
-import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
-import { buildTopBar } from '@/components/templates/datapage/PageTopBar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import { DataBodyTemplate, buildTopBar } from '@loykin/designkit'
+import { Badge, Button, Card, CardContent, Input } from '@loykin/designkit'
 import {
   Table,
   TableBody,
@@ -11,9 +7,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
+} from '@loykin/designkit'
 import { CheckCircle2, Clock, AlertCircle, XCircle, Plus, Search } from 'lucide-react'
-import type { TemplateCodeContext } from '../code'
+import type { TemplateCodeContext } from '../../code'
 
 type Status = 'open' | 'in-progress' | 'resolved' | 'closed'
 type Priority = 'critical' | 'high' | 'medium' | 'low'

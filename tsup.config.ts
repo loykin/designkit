@@ -14,7 +14,7 @@ export default defineConfig({
     '@loykin/gridkit',
     '@tanstack/react-table',
     '@tanstack/react-virtual',
-  ],
+  ], // @loykin/gridkit: devDep — external so demo files reference it at runtime without bundling
   treeshake: true,
   esbuildOptions(options) {
     options.alias = { '@': resolve(__dirname, './src') }

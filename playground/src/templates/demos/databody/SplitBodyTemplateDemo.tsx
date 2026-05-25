@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { DataBodyTemplate } from './DataBodyTemplate'
-import { buildTopBar } from '@/components/templates/datapage/PageTopBar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import type { TemplateCodeContext } from '../code'
+import { DataBodyTemplate, buildTopBar } from '@loykin/designkit'
+import { Badge, Button } from '@loykin/designkit'
+import type { TemplateCodeContext } from '../../code'
 
 type User = {
   id: string

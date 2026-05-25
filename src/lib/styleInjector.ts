@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import { getTemplateDefinition } from '@/components/templates/definitions'
 import { useThemeStore } from '@/store/themeStore'
 import type { DensityId, TemplateId } from '@/store/types'
 
@@ -187,7 +186,7 @@ export function useStyleInjector() {
           panelGap: o.panelGap,
           toolbarHeight: o.toolbarHeight,
         })
-        const layoutClassName = getTemplateDefinition(id)?.layoutClassName ?? `layout-${id}`
+        const layoutClassName = `layout-${id}`
         return `.${layoutClassName} {\n${tokenMapToCss(tokens)}\n}`
       })
       .filter(Boolean)

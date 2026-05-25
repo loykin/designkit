@@ -10,9 +10,8 @@ import {
   TabsList,
   TabsTrigger,
   Button,
-  getTemplateDefinition,
-  TEMPLATES,
 } from '@loykin/designkit'
+import { TEMPLATES, getTemplateDefinition } from '@/templates'
 import { Code2 } from 'lucide-react'
 import type { DensityId, TemplateId, TemplateOverride } from '@loykin/designkit'
 import { CodeBlock } from './CodeBlock'

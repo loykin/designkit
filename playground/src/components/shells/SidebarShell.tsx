@@ -6,7 +6,8 @@ import {
   SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
   SidebarProvider, SidebarRail,
 } from '@loykin/designkit'
-import type { TemplateNavigationGroup, TemplateNavigationItem, TemplateId } from '@loykin/designkit'
+import type { TemplateId } from '@loykin/designkit'
+import type { TemplateNavigationGroup, TemplateNavigationItem } from '../../templates'
 import { LayoutDashboard, Table2, LayoutGrid, Layers, FileText, Settings, Bell } from 'lucide-react'
 
 export interface SidebarShellProps {

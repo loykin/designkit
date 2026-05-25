@@ -1,18 +1,6 @@
-import { DataBodyTemplate } from '@/components/templates/databody/DataBodyTemplate'
-import { buildTopBar } from '@/components/templates/datapage/PageTopBar'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
-import type { TemplateCodeContext } from '../code'
+import { DataBodyTemplate, buildTopBar } from '@loykin/designkit'
+import { Button, Input, Label, Badge, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch } from '@loykin/designkit'
+import type { TemplateCodeContext } from '../../code'
 
 export function FormBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBarBg }: { theme?: React.CSSProperties; topBarShow?: string; topBarVariant?: string; topBarBg?: string }) {
   return (

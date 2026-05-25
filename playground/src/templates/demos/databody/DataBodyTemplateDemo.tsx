@@ -6,15 +6,10 @@ import {
   type DataGridColumnDef,
 } from '@loykin/gridkit'
 import type { Table as TanStackTable } from '@tanstack/react-table'
-import { DataBodyTemplate } from './DataBodyTemplate'
-import { buildTopBar } from '@/components/templates/datapage/PageTopBar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
-import { Switch } from '@/components/ui/switch'
+import { DataBodyTemplate, buildTopBar } from '@loykin/designkit'
+import { Badge, Button, Card, CardContent, Switch, EmptyState } from '@loykin/designkit'
 import { Plus, Users, Search, RefreshCw } from 'lucide-react'
-import { EmptyState } from '@/components/ui/empty-state'
-import type { TemplateCodeContext } from '../code'
+import type { TemplateCodeContext } from '../../code'
 import React from 'react'
 
 export interface DataBodyTemplateDemoProps {
