@@ -2,6 +2,15 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { resolve } from 'path'
+import { existsSync } from 'fs'
+
+const dashboardkitLocal = resolve(__dirname, '../../dashboardkit/dist/index.js')
+const dashboardkitAliases = existsSync(dashboardkitLocal)
+  ? [
+      { find: '@loykin/dashboardkit/react', replacement: resolve(__dirname, '../../dashboardkit/dist/react.js') },
+      { find: '@loykin/dashboardkit', replacement: dashboardkitLocal },
+    ]
+  : []
 
 export default defineConfig({
   base: process.env.VITE_BASE_PATH ?? '/',
@@ -14,8 +23,7 @@ export default defineConfig({
       { find: /^react\/(.*)$/, replacement: resolve(__dirname, '../node_modules/react/$1') },
       { find: /^react-dom$/, replacement: resolve(__dirname, '../node_modules/react-dom') },
       { find: /^react-dom\/(.*)$/, replacement: resolve(__dirname, '../node_modules/react-dom/$1') },
-      { find: '@loykin/dashboardkit/react', replacement: resolve(__dirname, '../../dashboardkit/dist/react.js') },
-      { find: '@loykin/dashboardkit', replacement: resolve(__dirname, '../../dashboardkit/dist/index.js') },
+      ...dashboardkitAliases,
       { find: '@loykin/designkit', replacement: resolve(__dirname, '../src/index.ts') },
       { find: '@', replacement: resolve(__dirname, '../src') },
       { find: '~', replacement: resolve(__dirname, 'src') },
