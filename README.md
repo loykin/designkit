@@ -17,7 +17,14 @@ Import the styles in your global CSS:
 @import "@loykin/designkit/styles";
 ```
 
-This handles Tailwind class scanning automatically — no additional `@source` configuration needed.
+If your app builds Tailwind utilities from package source, include designkit in
+your Tailwind scan sources:
+
+```css
+@source "@loykin/designkit";
+```
+
+You can also import the stylesheet from your app entry, as shown below.
 
 ## Quick Start
 
@@ -174,16 +181,33 @@ Pinned summary area below the header, above tabs.
 
 Dashboard page shell. Provides the chrome — top bar, variable bar, panel grid area — while the app owns panel content and the data engine.
 
-Requires [`@loykin/dashboardkit`](https://github.com/loykin/dashboardkit) for the grid and variable system:
+Requires [`@loykin/dashboardkit`](https://github.com/loykin/dashboardkit) 0.0.6 or newer for the grid and variable system:
 
 ```bash
-npm install @loykin/dashboardkit react-grid-layout
+npm install @loykin/dashboardkit@^0.0.6 react-grid-layout
 ```
 
 Also import DashboardKit's grid CSS in your app:
 
 ```ts
 import '@loykin/dashboardkit/styles'
+```
+
+For rounded design systems, tune DashboardKit's resize handle variables so the
+handle stays inside the clipped panel corner:
+
+```css
+.layout-dashboard .react-grid-item:not(.react-grid-placeholder) {
+  --dk-resize-handle-size: clamp(20px, calc(var(--radius) * 1.6), 40px);
+  --dk-resize-handle-inset: clamp(4px, calc(var(--radius) * 0.45), 16px);
+  --dk-resize-handle-mark-size: clamp(6px, calc(var(--radius) * 0.55), 12px);
+  --dk-resize-handle-color: rgba(0, 0, 0, 0.35);
+  --dk-resize-handle-mark-radius: min(var(--radius), var(--dk-resize-handle-mark-size));
+}
+
+.dark .layout-dashboard .react-grid-item:not(.react-grid-placeholder) {
+  --dk-resize-handle-color: rgba(255, 255, 255, 0.4);
+}
 ```
 
 ```tsx
