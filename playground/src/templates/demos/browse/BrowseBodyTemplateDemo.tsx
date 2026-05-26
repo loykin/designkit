@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   BrowseBodyTemplate,
   PageTopBar,
@@ -11,7 +11,7 @@ import {
   SelectContent,
   SelectItem,
 } from '@loykin/designkit'
-import { DataGridCard, type DataGridColumnDef } from '@loykin/gridkit'
+import { DataGridCard, type DataGridColumnDef, type QueryParams, type QueryResult } from '@loykin/gridkit'
 import { LayoutGrid, LayoutList, Star } from 'lucide-react'
 import { Button } from '@loykin/designkit'
 import type { TemplateCodeContext } from '../../code'
@@ -43,6 +43,15 @@ const PRODUCTS: Product[] = [
   { id: '11', name: '574 Core',          brand: 'New Balance', category: 'Lifestyle', color: 'Navy',   price: 80,  rating: 4.2 },
   { id: '12', name: '1080 v12',          brand: 'New Balance', category: 'Running',   color: 'Black',  price: 185, rating: 4.9, badge: 'Popular' },
 ]
+const CATALOG_PRODUCTS: Product[] = Array.from({ length: 6 }, (_, batch) =>
+  PRODUCTS.map((product) => ({
+    ...product,
+    id: `${product.id}-${batch + 1}`,
+    name: batch === 0 ? product.name : `${product.name} ${batch + 1}`,
+    price: product.price + batch * 5,
+    rating: Math.max(3.8, Math.min(5, Number((product.rating - batch * 0.05).toFixed(1)))),
+  })),
+).flat()
 
 const BRANDS     = ['Nike', 'Adidas', 'New Balance']
 const CATEGORIES = ['Lifestyle', 'Running', 'Training']
@@ -52,6 +61,7 @@ const PRICE_CAPS = [
   { label: 'Under $150', max: 149 },
   { label: 'Under $200', max: 199 },
 ]
+const PAGE_SIZE = 6
 
 const COLOR_SWATCH: Record<string, string> = {
   Black: 'bg-zinc-900',
@@ -89,6 +99,46 @@ const EMPTY: Filters = { brands: [], categories: [], colors: [], maxPrice: null 
 
 function countActive(f: Filters) {
   return f.brands.length + f.categories.length + f.colors.length + (f.maxPrice !== null ? 1 : 0)
+}
+
+function readProductField(product: Product, field: string) {
+  return product[field as keyof Product]
+}
+
+function matchesBackendFilter(product: Product, filter: NonNullable<QueryParams['filters']>[number]) {
+  const value = readProductField(product, filter.field)
+  if (filter.op === 'in') {
+    return Array.isArray(filter.value) && filter.value.includes(value)
+  }
+  if (filter.op === 'lte') {
+    return typeof value === 'number' && value <= Number(filter.value)
+  }
+  return true
+}
+
+async function queryProducts(params: QueryParams): Promise<QueryResult<Product>> {
+  await new Promise((resolve) => setTimeout(resolve, 160))
+
+  let rows = CATALOG_PRODUCTS.filter((product) =>
+    (params.filters ?? []).every((filter) => matchesBackendFilter(product, filter)),
+  )
+
+  const sort = params.sort?.[0]
+  if (sort) {
+    rows = [...rows].sort((a, b) => {
+      const left = readProductField(a, sort.field)
+      const right = readProductField(b, sort.field)
+      const result = typeof left === 'number' && typeof right === 'number'
+        ? left - right
+        : String(left ?? '').localeCompare(String(right ?? ''))
+      return sort.desc ? -result : result
+    })
+  }
+
+  const total = rows.length
+  const offset = params.offset ?? 0
+  const limit = params.limit ?? PAGE_SIZE
+  return { rows: rows.slice(offset, offset + limit), total }
 }
 
 // ─── Small pieces ─────────────────────────────────────────────────────────────
@@ -216,6 +266,11 @@ function FilterSidebar({
 export function BrowseBodyTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
   const [filters, setFilters] = useState<Filters>(EMPTY)
   const [sort, setSort] = useState('featured')
+  const [rows, setRows] = useState<Product[]>([])
+  const [total, setTotal] = useState(0)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isFetchingNextPage, setIsFetchingNextPage] = useState(false)
+  const requestSeq = useRef(0)
 
   const toggle = (key: keyof Pick<Filters, 'brands' | 'categories' | 'colors'>, value: string) =>
     setFilters((f) => ({
@@ -223,19 +278,46 @@ export function BrowseBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
       [key]: f[key].includes(value) ? f[key].filter((v) => v !== value) : [...f[key], value],
     }))
 
-  const filteredProducts = useMemo(() => {
-    const list = PRODUCTS.filter((p) => {
-      if (filters.brands.length     && !filters.brands.includes(p.brand))       return false
-      if (filters.categories.length && !filters.categories.includes(p.category)) return false
-      if (filters.colors.length     && !filters.colors.includes(p.color))       return false
-      return !(filters.maxPrice !== null && p.price > filters.maxPrice);
+  const queryParams = useMemo<QueryParams>(() => ({
+    filters: [
+      ...(filters.brands.length ? [{ field: 'brand', op: 'in' as const, value: filters.brands }] : []),
+      ...(filters.categories.length ? [{ field: 'category', op: 'in' as const, value: filters.categories }] : []),
+      ...(filters.colors.length ? [{ field: 'color', op: 'in' as const, value: filters.colors }] : []),
+      ...(filters.maxPrice !== null ? [{ field: 'price', op: 'lte' as const, value: filters.maxPrice }] : []),
+    ],
+    sort: sort === 'price-asc'
+      ? [{ field: 'price', desc: false }]
+      : sort === 'price-desc'
+        ? [{ field: 'price', desc: true }]
+        : sort === 'rating'
+          ? [{ field: 'rating', desc: true }]
+          : [],
+  }), [filters, sort])
 
-    })
-    if (sort === 'price-asc')  return [...list].sort((a, b) => a.price - b.price)
-    if (sort === 'price-desc') return [...list].sort((a, b) => b.price - a.price)
-    if (sort === 'rating')     return [...list].sort((a, b) => b.rating - a.rating)
-    return list
-  }, [filters, sort])
+  useEffect(() => {
+    const seq = ++requestSeq.current
+    setIsLoading(true)
+    void queryProducts({ ...queryParams, limit: PAGE_SIZE, offset: 0 })
+      .then((result) => {
+        if (seq !== requestSeq.current) return
+        setRows(result.rows)
+        setTotal(result.total)
+      })
+      .finally(() => {
+        if (seq === requestSeq.current) setIsLoading(false)
+      })
+  }, [queryParams])
+
+  const fetchNextPage = useCallback(() => {
+    if (isFetchingNextPage || rows.length >= total) return
+    setIsFetchingNextPage(true)
+    void queryProducts({ ...queryParams, limit: PAGE_SIZE, offset: rows.length })
+      .then((result) => {
+        setRows((current) => [...current, ...result.rows])
+        setTotal(result.total)
+      })
+      .finally(() => setIsFetchingNextPage(false))
+  }, [isFetchingNextPage, queryParams, rows.length, total])
 
   const activeCount = countActive(filters)
 
@@ -250,7 +332,7 @@ export function BrowseBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
   const toolbar = (
     <>
       <span className="text-sm text-muted-foreground shrink-0">
-        {filteredProducts.length} products
+        {isLoading ? 'Loading products...' : `${rows.length} of ${total} products`}
       </span>
       <div className="flex-1" />
       <Select value={sort} onValueChange={(v) => v && setSort(v)}>
@@ -287,11 +369,15 @@ export function BrowseBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
       toolbar={toolbar}
     >
       <DataGridCard
-        data={filteredProducts}
+        data={rows}
         columns={columns}
         getRowId={(row) => row.id}
         minCardWidth={180}
         minColumns={2}
+        isLoading={isLoading}
+        hasNextPage={rows.length < total}
+        isFetchingNextPage={isFetchingNextPage}
+        fetchNextPage={fetchNextPage}
         renderCard={(row) => <ProductCard product={row.original} />}
       />
     </BrowseBodyTemplate>
@@ -301,11 +387,11 @@ export function BrowseBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
 export function buildBrowseBodyTemplateCode({ themeProp }: TemplateCodeContext) {
   return [
     `import { BrowseBodyTemplate, PageTopBar, Checkbox, Separator } from '@loykin/designkit'`,
-    `import { DataGridCard, type DataGridColumnDef } from '@loykin/gridkit'`,
+    `import { DataGridCard, type DataGridColumnDef, type QueryParams } from '@loykin/gridkit'`,
     ``,
     `export function ProductListPage() {`,
     `  const [filters, setFilters] = useState(EMPTY_FILTERS)`,
-    `  const filtered = useMemo(() => applyFilters(products, filters), [filters])`,
+    `  const { rows, total, isLoading, isFetchingNextPage, fetchNextPage } = useBackendProducts(filters)`,
     ``,
     `  return (`,
     `    <BrowseBodyTemplate${themeProp}`,
@@ -315,11 +401,14 @@ export function buildBrowseBodyTemplateCode({ themeProp }: TemplateCodeContext) 
     `      toolbar={<SortToolbar />}`,
     `    >`,
     `      <DataGridCard`,
-    `        data={filtered}`,
+    `        data={rows}`,
     `        columns={columns}`,
     `        getRowId={(row) => row.id}`,
-    `        tableHeight={480}`,
     `        minCardWidth={180}`,
+    `        isLoading={isLoading}`,
+    `        hasNextPage={rows.length < total}`,
+    `        isFetchingNextPage={isFetchingNextPage}`,
+    `        fetchNextPage={fetchNextPage}`,
     `        renderCard={(row) => <ProductCard product={row.original} />}`,
     `      />`,
     `    </BrowseBodyTemplate>`,

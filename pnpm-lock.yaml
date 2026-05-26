@@ -43,8 +43,8 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.4.0(jiti@2.7.0))
       '@loykin/gridkit':
-        specifier: ^0.1.20
-        version: 0.1.20(@tanstack/react-table@8.21.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@tanstack/react-virtual@3.13.25(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.15)(immer@11.1.8)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))
+        specifier: ^0.1.21
+        version: 0.1.21(@tanstack/react-table@8.21.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@tanstack/react-virtual@3.13.25(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.15)(immer@11.1.8)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))
       '@types/node':
         specifier: ^25.6.2
         version: 25.9.1
@@ -711,8 +711,8 @@ packages:
       react-grid-layout:
         optional: true
 
-  '@loykin/gridkit@0.1.20':
-    resolution: {integrity: sha512-AbRtRyBqJekBWvf1YIsZZ4TBE5Y4+tgJik24XxvD/BgmtUY4KcgI5pNIYPW5SNMFr0+/ijwghMKNr3OFW+jsOg==}
+  '@loykin/gridkit@0.1.21':
+    resolution: {integrity: sha512-Q3D7hY/drRU7sqxvgNq8HsMRo9H6d+UgU6lqsL4uoGiAw2UeuFN6fCX8cz7WSArFg2F2CDxyrjbLyaGiJafJRA==}
     peerDependencies:
       '@tanstack/react-table': ^8.21.3
       '@tanstack/react-virtual': ^3.13.24
@@ -3927,7 +3927,7 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  '@loykin/gridkit@0.1.20(@tanstack/react-table@8.21.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@tanstack/react-virtual@3.13.25(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.15)(immer@11.1.8)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))':
+  '@loykin/gridkit@0.1.21(@tanstack/react-table@8.21.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@tanstack/react-virtual@3.13.25(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(@types/react@19.2.15)(immer@11.1.8)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))':
     dependencies:
       '@dnd-kit/core': 6.3.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@dnd-kit/sortable': 10.0.0(@dnd-kit/core@6.3.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)
