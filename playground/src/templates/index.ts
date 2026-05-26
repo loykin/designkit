@@ -1,7 +1,7 @@
 import { createElement, type ComponentType } from 'react'
 import type { TemplateId } from '@loykin/designkit'
 import { TypographyBodyTemplate, ColorsBodyTemplate } from '@loykin/designkit'
-import { FileText, LayoutDashboard, Table2, Layers, Type, Palette, KeyRound, BarChart2 } from 'lucide-react'
+import { FileText, LayoutDashboard, Table2, Layers, Type, Palette, KeyRound, BarChart2, PanelTop } from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
 import type { TemplateCodeBuilder } from './code'
 
@@ -63,6 +63,10 @@ import { LoginResetDemo, buildLoginResetCode } from './demos/auth/LoginResetDemo
 import { LoginOtpDemo, buildLoginOtpCode } from './demos/auth/LoginOtpDemo'
 import { DashboardBodyTemplateDemo, buildDashboardTemplateCode } from './demos/dashboard/DashboardBodyTemplateDemo'
 import { BrowseBodyTemplateDemo, buildBrowseBodyTemplateCode } from './demos/browse/BrowseBodyTemplateDemo'
+import {
+  DetailBodyTemplateDemo as ProductDetailBodyTemplateDemo,
+  buildDetailTemplateCode,
+} from './demos/detail/DetailBodyTemplateDemo'
 
 function DataGridTemplatePreview(props: {
   theme?: React.CSSProperties
@@ -126,6 +130,7 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   'login-otp': LoginOtpDemo,
   dashboard: DashboardBodyTemplateDemo,
   browse: BrowseBodyTemplateDemo,
+  detail: ProductDetailBodyTemplateDemo,
 }
 
 const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
@@ -149,6 +154,7 @@ const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
   sectioned: buildSectionedBodyTemplateCode,
   dashboard: buildDashboardTemplateCode,
   browse: buildBrowseBodyTemplateCode,
+  detail: buildDetailTemplateCode,
 }
 
 export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
@@ -170,6 +176,7 @@ const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>
   colors: Palette,
   login: KeyRound,
   dashboard: BarChart2,
+  detail: PanelTop,
 }
 
 const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: string }>>> = {
@@ -179,7 +186,7 @@ const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: st
   DashboardBodyTemplate: BarChart2,
 }
 
-const navigationLabelOrder = ['Common', 'DataBodyTemplate', 'FormWizardBodyTemplate', 'LoginBodyTemplate', 'DashboardBodyTemplate']
+const navigationLabelOrder = ['Common', 'DataBodyTemplate', 'DetailBodyTemplate', 'FormWizardBodyTemplate', 'LoginBodyTemplate', 'DashboardBodyTemplate']
 
 export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder
   .map((groupId) => {

@@ -18,6 +18,12 @@ export type { DashboardBodyTemplateProps, DashboardPanelProps } from './dashboar
 export { DataBodyTemplate } from './databody/DataBodyTemplate'
 export { BrowseBodyTemplate } from './browse/BrowseBodyTemplate'
 export type { BrowseBodyTemplateProps } from './browse/BrowseBodyTemplate'
+export { DetailBodyTemplate } from './detail/DetailBodyTemplate'
+export type {
+  DetailBodyTemplateProps,
+  DetailBodyTabProps,
+  DetailBodySectionProps,
+} from './detail/DetailBodyTemplate'
 export { FormWizardBodyTemplate } from './form/FormWizardBodyTemplate'
 export type {
   FormWizardBodyTemplateProps,

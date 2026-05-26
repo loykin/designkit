@@ -6,6 +6,7 @@ export type TemplateNavigationGroupId =
   | 'DataBodyTemplate'
   | 'FormWizardBodyTemplate'
   | 'LoginBodyTemplate'
+  | 'DetailBodyTemplate'
   | 'DashboardBodyTemplate'
   | 'Common'
 export type TemplateExportKind =
@@ -15,6 +16,7 @@ export type TemplateExportKind =
   | 'typography'
   | 'databody'
   | 'login'
+  | 'detail'
   | 'dashboard'
 
 export interface TemplateOptionChoice {
@@ -345,6 +347,17 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     exportKind: 'databody',
     preset: {},
     options: topBarOptions,
+  },
+  {
+    id: 'detail',
+    label: 'Detail',
+    navigationSubgroupLabel: 'Detail',
+    group: 'Pages',
+    navigationGroup: 'DetailBodyTemplate',
+    layoutClassName: 'layout-detail',
+    exportComponent: 'DetailBodyTemplate',
+    exportKind: 'detail',
+    preset: {},
   },
   // ── Common ───────────────────────────────────────────────────────────────────
   {
