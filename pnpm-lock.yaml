@@ -97,8 +97,8 @@ importers:
         specifier: ^5.2.8
         version: 5.2.9
       '@loykin/dashboardkit':
-        specifier: ^0.0.1
-        version: 0.0.1(@types/react@19.2.15)(immer@11.1.8)(react-dom@19.2.6(react@19.2.6))(react-grid-layout@2.2.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))
+        specifier: ^0.0.6
+        version: 0.0.6(@types/react@19.2.15)(immer@11.1.8)(react-dom@19.2.6(react@19.2.6))(react-grid-layout@2.2.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))
       '@loykin/designkit':
         specifier: workspace:*
         version: link:..
@@ -697,8 +697,8 @@ packages:
   '@lezer/lr@1.4.10':
     resolution: {integrity: sha512-rnCpTIBafOx4mRp43xOxDJbFipJm/c0cia/V5TiGlhmMa+wsSdoGmUN3w5Bqrks/09Q/D4tNAmWaT8p6NRi77A==}
 
-  '@loykin/dashboardkit@0.0.1':
-    resolution: {integrity: sha512-ehuuu1f+r5g7eLdTjd1VrkSN0ADCM2D3RcRKRhLwI2UbaYnczZfP4igWQURSwiEjRyAlwckKyC0wlkE5MJ/nBg==}
+  '@loykin/dashboardkit@0.0.6':
+    resolution: {integrity: sha512-NMoRZVXEC/s7qFOihOEUybtQz3o1BA8X09TJaxaVVL/ymz1rgQ7BhZteicgkE+f8b8aySbQfxYBr81Rh9umXFA==}
     peerDependencies:
       react: ^19.0.0
       react-dom: ^19.0.0
@@ -3914,7 +3914,7 @@ snapshots:
     dependencies:
       '@lezer/common': 1.5.2
 
-  '@loykin/dashboardkit@0.0.1(@types/react@19.2.15)(immer@11.1.8)(react-dom@19.2.6(react@19.2.6))(react-grid-layout@2.2.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))':
+  '@loykin/dashboardkit@0.0.6(@types/react@19.2.15)(immer@11.1.8)(react-dom@19.2.6(react@19.2.6))(react-grid-layout@2.2.3(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))':
     dependencies:
       zod: 3.25.76
       zustand: 5.0.13(@types/react@19.2.15)(immer@11.1.8)(react@19.2.6)(use-sync-external-store@1.6.0(react@19.2.6))

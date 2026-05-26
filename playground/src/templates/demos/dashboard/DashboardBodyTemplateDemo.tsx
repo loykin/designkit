@@ -10,7 +10,7 @@ import {
   SelectValue,
   Button,
 } from '@loykin/designkit'
-import { createDashboardEngine, builtinVariableTypes } from '@loykin/dashboardkit'
+import { createDashboardEngine } from '@loykin/dashboardkit'
 import { useLoadDashboard, useVariable, DashboardGrid } from '@loykin/dashboardkit/react'
 import type { PanelViewerProps, CoreEngineAPI, DashboardConfig } from '@loykin/dashboardkit'
 import { RefreshCw, Clock, PencilLine, Check, MoreVertical } from 'lucide-react'
@@ -19,11 +19,10 @@ import { timeSeriesPlugin } from './panels/TimeSeriesPanel'
 import { barChartPlugin } from './panels/BarChartPanel'
 import { tablePlugin } from './panels/TablePanel'
 import type { TemplateCodeContext } from '../../code'
-import 'react-grid-layout/css/styles.css'
 
 // ─── Engine (module-level, stable reference) ──────────────────────────────────
 
-const engine = createDashboardEngine({ variableTypes: builtinVariableTypes })
+const engine = createDashboardEngine()
 engine.registerPanel(statPlugin)
 engine.registerPanel(timeSeriesPlugin)
 engine.registerPanel(barChartPlugin)
@@ -294,14 +293,14 @@ export function DashboardBodyTemplateDemo({ theme }: { theme?: React.CSSProperti
 export function buildDashboardTemplateCode({ layoutClassName, themeProp }: TemplateCodeContext) {
   return [
     `import { DashboardBodyTemplate, DashboardPanel, PageTopBar } from '@loykin/designkit'`,
-    `import { createDashboardEngine, builtinVariableTypes } from '@loykin/dashboardkit'`,
+    `import { createDashboardEngine } from '@loykin/dashboardkit'`,
     `import { useLoadDashboard, useVariable, DashboardGrid } from '@loykin/dashboardkit/react'`,
     `import type { PanelViewerProps } from '@loykin/dashboardkit'`,
     `import '@loykin/designkit/styles'`,
-    `import 'react-grid-layout/css/styles.css'`,
+    `import '@loykin/dashboardkit/styles'`,
     ``,
     `// Register panel plugins once at module level`,
-    `const engine = createDashboardEngine({ variableTypes: builtinVariableTypes })`,
+    `const engine = createDashboardEngine()`,
     `engine.registerPanel(statPlugin)`,
     `engine.registerPanel(timeSeriesPlugin)`,
     `// ... register more panel types`,

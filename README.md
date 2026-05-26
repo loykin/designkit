@@ -180,21 +180,21 @@ Requires [`@loykin/dashboardkit`](https://github.com/loykin/dashboardkit) for th
 npm install @loykin/dashboardkit react-grid-layout
 ```
 
-Also import the grid layout CSS in your app:
+Also import DashboardKit's grid CSS in your app:
 
 ```ts
-import 'react-grid-layout/css/styles.css'
+import '@loykin/dashboardkit/styles'
 ```
 
 ```tsx
 import React, { useState, useMemo } from 'react'
 import { DashboardBodyTemplate, DashboardPanel, PageTopBar } from '@loykin/designkit'
-import { createDashboardEngine, builtinVariableTypes, definePanel } from '@loykin/dashboardkit'
+import { createDashboardEngine, definePanel } from '@loykin/dashboardkit'
 import { useLoadDashboard, useVariable, DashboardGrid } from '@loykin/dashboardkit/react'
 import type { PanelViewerProps } from '@loykin/dashboardkit'
 
 // Register panel types once at module level
-const engine = createDashboardEngine({ variableTypes: builtinVariableTypes })
+const engine = createDashboardEngine()
 engine.registerPanel(definePanel({
   id: 'stat',
   name: 'Stat',
