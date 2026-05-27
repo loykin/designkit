@@ -1,7 +1,7 @@
 import { createElement, type ComponentType } from 'react'
 import type { TemplateId } from '@loykin/designkit'
 import { TypographyBodyTemplate, ColorsBodyTemplate } from '@loykin/designkit'
-import { FileText, LayoutDashboard, Table2, Layers, Type, Palette, KeyRound, BarChart2, PanelTop } from 'lucide-react'
+import { FileText, LayoutDashboard, Table2, Layers, Type, Palette, KeyRound, BarChart2, PanelTop, PanelsTopLeft } from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
 import type { TemplateCodeBuilder } from './code'
 
@@ -62,6 +62,11 @@ import { LoginForgotDemo, buildLoginForgotCode } from './demos/auth/LoginForgotD
 import { LoginResetDemo, buildLoginResetCode } from './demos/auth/LoginResetDemo'
 import { LoginOtpDemo, buildLoginOtpCode } from './demos/auth/LoginOtpDemo'
 import { DashboardBodyTemplateDemo, buildDashboardTemplateCode } from './demos/dashboard/DashboardBodyTemplateDemo'
+import {
+  WorkbenchPanelEditorDemo,
+  WorkbenchSqlEditorDemo,
+  buildWorkbenchTemplateCode,
+} from './demos/workbench/WorkbenchBodyTemplateDemos'
 import { BrowseBodyTemplateDemo, buildBrowseBodyTemplateCode } from './demos/browse/BrowseBodyTemplateDemo'
 import {
   DetailBodyTemplateDemo as ProductDetailBodyTemplateDemo,
@@ -135,6 +140,8 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   'login-reset': LoginResetDemo,
   'login-otp': LoginOtpDemo,
   dashboard: DashboardBodyTemplateDemo,
+  'workbench-panel-editor': WorkbenchPanelEditorDemo,
+  'workbench-sql-editor': WorkbenchSqlEditorDemo,
   browse: BrowseBodyTemplateDemo,
   detail: createDetailPreview('media'),
   'detail-record': createDetailPreview('record'),
@@ -161,6 +168,8 @@ const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
   'form-inline': buildFormInlineBodyTemplateCode,
   sectioned: buildSectionedBodyTemplateCode,
   dashboard: buildDashboardTemplateCode,
+  'workbench-panel-editor': buildWorkbenchTemplateCode,
+  'workbench-sql-editor': buildWorkbenchTemplateCode,
   browse: buildBrowseBodyTemplateCode,
   detail: buildDetailTemplateCode,
   'detail-record': buildDetailTemplateCode,
@@ -186,6 +195,8 @@ const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>
   colors: Palette,
   login: KeyRound,
   dashboard: BarChart2,
+  'workbench-panel-editor': PanelsTopLeft,
+  'workbench-sql-editor': PanelsTopLeft,
   detail: PanelTop,
   'detail-record': PanelTop,
   'detail-full': PanelTop,
@@ -196,9 +207,10 @@ const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: st
   FormWizardBodyTemplate: Layers,
   LoginBodyTemplate: KeyRound,
   DashboardBodyTemplate: BarChart2,
+  WorkbenchBodyTemplate: PanelsTopLeft,
 }
 
-const navigationLabelOrder = ['Common', 'DataBodyTemplate', 'DetailBodyTemplate', 'FormWizardBodyTemplate', 'LoginBodyTemplate', 'DashboardBodyTemplate']
+const navigationLabelOrder = ['Common', 'DataBodyTemplate', 'DetailBodyTemplate', 'FormWizardBodyTemplate', 'LoginBodyTemplate', 'DashboardBodyTemplate', 'WorkbenchBodyTemplate']
 
 export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder
   .map((groupId) => {

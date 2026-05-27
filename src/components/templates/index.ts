@@ -15,6 +15,8 @@ export interface TemplateNavigationGroup {
 
 export { DashboardBodyTemplate, DashboardPanel } from './dashboard/DashboardBodyTemplate'
 export type { DashboardBodyTemplateProps, DashboardPanelProps } from './dashboard/DashboardBodyTemplate'
+export { WorkbenchBodyTemplate } from './workbench/WorkbenchBodyTemplate'
+export type { WorkbenchBodyTemplateProps } from './workbench/WorkbenchBodyTemplate'
 export { DataBodyTemplate } from './databody/DataBodyTemplate'
 export { BrowseBodyTemplate } from './browse/BrowseBodyTemplate'
 export type { BrowseBodyTemplateProps } from './browse/BrowseBodyTemplate'

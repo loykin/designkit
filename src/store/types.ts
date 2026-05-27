@@ -22,6 +22,8 @@ export type TemplateId =
   | 'login-reset'
   | 'login-otp'
   | 'dashboard'
+  | 'workbench-panel-editor'
+  | 'workbench-sql-editor'
   | 'browse'
   | 'detail'
   | 'detail-record'

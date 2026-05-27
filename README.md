@@ -300,6 +300,44 @@ Panel card component. Wrap your panel viewer in `DashboardPanel` for consistent 
 
 ---
 
+### WorkbenchBodyTemplate
+
+Resizable editor/workbench shell for products like panel editors, SQL editors, log explorers, and data workspaces. The template owns the pane chrome and resize handles; the app owns editor, preview, inspector, schema, and result content.
+
+```tsx
+import { WorkbenchBodyTemplate, PageTopBar, Button } from '@loykin/designkit'
+
+export function SqlEditorPage() {
+  return (
+    <WorkbenchBodyTemplate
+      topBar={<PageTopBar left="Data / Query editor" />}
+      title="SQL editor"
+      headerRight={<Button variant="outline" size="sm">Run</Button>}
+      leftPane={<SchemaBrowser />}
+      mainPane={<SqlEditor />}
+      bottomPane={<ResultsGrid />}
+      resizable
+    />
+  )
+}
+```
+
+**WorkbenchBodyTemplate props:**
+
+| Prop | Type | Description |
+|---|---|---|
+| `topBar` | `ReactNode` | Top bar above the workbench |
+| `title` / `description` | `ReactNode` | Header copy above the panes |
+| `headerRight` / `actions` | `ReactNode` | Header action slots |
+| `leftPane` / `rightPane` | `ReactNode` | Optional side panes |
+| `mainPane` | `ReactNode` | Primary editor or preview area |
+| `bottomPane` | `ReactNode` | Optional result, query, or logs pane |
+| `resizable` | `boolean` | Enables pane drag handles |
+| `leftPaneCollapsed` / `rightPaneCollapsed` / `bottomPaneCollapsed` | `boolean` | Hides optional panes while preserving the template layout model |
+| `leftPaneWidth` / `rightPaneWidth` / `bottomPaneHeight` | `number` | Initial pane sizes in pixels |
+
+---
+
 ### FormWizardBodyTemplate
 
 Multi-step input wizard. Wraps each step's `content` in a `<form>` element automatically.

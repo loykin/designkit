@@ -1,13 +1,14 @@
 import type { TemplateOverride, TemplateId } from '@loykin/designkit'
 import type { DataGridTemplateVariant } from './demos/table/DataGridTemplateDemo'
 
-export type TemplateGroup = 'Table' | 'Pages' | 'Design' | 'Auth' | 'Dashboard'
+export type TemplateGroup = 'Table' | 'Pages' | 'Design' | 'Auth' | 'Dashboard' | 'Workbench'
 export type TemplateNavigationGroupId =
   | 'DataBodyTemplate'
   | 'FormWizardBodyTemplate'
   | 'LoginBodyTemplate'
   | 'DetailBodyTemplate'
   | 'DashboardBodyTemplate'
+  | 'WorkbenchBodyTemplate'
   | 'Common'
 export type TemplateExportKind =
   | 'data-grid'
@@ -18,6 +19,7 @@ export type TemplateExportKind =
   | 'login'
   | 'detail'
   | 'dashboard'
+  | 'workbench'
 
 export interface TemplateOptionChoice {
   value: string
@@ -481,6 +483,29 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-dashboard',
     exportComponent: 'DashboardBodyTemplate',
     exportKind: 'dashboard',
+    preset: {},
+  },
+  // -- WorkbenchBodyTemplate ----------------------------------------------------
+  {
+    id: 'workbench-panel-editor',
+    label: 'Panel Editor',
+    navigationSubgroupLabel: 'Workbench',
+    group: 'Workbench',
+    navigationGroup: 'WorkbenchBodyTemplate',
+    layoutClassName: 'layout-workbench-panel-editor',
+    exportComponent: 'WorkbenchBodyTemplate',
+    exportKind: 'workbench',
+    preset: {},
+  },
+  {
+    id: 'workbench-sql-editor',
+    label: 'SQL Editor',
+    group: 'Workbench',
+    navigationGroup: 'WorkbenchBodyTemplate',
+    navigationParent: 'workbench-panel-editor',
+    layoutClassName: 'layout-workbench-sql-editor',
+    exportComponent: 'WorkbenchBodyTemplate',
+    exportKind: 'workbench',
     preset: {},
   },
 ]
