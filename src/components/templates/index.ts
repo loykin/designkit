@@ -21,8 +21,10 @@ export type { BrowseBodyTemplateProps } from './browse/BrowseBodyTemplate'
 export { DetailBodyTemplate } from './detail/DetailBodyTemplate'
 export type {
   DetailBodyTemplateProps,
+  DetailBodyHeaderProps,
   DetailBodyTabProps,
   DetailBodySectionProps,
+  DetailBodyVariant,
 } from './detail/DetailBodyTemplate'
 export { FormWizardBodyTemplate } from './form/FormWizardBodyTemplate'
 export type {

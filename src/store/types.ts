@@ -24,6 +24,8 @@ export type TemplateId =
   | 'dashboard'
   | 'browse'
   | 'detail'
+  | 'detail-record'
+  | 'detail-full'
 
 export interface GlobalTheme {
   radius: number

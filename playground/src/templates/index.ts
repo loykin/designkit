@@ -68,6 +68,12 @@ import {
   buildDetailTemplateCode,
 } from './demos/detail/DetailBodyTemplateDemo'
 
+function createDetailPreview(detailVariant: 'media' | 'record' | 'full') {
+  return function DetailPreview({ theme }: { theme?: React.CSSProperties }) {
+    return createElement(ProductDetailBodyTemplateDemo, { theme, detailVariant })
+  }
+}
+
 function DataGridTemplatePreview(props: {
   theme?: React.CSSProperties
   variant: DataGridTemplateVariant
@@ -130,7 +136,9 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   'login-otp': LoginOtpDemo,
   dashboard: DashboardBodyTemplateDemo,
   browse: BrowseBodyTemplateDemo,
-  detail: ProductDetailBodyTemplateDemo,
+  detail: createDetailPreview('media'),
+  'detail-record': createDetailPreview('record'),
+  'detail-full': createDetailPreview('full'),
 }
 
 const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
@@ -155,6 +163,8 @@ const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
   dashboard: buildDashboardTemplateCode,
   browse: buildBrowseBodyTemplateCode,
   detail: buildDetailTemplateCode,
+  'detail-record': buildDetailTemplateCode,
+  'detail-full': buildDetailTemplateCode,
 }
 
 export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
@@ -177,6 +187,8 @@ const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>
   login: KeyRound,
   dashboard: BarChart2,
   detail: PanelTop,
+  'detail-record': PanelTop,
+  'detail-full': PanelTop,
 }
 
 const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: string }>>> = {
