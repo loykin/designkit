@@ -2,6 +2,9 @@
 
 React page template library. Provides ready-to-use page layouts for admin and dashboard applications.
 
+For AI-assisted implementation in consuming applications, see the
+[DesignKit Consumer Agent Guide](docs/consumer-guide.md).
+
 ## Installation
 
 ```bash
