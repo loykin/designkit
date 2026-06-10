@@ -82,6 +82,8 @@ const userColumns: DataGridColumnDef<User>[] = [
     id: 'role',
     accessorKey: 'role',
     header: 'Role',
+    size: 100,
+    meta: { cellOverflow: 'visible' },
     cell: ({ row }) => (
       <Badge variant="outline" className="text-xs font-normal">
         {row.original.role}
@@ -92,6 +94,8 @@ const userColumns: DataGridColumnDef<User>[] = [
     id: 'status',
     accessorKey: 'status',
     header: 'Status',
+    size: 100,
+    meta: { cellOverflow: 'visible' },
     cell: ({ row }) => (
       <Badge variant={statusVariant[row.original.status]} className="text-xs capitalize">
         {row.original.status}
@@ -102,6 +106,7 @@ const userColumns: DataGridColumnDef<User>[] = [
     id: 'joined',
     accessorKey: 'joined',
     header: 'Joined',
+    size: 120,
     cell: ({ row }) => <span className="text-xs text-muted-foreground">{row.original.joined}</span>,
   },
 ]
@@ -194,6 +199,8 @@ const recentColumns: DataGridColumnDef<User>[] = [
     id: 'role',
     accessorKey: 'role',
     header: 'Role',
+    size: 100,
+    meta: { cellOverflow: 'visible' },
     cell: ({ row }) => (
       <Badge variant="outline" className="text-xs font-normal">
         {row.original.role}
@@ -204,6 +211,8 @@ const recentColumns: DataGridColumnDef<User>[] = [
     id: 'status',
     accessorKey: 'status',
     header: 'Status',
+    size: 100,
+    meta: { cellOverflow: 'visible' },
     cell: ({ row }) => (
       <Badge variant={statusVariant[row.original.status]} className="text-xs capitalize">
         {row.original.status}
@@ -214,6 +223,7 @@ const recentColumns: DataGridColumnDef<User>[] = [
     id: 'joined',
     accessorKey: 'joined',
     header: 'Joined',
+    size: 120,
     cell: ({ row }) => <span className="text-xs text-muted-foreground">{row.original.joined}</span>,
   },
 ]

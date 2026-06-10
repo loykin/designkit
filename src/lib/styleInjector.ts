@@ -213,6 +213,7 @@ export function buildTemplateTheme(
     radius: number
     primaryHue: number
     primaryChroma: number
+    darkMode?: boolean
     density?: DensityId
     fontScale?: number
     lineHeight?: number
@@ -226,7 +227,7 @@ export function buildTemplateTheme(
     toolbarHeight?: string
   } = {},
 ): React.CSSProperties {
-  return buildTokenMap({
+  const tokens = buildTokenMap({
     radius: ov.radius ?? g.radius,
     primaryHue: g.primaryHue,
     primaryChroma: ov.primaryChroma ?? g.primaryChroma,
@@ -236,5 +237,11 @@ export function buildTemplateTheme(
     toolbarHeight: ov.toolbarHeight,
     fontScale: g.fontScale ?? 1,
     lineHeight: g.lineHeight ?? 1,
-  }) as React.CSSProperties
+  })
+
+  if (g.darkMode) {
+    Object.assign(tokens, buildDarkTonalTokens(g.primaryHue, ov.primaryChroma ?? g.primaryChroma))
+  }
+
+  return tokens as React.CSSProperties
 }

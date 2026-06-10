@@ -50,13 +50,13 @@
 
 .dark {
   --dk-background: var(--background, oklch(0.145 0 0));
-  --dk-foreground: var(--foreground, oklch(0.985 0 0));
+  --dk-foreground: var(--foreground, oklch(0.685 0 0));
   --dk-card: var(--card, oklch(0.205 0 0));
-  --dk-card-foreground: var(--card-foreground, oklch(0.985 0 0));
+  --dk-card-foreground: var(--card-foreground, oklch(0.712 0 0));
   --dk-muted: var(--muted, oklch(0.269 0 0));
-  --dk-muted-foreground: var(--muted-foreground, oklch(0.708 0 0));
-  --dk-border: var(--border, oklch(1 0 0 / 10%));
-  --dk-input: var(--input, oklch(1 0 0 / 15%));
+  --dk-muted-foreground: var(--muted-foreground, oklch(0.580 0 0));
+  --dk-border: var(--border, oklch(1 0 0 / 18%));
+  --dk-input: var(--input, oklch(1 0 0 / 22%));
   /* dark mode: background보다 약간 밝게, 반투명 */
   --dk-header: oklch(0.22 0 0 / 0.88);
 }
