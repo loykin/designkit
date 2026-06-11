@@ -159,10 +159,18 @@ function AppView() {
   )
 }
 
+function TemplateRedirect() {
+  const { templateId = 'table' } = useParams()
+  const validTemplate = TEMPLATES.find((t) => t.id === templateId)
+
+  return <Navigate to={`/sidebar/${validTemplate ? templateId : 'table'}`} replace />
+}
+
 export default function App() {
   return (
     <Routes>
       <Route path="/:shell/:templateId" element={<AppView />} />
+      <Route path="/:templateId" element={<TemplateRedirect />} />
       <Route path="*" element={<Navigate to="/sidebar/table" replace />} />
     </Routes>
   )
