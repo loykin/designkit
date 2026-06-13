@@ -1,0 +1,12 @@
+/*
+ * Build-only entry point for the Tailwind CLI (scripts/build-css.mjs).
+ * Do NOT import this file from application code or the playground.
+ *
+ * index.css is imported directly by the playground (playground/src/main.tsx)
+ * and by consumers at runtime, so it must stay free of Tailwind directives.
+ * Tailwind directives placed in index.css break the playground's CSS layer
+ * ordering and can conflict with the consumer's own Tailwind setup.
+ */
+@import "./index.css";
+@import "tailwindcss/utilities";
+@source "../**/*.{ts,tsx}";
