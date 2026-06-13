@@ -20,14 +20,7 @@ Import the styles in your global CSS:
 @import "@loykin/designkit/styles";
 ```
 
-If your app builds Tailwind utilities from package source, include designkit in
-your Tailwind scan sources:
-
-```css
-@source "@loykin/designkit";
-```
-
-You can also import the stylesheet from your app entry, as shown below.
+The styles file includes pre-built Tailwind utility classes — no `@source` configuration required. You can also import the stylesheet from your app entry, as shown below.
 
 ## Quick Start
 
@@ -140,6 +133,16 @@ Groups content within a tab or section. The `layout` prop controls the visual st
 | `stacked` | Label above, input below |
 | `inline` | Table-style rows (detail view) |
 | `split` | Left list + right detail |
+
+| Prop | Type | Description |
+|---|---|---|
+| `layout` | `GroupLayout` | Visual structure — see table above |
+| `variant` | `'card' \| 'plain' \| 'bordered'` | Wrapper style (defaults per layout) |
+| `title` | `ReactNode` | Group heading |
+| `description` | `ReactNode` | Subtitle below the heading |
+| `actions` | `ReactNode` | Action slot next to the heading |
+| `danger` | `boolean` | Renders title in destructive color |
+| `className` | `string` | Class applied to the group root element |
 
 ```tsx
 <DataBodyTemplate.Tab id="settings" label="Settings">
@@ -505,6 +508,20 @@ Or via `theme` prop:
   title="Settings"
 >
 ```
+
+---
+
+## Using with gridkit
+
+If your app also uses `@loykin/gridkit`, import its styles **after** designkit:
+
+```css
+@import "tailwindcss";
+@import "@loykin/designkit/styles";
+@import "@loykin/gridkit/styles";  /* must come last — uses @layer gridkit */
+```
+
+gridkit registers a named `@layer gridkit`. Importing it before `tailwindcss` or `designkit/styles` causes layer ordering conflicts where utility overrides resolve incorrectly.
 
 ---
 

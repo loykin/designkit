@@ -29,12 +29,20 @@ Import the published design tokens:
 import '@loykin/designkit/styles'
 ```
 
-DesignKit currently uses Tailwind CSS v4 utilities. Include the package in the
-application's Tailwind source scan:
+DesignKit currently uses Tailwind CSS v4 utilities. The published styles file
+includes pre-built utility classes, so no `@source` configuration is required:
 
 ```css
 @import "tailwindcss";
-@source "@loykin/designkit";
+@import "@loykin/designkit/styles";
+```
+
+If the application also uses `@loykin/gridkit`, import gridkit styles last:
+
+```css
+@import "tailwindcss";
+@import "@loykin/designkit/styles";
+@import "@loykin/gridkit/styles";  /* must come last — uses @layer gridkit */
 ```
 
 The application must define the semantic Tailwind/shadcn variables it wants to
@@ -83,8 +91,12 @@ component already supplied by DesignKit.
 | Filter sidebar and browse results | `BrowseBodyTemplate` |
 | Authentication page | `LoginBodyTemplate` |
 
-Use `DataPage` only when composing a reusable structure that is not covered by
-a higher-level template.
+Avoid using `DataPage` directly in application pages. `DataPage` is a low-level
+layout primitive that the body templates compose internally. Consuming it
+directly bypasses the template-level integration: the `theme` prop, shell
+coordination, and density tokens will not apply. Use one of the body templates
+above and reach for `DataPage` only when building a new reusable template that
+is not covered by any existing one.
 
 ## Supported Customization
 

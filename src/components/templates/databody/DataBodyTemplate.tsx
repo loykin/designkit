@@ -95,6 +95,7 @@ export interface DataBodyGroupProps {
   description?: React.ReactNode
   actions?: React.ReactNode
   danger?: boolean
+  className?: string
   children?: React.ReactNode
 }
 
@@ -157,6 +158,7 @@ function renderGroupProps(props: DataBodyGroupProps) {
     description,
     actions,
     danger,
+    className,
     children,
   } = props
   const variant = variantProp ?? layoutDefaultVariant[layout]
@@ -164,7 +166,7 @@ function renderGroupProps(props: DataBodyGroupProps) {
   if (layout === 'split') {
     const panes = Children.toArray(children)
     return (
-      <div className="py-(--dk-panel-gap)">
+      <div className={cn('py-(--dk-panel-gap)', className)}>
         {(title || description || actions) && (
           <div className="mb-3 flex items-start justify-between">
             <div>
@@ -191,7 +193,7 @@ function renderGroupProps(props: DataBodyGroupProps) {
 
   if (layout === 'horizontal') {
     return (
-      <div className="grid grid-cols-3 gap-[calc(var(--dk-panel-gap)*2)] py-(--dk-panel-gap)">
+      <div className={cn('grid grid-cols-3 gap-[calc(var(--dk-panel-gap)*2)] py-(--dk-panel-gap)', className)}>
         <div>
           <p className={cn('text-sm font-medium', danger && 'text-destructive')}>{title}</p>
           {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
@@ -208,7 +210,7 @@ function renderGroupProps(props: DataBodyGroupProps) {
 
   if (layout === 'inline') {
     return (
-      <div className="py-(--dk-panel-gap)">
+      <div className={cn('py-(--dk-panel-gap)', className)}>
         {(title || description) && (
           <div className="mb-2 flex items-start justify-between">
             <div>
@@ -231,7 +233,7 @@ function renderGroupProps(props: DataBodyGroupProps) {
 
   // stacked (default)
   return (
-    <div className="py-(--dk-panel-gap)">
+    <div className={cn('py-(--dk-panel-gap)', className)}>
       <div className="flex items-start justify-between">
         <div>
           <h2 className={cn('text-sm font-semibold', danger && 'text-destructive')}>{title}</h2>
