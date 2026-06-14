@@ -3,7 +3,9 @@ import { WorkbenchBodyTemplate, PageTopBar, Button, Badge } from '@loykin/design
 import { cn } from '@loykin/designkit'
 import { DataGridAgentChat } from '@loykin/gridkit'
 import type { AgentChatEvent } from '@loykin/gridkit'
-import { Send, Database, MessageSquare, Plus } from 'lucide-react'
+import { ChartRenderer } from '@loykin/chartkit'
+import type { ChartSpec } from '@loykin/chartkit'
+import { Send, Database, MessageSquare, Plus, BarChart2 } from 'lucide-react'
 import type { TemplateCodeContext } from '../../code'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -53,12 +55,15 @@ const SEED_EVENTS: AgentChatEvent[] = [
     output: { rows: [{ plan: 'free', users: 2840 }, { plan: 'pro', users: 1102 }, { plan: 'enterprise', users: 276 }], duration_ms: 21 },
   },
   {
-    id: 'art1', type: 'artifact', kind: 'table', title: 'Active Users by Plan',
-    data: [
-      { plan: 'Free',       users: 2840, share: '67%' },
-      { plan: 'Pro',        users: 1102, share: '26%' },
-      { plan: 'Enterprise', users: 276,  share: '7%'  },
-    ],
+    id: 'art1', type: 'artifact', kind: 'chart', title: 'Active Users by Plan',
+    data: {
+      type: 'bar',
+      categories: ['Free', 'Pro', 'Enterprise'],
+      series: [{ label: 'Users', color: 'oklch(0.6 0.15 220)', values: [2840, 1102, 276] }],
+      yUnit: 'users',
+      orientation: 'vertical',
+      height: 200,
+    } satisfies ChartSpec,
   },
   {
     id: 'a2', type: 'message', role: 'assistant',
@@ -78,19 +83,50 @@ let _seq = 100
 
 function nextId() { return `gen-${++_seq}` }
 
+const now = Math.floor(Date.now() / 1000)
+const DAY_TS = Array.from({ length: 24 }, (_, i) => now - (23 - i) * 3600)
+
 const RESPONSES = [
-  (q: string): AgentChatEvent[] => [
-    { id: nextId(), type: 'status',      label: `Processing: "${q}"`, status: 'complete' },
-    { id: nextId(), type: 'tool_call',   name: 'query_database', status: 'complete', input: { sql: `SELECT * FROM metrics WHERE topic = '${q.toLowerCase().split(' ')[0]}'` } },
-    { id: nextId(), type: 'tool_result', name: 'query_database', output: { rows: 14, duration_ms: 27 } },
-    { id: nextId(), type: 'message',     role: 'assistant', content: `I found 14 matching records. The trend over the last 30 days shows a steady 8% week-over-week increase. Want me to break this down further?` },
+  (_q: string): AgentChatEvent[] => [
+    { id: nextId(), type: 'status',      label: 'Querying time-series data…', status: 'complete' },
+    { id: nextId(), type: 'tool_call',   name: 'query_timeseries', status: 'complete', input: { metric: 'request_rate', window: '24h', step: '1h' } },
+    { id: nextId(), type: 'tool_result', name: 'query_timeseries', output: { points: 24, min: 820, max: 4210, avg: 2380 } },
+    {
+      id: nextId(), type: 'artifact', kind: 'chart', title: 'Request Rate — Last 24h',
+      data: {
+        type: 'timeseries',
+        data: [DAY_TS, DAY_TS.map(() => Math.round(800 + Math.random() * 3400))],
+        series: [{ label: 'req/s', color: 'oklch(0.6 0.15 220)', type: 'area', fillOpacity: 0.15 }],
+        yUnit: 'req/s',
+        height: 180,
+      } satisfies ChartSpec,
+    },
+    { id: nextId(), type: 'message', role: 'assistant', content: 'Request rate peaked at **4,210 req/s** around 2 PM and dipped to 820 at 4 AM. Overall average is 2,380 req/s. Traffic pattern looks healthy — no anomalies detected.' },
   ],
-  (q: string): AgentChatEvent[] => [
-    { id: nextId(), type: 'status',      label: 'Running analysis…', status: 'complete' },
-    { id: nextId(), type: 'tool_call',   name: 'compute_stats', status: 'complete', input: { metric: q, window: '30d' } },
-    { id: nextId(), type: 'tool_result', name: 'compute_stats', output: { mean: 1842, p50: 1654, p95: 3201 } },
-    { id: nextId(), type: 'artifact',    kind: 'table', title: 'Statistical Summary', data: [{ stat: 'Mean', value: 1842 }, { stat: 'P50', value: 1654 }, { stat: 'P95', value: 3201 }] },
-    { id: nextId(), type: 'message',     role: 'assistant', content: 'The P95 is about 2× the median — there are outliers worth investigating. Should I identify which segments are driving the tail?' },
+  (_q: string): AgentChatEvent[] => [
+    { id: nextId(), type: 'status',      label: 'Computing latency percentiles…', status: 'complete' },
+    { id: nextId(), type: 'tool_call',   name: 'query_percentiles', status: 'complete', input: { metric: 'latency_ms', percentiles: [50, 95, 99], window: '24h' } },
+    { id: nextId(), type: 'tool_result', name: 'query_percentiles', output: { p50: 42, p95: 138, p99: 310 } },
+    {
+      id: nextId(), type: 'artifact', kind: 'chart', title: 'Latency Percentiles — Last 24h',
+      data: {
+        type: 'timeseries',
+        data: [
+          DAY_TS,
+          DAY_TS.map(() => Math.round(30 + Math.random() * 30)),
+          DAY_TS.map(() => Math.round(110 + Math.random() * 60)),
+          DAY_TS.map(() => Math.round(260 + Math.random() * 100)),
+        ],
+        series: [
+          { label: 'P50', color: 'oklch(0.6 0.15 220)', unit: 'ms' },
+          { label: 'P95', color: 'oklch(0.65 0.18 50)', unit: 'ms' },
+          { label: 'P99', color: 'oklch(0.55 0.22 27)', unit: 'ms' },
+        ],
+        yUnit: 'ms',
+        height: 180,
+      } satisfies ChartSpec,
+    },
+    { id: nextId(), type: 'message', role: 'assistant', content: 'P99 is **7× higher than P50** — suggests a long-tail issue. The spike at P99 between 10–11 AM correlates with the deployment window. Worth profiling that period.' },
   ],
 ]
 
@@ -106,7 +142,7 @@ function ToolCallBlock({ name, input }: { name: string; input?: unknown }) {
         <span className="font-sans font-medium">{name}</span>
       </div>
       {input !== undefined && (
-        <pre className="text-[11px] leading-relaxed overflow-x-auto whitespace-pre-wrap break-words text-foreground/80">
+        <pre className="text-[11px] leading-relaxed overflow-x-auto whitespace-pre-wrap wrap-break-word text-foreground/80">
           {typeof input === 'object' && input !== null && 'sql' in input
             ? String((input as { sql: unknown }).sql)
             : JSON.stringify(input, null, 2)}
@@ -116,7 +152,7 @@ function ToolCallBlock({ name, input }: { name: string; input?: unknown }) {
   )
 }
 
-function ArtifactTable({ data, title }: { data: Record<string, unknown>[]; title?: React.ReactNode }) {
+function TableArtifact({ data, title }: { data: Record<string, unknown>[]; title?: React.ReactNode }) {
   if (!data?.length) return null
   const cols = Object.keys(data[0])
   return (
@@ -151,6 +187,22 @@ function ArtifactTable({ data, title }: { data: Record<string, unknown>[]; title
   )
 }
 
+function ChartArtifact({ spec, title }: { spec: ChartSpec; title?: React.ReactNode }) {
+  return (
+    <div className="rounded border border-border overflow-hidden">
+      {title && (
+        <div className="flex items-center gap-1.5 border-b bg-muted/50 px-3 py-1.5 text-xs font-medium text-muted-foreground">
+          <BarChart2 className="h-3 w-3" />
+          {title}
+        </div>
+      )}
+      <div className="p-2">
+        <ChartRenderer spec={spec} />
+      </div>
+    </div>
+  )
+}
+
 // ─── Input footer ─────────────────────────────────────────────────────────────
 
 function ChatInput({ onSend, disabled }: { onSend: (msg: string) => void; disabled?: boolean }) {
@@ -166,7 +218,7 @@ function ChatInput({ onSend, disabled }: { onSend: (msg: string) => void; disabl
   return (
     <div className="flex items-end gap-2 border-t px-4 py-3">
       <textarea
-        className="flex-1 resize-none rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring min-h-[36px] max-h-[120px]"
+        className="flex-1 resize-none rounded-md border bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring min-h-9 max-h-30"
         placeholder="Ask anything about your data…"
         rows={1}
         value={value}
@@ -303,11 +355,13 @@ export function AgentChatDemo({ theme }: { theme?: React.CSSProperties }) {
           renderToolCall={(event) => (
             <ToolCallBlock name={event.name} input={event.input} />
           )}
-          renderArtifact={(event) =>
-            event.kind === 'table'
-              ? <ArtifactTable data={event.data as Record<string, unknown>[]} title={event.title} />
-              : undefined
-          }
+          renderArtifact={(event) => {
+            if (event.kind === 'chart')
+              return <ChartArtifact spec={event.data as ChartSpec} title={event.title} />
+            if (event.kind === 'table')
+              return <TableArtifact data={event.data as Record<string, unknown>[]} title={event.title} />
+            return undefined
+          }}
         />
       }
     />
