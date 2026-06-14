@@ -18,7 +18,7 @@ import { CodeBlock } from './CodeBlock'
 
 function radiusVarLines(r: number): string[] {
   return [
-    `  --dk-radius:       ${r}rem;`,
+    `  --designkit-radius:       ${r}rem;`,
     `  --gridkit-radius:  ${r}rem;`,
     `  --radius:          ${r}rem;`,
     `  --radius-sm:  ${(r * 0.6).toFixed(4)}rem;`,
@@ -30,9 +30,9 @@ function radiusVarLines(r: number): string[] {
 
 function colorVarLines(chroma: number, hue: number): string[] {
   return [
-    `  --dk-primary:                    oklch(0.52 ${chroma} ${hue});`,
-    `  --dk-primary-foreground:         oklch(0.985 0 0);`,
-    `  --dk-ring:                       oklch(0.5 ${chroma} ${hue});`,
+    `  --designkit-primary:                    oklch(0.52 ${chroma} ${hue});`,
+    `  --designkit-primary-foreground:         oklch(0.985 0 0);`,
+    `  --designkit-ring:                       oklch(0.5 ${chroma} ${hue});`,
     `  --gridkit-primary:               oklch(0.52 ${chroma} ${hue});`,
     `  --gridkit-primary-foreground:    oklch(0.985 0 0);`,
     `  --gridkit-ring:                  oklch(0.5 ${chroma} ${hue});`,
@@ -44,18 +44,18 @@ function colorVarLines(chroma: number, hue: number): string[] {
 
 function typographyVarLines(fontScale: number, lineHeight: number): string[] {
   return [
-    `  --dk-font-scale:  ${fontScale};`,
-    `  --dk-line-height: ${lineHeight};`,
-    `  --dk-text-xs:     calc(0.75rem * ${fontScale});`,
-    `  --dk-text-sm:     calc(0.875rem * ${fontScale});`,
-    `  --dk-text-base:   calc(1rem * ${fontScale});`,
-    `  --dk-text-lg:     calc(1.125rem * ${fontScale});`,
-    `  --dk-text-xl:     calc(1.25rem * ${fontScale});`,
-    `  --dk-leading-xs:  calc(1rem * ${lineHeight});`,
-    `  --dk-leading-sm:  calc(1.25rem * ${lineHeight});`,
-    `  --dk-leading-base:calc(1.5rem * ${lineHeight});`,
-    `  --dk-leading-lg:  calc(1.75rem * ${lineHeight});`,
-    `  --dk-leading-xl:  calc(1.75rem * ${lineHeight});`,
+    `  --designkit-font-scale:  ${fontScale};`,
+    `  --designkit-line-height: ${lineHeight};`,
+    `  --designkit-text-xs:     calc(0.75rem * ${fontScale});`,
+    `  --designkit-text-sm:     calc(0.875rem * ${fontScale});`,
+    `  --designkit-text-base:   calc(1rem * ${fontScale});`,
+    `  --designkit-text-lg:     calc(1.125rem * ${fontScale});`,
+    `  --designkit-text-xl:     calc(1.25rem * ${fontScale});`,
+    `  --designkit-leading-xs:  calc(1rem * ${lineHeight});`,
+    `  --designkit-leading-sm:  calc(1.25rem * ${lineHeight});`,
+    `  --designkit-leading-base:calc(1.5rem * ${lineHeight});`,
+    `  --designkit-leading-lg:  calc(1.75rem * ${lineHeight});`,
+    `  --designkit-leading-xl:  calc(1.75rem * ${lineHeight});`,
   ]
 }
 
@@ -85,11 +85,11 @@ function densityVarLines(
   }[density]
 
   return [
-    `  --dk-density:        ${values.density};`,
-    `  --dk-page-padding-x: 1.5rem;`,
-    `  --dk-page-padding-y: ${overrides.pagePaddingY ?? values.pagePaddingY};`,
-    `  --dk-panel-gap:      ${overrides.panelGap ?? values.panelGap};`,
-    `  --dk-toolbar-height: ${overrides.toolbarHeight ?? values.toolbarHeight};`,
+    `  --designkit-density:        ${values.density};`,
+    `  --designkit-page-padding-x: 1.5rem;`,
+    `  --designkit-page-padding-y: ${overrides.pagePaddingY ?? values.pagePaddingY};`,
+    `  --designkit-panel-gap:      ${overrides.panelGap ?? values.panelGap};`,
+    `  --designkit-toolbar-height: ${overrides.toolbarHeight ?? values.toolbarHeight};`,
   ]
 }
 
@@ -137,26 +137,26 @@ function buildThemeProp(
 ): string {
   const themeEntries: string[] = []
   if (ov.radius !== undefined) {
-    themeEntries.push(`    '--dk-radius': '${ov.radius}rem',`)
+    themeEntries.push(`    '--designkit-radius': '${ov.radius}rem',`)
     themeEntries.push(`    '--gridkit-radius': '${ov.radius}rem',`)
     themeEntries.push(`    '--radius': '${ov.radius}rem',`)
   }
   if (ov.primaryChroma !== undefined) {
-    themeEntries.push(`    '--dk-primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
+    themeEntries.push(`    '--designkit-primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
     themeEntries.push(`    '--gridkit-primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
     themeEntries.push(`    '--primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
   }
   if (ov.density !== undefined) {
-    themeEntries.push(`    '--dk-density': '${ov.density === 'compact' ? 0.85 : ov.density === 'comfortable' ? 1.15 : 1}',`)
+    themeEntries.push(`    '--designkit-density': '${ov.density === 'compact' ? 0.85 : ov.density === 'comfortable' ? 1.15 : 1}',`)
   }
   if (ov.pagePaddingY !== undefined) {
-    themeEntries.push(`    '--dk-page-padding-y': '${ov.pagePaddingY}',`)
+    themeEntries.push(`    '--designkit-page-padding-y': '${ov.pagePaddingY}',`)
   }
   if (ov.panelGap !== undefined) {
-    themeEntries.push(`    '--dk-panel-gap': '${ov.panelGap}',`)
+    themeEntries.push(`    '--designkit-panel-gap': '${ov.panelGap}',`)
   }
   if (ov.toolbarHeight !== undefined) {
-    themeEntries.push(`    '--dk-toolbar-height': '${ov.toolbarHeight}',`)
+    themeEntries.push(`    '--designkit-toolbar-height': '${ov.toolbarHeight}',`)
   }
 
   return themeEntries.length

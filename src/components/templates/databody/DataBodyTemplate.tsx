@@ -119,7 +119,7 @@ function GroupWrapper({
   if (variant === 'card') {
     return (
       <Card>
-        <CardContent className="p-(--dk-panel-gap)">{children}</CardContent>
+        <CardContent className="p-(--designkit-panel-gap)">{children}</CardContent>
       </Card>
     )
   }
@@ -129,7 +129,7 @@ function GroupWrapper({
         <div className="overflow-hidden rounded-(--radius) border divide-y">{children}</div>
       )
     }
-    return <div className="rounded-(--radius) border p-(--dk-panel-gap)">{children}</div>
+    return <div className="rounded-(--radius) border p-(--designkit-panel-gap)">{children}</div>
   }
   return <>{children}</>
 }
@@ -166,7 +166,7 @@ function renderGroupProps(props: DataBodyGroupProps) {
   if (layout === 'split') {
     const panes = Children.toArray(children)
     return (
-      <div className={cn('py-(--dk-panel-gap)', className)}>
+      <div className={cn('py-(--designkit-panel-gap)', className)}>
         {(title || description || actions) && (
           <div className="mb-3 flex items-start justify-between">
             <div>
@@ -180,7 +180,7 @@ function renderGroupProps(props: DataBodyGroupProps) {
             {actions && <div>{actions}</div>}
           </div>
         )}
-        <div className="grid min-h-104 gap-(--dk-panel-gap) lg:grid-cols-[20rem_minmax(0,1fr)]">
+        <div className="grid min-h-104 gap-(--designkit-panel-gap) lg:grid-cols-[20rem_minmax(0,1fr)]">
           {panes.map((pane, i) => (
             <GroupWrapper key={i} layout={layout} variant={variant}>
               {pane}
@@ -193,7 +193,7 @@ function renderGroupProps(props: DataBodyGroupProps) {
 
   if (layout === 'horizontal') {
     return (
-      <div className={cn('grid grid-cols-3 gap-[calc(var(--dk-panel-gap)*2)] py-(--dk-panel-gap)', className)}>
+      <div className={cn('grid grid-cols-3 gap-[calc(var(--designkit-panel-gap)*2)] py-(--designkit-panel-gap)', className)}>
         <div>
           <p className={cn('text-sm font-medium', danger && 'text-destructive')}>{title}</p>
           {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
@@ -210,7 +210,7 @@ function renderGroupProps(props: DataBodyGroupProps) {
 
   if (layout === 'inline') {
     return (
-      <div className={cn('py-(--dk-panel-gap)', className)}>
+      <div className={cn('py-(--designkit-panel-gap)', className)}>
         {(title || description) && (
           <div className="mb-2 flex items-start justify-between">
             <div>
@@ -233,7 +233,7 @@ function renderGroupProps(props: DataBodyGroupProps) {
 
   // stacked (default)
   return (
-    <div className={cn('py-(--dk-panel-gap)', className)}>
+    <div className={cn('py-(--designkit-panel-gap)', className)}>
       <div className="flex items-start justify-between">
         <div>
           <h2 className={cn('text-sm font-semibold', danger && 'text-destructive')}>{title}</h2>
@@ -262,7 +262,7 @@ function DataBodyField({ label, description, children }: DataBodyFieldProps) {
   return (
     <div
       className="grid items-start gap-x-4 px-4 py-3"
-      style={{ gridTemplateColumns: 'var(--dk-form-label-w, 11rem) 1fr' }}
+      style={{ gridTemplateColumns: 'var(--designkit-form-label-w, 11rem) 1fr' }}
     >
       <div className="pt-0.5">
         <span className="text-xs text-muted-foreground">{label}</span>
@@ -286,7 +286,7 @@ function DataBodyRow({ label, description, required, children }: DataBodyRowProp
   return (
     <div
       className="grid items-start gap-x-4 px-4 py-3"
-      style={{ gridTemplateColumns: 'var(--dk-form-label-w, 11rem) 1fr' }}
+      style={{ gridTemplateColumns: 'var(--designkit-form-label-w, 11rem) 1fr' }}
     >
       <div className="pt-1">
         <div className="flex items-center gap-1">
@@ -375,7 +375,7 @@ function Root({
         </DataPage.Header>
 
         {summaryEl && (
-          <div className="shrink-0 border-b px-(--dk-page-padding-x) py-(--dk-panel-gap)">
+          <div className="shrink-0 border-b px-(--designkit-page-padding-x) py-(--designkit-panel-gap)">
             {summaryEl.props.children}
           </div>
         )}
@@ -403,13 +403,13 @@ function Root({
         </DataPage.Header>
 
         {summaryEl && (
-          <div className="shrink-0 border-b px-(--dk-page-padding-x) py-(--dk-panel-gap)">
+          <div className="shrink-0 border-b px-(--designkit-page-padding-x) py-(--designkit-panel-gap)">
             {summaryEl.props.children}
           </div>
         )}
 
         <DataPage.Content className={contentClassName}>
-          <div className="grid gap-(--dk-panel-gap) lg:grid-cols-[16rem_minmax(0,1fr)]">
+          <div className="grid gap-(--designkit-panel-gap) lg:grid-cols-[16rem_minmax(0,1fr)]">
             <nav className="space-y-1">
               {sections.map((section) => {
                 const active = section.props.id === activeSection?.props.id
@@ -435,7 +435,7 @@ function Root({
                 )
               })}
             </nav>
-            <div className="min-w-0 space-y-(--dk-panel-gap)">
+            <div className="min-w-0 space-y-(--designkit-panel-gap)">
               {renderGroups(activeSection?.props.children)}
             </div>
           </div>
@@ -456,7 +456,7 @@ function Root({
       </DataPage.Header>
 
       {summaryEl && (
-        <div className="shrink-0 border-b px-(--dk-page-padding-x) py-(--dk-panel-gap)">
+        <div className="shrink-0 border-b px-(--designkit-page-padding-x) py-(--designkit-panel-gap)">
           {summaryEl.props.children}
         </div>
       )}

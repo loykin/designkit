@@ -63,7 +63,7 @@ src/
 
 ## Styling
 
-- CSS custom properties use `--dk-` prefix for DesignKit-owned tokens
+- CSS custom properties use `--designkit-` prefix for DesignKit-owned tokens
 - Shared shadcn variables (`--primary`, `--background`, `--radius`, etc.) are supported as fallbacks
 - `useStyleInjector` writes both `:root` (light) and `.dark` (dark tonal) blocks, plus per-template `.layout-<id>` overrides
 - State styling uses `data-*` attributes; avoid relying on generated class ordering
@@ -91,7 +91,7 @@ Do not copy a DesignKit component into another project to make a visual variatio
 
 Preferred customization points:
 - Shared shadcn-style variables: `--background`, `--primary`, `--border`, `--radius`
-- DesignKit variables: `--dk-*`
+- DesignKit variables: `--designkit-*`
 - The `theme` prop on page templates
 - Public layout slots: `actions`, `toolbar`, `header`, `sidebar`, `aside`, and template children
 - Documented component variants and `className` props
@@ -139,6 +139,6 @@ npm_config_cache=/tmp/designkit-npm-cache npm pack --dry-run
 ## Conventions
 
 - No unnecessary comments — only add when the WHY is non-obvious
-- New `--dk-*` variables must have sensible fallbacks for consuming apps
+- New `--designkit-*` variables must have sensible fallbacks for consuming apps
 - New public component → export from `src/index.ts` AND `src/components/templates/index.ts` (if a template)
 - New public template → also update the Template Selection table in `docs/consumer-guide.md`

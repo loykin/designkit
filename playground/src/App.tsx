@@ -96,7 +96,7 @@ function AppView() {
   return (
     <TooltipProvider>
       <div className="h-screen flex flex-col">
-        <header className="flex h-11 shrink-0 items-center border-b bg-[var(--dk-header)] backdrop-blur-sm px-4 gap-3 z-20">
+        <header className="flex h-11 shrink-0 items-center border-b bg-[var(--designkit-header)] backdrop-blur-sm px-4 gap-3 z-20">
           <span className="text-xs font-bold text-muted-foreground mr-1">designkit</span>
 
           {/* Shell selector */}

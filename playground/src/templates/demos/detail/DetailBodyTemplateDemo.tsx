@@ -192,7 +192,7 @@ function ProductLeadSlot({ variant }: { variant: 'media' | 'full' }) {
   return (
     <div
       className={[
-        'grid gap-(--dk-panel-gap)',
+        'grid gap-(--designkit-panel-gap)',
         variant === 'media' && 'xl:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]',
         variant === 'full' && 'xl:grid-cols-1',
       ].filter(Boolean).join(' ')}
@@ -200,7 +200,7 @@ function ProductLeadSlot({ variant }: { variant: 'media' | 'full' }) {
       <div className="min-h-0 overflow-hidden rounded-(--radius) border bg-card">
         <ProductGallery />
       </div>
-      <div className="min-h-0 rounded-(--radius) border bg-card p-(--dk-panel-gap) text-card-foreground">
+      <div className="min-h-0 rounded-(--radius) border bg-card p-(--designkit-panel-gap) text-card-foreground">
         <Summary />
       </div>
     </div>
@@ -209,7 +209,7 @@ function ProductLeadSlot({ variant }: { variant: 'media' | 'full' }) {
 
 function RecordLeadSlot() {
   return (
-    <div className="space-y-(--dk-panel-gap)">
+    <div className="space-y-(--designkit-panel-gap)">
       <DetailBodyTemplate.Section title="Order record" surface="card">
         <div className="divide-y text-sm">
           {orderFields.map(([label, value]) => (
@@ -288,7 +288,7 @@ function RecordAsideSlot() {
 function ProductContentTabs() {
   return [
     <DetailBodyTemplate.Tab key="overview" id="overview" label="Overview">
-        <div className="grid gap-(--dk-panel-gap) xl:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="grid gap-(--designkit-panel-gap) xl:grid-cols-[minmax(0,1fr)_20rem]">
           <DetailBodyTemplate.Section title="Product story" surface="card">
             <div className="space-y-3 text-sm leading-6 text-muted-foreground">
               <p>
@@ -326,7 +326,7 @@ function ProductContentTabs() {
     </DetailBodyTemplate.Tab>,
 
     <DetailBodyTemplate.Tab key="shipping" id="shipping" label="Shipping">
-        <div className="grid gap-(--dk-panel-gap) md:grid-cols-3">
+        <div className="grid gap-(--designkit-panel-gap) md:grid-cols-3">
           {[
             ['Standard', '2-4 business days', 'Free over $100'],
             ['Express', '1-2 business days', '$12'],

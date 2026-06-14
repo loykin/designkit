@@ -112,7 +112,7 @@ export function DashboardBodyTemplate({
     <DataPage className={cn('layout-dashboard', className)} style={theme}>
       {topBar && <div className="shrink-0">{topBar}</div>}
       {(title || toolbar) && (
-        <header className="shrink-0 border-b px-(--dk-page-padding-x) py-(--dk-page-padding-y)">
+        <header className="shrink-0 border-b px-(--designkit-page-padding-x) py-(--designkit-page-padding-y)">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="min-w-0">
               {title && (
@@ -129,11 +129,11 @@ export function DashboardBodyTemplate({
         </header>
       )}
       {variableBar && (
-        <div className="shrink-0 flex flex-wrap items-center gap-2 px-(--dk-page-padding-x) py-1.5">
+        <div className="shrink-0 flex flex-wrap items-center gap-2 px-(--designkit-page-padding-x) py-1.5">
           {variableBar}
         </div>
       )}
-      <div className={cn('flex-1 min-h-0 overflow-auto px-[calc(var(--dk-page-padding-x)-0.5rem)] pt-0 pb-(--dk-page-padding-y)', contentClassName)}>
+      <div className={cn('flex-1 min-h-0 overflow-auto px-[calc(var(--designkit-page-padding-x)-0.5rem)] pt-0 pb-(--designkit-page-padding-y)', contentClassName)}>
         {children}
       </div>
     </DataPage>

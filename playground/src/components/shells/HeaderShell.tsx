@@ -145,7 +145,7 @@ export function HeaderShell({ navigation, children }: HeaderShellProps) {
 
   return (
     <div className="h-full flex flex-col">
-      <header className="flex h-12 shrink-0 items-center border-b px-4 bg-(--dk-header) backdrop-blur-sm">
+      <header className="flex h-12 shrink-0 items-center border-b px-4 bg-(--designkit-header) backdrop-blur-sm">
         <NavigationHeaderContent
           navigation={navigation}
           activeItemId={templateId as TemplateId | undefined}

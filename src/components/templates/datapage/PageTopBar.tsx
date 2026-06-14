@@ -90,7 +90,7 @@ export function PageTopBar({
   left,
   right,
   variant = 'ghost',
-  height = 'var(--dk-toolbar-height)',
+  height = 'var(--designkit-toolbar-height)',
   className,
   style,
   children,
@@ -98,7 +98,7 @@ export function PageTopBar({
   return (
     <div
       className={cn(
-        'flex shrink-0 items-center justify-between gap-4 px-(--dk-page-padding-x)',
+        'flex shrink-0 items-center justify-between gap-4 px-(--designkit-page-padding-x)',
         variant === 'default' && 'border-b',
         className,
       )}

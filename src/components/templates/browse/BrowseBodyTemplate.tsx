@@ -73,7 +73,7 @@ export function BrowseBodyTemplate({
       <DataPage.Content padding="none" className="flex flex-col overflow-hidden">
         {/* Toolbar row */}
         {(toolbar || isNarrow) && (
-          <div className="flex shrink-0 items-center gap-2 border-b px-(--dk-page-padding-x) py-2">
+          <div className="flex shrink-0 items-center gap-2 border-b px-(--designkit-page-padding-x) py-2">
             {isNarrow && (
               <Sheet>
                 <SheetTrigger
@@ -106,7 +106,7 @@ export function BrowseBodyTemplate({
               style={{ width: sidebarWidth }}
             >
               <ScrollArea className="h-full">
-                <div className="px-(--dk-page-padding-x) py-(--dk-page-padding-y)">
+                <div className="px-(--designkit-page-padding-x) py-(--designkit-page-padding-y)">
                   {sidebar}
                 </div>
               </ScrollArea>
@@ -114,7 +114,7 @@ export function BrowseBodyTemplate({
           )}
           <div
             className={cn(
-              'min-w-0 flex-1 overflow-hidden px-(--dk-page-padding-x) py-(--dk-page-padding-y)',
+              'min-w-0 flex-1 overflow-hidden px-(--designkit-page-padding-x) py-(--designkit-page-padding-y)',
               '[&_.gridkit-shell]:h-full [&_.gridkit-table-stack]:flex-1 [&_.gridkit-table-stack]:min-h-0',
               '[&_.gridkit-frame]:flex-1 [&_.gridkit-frame]:min-h-0 [&_.gridkit-frame]:overflow-auto',
               contentClassName,

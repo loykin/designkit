@@ -93,11 +93,11 @@ function Header({ children, className }: DataPageHeaderProps) {
     <header
       data-slot="data-page-header"
       className={cn(
-        'shrink-0 px-[var(--dk-page-padding-x)] pt-[var(--dk-page-padding-y)]',
+        'shrink-0 px-[var(--designkit-page-padding-x)] pt-[var(--designkit-page-padding-y)]',
         className,
       )}
     >
-      <div className="flex items-center justify-between gap-[var(--dk-panel-gap)]">
+      <div className="flex items-center justify-between gap-[var(--designkit-panel-gap)]">
         {children}
       </div>
     </header>
@@ -122,7 +122,7 @@ function Actions({ children, className }: DataPageActionsProps) {
   return (
     <div
       data-slot="data-page-actions"
-      className={cn('flex shrink-0 items-center gap-[calc(var(--dk-panel-gap)*0.5)]', className)}
+      className={cn('flex shrink-0 items-center gap-[calc(var(--designkit-panel-gap)*0.5)]', className)}
     >
       {children}
     </div>
@@ -173,8 +173,8 @@ function Content({ children, className, padding = 'default' }: DataPageContentPr
       className={cn(
         'min-h-0 flex-1 overflow-auto',
         padding === 'default' &&
-          'px-[var(--dk-page-padding-x)] pb-[var(--dk-page-padding-y)] pt-[var(--dk-page-padding-y)]',
-        padding === 'compact' && 'p-[calc(var(--dk-page-padding-y)*0.875)]',
+          'px-[var(--designkit-page-padding-x)] pb-[var(--designkit-page-padding-y)] pt-[var(--designkit-page-padding-y)]',
+        padding === 'compact' && 'p-[calc(var(--designkit-page-padding-y)*0.875)]',
         padding === 'none' && 'p-0',
         className,
       )}
@@ -215,7 +215,7 @@ function GroupHeader({
     <div
       data-slot="data-page-group-header"
       className={cn(
-        'flex items-start justify-between gap-4 px-0 pb-[calc(var(--dk-panel-gap)*0.75)]',
+        'flex items-start justify-between gap-4 px-0 pb-[calc(var(--designkit-panel-gap)*0.75)]',
         className,
       )}
     >
@@ -236,7 +236,7 @@ function GroupToolbar({ children, className }: DataPageGroupToolbarProps) {
     <div
       data-slot="data-page-group-toolbar"
       className={cn(
-        'flex min-h-[var(--dk-toolbar-height)] items-center justify-between gap-[calc(var(--dk-panel-gap)*0.75)] pb-[calc(var(--dk-panel-gap)*0.75)]',
+        'flex min-h-[var(--designkit-toolbar-height)] items-center justify-between gap-[calc(var(--designkit-panel-gap)*0.75)] pb-[calc(var(--designkit-panel-gap)*0.75)]',
         className,
       )}
     >

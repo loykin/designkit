@@ -150,11 +150,11 @@
    reliably clips absolute-positioned children (e.g. resize handles) */
 .react-grid-item:not(.react-grid-placeholder) {
   clip-path: inset(0 round var(--radius));
-  --dk-resize-handle-size: clamp(20px, calc(var(--radius) * 1.6), 40px);
-  --dk-resize-handle-inset: clamp(4px, calc(var(--radius) * 0.45), 16px);
-  --dk-resize-handle-mark-size: clamp(6px, calc(var(--radius) * 0.55), 12px);
-  --dk-resize-handle-color: rgba(0, 0, 0, 0.35);
-  --dk-resize-handle-mark-radius: min(var(--radius), var(--dk-resize-handle-mark-size));
+  --designkit-resize-handle-size: clamp(20px, calc(var(--radius) * 1.6), 40px);
+  --designkit-resize-handle-inset: clamp(4px, calc(var(--radius) * 0.45), 16px);
+  --designkit-resize-handle-mark-size: clamp(6px, calc(var(--radius) * 0.55), 12px);
+  --designkit-resize-handle-color: rgba(0, 0, 0, 0.35);
+  --designkit-resize-handle-mark-radius: min(var(--radius), var(--designkit-resize-handle-mark-size));
 }
 
 .react-grid-item.react-grid-placeholder {
@@ -173,7 +173,7 @@
 }
 
 .dark .react-grid-item:not(.react-grid-placeholder) {
-  --dk-resize-handle-color: rgba(255, 255, 255, 0.4);
+  --designkit-resize-handle-color: rgba(255, 255, 255, 0.4);
 }
 
 .dk-code-block {

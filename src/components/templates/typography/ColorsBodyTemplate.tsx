@@ -137,7 +137,7 @@ export function ColorsBodyTemplate({ theme, breadcrumb }: ColorsBodyTemplateProp
         />
       </DataPage.Header>
 
-      <DataPage.Content className="space-y-[var(--dk-panel-gap)]">
+      <DataPage.Content className="space-y-[var(--designkit-panel-gap)]">
         {/* Primary derived chain */}
         <Card className="rounded-lg border border-border ring-0">
           <CardHeader>

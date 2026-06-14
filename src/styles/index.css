@@ -8,70 +8,70 @@
  */
 
 :root {
-  --dk-radius: var(--radius, 0.5rem);
-  --dk-background: var(--background, oklch(1 0 0));
-  --dk-foreground: var(--foreground, oklch(0.145 0 0));
-  --dk-card: var(--card, oklch(1 0 0));
-  --dk-card-foreground: var(--card-foreground, oklch(0.145 0 0));
-  --dk-primary: var(--primary, oklch(0.205 0 0));
-  --dk-primary-foreground: var(--primary-foreground, oklch(0.985 0 0));
-  --dk-secondary: var(--secondary, oklch(0.97 0 0));
-  --dk-secondary-foreground: var(--secondary-foreground, oklch(0.205 0 0));
-  --dk-muted: var(--muted, oklch(0.97 0 0));
-  --dk-muted-foreground: var(--muted-foreground, oklch(0.556 0 0));
-  --dk-accent: var(--accent, oklch(0.97 0 0));
-  --dk-accent-foreground: var(--accent-foreground, oklch(0.205 0 0));
-  --dk-border: var(--border, oklch(0.922 0 0));
-  --dk-input: var(--input, oklch(0.922 0 0));
-  --dk-ring: var(--ring, oklch(0.708 0 0));
-  --dk-destructive: var(--destructive, oklch(0.577 0.245 27.325));
+  --designkit-radius: var(--radius, 0.5rem);
+  --designkit-background: var(--background, oklch(1 0 0));
+  --designkit-foreground: var(--foreground, oklch(0.145 0 0));
+  --designkit-card: var(--card, oklch(1 0 0));
+  --designkit-card-foreground: var(--card-foreground, oklch(0.145 0 0));
+  --designkit-primary: var(--primary, oklch(0.205 0 0));
+  --designkit-primary-foreground: var(--primary-foreground, oklch(0.985 0 0));
+  --designkit-secondary: var(--secondary, oklch(0.97 0 0));
+  --designkit-secondary-foreground: var(--secondary-foreground, oklch(0.205 0 0));
+  --designkit-muted: var(--muted, oklch(0.97 0 0));
+  --designkit-muted-foreground: var(--muted-foreground, oklch(0.556 0 0));
+  --designkit-accent: var(--accent, oklch(0.97 0 0));
+  --designkit-accent-foreground: var(--accent-foreground, oklch(0.205 0 0));
+  --designkit-border: var(--border, oklch(0.922 0 0));
+  --designkit-input: var(--input, oklch(0.922 0 0));
+  --designkit-ring: var(--ring, oklch(0.708 0 0));
+  --designkit-destructive: var(--destructive, oklch(0.577 0.245 27.325));
 
   /* light mode: slightly darker than background, semi-transparent */
-  --dk-header: oklch(0.96 0 0 / 0.92);
+  --designkit-header: oklch(0.96 0 0 / 0.92);
 
-  --dk-density: 1;
-  --dk-page-padding-x: 1.5rem;
-  --dk-page-padding-y: 1rem;
-  --dk-panel-gap: 1rem;
-  --dk-toolbar-height: 2.75rem;
-  --dk-font-scale: 1;
-  --dk-line-height: 1;
-  --dk-text-xs: 0.75rem;
-  --dk-text-sm: 0.875rem;
-  --dk-text-base: 1rem;
-  --dk-text-lg: 1.125rem;
-  --dk-text-xl: 1.25rem;
-  --dk-leading-xs: 1rem;
-  --dk-leading-sm: 1.25rem;
-  --dk-leading-base: 1.5rem;
-  --dk-leading-lg: 1.75rem;
-  --dk-leading-xl: 1.75rem;
+  --designkit-density: 1;
+  --designkit-page-padding-x: 1.5rem;
+  --designkit-page-padding-y: 1rem;
+  --designkit-panel-gap: 1rem;
+  --designkit-toolbar-height: 2.75rem;
+  --designkit-font-scale: 1;
+  --designkit-line-height: 1;
+  --designkit-text-xs: 0.75rem;
+  --designkit-text-sm: 0.875rem;
+  --designkit-text-base: 1rem;
+  --designkit-text-lg: 1.125rem;
+  --designkit-text-xl: 1.25rem;
+  --designkit-leading-xs: 1rem;
+  --designkit-leading-sm: 1.25rem;
+  --designkit-leading-base: 1.5rem;
+  --designkit-leading-lg: 1.75rem;
+  --designkit-leading-xl: 1.75rem;
 }
 
 .dark {
-  --dk-background: var(--background, oklch(0.145 0 0));
-  --dk-foreground: var(--foreground, oklch(0.685 0 0));
-  --dk-card: var(--card, oklch(0.205 0 0));
-  --dk-card-foreground: var(--card-foreground, oklch(0.712 0 0));
-  --dk-muted: var(--muted, oklch(0.269 0 0));
-  --dk-muted-foreground: var(--muted-foreground, oklch(0.580 0 0));
-  --dk-border: var(--border, oklch(1 0 0 / 18%));
-  --dk-input: var(--input, oklch(1 0 0 / 22%));
+  --designkit-background: var(--background, oklch(0.145 0 0));
+  --designkit-foreground: var(--foreground, oklch(0.685 0 0));
+  --designkit-card: var(--card, oklch(0.205 0 0));
+  --designkit-card-foreground: var(--card-foreground, oklch(0.712 0 0));
+  --designkit-muted: var(--muted, oklch(0.269 0 0));
+  --designkit-muted-foreground: var(--muted-foreground, oklch(0.580 0 0));
+  --designkit-border: var(--border, oklch(1 0 0 / 18%));
+  --designkit-input: var(--input, oklch(1 0 0 / 22%));
   /* dark mode: slightly lighter than background, semi-transparent */
-  --dk-header: oklch(0.22 0 0 / 0.88);
+  --designkit-header: oklch(0.22 0 0 / 0.88);
 }
 
-[data-dk-density='compact'] {
-  --dk-density: 0.85;
-  --dk-page-padding-y: 0.75rem;
-  --dk-panel-gap: 0.75rem;
-  --dk-toolbar-height: 2.5rem;
+[data-designkit-density='compact'] {
+  --designkit-density: 0.85;
+  --designkit-page-padding-y: 0.75rem;
+  --designkit-panel-gap: 0.75rem;
+  --designkit-toolbar-height: 2.5rem;
 }
 
-[data-dk-density='comfortable'] {
-  --dk-density: 1.15;
-  --dk-page-padding-y: 1.25rem;
-  --dk-panel-gap: 1.25rem;
-  --dk-toolbar-height: 3rem;
+[data-designkit-density='comfortable'] {
+  --designkit-density: 1.15;
+  --designkit-page-padding-y: 1.25rem;
+  --designkit-panel-gap: 1.25rem;
+  --designkit-toolbar-height: 3rem;
 }
 

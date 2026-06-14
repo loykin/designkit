@@ -166,7 +166,7 @@ export function TabbedBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBa
       }
     >
       <DataBodyTemplate.Summary>
-        <div className="grid grid-cols-4 gap-(--dk-panel-gap)">
+        <div className="grid grid-cols-4 gap-(--designkit-panel-gap)">
           {(
             [
               { label: 'Open', count: counts.open, Icon: AlertCircle, cls: 'text-destructive' },
@@ -191,7 +191,7 @@ export function TabbedBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBa
             ] as const
           ).map(({ label, count, Icon, cls }) => (
             <Card key={label}>
-              <CardContent className="flex items-center gap-[calc(var(--dk-panel-gap)*0.75)] p-[calc(var(--dk-panel-gap)*0.75)]">
+              <CardContent className="flex items-center gap-[calc(var(--designkit-panel-gap)*0.75)] p-[calc(var(--designkit-panel-gap)*0.75)]">
                 <Icon className={`h-5 w-5 ${cls}`} />
                 <div>
                   <p className="text-xl font-bold tabular-nums">{count}</p>

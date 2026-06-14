@@ -158,8 +158,8 @@ const events: AgentChatEvent[] = [
 Applications may customize:
 
 - Semantic theme variables such as `--primary`, `--background`, and `--radius`.
-- DesignKit variables such as `--dk-page-padding-x`, `--dk-page-padding-y`,
-  `--dk-panel-gap`, and `--dk-toolbar-height`.
+- DesignKit variables such as `--designkit-page-padding-x`, `--designkit-page-padding-y`,
+  `--designkit-panel-gap`, and `--designkit-toolbar-height`.
 - Template `theme` props.
 - Public slots such as `actions`, `toolbar`, `topBar`, `sidebar`, `header`,
   `lead`, `aside`, and children.
@@ -184,8 +184,8 @@ export function UsersPage() {
       description="Manage project members."
       actions={<Button>Add user</Button>}
       theme={{
-        '--dk-panel-gap': '1.25rem',
-        '--dk-page-padding-x': '2rem',
+        '--designkit-panel-gap': '1.25rem',
+        '--designkit-page-padding-x': '2rem',
       } as React.CSSProperties}
     >
       <DataBodyTemplate.Body>
@@ -231,7 +231,7 @@ Add a short section like this to the consuming repository's `AGENTS.md`:
 
 - Check `@loykin/designkit` before creating page shells or common UI.
 - Prefer existing templates, props, and slots over copied implementations.
-- Implement project branding with semantic CSS variables and `--dk-*` tokens.
+- Implement project branding with semantic CSS variables and `--designkit-*` tokens.
 - Keep domain data and business logic in this repository.
 - Do not import undocumented DesignKit internals.
 - Run type checking and a production build after DesignKit-related changes.

@@ -204,15 +204,15 @@ handle stays inside the clipped panel corner:
 
 ```css
 .layout-dashboard .react-grid-item:not(.react-grid-placeholder) {
-  --dk-resize-handle-size: clamp(20px, calc(var(--radius) * 1.6), 40px);
-  --dk-resize-handle-inset: clamp(4px, calc(var(--radius) * 0.45), 16px);
-  --dk-resize-handle-mark-size: clamp(6px, calc(var(--radius) * 0.55), 12px);
-  --dk-resize-handle-color: rgba(0, 0, 0, 0.35);
-  --dk-resize-handle-mark-radius: min(var(--radius), var(--dk-resize-handle-mark-size));
+  --designkit-resize-handle-size: clamp(20px, calc(var(--radius) * 1.6), 40px);
+  --designkit-resize-handle-inset: clamp(4px, calc(var(--radius) * 0.45), 16px);
+  --designkit-resize-handle-mark-size: clamp(6px, calc(var(--radius) * 0.55), 12px);
+  --designkit-resize-handle-color: rgba(0, 0, 0, 0.35);
+  --designkit-resize-handle-mark-radius: min(var(--radius), var(--designkit-resize-handle-mark-size));
 }
 
 .dark .layout-dashboard .react-grid-item:not(.react-grid-placeholder) {
-  --dk-resize-handle-color: rgba(255, 255, 255, 0.4);
+  --designkit-resize-handle-color: rgba(255, 255, 255, 0.4);
 }
 ```
 
@@ -471,20 +471,20 @@ import { Users } from 'lucide-react'
 
 ## Theming
 
-Designkit maps shadcn/ui CSS variables onto its own `--dk-*` tokens. Changing your shadcn theme automatically updates all designkit components.
+Designkit maps shadcn/ui CSS variables onto its own `--designkit-*` tokens. Changing your shadcn theme automatically updates all designkit components.
 
 | What | How |
 |---|---|
 | Colors, radius, typography | shadcn/ui theme variables (`--primary`, `--radius`, etc.) |
-| Spacing, density, padding | `--dk-density`, `--dk-page-padding-*`, `--dk-panel-gap` |
+| Spacing, density, padding | `--designkit-density`, `--designkit-page-padding-*`, `--designkit-panel-gap` |
 | Per-page overrides | `className` or `theme` prop |
 
 ```css
 :root {
-  --dk-density:        1;        /* 0.85 compact / 1 default / 1.15 comfortable */
-  --dk-page-padding-x: 1.5rem;
-  --dk-page-padding-y: 1rem;
-  --dk-panel-gap:      1rem;
+  --designkit-density:        1;        /* 0.85 compact / 1 default / 1.15 comfortable */
+  --designkit-page-padding-x: 1.5rem;
+  --designkit-page-padding-y: 1rem;
+  --designkit-panel-gap:      1rem;
 }
 ```
 
@@ -492,7 +492,7 @@ Per-page override via `className`:
 
 ```css
 .layout-dashboard {
-  --dk-density: 0.85;
+  --designkit-density: 0.85;
 }
 ```
 
@@ -504,7 +504,7 @@ Or via `theme` prop:
 
 ```tsx
 <DataBodyTemplate
-  theme={{ '--dk-density': '1.15' } as React.CSSProperties}
+  theme={{ '--designkit-density': '1.15' } as React.CSSProperties}
   title="Settings"
 >
 ```

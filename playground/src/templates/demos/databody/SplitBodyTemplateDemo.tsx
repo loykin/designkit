@@ -51,7 +51,7 @@ export function SplitBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBar
             </button>
           ))}
         </div>
-        <div className="space-y-4 p-(--dk-panel-gap)">
+        <div className="space-y-4 p-(--designkit-panel-gap)">
           <div className="flex items-start justify-between gap-3">
             <div>
               <h2 className="text-base font-semibold">{active.name}</h2>

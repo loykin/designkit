@@ -105,8 +105,8 @@ function DetailBodySection({
     <section
       className={cn(
         'min-h-0',
-        surface === 'card' && 'rounded-(--radius) border bg-card p-(--dk-panel-gap) text-card-foreground shadow-sm',
-        surface === 'bordered' && 'rounded-(--radius) border p-(--dk-panel-gap)',
+        surface === 'card' && 'rounded-(--radius) border bg-card p-(--designkit-panel-gap) text-card-foreground shadow-sm',
+        surface === 'bordered' && 'rounded-(--radius) border p-(--designkit-panel-gap)',
         className,
       )}
     >
@@ -157,7 +157,7 @@ function DetailBodyTemplateRoot({
   const [activeTab, setActiveTab] = useState(() => tabs[0]?.props.id ?? '')
   const selectedTab = tabs.find((tab) => tab.props.id === activeTab) ?? tabs[0]
   const summarySlot = summary ? (
-    <div className="min-h-0 rounded-(--radius) border bg-card p-(--dk-panel-gap) text-card-foreground">
+    <div className="min-h-0 rounded-(--radius) border bg-card p-(--designkit-panel-gap) text-card-foreground">
       {summary}
     </div>
   ) : null
@@ -182,7 +182,7 @@ function DetailBodyTemplateRoot({
     : null
   const defaultLead = (media || summary)
     ? (
-      <div className={cn('grid gap-(--dk-panel-gap)', leadGridClass)}>
+      <div className={cn('grid gap-(--designkit-panel-gap)', leadGridClass)}>
         {mediaSlot}
         {summarySlot}
       </div>
@@ -203,12 +203,12 @@ function DetailBodyTemplateRoot({
           </DataPage.Tab>
         ))}
       </DataPage.Tabs>
-      <div className="pt-(--dk-panel-gap)">
+      <div className="pt-(--designkit-panel-gap)">
         {selectedTab?.props.children}
       </div>
     </div>
   ) : (
-    <div className="space-y-(--dk-panel-gap)">
+    <div className="space-y-(--designkit-panel-gap)">
       {renderChildren(children)}
     </div>
   )
@@ -221,20 +221,20 @@ function DetailBodyTemplateRoot({
   const layout = {
     media: (
       <>
-        {leadSlot && <div className="mb-(--dk-panel-gap)">{leadSlot}</div>}
+        {leadSlot && <div className="mb-(--designkit-panel-gap)">{leadSlot}</div>}
         {body}
       </>
     ),
     record: (
       <div
         className={cn(
-          'grid gap-(--dk-panel-gap)',
+          'grid gap-(--designkit-panel-gap)',
           hasRecordInspector && 'xl:grid-cols-[minmax(28rem,1fr)_minmax(14rem,18rem)]',
         )}
       >
         <div className="min-w-0">{body}</div>
         {hasRecordInspector && (
-          <div className="space-y-(--dk-panel-gap)">
+          <div className="space-y-(--designkit-panel-gap)">
             {leadSlot}
           </div>
         )}
@@ -245,13 +245,13 @@ function DetailBodyTemplateRoot({
         {hasFullLeadArea && (
           <div
             className={cn(
-              'mb-(--dk-panel-gap) grid gap-(--dk-panel-gap)',
+              'mb-(--designkit-panel-gap) grid gap-(--designkit-panel-gap)',
               insideAsideSlot && 'xl:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)]',
             )}
           >
-            {leadSlot && <div className="space-y-(--dk-panel-gap)">{leadSlot}</div>}
+            {leadSlot && <div className="space-y-(--designkit-panel-gap)">{leadSlot}</div>}
             {insideAsideSlot && (
-              <div className={cn('min-h-0 rounded-(--radius) border bg-card p-(--dk-panel-gap)', asideClassName)}>
+              <div className={cn('min-h-0 rounded-(--radius) border bg-card p-(--designkit-panel-gap)', asideClassName)}>
                 {insideAsideSlot}
               </div>
             )}
@@ -276,7 +276,7 @@ function DetailBodyTemplateRoot({
         >
           <main
             className={cn(
-              'min-h-0 overflow-auto px-(--dk-page-padding-x) py-(--dk-page-padding-y)',
+              'min-h-0 overflow-auto px-(--designkit-page-padding-x) py-(--designkit-page-padding-y)',
               contentClassName,
             )}
           >
@@ -287,7 +287,7 @@ function DetailBodyTemplateRoot({
             <aside className={cn('min-h-0 border-t bg-background lg:border-l lg:border-t-0', asideClassName)}>
               <div
                 className={cn(
-                  'px-(--dk-page-padding-x) py-(--dk-page-padding-y)',
+                  'px-(--designkit-page-padding-x) py-(--designkit-page-padding-y)',
                   stickyAside && 'lg:sticky lg:top-0',
                 )}
               >

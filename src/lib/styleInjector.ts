@@ -53,7 +53,7 @@ function buildTokenMap({
   const c = (factor: number) => (primaryChroma * factor).toFixed(4)
 
   return {
-    '--dk-radius': `${radius}rem`,
+    '--designkit-radius': `${radius}rem`,
     '--gridkit-radius': `${radius}rem`,
     '--radius': `${radius}rem`,
     '--radius-sm': `${(radius * 0.6).toFixed(4)}rem`,
@@ -63,9 +63,9 @@ function buildTokenMap({
     '--radius-2xl': `${(radius * 1.8).toFixed(4)}rem`,
 
     // primary — fully controlled
-    '--dk-primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
-    '--dk-primary-foreground': 'oklch(0.985 0 0)',
-    '--dk-ring': `oklch(0.50 ${primaryChroma} ${primaryHue})`,
+    '--designkit-primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
+    '--designkit-primary-foreground': 'oklch(0.985 0 0)',
+    '--designkit-ring': `oklch(0.50 ${primaryChroma} ${primaryHue})`,
     '--gridkit-primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
     '--gridkit-primary-foreground': 'oklch(0.985 0 0)',
     '--gridkit-ring': `oklch(0.50 ${primaryChroma} ${primaryHue})`,
@@ -89,38 +89,38 @@ function buildTokenMap({
     '--color-muted': `oklch(0.970 ${c(0.02)} ${primaryHue})`,
     '--color-secondary': `oklch(0.970 ${c(0.02)} ${primaryHue})`,
     '--color-accent': `oklch(0.970 ${c(0.04)} ${primaryHue})`,
-    '--dk-border': `oklch(0.922 ${c(0.04)} ${primaryHue})`,
-    '--dk-input': `oklch(0.922 ${c(0.04)} ${primaryHue})`,
-    '--dk-muted': `oklch(0.970 ${c(0.02)} ${primaryHue})`,
+    '--designkit-border': `oklch(0.922 ${c(0.04)} ${primaryHue})`,
+    '--designkit-input': `oklch(0.922 ${c(0.04)} ${primaryHue})`,
+    '--designkit-muted': `oklch(0.970 ${c(0.02)} ${primaryHue})`,
     '--gridkit-border': `oklch(0.922 ${c(0.04)} ${primaryHue})`,
     '--gridkit-muted': `oklch(0.970 ${c(0.02)} ${primaryHue})`,
 
-    '--dk-font-scale': fontScale,
-    '--dk-line-height': lineHeight,
-    '--dk-density': densityValues.density,
-    '--dk-page-padding-y': pagePaddingY ?? densityValues.pagePaddingY,
-    '--dk-panel-gap': panelGap ?? densityValues.panelGap,
-    '--dk-toolbar-height': toolbarHeight ?? densityValues.toolbarHeight,
-    '--dk-text-xs': `calc(0.75rem * ${fontScale})`,
-    '--dk-text-sm': `calc(0.875rem * ${fontScale})`,
-    '--dk-text-base': `calc(1rem * ${fontScale})`,
-    '--dk-text-lg': `calc(1.125rem * ${fontScale})`,
-    '--dk-text-xl': `calc(1.25rem * ${fontScale})`,
-    '--dk-leading-xs': `calc(1rem * ${lineHeight})`,
-    '--dk-leading-sm': `calc(1.25rem * ${lineHeight})`,
-    '--dk-leading-base': `calc(1.5rem * ${lineHeight})`,
-    '--dk-leading-lg': `calc(1.75rem * ${lineHeight})`,
-    '--dk-leading-xl': `calc(1.75rem * ${lineHeight})`,
-    '--text-xs': 'var(--dk-text-xs)',
-    '--text-sm': 'var(--dk-text-sm)',
-    '--text-base': 'var(--dk-text-base)',
-    '--text-lg': 'var(--dk-text-lg)',
-    '--text-xl': 'var(--dk-text-xl)',
-    '--text-xs--line-height': 'var(--dk-leading-xs)',
-    '--text-sm--line-height': 'var(--dk-leading-sm)',
-    '--text-base--line-height': 'var(--dk-leading-base)',
-    '--text-lg--line-height': 'var(--dk-leading-lg)',
-    '--text-xl--line-height': 'var(--dk-leading-xl)',
+    '--designkit-font-scale': fontScale,
+    '--designkit-line-height': lineHeight,
+    '--designkit-density': densityValues.density,
+    '--designkit-page-padding-y': pagePaddingY ?? densityValues.pagePaddingY,
+    '--designkit-panel-gap': panelGap ?? densityValues.panelGap,
+    '--designkit-toolbar-height': toolbarHeight ?? densityValues.toolbarHeight,
+    '--designkit-text-xs': `calc(0.75rem * ${fontScale})`,
+    '--designkit-text-sm': `calc(0.875rem * ${fontScale})`,
+    '--designkit-text-base': `calc(1rem * ${fontScale})`,
+    '--designkit-text-lg': `calc(1.125rem * ${fontScale})`,
+    '--designkit-text-xl': `calc(1.25rem * ${fontScale})`,
+    '--designkit-leading-xs': `calc(1rem * ${lineHeight})`,
+    '--designkit-leading-sm': `calc(1.25rem * ${lineHeight})`,
+    '--designkit-leading-base': `calc(1.5rem * ${lineHeight})`,
+    '--designkit-leading-lg': `calc(1.75rem * ${lineHeight})`,
+    '--designkit-leading-xl': `calc(1.75rem * ${lineHeight})`,
+    '--text-xs': 'var(--designkit-text-xs)',
+    '--text-sm': 'var(--designkit-text-sm)',
+    '--text-base': 'var(--designkit-text-base)',
+    '--text-lg': 'var(--designkit-text-lg)',
+    '--text-xl': 'var(--designkit-text-xl)',
+    '--text-xs--line-height': 'var(--designkit-leading-xs)',
+    '--text-sm--line-height': 'var(--designkit-leading-sm)',
+    '--text-base--line-height': 'var(--designkit-leading-base)',
+    '--text-lg--line-height': 'var(--designkit-leading-lg)',
+    '--text-xl--line-height': 'var(--designkit-leading-xl)',
   }
 }
 
@@ -137,9 +137,9 @@ function buildDarkTonalTokens(primaryHue: number, primaryChroma: number): TokenM
     '--color-muted': `oklch(0.269 ${c(0.03)} ${primaryHue})`,
     '--color-secondary': `oklch(0.269 ${c(0.02)} ${primaryHue})`,
     '--color-accent': `oklch(0.320 ${c(0.04)} ${primaryHue})`,
-    '--dk-border': `oklch(0.32  ${c(0.06)} ${primaryHue})`,
-    '--dk-input': `oklch(0.35  ${c(0.06)} ${primaryHue})`,
-    '--dk-muted': `oklch(0.269 ${c(0.03)} ${primaryHue})`,
+    '--designkit-border': `oklch(0.32  ${c(0.06)} ${primaryHue})`,
+    '--designkit-input': `oklch(0.35  ${c(0.06)} ${primaryHue})`,
+    '--designkit-muted': `oklch(0.269 ${c(0.03)} ${primaryHue})`,
     '--gridkit-border': `oklch(0.32  ${c(0.06)} ${primaryHue})`,
     '--gridkit-muted': `oklch(0.269 ${c(0.03)} ${primaryHue})`,
   }
@@ -200,10 +200,10 @@ export function useStyleInjector() {
 
   useEffect(() => {
     if (g.density === 'default') {
-      document.documentElement.removeAttribute('data-dk-density')
+      document.documentElement.removeAttribute('data-designkit-density')
       return
     }
-    document.documentElement.dataset.dkDensity = g.density
+    document.documentElement.dataset.designkitDensity = g.density
   }, [g.density])
 }
 

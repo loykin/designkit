@@ -161,8 +161,8 @@ export function WorkbenchBodyTemplate({
     <DataPage className={cn('layout-workbench', className)} style={theme}>
       {topBar && <div className="shrink-0">{topBar}</div>}
       {showHeader && (
-        <header className="shrink-0 border-b px-(--dk-page-padding-x) py-[calc(var(--dk-page-padding-y)*0.75)]">
-          <div className="flex min-h-[var(--dk-toolbar-height)] items-center justify-between gap-3">
+        <header className="shrink-0 border-b px-(--designkit-page-padding-x) py-[calc(var(--designkit-page-padding-y)*0.75)]">
+          <div className="flex min-h-[var(--designkit-toolbar-height)] items-center justify-between gap-3">
             <div className="min-w-0">
               {title && <h1 className="truncate text-sm font-semibold">{title}</h1>}
               {description && <p className="mt-0.5 truncate text-xs text-muted-foreground">{description}</p>}

@@ -54,7 +54,7 @@ export function FormWizardBodyTemplate({
       </DataPage.Header>
 
       {/* Step indicator */}
-      <div className="shrink-0 px-(--dk-page-padding-x) pb-4">
+      <div className="shrink-0 px-(--designkit-page-padding-x) pb-4">
         <div className="flex items-center">
           {steps.map((step, i) => (
             <Fragment key={step.key}>
@@ -97,7 +97,7 @@ export function FormWizardBodyTemplate({
         {current && (
           variant === 'card' ? (
             <Card>
-              <CardContent className="p-(--dk-panel-gap)">
+              <CardContent className="p-(--designkit-panel-gap)">
                 <form id={current.key} onSubmit={handleStepSubmit}>
                   <div className="mb-5">
                     <h2 className="text-sm font-semibold">{current.title}</h2>

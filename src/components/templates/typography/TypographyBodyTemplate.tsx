@@ -32,8 +32,8 @@ export function TypographyBodyTemplate({ theme, breadcrumb }: TypographyBodyTemp
         />
       </DataPage.Header>
 
-      <DataPage.Content className="grid gap-[var(--dk-panel-gap)] lg:grid-cols-[1fr_22rem]">
-        <div className="space-y-[var(--dk-panel-gap)]">
+      <DataPage.Content className="grid gap-[var(--designkit-panel-gap)] lg:grid-cols-[1fr_22rem]">
+        <div className="space-y-[var(--designkit-panel-gap)]">
           <Card className="rounded-lg border border-border ring-0">
             <CardHeader>
               <CardTitle>Type Scale</CardTitle>

@@ -95,7 +95,7 @@ export function FormInlineBodyTemplateDemo({ theme, topBarShow, topBarVariant, t
           </DataBodyTemplate.Row>
         </DataBodyTemplate.Group>
 
-        <div className="flex justify-end gap-2 px-(--dk-page-padding-x) pb-(--dk-page-padding-y)">
+        <div className="flex justify-end gap-2 px-(--designkit-page-padding-x) pb-(--designkit-page-padding-y)">
           <Button type="reset" variant="outline" size="sm" className="h-8 text-xs">Cancel</Button>
           <Button type="submit" size="sm" className="h-8 text-xs">Save</Button>
         </div>
@@ -124,7 +124,7 @@ export function buildFormInlineBodyTemplateCode({
     `            {/* input */}`,
     `          </DataBodyTemplate.Row>`,
     `        </DataBodyTemplate.Group>`,
-    `        <div className="flex justify-end gap-2 px-(--dk-page-padding-x) pb-(--dk-page-padding-y)">`,
+    `        <div className="flex justify-end gap-2 px-(--designkit-page-padding-x) pb-(--designkit-page-padding-y)">`,
     `          <button type="reset">Cancel</button>`,
     `          <button type="submit">Save</button>`,
     `        </div>`,
