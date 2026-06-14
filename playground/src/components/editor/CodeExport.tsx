@@ -18,9 +18,9 @@ import { CodeBlock } from './CodeBlock'
 
 function radiusVarLines(r: number): string[] {
   return [
-    `  --dk-radius:  ${r}rem;`,
-    `  --dg-radius:  ${r}rem;`,
-    `  --radius:     ${r}rem;`,
+    `  --dk-radius:       ${r}rem;`,
+    `  --gridkit-radius:  ${r}rem;`,
+    `  --radius:          ${r}rem;`,
     `  --radius-sm:  ${(r * 0.6).toFixed(4)}rem;`,
     `  --radius-md:  ${(r * 0.8).toFixed(4)}rem;`,
     `  --radius-lg:  ${r}rem;`,
@@ -30,12 +30,12 @@ function radiusVarLines(r: number): string[] {
 
 function colorVarLines(chroma: number, hue: number): string[] {
   return [
-    `  --dk-primary:            oklch(0.52 ${chroma} ${hue});`,
-    `  --dk-primary-foreground: oklch(0.985 0 0);`,
-    `  --dk-ring:               oklch(0.5 ${chroma} ${hue});`,
-    `  --dg-primary:            oklch(0.52 ${chroma} ${hue});`,
-    `  --dg-primary-foreground: oklch(0.985 0 0);`,
-    `  --dg-ring:               oklch(0.5 ${chroma} ${hue});`,
+    `  --dk-primary:                    oklch(0.52 ${chroma} ${hue});`,
+    `  --dk-primary-foreground:         oklch(0.985 0 0);`,
+    `  --dk-ring:                       oklch(0.5 ${chroma} ${hue});`,
+    `  --gridkit-primary:               oklch(0.52 ${chroma} ${hue});`,
+    `  --gridkit-primary-foreground:    oklch(0.985 0 0);`,
+    `  --gridkit-ring:                  oklch(0.5 ${chroma} ${hue});`,
     `  --primary:             oklch(0.52 ${chroma} ${hue});`,
     `  --primary-foreground:  oklch(0.985 0 0);`,
     `  --ring:                oklch(0.5 ${chroma} ${hue});`,
@@ -138,12 +138,12 @@ function buildThemeProp(
   const themeEntries: string[] = []
   if (ov.radius !== undefined) {
     themeEntries.push(`    '--dk-radius': '${ov.radius}rem',`)
-    themeEntries.push(`    '--dg-radius': '${ov.radius}rem',`)
+    themeEntries.push(`    '--gridkit-radius': '${ov.radius}rem',`)
     themeEntries.push(`    '--radius': '${ov.radius}rem',`)
   }
   if (ov.primaryChroma !== undefined) {
     themeEntries.push(`    '--dk-primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
-    themeEntries.push(`    '--dg-primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
+    themeEntries.push(`    '--gridkit-primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
     themeEntries.push(`    '--primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
   }
   if (ov.density !== undefined) {

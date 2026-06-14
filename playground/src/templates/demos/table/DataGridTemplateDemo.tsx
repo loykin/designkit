@@ -275,14 +275,14 @@ export function DataGridTemplateDemo({
 
   return (
     <DataBodyTemplate
-      theme={{ '--dg-card-padding': '0px', ...theme } as React.CSSProperties}
+      theme={{ '--gridkit-card-padding': '0px', ...theme } as React.CSSProperties}
       className={layoutClassName}
       topBar={resolvedTopBar}
       title={title}
       description={description}
       contentClassName={variant === 'infinity' ? 'pb-0' : undefined}
     >
-      <DataBodyTemplate.Body className="[&_.dg-shell]:h-full [&_.dg-table-wrapper]:min-h-0 [&_.dg-table-wrapper]:flex-1">
+      <DataBodyTemplate.Body className="[&_.gridkit-shell]:h-full [&_.gridkit-frame]:min-h-0 [&_.gridkit-frame]:flex-1">
         <GridContent
           variant={variant}
           visibleData={visibleData}

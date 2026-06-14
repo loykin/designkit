@@ -1,72 +1,20 @@
 import { useMemo } from 'react'
+import { DataGrid, type DataGridColumnDef } from '@loykin/gridkit'
 import { Badge } from '@loykin/designkit'
-import { cn } from '@loykin/designkit'
 import type { PanelViewerProps, PanelPluginDef } from '@loykin/dashboardkit'
 
-export interface TableColumn<T> {
-  key: keyof T
-  label: string
-  align?: 'left' | 'right' | 'center'
-  render?: (value: T[keyof T], row: T) => React.ReactNode
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
+type ServiceRow = {
+  service:  string
+  status:   string
+  requests: number
+  p99ms:    number
+  errors:   number
+  uptime:   string
 }
 
-export interface TablePanelProps<T extends Record<string, unknown>> {
-  columns: TableColumn<T>[]
-  rows: T[]
-}
-
-export function TablePanel<T extends Record<string, unknown>>({ columns, rows }: TablePanelProps<T>) {
-  return (
-    <div className="h-full overflow-auto">
-      <table className="w-full text-xs border-collapse">
-        <thead className="sticky top-0 bg-card z-10">
-          <tr className="border-b border-border">
-            {columns.map((col) => (
-              <th
-                key={String(col.key)}
-                className={cn(
-                  'px-2 py-1.5 font-medium text-muted-foreground whitespace-nowrap',
-                  col.align === 'right' && 'text-right',
-                  col.align === 'center' && 'text-center',
-                  !col.align && 'text-left',
-                )}
-              >
-                {col.label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, i) => (
-            <tr
-              key={i}
-              className="border-b border-border/40 hover:bg-muted/30 transition-colors"
-            >
-              {columns.map((col) => (
-                <td
-                  key={String(col.key)}
-                  className={cn(
-                    'px-2 py-1.5 text-card-foreground',
-                    col.align === 'right' && 'text-right tabular-nums',
-                    col.align === 'center' && 'text-center',
-                  )}
-                >
-                  {col.render
-                    ? col.render(row[col.key], row)
-                    : String(row[col.key] ?? '')}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-// ─── Plugin ───────────────────────────────────────────────────────────────────
-
-function makeServiceRows(env: string) {
+function makeServiceRows(env: string): ServiceRow[] {
   const services = ['api-gateway', 'auth-service', 'data-pipeline', 'scheduler', 'notifier']
   const statusByEnv: Record<string, string[]> = {
     production:  ['healthy', 'healthy', 'warning', 'healthy', 'healthy'],
@@ -84,34 +32,78 @@ function makeServiceRows(env: string) {
   }))
 }
 
-export interface TableColumnDef {
-  key: string
-  label: string
-  align?: 'left' | 'right' | 'center'
-  /** Rendering hint: 'status' → badge, 'errors' → colored number, 'localeNumber' → toLocaleString */
-  type?: 'status' | 'errors' | 'localeNumber'
+// ─── Columns ──────────────────────────────────────────────────────────────────
+
+const statusMap: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
+  healthy: 'default', ok: 'default',
+  warning: 'secondary',
+  error: 'destructive', critical: 'destructive',
+  unknown: 'outline',
 }
+
+const SERVICE_COLUMNS: DataGridColumnDef<ServiceRow>[] = [
+  {
+    id: 'service', accessorKey: 'service', header: 'Service',
+    cell: ({ row }) => <span className="font-medium">{row.original.service}</span>,
+  },
+  {
+    id: 'status', accessorKey: 'status', header: 'Status',
+    cell: ({ row }) => {
+      const v = row.original.status
+      return (
+        <Badge variant={statusMap[v.toLowerCase()] ?? 'outline'} className="text-[10px] px-1.5 py-0 capitalize">
+          {v}
+        </Badge>
+      )
+    },
+  },
+  {
+    id: 'requests', accessorKey: 'requests', header: 'Requests/s',
+    meta: { align: 'right' },
+    cell: ({ row }) => row.original.requests.toLocaleString(),
+  },
+  {
+    id: 'p99ms', accessorKey: 'p99ms', header: 'P99 (ms)',
+    meta: { align: 'right' },
+    cell: ({ row }) => row.original.p99ms,
+  },
+  {
+    id: 'errors', accessorKey: 'errors', header: 'Errors',
+    meta: { align: 'right' },
+    cell: ({ row }) => (
+      <span className={row.original.errors > 50 ? 'text-destructive font-medium' : undefined}>
+        {row.original.errors}
+      </span>
+    ),
+  },
+  {
+    id: 'uptime', accessorKey: 'uptime', header: 'Uptime',
+    meta: { align: 'right' },
+    cell: ({ row }) => row.original.uptime,
+  },
+]
+
+// ─── Plugin ───────────────────────────────────────────────────────────────────
 
 export interface TablePanelOptions extends Record<string, unknown> {
-  columns: TableColumnDef[]
+  columns: { key: string; label: string; align?: string; type?: string }[]
 }
 
-function TableViewer({ options, variables }: PanelViewerProps<TablePanelOptions, unknown>) {
+function TableViewer({ variables }: PanelViewerProps<TablePanelOptions, unknown>) {
   const env = (variables.env as string) ?? 'production'
   const rows = useMemo(() => makeServiceRows(env), [env])
-  const columns = options.columns.map((col) => ({
-    key:   col.key as keyof Record<string, unknown>,
-    label: col.label,
-    align: col.align,
-    render:
-      col.type === 'status'      ? (v: unknown) => <StatusBadge value={String(v)} /> :
-      col.type === 'errors'      ? (v: unknown) => (
-        <span className={Number(v) > 50 ? 'text-destructive font-medium' : undefined}>{String(v)}</span>
-      ) :
-      col.type === 'localeNumber'? (v: unknown) => Number(v).toLocaleString() :
-      undefined,
-  }))
-  return <TablePanel columns={columns} rows={rows as Record<string, unknown>[]} />
+  return (
+    <div style={{ '--gridkit-container-border': 'transparent', '--gridkit-radius': '0px', '--gridkit-header-background': 'transparent' } as React.CSSProperties} className="h-full">
+      <DataGrid<ServiceRow>
+        data={rows}
+        columns={SERVICE_COLUMNS}
+        getRowId={(row) => row.service}
+        fillParent
+        rowHeight={36}
+        styles={{ header: { borderTop: '1px solid var(--border)' } }}
+      />
+    </div>
+  )
 }
 
 export const tablePlugin: PanelPluginDef<TablePanelOptions, unknown> = {
@@ -119,24 +111,4 @@ export const tablePlugin: PanelPluginDef<TablePanelOptions, unknown> = {
   name: 'Table',
   optionsSchema: {},
   viewer: TableViewer,
-}
-
-// ── Status badge helper ────────────────────────────────────────────────────────
-
-const statusMap: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = {
-  healthy: 'default',
-  ok: 'default',
-  warning: 'secondary',
-  error: 'destructive',
-  critical: 'destructive',
-  unknown: 'outline',
-}
-
-export function StatusBadge({ value }: { value: string }) {
-  const variant = statusMap[value.toLowerCase()] ?? 'outline'
-  return (
-    <Badge variant={variant} className="text-[10px] px-1.5 py-0 capitalize">
-      {value}
-    </Badge>
-  )
 }
