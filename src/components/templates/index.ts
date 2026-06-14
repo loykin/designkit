@@ -21,6 +21,8 @@ export { DataBodyTemplate } from './databody/DataBodyTemplate'
 export { BrowseBodyTemplate } from './browse/BrowseBodyTemplate'
 export type { BrowseBodyTemplateProps } from './browse/BrowseBodyTemplate'
 export { DetailBodyTemplate } from './detail/DetailBodyTemplate'
+export { ListDetailBodyTemplate } from './listdetail/ListDetailBodyTemplate'
+export type { ListDetailBodyTemplateProps } from './listdetail/ListDetailBodyTemplate'
 export type {
   DetailBodyTemplateProps,
   DetailBodyHeaderProps,

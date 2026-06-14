@@ -84,10 +84,12 @@ component already supplied by DesignKit.
 | Requirement | Template |
 | --- | --- |
 | Data, list, tabs, or settings page | `DataBodyTemplate` |
+| Settings page with vertical category nav | `DataBodyTemplate` with `DataBodyTemplate.Section` |
+| Selected item drives a detail pane (CRM, inbox, issue tracker) | `ListDetailBodyTemplate` |
 | Entity or record details | `DetailBodyTemplate` |
 | Multi-step form | `FormWizardBodyTemplate` |
 | Dashboard shell and panels | `DashboardBodyTemplate` |
-| Editor or multi-pane workspace | `WorkbenchBodyTemplate` |
+| Editor, multi-pane workspace, or agent chat | `WorkbenchBodyTemplate` |
 | Filter sidebar and browse results | `BrowseBodyTemplate` |
 | Authentication page | `LoginBodyTemplate` |
 
@@ -97,6 +99,59 @@ directly bypasses the template-level integration: the `theme` prop, shell
 coordination, and density tokens will not apply. Use one of the body templates
 above and reach for `DataPage` only when building a new reusable template that
 is not covered by any existing one.
+
+### ListDetailBodyTemplate
+
+Two-pane master-detail layout. The list pane has a fixed width; the detail pane
+fills the remaining space. On mobile, only one pane is visible at a time —
+passing `detail` shows the detail pane, omitting it shows the list.
+
+```tsx
+import { ListDetailBodyTemplate, PageTopBar } from '@loykin/designkit'
+
+<ListDetailBodyTemplate
+  topBar={<PageTopBar left="Issues" />}
+  listWidth={320}
+  list={<IssueList onSelect={setSelectedId} />}
+  detail={selected ? <IssueDetail issue={selected} /> : undefined}
+  emptyDetail={<p>Select an issue to view details</p>}
+/>
+```
+
+### WorkbenchBodyTemplate with DataGridAgentChat
+
+For agent or LLM chat interfaces, place `DataGridAgentChat` from
+`@loykin/gridkit` in the `mainPane` slot. Use `leftPane` for conversation
+history or context.
+
+```tsx
+import { WorkbenchBodyTemplate, PageTopBar } from '@loykin/designkit'
+import { DataGridAgentChat } from '@loykin/gridkit'
+import type { AgentChatEvent } from '@loykin/gridkit'
+
+const events: AgentChatEvent[] = [
+  { id: '1', type: 'message', role: 'user', content: 'How many active users?' },
+  { id: '2', type: 'tool_call', name: 'query_database', status: 'complete',
+    input: { sql: 'SELECT COUNT(*) FROM users WHERE active = true' } },
+  { id: '3', type: 'tool_result', name: 'query_database', output: { count: 4218 } },
+  { id: '4', type: 'message', role: 'assistant', content: '4,218 active users.' },
+]
+
+<WorkbenchBodyTemplate
+  topBar={<PageTopBar variant="default" left="Data Agent" />}
+  leftPaneWidth={220}
+  leftPane={<ConversationList />}
+  mainPane={
+    <DataGridAgentChat
+      events={events}
+      fillParent
+      stickToBottom
+      scrollbar={{ mode: 'custom' }}
+      styles={{ root: { '--gridkit-container-border': 'transparent' } as React.CSSProperties }}
+    />
+  }
+/>
+```
 
 ## Supported Customization
 

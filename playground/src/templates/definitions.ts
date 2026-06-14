@@ -9,6 +9,7 @@ export type TemplateNavigationGroupId =
   | 'DetailBodyTemplate'
   | 'DashboardBodyTemplate'
   | 'WorkbenchBodyTemplate'
+  | 'ListDetailBodyTemplate'
   | 'Common'
 export type TemplateExportKind =
   | 'data-grid'
@@ -20,6 +21,7 @@ export type TemplateExportKind =
   | 'detail'
   | 'dashboard'
   | 'workbench'
+  | 'list-detail'
 
 export interface TemplateOptionChoice {
   value: string
@@ -336,6 +338,18 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     preset: {},
     options: topBarOptions,
   },
+  // ── ListDetailBodyTemplate ────────────────────────────────────────────────────
+  {
+    id: 'list-detail',
+    label: 'List / Detail',
+    navigationSubgroupLabel: 'List / Detail',
+    group: 'Pages',
+    navigationGroup: 'ListDetailBodyTemplate',
+    layoutClassName: 'layout-list-detail',
+    exportComponent: 'ListDetailBodyTemplate',
+    exportKind: 'list-detail',
+    preset: {},
+  },
   // ── BrowseBodyTemplate ───────────────────────────────────────────────────────
   {
     id: 'browse',
@@ -504,6 +518,17 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     navigationGroup: 'WorkbenchBodyTemplate',
     navigationParent: 'workbench-panel-editor',
     layoutClassName: 'layout-workbench-sql-editor',
+    exportComponent: 'WorkbenchBodyTemplate',
+    exportKind: 'workbench',
+    preset: {},
+  },
+  {
+    id: 'workbench-agent-chat',
+    label: 'Agent Chat',
+    group: 'Workbench',
+    navigationGroup: 'WorkbenchBodyTemplate',
+    navigationParent: 'workbench-panel-editor',
+    layoutClassName: 'layout-workbench-agent-chat',
     exportComponent: 'WorkbenchBodyTemplate',
     exportKind: 'workbench',
     preset: {},

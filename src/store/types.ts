@@ -24,10 +24,12 @@ export type TemplateId =
   | 'dashboard'
   | 'workbench-panel-editor'
   | 'workbench-sql-editor'
+  | 'workbench-agent-chat'
   | 'browse'
   | 'detail'
   | 'detail-record'
   | 'detail-full'
+  | 'list-detail'
 
 export interface GlobalTheme {
   radius: number

@@ -141,3 +141,4 @@ npm_config_cache=/tmp/designkit-npm-cache npm pack --dry-run
 - No unnecessary comments — only add when the WHY is non-obvious
 - New `--dk-*` variables must have sensible fallbacks for consuming apps
 - New public component → export from `src/index.ts` AND `src/components/templates/index.ts` (if a template)
+- New public template → also update the Template Selection table in `docs/consumer-guide.md`
