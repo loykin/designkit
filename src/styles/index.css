@@ -26,7 +26,7 @@
   --dk-ring: var(--ring, oklch(0.708 0 0));
   --dk-destructive: var(--destructive, oklch(0.577 0.245 27.325));
 
-  /* light mode: background보다 약간 어둡게, 반투명 */
+  /* light mode: slightly darker than background, semi-transparent */
   --dk-header: oklch(0.96 0 0 / 0.92);
 
   --dk-density: 1;
@@ -57,7 +57,7 @@
   --dk-muted-foreground: var(--muted-foreground, oklch(0.580 0 0));
   --dk-border: var(--border, oklch(1 0 0 / 18%));
   --dk-input: var(--input, oklch(1 0 0 / 22%));
-  /* dark mode: background보다 약간 밝게, 반투명 */
+  /* dark mode: slightly lighter than background, semi-transparent */
   --dk-header: oklch(0.22 0 0 / 0.88);
 }
 
