@@ -23,6 +23,8 @@ export type { BrowseBodyTemplateProps } from './browse/BrowseBodyTemplate'
 export { DetailBodyTemplate } from './detail/DetailBodyTemplate'
 export { ListDetailBodyTemplate } from './listdetail/ListDetailBodyTemplate'
 export type { ListDetailBodyTemplateProps } from './listdetail/ListDetailBodyTemplate'
+export { PanelTemplate } from './panel/PanelTemplate'
+export type { PanelTemplateProps, PanelTemplateSectionProps } from './panel/PanelTemplate'
 export type {
   DetailBodyTemplateProps,
   DetailBodyHeaderProps,

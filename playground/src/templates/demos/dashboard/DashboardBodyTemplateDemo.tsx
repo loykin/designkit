@@ -3,17 +3,16 @@ import {
   DashboardBodyTemplate,
   DashboardPanel,
   PageTopBar,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   Button,
 } from '@loykin/designkit'
 import { createDashboardEngine } from '@loykin/dashboardkit'
 import { useLoadDashboard, useVariable, DashboardGrid } from '@loykin/dashboardkit/react'
 import type { PanelViewerProps, CoreEngineAPI, DashboardConfig } from '@loykin/dashboardkit'
-import { RefreshCw, Clock, PencilLine, Check, MoreVertical } from 'lucide-react'
+import { RefreshCw, PencilLine, Check, MoreVertical } from 'lucide-react'
+import { FilterVariable } from '@loykin/filter-input'
+import type { FilterInputConfig, FilterValue } from '@loykin/filter-input'
+import { DatetimeRange, relativeAgo, relativeNow } from '@loykin/datetime-range'
+import type { DateTimeRangeValue } from '@loykin/datetime-range'
 import { statPlugin } from './panels/StatPanel'
 import { timeSeriesPlugin } from './panels/TimeSeriesPanel'
 import { barChartPlugin } from './panels/BarChartPanel'
@@ -171,25 +170,44 @@ const DASHBOARD_CONFIG: DashboardConfig = {
   annotations: [],
 }
 
-// ─── Variable toolbar ─────────────────────────────────────────────────────────
+// ─── FilterVariable configs ───────────────────────────────────────────────────
 
-function VariableSelect({ engine, name, className }: {
-  engine: CoreEngineAPI
-  name: string
-  className?: string
-}) {
-  const { value, options, setValue } = useVariable(engine, name)
+const ENV_CONFIG: FilterInputConfig = {
+  key: 'env',
+  label: 'env',
+  type: 'select',
+  options: [
+    { label: 'production',  value: 'production'  },
+    { label: 'staging',     value: 'staging'     },
+    { label: 'development', value: 'development' },
+  ],
+  behavior: { clearable: false },
+}
+
+const INTERVAL_CONFIG: FilterInputConfig = {
+  key: 'interval',
+  label: 'interval',
+  type: 'select',
+  options: [
+    { label: '5m',  value: '5m'  },
+    { label: '1h',  value: '1h'  },
+    { label: '6h',  value: '6h'  },
+    { label: '24h', value: '24h' },
+  ],
+  behavior: { clearable: false },
+}
+
+// ─── DashboardVariable: FilterVariable backed by dashboardkit useVariable ─────
+
+function DashboardVariable({ engine, config }: { engine: CoreEngineAPI; config: FilterInputConfig }) {
+  const { value, setValue } = useVariable(engine, config.key)
   return (
-    <Select value={value as string} onValueChange={(v) => v !== null && setValue(v)}>
-      <SelectTrigger className={['h-7 text-xs', className].filter(Boolean).join(' ')}>
-        <SelectValue />
-      </SelectTrigger>
-      <SelectContent>
-        {options.map((opt) => (
-          <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <FilterVariable
+      config={config}
+      value={value as FilterValue}
+      onChange={(next) => next != null && setValue(next as string)}
+      classNames={{ root: 'fi-dashboard-var', label: 'text-xs text-muted-foreground', value: 'w-28' }}
+    />
   )
 }
 
@@ -206,8 +224,8 @@ export function DashboardBodyTemplateDemo({ theme }: { theme?: React.CSSProperti
   }), [envVar.value, intervalVar.value])
 
   const [editable, setEditable] = useState(false)
-  const [lastRefresh, setLastRefresh] = useState(() => new Date())
-  const refresh = () => setLastRefresh(new Date())
+  const [startTime, setStartTime] = useState<DateTimeRangeValue>(() => relativeAgo(6, 'Hours ago'))
+  const [endTime,   setEndTime]   = useState<DateTimeRangeValue>(() => relativeNow())
 
   return (
     <DashboardBodyTemplate
@@ -218,13 +236,14 @@ export function DashboardBodyTemplateDemo({ theme }: { theme?: React.CSSProperti
           left="Infrastructure / Overview"
           right={
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <Clock className="h-3.5 w-3.5" />
-                <span className="text-xs">
-                  {lastRefresh.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </span>
-              </div>
-              <Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs" onClick={refresh}>
+              <DatetimeRange
+                startTime={startTime}
+                endTime={endTime}
+                onChange={(s, e) => { setStartTime(s); setEndTime(e) }}
+                showQuickRanges={true}
+                popoverAlign="end"
+              />
+              <Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs">
                 <RefreshCw className="h-3.5 w-3.5" />
                 Refresh
               </Button>
@@ -243,10 +262,8 @@ export function DashboardBodyTemplateDemo({ theme }: { theme?: React.CSSProperti
       }
       variableBar={
         <>
-          <span className="text-xs text-muted-foreground">env</span>
-          <VariableSelect engine={engine} name="env" className="w-32" />
-          <span className="text-xs text-muted-foreground ml-2">interval</span>
-          <VariableSelect engine={engine} name="interval" className="w-20" />
+          <DashboardVariable engine={engine} config={ENV_CONFIG} />
+          <DashboardVariable engine={engine} config={INTERVAL_CONFIG} />
         </>
       }
       contentClassName="pb-6"
@@ -292,30 +309,51 @@ export function DashboardBodyTemplateDemo({ theme }: { theme?: React.CSSProperti
 
 export function buildDashboardTemplateCode({ layoutClassName, themeProp }: TemplateCodeContext) {
   return [
-    `import { DashboardBodyTemplate, DashboardPanel, PageTopBar } from '@loykin/designkit'`,
+    `import { DashboardBodyTemplate, DashboardPanel, PageTopBar, Button } from '@loykin/designkit'`,
     `import { createDashboardEngine } from '@loykin/dashboardkit'`,
     `import { useLoadDashboard, useVariable, DashboardGrid } from '@loykin/dashboardkit/react'`,
     `import type { PanelViewerProps } from '@loykin/dashboardkit'`,
+    `import { FilterVariable } from '@loykin/filter-input'`,
+    `import { DatetimeRange, relativeAgo, relativeNow } from '@loykin/datetime-range'`,
     `import '@loykin/designkit/styles'`,
     `import '@loykin/dashboardkit/styles'`,
+    `import '@loykin/filter-input/styles'`,
+    `import '@loykin/datetime-range/styles'`,
     ``,
-    `// Register panel plugins once at module level`,
     `const engine = createDashboardEngine()`,
     `engine.registerPanel(statPlugin)`,
-    `engine.registerPanel(timeSeriesPlugin)`,
     `// ... register more panel types`,
+    ``,
+    `const ENV_CONFIG = {`,
+    `  key: 'env', label: 'env', type: 'select' as const,`,
+    `  options: [{ label: 'production', value: 'production' }, ...],`,
+    `  behavior: { clearable: false },`,
+    `}`,
     ``,
     `export function MyDashboard() {`,
     `  useLoadDashboard(engine, config)`,
     `  const envVar = useVariable(engine, 'env')`,
-    `  const variables = { env: envVar.value ?? 'production' }`,
+    `  const variables = { env: (envVar.value as string) ?? 'production' }`,
     `  const [editable, setEditable] = useState(false)`,
+    `  const [startTime, setStartTime] = useState(() => relativeAgo(6, 'Hours ago'))`,
+    `  const [endTime,   setEndTime]   = useState(() => relativeNow())`,
     ``,
     `  return (`,
     `    <DashboardBodyTemplate${themeProp}`,
     `      className="${layoutClassName}"`,
-    `      topBar={<PageTopBar left="My Dashboard" right={/* edit / refresh */} />}`,
-    `      variableBar={/* <VariableSelect> components */}`,
+    `      topBar={`,
+    `        <PageTopBar left="My Dashboard" right={`,
+    `          <div className="flex items-center gap-2">`,
+    `            <DatetimeRange startTime={startTime} endTime={endTime}`,
+    `              onChange={(s, e) => { setStartTime(s); setEndTime(e) }} popoverAlign="end" />`,
+    `            <Button variant="outline" size="sm">Refresh</Button>`,
+    `          </div>`,
+    `        } />`,
+    `      }`,
+    `      variableBar={`,
+    `        <FilterVariable config={ENV_CONFIG} value={envVar.value}`,
+    `          onChange={({ value }) => value != null && envVar.setValue(value as string)} />`,
+    `      }`,
     `    >`,
     `      <DashboardGrid engine={engine} editable={editable}>`,
     `        {({ panelType, config, data, rawData, loading, error, ref }) => {`,

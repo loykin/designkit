@@ -30,6 +30,7 @@ export type TemplateId =
   | 'detail-record'
   | 'detail-full'
   | 'list-detail'
+  | 'panel'
 
 export interface GlobalTheme {
   radius: number

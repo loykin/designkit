@@ -1,7 +1,7 @@
 import { createElement, type ComponentType } from 'react'
 import type { TemplateId } from '@loykin/designkit'
 import { TypographyBodyTemplate, ColorsBodyTemplate } from '@loykin/designkit'
-import { FileText, LayoutDashboard, Table2, Layers, Type, Palette, KeyRound, BarChart2, PanelTop, PanelsTopLeft, PanelLeftOpen } from 'lucide-react'
+import { FileText, LayoutDashboard, Table2, Layers, Type, Palette, KeyRound, BarChart2, PanelTop, PanelsTopLeft, PanelLeftOpen, PanelRight } from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
 import type { TemplateCodeBuilder } from './code'
 
@@ -70,6 +70,7 @@ import {
 import { AgentChatDemo, buildAgentChatCode } from './demos/workbench/AgentChatDemo'
 import { BrowseBodyTemplateDemo, buildBrowseBodyTemplateCode } from './demos/browse/BrowseBodyTemplateDemo'
 import { ListDetailBodyTemplateDemo, buildListDetailBodyTemplateCode } from './demos/listdetail/ListDetailBodyTemplateDemo'
+import { PanelTemplateDemo, buildPanelTemplateCode } from './demos/panel/PanelTemplateDemo'
 import {
   DetailBodyTemplateDemo as ProductDetailBodyTemplateDemo,
   buildDetailTemplateCode,
@@ -147,6 +148,7 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   'workbench-agent-chat': AgentChatDemo,
   browse: BrowseBodyTemplateDemo,
   'list-detail': ListDetailBodyTemplateDemo,
+  panel: PanelTemplateDemo,
   detail: createDetailPreview('media'),
   'detail-record': createDetailPreview('record'),
   'detail-full': createDetailPreview('full'),
@@ -177,6 +179,7 @@ const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
   'workbench-agent-chat': buildAgentChatCode,
   browse: buildBrowseBodyTemplateCode,
   'list-detail': buildListDetailBodyTemplateCode,
+  panel: buildPanelTemplateCode,
   detail: buildDetailTemplateCode,
   'detail-record': buildDetailTemplateCode,
   'detail-full': buildDetailTemplateCode,
@@ -207,6 +210,7 @@ const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>
   'detail-record': PanelTop,
   'detail-full': PanelTop,
   'list-detail': PanelLeftOpen,
+  panel: PanelRight,
 }
 
 const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: string }>>> = {
@@ -216,9 +220,10 @@ const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: st
   DashboardBodyTemplate: BarChart2,
   WorkbenchBodyTemplate: PanelsTopLeft,
   ListDetailBodyTemplate: PanelLeftOpen,
+  PanelTemplate: PanelRight,
 }
 
-const navigationLabelOrder = ['Common', 'DataBodyTemplate', 'DetailBodyTemplate', 'ListDetailBodyTemplate', 'FormWizardBodyTemplate', 'LoginBodyTemplate', 'DashboardBodyTemplate', 'WorkbenchBodyTemplate']
+const navigationLabelOrder = ['Common', 'DataBodyTemplate', 'DetailBodyTemplate', 'ListDetailBodyTemplate', 'PanelTemplate', 'FormWizardBodyTemplate', 'LoginBodyTemplate', 'DashboardBodyTemplate', 'WorkbenchBodyTemplate']
 
 export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder
   .map((groupId) => {

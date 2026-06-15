@@ -10,6 +10,7 @@ export type TemplateNavigationGroupId =
   | 'DashboardBodyTemplate'
   | 'WorkbenchBodyTemplate'
   | 'ListDetailBodyTemplate'
+  | 'PanelTemplate'
   | 'Common'
 export type TemplateExportKind =
   | 'data-grid'
@@ -22,6 +23,7 @@ export type TemplateExportKind =
   | 'dashboard'
   | 'workbench'
   | 'list-detail'
+  | 'panel'
 
 export interface TemplateOptionChoice {
   value: string
@@ -531,6 +533,18 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     layoutClassName: 'layout-workbench-agent-chat',
     exportComponent: 'WorkbenchBodyTemplate',
     exportKind: 'workbench',
+    preset: {},
+  },
+  // ── PanelTemplate ────────────────────────────────────────────────────────────
+  {
+    id: 'panel',
+    label: 'Side Panel',
+    navigationSubgroupLabel: 'Panel',
+    group: 'Pages',
+    navigationGroup: 'PanelTemplate',
+    layoutClassName: 'layout-panel',
+    exportComponent: 'PanelTemplate',
+    exportKind: 'panel',
     preset: {},
   },
 ]

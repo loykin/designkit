@@ -75,3 +75,33 @@
   --designkit-toolbar-height: 3rem;
 }
 
+/*
+ * Basekit adapter.
+ *
+ * Maps --bk-* tokens used by @loykin/filter-input, @loykin/datetime-range,
+ * and @loykin/side-panel onto the designkit token set.
+ *
+ * Import order matters: this file must be loaded AFTER basekit package styles
+ * so these :root declarations win the cascade.
+ */
+:root {
+  --bk-background:           var(--designkit-background);
+  --bk-foreground:           var(--designkit-foreground);
+  --bk-popover:              var(--designkit-card);
+  --bk-popover-foreground:   var(--designkit-card-foreground);
+  --bk-muted:                var(--designkit-muted);
+  --bk-muted-foreground:     var(--designkit-muted-foreground);
+  --bk-border:               var(--designkit-border);
+  --bk-input:                var(--designkit-input);
+  --bk-ring:                 var(--designkit-ring);
+  --bk-primary:              var(--designkit-primary);
+  --bk-primary-foreground:   var(--designkit-primary-foreground);
+  --bk-secondary:            var(--designkit-secondary);
+  --bk-secondary-foreground: var(--designkit-secondary-foreground);
+  --bk-accent:               var(--designkit-accent);
+  --bk-accent-foreground:    var(--designkit-accent-foreground);
+  --bk-destructive:          var(--designkit-destructive);
+  --bk-radius:               var(--designkit-radius);
+  --bk-switch-thumb:         oklch(1 0 0);
+}
+
