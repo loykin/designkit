@@ -60,7 +60,7 @@ function PanelTemplateRoot({
   return (
     <div className={cn('flex h-full flex-col overflow-hidden', className)}>
       {(title || eyebrow || actions) && (
-        <div className="shrink-0 border-b px-4 py-3">
+        <div className="shrink-0 px-4 py-3">
           {eyebrow && (
             <p className="mb-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
               {eyebrow}
