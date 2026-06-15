@@ -453,6 +453,39 @@ import {
 } from '@loykin/designkit'
 ```
 
+### PageTopBar
+
+Top breadcrumb / action bar placed at the top of a page template via the `topBar` prop.
+
+```tsx
+import { PageTopBar } from '@loykin/designkit'
+
+<PageTopBar left="Admin / Users" right={<Button size="sm">Add</Button>} />
+```
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `left` | `ReactNode` | — | Left content. A plain string is parsed as `/`-separated breadcrumbs. |
+| `right` | `ReactNode` | — | Right-aligned actions |
+| `variant` | `'ghost' \| 'default'` | `'ghost'` | `'default'` adds a bottom border |
+| `sidebarTrigger` | `false \| ReactNode` | auto | Mobile sidebar open button. `undefined` auto-detects SidebarProvider context; `false` suppresses; pass a `ReactNode` for a custom trigger. |
+| `height` | `string` | `var(--designkit-toolbar-height)` | Bar height |
+| `className` | `string` | — | Class applied to the bar root |
+
+**Mobile sidebar trigger**
+
+When `PageTopBar` is rendered inside a `SidebarShell` on a mobile viewport, it automatically prepends a hamburger trigger to open the sidebar drawer — no extra code required. To suppress this (e.g. when the left slot already has a back button), pass `sidebarTrigger={false}`:
+
+```tsx
+// Back-button detail page — suppress auto trigger
+<PageTopBar sidebarTrigger={false} left={<BackButton />} />
+
+// Custom trigger
+<PageTopBar sidebarTrigger={<MyTrigger />} left="Settings" />
+```
+
+---
+
 ### EmptyState
 
 ```tsx

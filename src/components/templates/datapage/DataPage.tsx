@@ -97,7 +97,7 @@ function Header({ children, className }: DataPageHeaderProps) {
         className,
       )}
     >
-      <div className="flex items-center justify-between gap-[var(--designkit-panel-gap)]">
+      <div className="flex flex-wrap items-center justify-between gap-[var(--designkit-panel-gap)]">
         {children}
       </div>
     </header>

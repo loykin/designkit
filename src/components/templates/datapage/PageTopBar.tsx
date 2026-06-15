@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
+import { SidebarTrigger, useSidebarOptional } from '@/components/ui/sidebar'
 
 export type PageTopBarVariant = 'ghost' | 'default'
 
@@ -19,6 +20,13 @@ export interface PageTopBarProps {
   className?: string
   style?: React.CSSProperties
   children?: React.ReactNode
+  /**
+   * Mobile sidebar trigger shown at the far left of the bar.
+   * - undefined (default): auto-detect — shows when inside SidebarProvider on mobile
+   * - false: suppress entirely
+   * - ReactNode: custom trigger content
+   */
+  sidebarTrigger?: false | React.ReactNode
 }
 
 export type PageBreadcrumbItem = string | { label: string; href?: string }
@@ -86,6 +94,12 @@ export function buildTopBar(opts: {
   )
 }
 
+function AutoSidebarTrigger() {
+  const ctx = useSidebarOptional()
+  if (!ctx?.isMobile) return null
+  return <SidebarTrigger className="-ml-1 shrink-0" />
+}
+
 export function PageTopBar({
   left,
   right,
@@ -94,7 +108,13 @@ export function PageTopBar({
   className,
   style,
   children,
+  sidebarTrigger,
 }: PageTopBarProps) {
+  const trigger =
+    sidebarTrigger === false ? null
+    : sidebarTrigger !== undefined ? sidebarTrigger
+    : <AutoSidebarTrigger />
+
   return (
     <div
       className={cn(
@@ -104,7 +124,8 @@ export function PageTopBar({
       )}
       style={{ height, ...style }}
     >
-      <div className="flex min-w-0 items-center text-xs text-muted-foreground">
+      <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
+        {trigger}
         {normalizeBreadcrumb(left ?? children)}
       </div>
       {right && <div className="flex shrink-0 items-center gap-2">{right}</div>}

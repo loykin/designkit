@@ -10,10 +10,11 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 import type { TemplateId } from '@/store/types'
 import type { TemplateNavigationGroup, TemplateNavigationItem } from '@/components/templates'
-import { Bell, Settings } from 'lucide-react'
+import { Bell, Menu, Settings } from 'lucide-react'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -55,6 +56,73 @@ function HeaderActions() {
 
 const demoNav = ['Overview', 'Users', 'Products', 'Reports', 'Settings']
 
+function MobileNavSheet({
+  navigation,
+  activeItemId,
+  onItemSelect,
+}: Pick<HeaderShellProps, 'navigation' | 'activeItemId' | 'onItemSelect'>) {
+  const [open, setOpen] = useState(false)
+
+  const handleSelect = (id: TemplateId) => {
+    onItemSelect?.(id)
+    setOpen(false)
+  }
+
+  const allItems = navigation?.flatMap((g) => g.items) ?? []
+
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger render={<Button variant="ghost" size="icon" className="h-8 w-8" />}>
+        <Menu className="h-4 w-4" />
+        <span className="sr-only">Open menu</span>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-64 p-0">
+        <SheetHeader className="border-b px-4 py-3">
+          <SheetTitle className="text-sm">Menu</SheetTitle>
+        </SheetHeader>
+        <nav className="flex flex-col gap-0.5 p-2">
+          {allItems.map((item) => {
+            const Icon = item.icon
+            const active = itemIsActive(item, activeItemId)
+            return (
+              <Fragment key={item.id}>
+                <button
+                  type="button"
+                  onClick={() => !item.children?.length && handleSelect(item.id)}
+                  className={cn(
+                    'flex w-full items-center gap-2 rounded-(--radius) px-3 py-2 text-left text-sm transition-colors',
+                    active && !item.children?.length
+                      ? 'bg-accent text-accent-foreground font-medium'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                  )}
+                >
+                  {Icon && <Icon className="h-4 w-4 shrink-0" />}
+                  {item.label}
+                </button>
+                {item.children?.map((child) => (
+                  <button
+                    key={child.id}
+                    type="button"
+                    onClick={() => handleSelect(child.id)}
+                    className={cn(
+                      'flex w-full items-center gap-2 rounded-(--radius) py-1.5 pl-9 pr-3 text-left text-sm transition-colors',
+                      child.id === activeItemId
+                        ? 'bg-accent text-accent-foreground font-medium'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                    )}
+                  >
+                    {child.label}
+                  </button>
+                ))}
+              </Fragment>
+            )
+          })}
+        </nav>
+      </SheetContent>
+    </Sheet>
+  )
+}
+
 function NavigationHeaderContent({
   navigation,
   activeItemId,
@@ -71,14 +139,27 @@ function NavigationHeaderContent({
 
   return (
     <>
-      <div className="mr-4 flex items-center gap-2">
+      {/* Mobile: hamburger + logo */}
+      <div className="flex items-center gap-2 md:hidden">
+        <MobileNavSheet
+          navigation={navigation}
+          activeItemId={activeItemId}
+          onItemSelect={onItemSelect}
+        />
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">
+          D
+        </div>
+      </div>
+
+      {/* Desktop: logo + nav */}
+      <div className="mr-4 hidden items-center gap-2 md:flex">
         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">
           D
         </div>
         <span className="text-sm font-semibold">DesignKit</span>
       </div>
 
-      <NavigationMenu value={menuValue} onValueChange={setMenuValue}>
+      <NavigationMenu value={menuValue} onValueChange={setMenuValue} className="hidden md:flex">
         <NavigationMenuList>
           {navigation.map((group, gi) => (
             <Fragment key={group.label}>
@@ -156,10 +237,10 @@ function DemoHeaderContent() {
         <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">
           A
         </div>
-        <span className="text-sm font-semibold">Acme Corp</span>
+        <span className="text-sm font-semibold hidden sm:inline">Acme Corp</span>
       </div>
 
-      <nav className="flex items-center gap-1">
+      <nav className="hidden items-center gap-1 md:flex">
         {demoNav.map((item) => (
           <Button
             key={item}

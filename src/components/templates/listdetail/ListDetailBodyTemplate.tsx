@@ -1,6 +1,8 @@
 import type { CSSProperties, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { DataPage } from '../datapage/DataPage'
+import { Button } from '@/components/ui/button'
+import { ChevronLeft } from 'lucide-react'
 
 export interface ListDetailBodyTemplateProps {
   theme?: CSSProperties
@@ -19,6 +21,10 @@ export interface ListDetailBodyTemplateProps {
   listWidth?: number
   listClassName?: string
   detailClassName?: string
+  /** Called when the mobile back button is pressed — use to clear the selected item */
+  onBack?: () => void
+  /** Label for the mobile back button. Default: "Back" */
+  backLabel?: string
 }
 
 export function ListDetailBodyTemplate({
@@ -31,6 +37,8 @@ export function ListDetailBodyTemplate({
   listWidth = 320,
   listClassName,
   detailClassName,
+  onBack,
+  backLabel = 'Back',
 }: ListDetailBodyTemplateProps) {
   return (
     <DataPage
@@ -52,12 +60,20 @@ export function ListDetailBodyTemplate({
         </aside>
         <main
           className={cn(
-            'min-h-0 min-w-0 flex-1 overflow-auto',
-            !detail && 'hidden lg:block',
+            'flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden',
+            !detail && 'hidden lg:flex',
             detailClassName,
           )}
         >
-          {detail ?? emptyDetail}
+          {detail && onBack && (
+            <div className="flex shrink-0 items-center border-b px-3 py-2 lg:hidden">
+              <Button variant="ghost" size="sm" className="-ml-1 gap-1" onClick={onBack}>
+                <ChevronLeft className="h-4 w-4" />
+                {backLabel}
+              </Button>
+            </div>
+          )}
+          <div className="min-h-0 flex-1 overflow-auto">{detail ?? emptyDetail}</div>
         </main>
       </div>
     </DataPage>

@@ -664,6 +664,10 @@ function SidebarMenuSubButton({
   })
 }
 
+function useSidebarOptional(): SidebarContextProps | null {
+  return React.useContext(SidebarContext)
+}
+
 export {
   Sidebar,
   SidebarContent,
@@ -689,4 +693,5 @@ export {
   SidebarSeparator,
   SidebarTrigger,
   useSidebar,
+  useSidebarOptional,
 }

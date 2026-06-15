@@ -1,6 +1,9 @@
 import React, { type CSSProperties, type ReactNode, useCallback, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { DataPage } from '../datapage/DataPage'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 type ResizeAxis = 'x' | 'y'
 
@@ -38,6 +41,10 @@ export interface WorkbenchBodyTemplateProps {
   mainPaneClassName?: string
   rightPaneClassName?: string
   bottomPaneClassName?: string
+  /** Mobile Sheet label for the left pane trigger */
+  leftPaneLabel?: string
+  /** Mobile Sheet label for the right pane trigger */
+  rightPaneLabel?: string
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -116,6 +123,8 @@ export function WorkbenchBodyTemplate({
   mainPaneClassName,
   rightPaneClassName,
   bottomPaneClassName,
+  leftPaneLabel = 'Panel',
+  rightPaneLabel = 'Inspector',
 }: WorkbenchBodyTemplateProps) {
   const [leftWidth, setLeftWidth] = useState(leftPaneWidth)
   const [rightWidth, setRightWidth] = useState(rightPaneWidth)
@@ -176,11 +185,41 @@ export function WorkbenchBodyTemplate({
           </div>
         </header>
       )}
+      {(showLeftPane || showRightPane) && (
+        <div className="flex shrink-0 items-center gap-1.5 border-b px-2 py-1.5 md:hidden">
+          {showLeftPane && (
+            <Sheet>
+              <SheetTrigger render={<Button variant="outline" size="sm" />}>
+                {leftPaneLabel}
+              </SheetTrigger>
+              <SheetContent side="left" className="flex flex-col gap-0 p-0">
+                <SheetHeader className="shrink-0 border-b px-4 py-3">
+                  <SheetTitle>{leftPaneLabel}</SheetTitle>
+                </SheetHeader>
+                <ScrollArea className="flex-1">{leftPane}</ScrollArea>
+              </SheetContent>
+            </Sheet>
+          )}
+          {showRightPane && (
+            <Sheet>
+              <SheetTrigger render={<Button variant="outline" size="sm" />}>
+                {rightPaneLabel}
+              </SheetTrigger>
+              <SheetContent side="right" className="flex flex-col gap-0 p-0">
+                <SheetHeader className="shrink-0 border-b px-4 py-3">
+                  <SheetTitle>{rightPaneLabel}</SheetTitle>
+                </SheetHeader>
+                <ScrollArea className="flex-1">{rightPane}</ScrollArea>
+              </SheetContent>
+            </Sheet>
+          )}
+        </div>
+      )}
       <div className={cn('flex min-h-0 flex-1 overflow-hidden', contentClassName)}>
         {showLeftPane && (
           <>
             <aside
-              className={cn('min-h-0 shrink-0 overflow-hidden border-r bg-card/45', leftPaneClassName)}
+              className={cn('hidden min-h-0 shrink-0 overflow-hidden border-r bg-card/45 md:flex md:flex-col', leftPaneClassName)}
               style={{ width: leftWidth }}
             >
               {leftPane}
@@ -188,6 +227,7 @@ export function WorkbenchBodyTemplate({
             {resizable && (
               <ResizeHandle
                 axis="x"
+                className="hidden md:flex"
                 onPointerDown={(event) => {
                   const start = leftWidth
                   startResize(event, 'x', (delta) => {
@@ -207,6 +247,7 @@ export function WorkbenchBodyTemplate({
               {resizable && (
                 <ResizeHandle
                   axis="y"
+                  className="hidden md:flex"
                   onPointerDown={(event) => {
                     const start = bottomHeight
                     startResize(event, 'y', (delta) => {
@@ -216,7 +257,7 @@ export function WorkbenchBodyTemplate({
                 />
               )}
               <section
-                className={cn('min-h-0 shrink-0 overflow-hidden border-t bg-card/40', bottomPaneClassName)}
+                className={cn('min-h-0 shrink-0 overflow-auto border-t bg-card/40 md:overflow-hidden', bottomPaneClassName)}
                 style={{ height: bottomHeight }}
               >
                 {bottomPane}
@@ -229,6 +270,7 @@ export function WorkbenchBodyTemplate({
             {resizable && (
               <ResizeHandle
                 axis="x"
+                className="hidden md:flex"
                 onPointerDown={(event) => {
                   const start = rightWidth
                   startResize(event, 'x', (delta) => {
@@ -238,7 +280,7 @@ export function WorkbenchBodyTemplate({
               />
             )}
             <aside
-              className={cn('min-h-0 shrink-0 overflow-hidden border-l bg-card/45', rightPaneClassName)}
+              className={cn('hidden min-h-0 shrink-0 overflow-hidden border-l bg-card/45 md:flex md:flex-col', rightPaneClassName)}
               style={{ width: rightWidth }}
             >
               {rightPane}

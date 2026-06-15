@@ -193,13 +193,13 @@ function renderGroupProps(props: DataBodyGroupProps) {
 
   if (layout === 'horizontal') {
     return (
-      <div className={cn('grid grid-cols-3 gap-[calc(var(--designkit-panel-gap)*2)] py-(--designkit-panel-gap)', className)}>
+      <div className={cn('grid grid-cols-1 gap-(--designkit-panel-gap) py-(--designkit-panel-gap) sm:grid-cols-3 sm:gap-[calc(var(--designkit-panel-gap)*2)]', className)}>
         <div>
           <p className={cn('text-sm font-medium', danger && 'text-destructive')}>{title}</p>
           {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
           {actions && <div className="mt-2">{actions}</div>}
         </div>
-        <div className="col-span-2">
+        <div className="sm:col-span-2">
           <GroupWrapper layout={layout} variant={variant}>
             {children}
           </GroupWrapper>
@@ -261,7 +261,7 @@ export interface DataBodyFieldProps {
 function DataBodyField({ label, description, children }: DataBodyFieldProps) {
   return (
     <div
-      className="grid items-start gap-x-4 px-4 py-3"
+      className="flex flex-col gap-y-1 px-4 py-3 sm:grid sm:items-start sm:gap-x-4 sm:gap-y-0"
       style={{ gridTemplateColumns: 'var(--designkit-form-label-w, 11rem) 1fr' }}
     >
       <div className="pt-0.5">
@@ -285,7 +285,7 @@ export interface DataBodyRowProps {
 function DataBodyRow({ label, description, required, children }: DataBodyRowProps) {
   return (
     <div
-      className="grid items-start gap-x-4 px-4 py-3"
+      className="flex flex-col gap-y-1.5 px-4 py-3 sm:grid sm:items-start sm:gap-x-4 sm:gap-y-0"
       style={{ gridTemplateColumns: 'var(--designkit-form-label-w, 11rem) 1fr' }}
     >
       <div className="pt-1">

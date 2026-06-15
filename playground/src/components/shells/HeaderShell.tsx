@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
   Avatar, AvatarFallback,
@@ -6,11 +6,12 @@ import {
   NavigationMenu, NavigationMenuContent, NavigationMenuItem,
   NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger,
   Separator,
+  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
   cn,
 } from '@loykin/designkit'
 import type { TemplateId } from '@loykin/designkit'
 import type { TemplateNavigationGroup, TemplateNavigationItem } from '~/templates'
-import { Bell, Settings } from 'lucide-react'
+import { Bell, Menu, Settings } from 'lucide-react'
 
 export interface HeaderShellProps {
   navigation?: TemplateNavigationGroup[]
@@ -41,6 +42,79 @@ function HeaderActions() {
 
 const demoNav = ['Overview', 'Users', 'Products', 'Reports', 'Settings']
 
+function MobileNavSheet({
+  navigation,
+  activeItemId,
+  shellId,
+}: {
+  navigation: TemplateNavigationGroup[]
+  activeItemId?: TemplateId
+  shellId: string
+}) {
+  const [open, setOpen] = useState(false)
+  const allItems = navigation.flatMap((g) => g.items)
+
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger render={<Button variant="ghost" size="icon" className="h-8 w-8" />}>
+        <Menu className="h-4 w-4" />
+        <span className="sr-only">Open menu</span>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-64 p-0">
+        <SheetHeader className="border-b px-4 py-3">
+          <SheetTitle className="text-sm">Menu</SheetTitle>
+        </SheetHeader>
+        <nav className="flex flex-col gap-0.5 p-2">
+          {allItems.map((item) => {
+            const Icon = item.icon
+            const active = itemIsActive(item, activeItemId)
+            return (
+              <Fragment key={item.id}>
+                {!item.children?.length ? (
+                  <Link
+                    to={`/${shellId}/${item.id}`}
+                    onClick={() => setOpen(false)}
+                    className={cn(
+                      'flex items-center gap-2 rounded-(--radius) px-3 py-2 text-sm transition-colors',
+                      active
+                        ? 'bg-accent text-accent-foreground font-medium'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                    )}
+                  >
+                    {Icon && <Icon className="h-4 w-4 shrink-0" />}
+                    {item.label}
+                  </Link>
+                ) : (
+                  <>
+                    <span className="px-3 py-1.5 text-xs font-medium text-muted-foreground">
+                      {item.label}
+                    </span>
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.id}
+                        to={`/${shellId}/${child.id}`}
+                        onClick={() => setOpen(false)}
+                        className={cn(
+                          'flex items-center gap-2 rounded-(--radius) py-1.5 pl-7 pr-3 text-sm transition-colors',
+                          child.id === activeItemId
+                            ? 'bg-accent text-accent-foreground font-medium'
+                            : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                        )}
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </>
+                )}
+              </Fragment>
+            )
+          })}
+        </nav>
+      </SheetContent>
+    </Sheet>
+  )
+}
+
 function NavigationHeaderContent({
   navigation,
   activeItemId,
@@ -55,9 +129,9 @@ function NavigationHeaderContent({
       <>
         <div className="flex items-center gap-2 mr-6">
           <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">A</div>
-          <span className="text-sm font-semibold">Acme Corp</span>
+          <span className="text-sm font-semibold hidden sm:inline">Acme Corp</span>
         </div>
-        <nav className="flex items-center gap-1">
+        <nav className="hidden items-center gap-1 md:flex">
           {demoNav.map((item) => (
             <Button key={item} variant="ghost" size="sm"
               className={item === 'Users' ? 'bg-accent text-foreground font-medium' : 'text-muted-foreground'}
@@ -73,12 +147,19 @@ function NavigationHeaderContent({
 
   return (
     <>
-      <div className="mr-4 flex items-center gap-2">
+      {/* Mobile: hamburger */}
+      <div className="flex items-center gap-2 md:hidden">
+        <MobileNavSheet navigation={navigation} activeItemId={activeItemId} shellId={shellId} />
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">D</div>
+      </div>
+
+      {/* Desktop: logo + nav */}
+      <div className="mr-4 hidden items-center gap-2 md:flex">
         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">D</div>
         <span className="text-sm font-semibold">DesignKit</span>
       </div>
 
-      <NavigationMenu>
+      <NavigationMenu className="hidden md:flex">
         <NavigationMenuList>
           {navigation.map((group, gi) => (
             <Fragment key={group.label}>
