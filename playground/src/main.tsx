@@ -2,17 +2,19 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 
-// Kit package styles first — their :root defaults are overridden by the
-// designkit bridge below (import order determines cascade winner).
+// Tailwind + shared vars first — kit package CSS overrides the reset that follows.
+import './index.css'
+
+// Kit package styles after Tailwind — their CSS wins over the border-width:0 reset.
+// --bk-* tokens are hardcoded here; the designkit bridge below overrides them.
 import '@loykin/side-panel/styles'
 import '@loykin/filter-input/styles'
 import '@loykin/datetime-range/styles'
 import '@loykin/gridkit/styles'
 import '@loykin/chartkit/styles'
 import '@loykin/dashboardkit/styles'
-import './index.css'
 
-// Designkit styles last — the basekit adapter section overrides --bk-* tokens.
+// Designkit bridge last — overrides --bk-* tokens set above.
 import '../../src/styles/index.css'
 
 import App from './App.tsx'
