@@ -277,7 +277,7 @@ export function DataGridTemplateDemo({
 
   return (
     <DataBodyTemplate
-      theme={{ '--gridkit-card-padding': '0px', ...theme } as React.CSSProperties}
+      theme={theme}
       className={layoutClassName}
       topBar={resolvedTopBar}
       title={title}
