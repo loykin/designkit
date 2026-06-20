@@ -99,7 +99,7 @@ Preferred customization points:
 - Shared shadcn-style variables: `--background`, `--primary`, `--border`, `--radius`
 - DesignKit variables: `--designkit-*`
 - The `theme` prop on page templates
-- Public layout slots: `actions`, `toolbar`, `header`, `sidebar`, `aside`, and template children
+- Public layout slots: `actions`, `status`, `toolbar`, `header`, `sidebar`, `aside`, and template children
 - Documented component variants and `className` props
 
 Avoid:

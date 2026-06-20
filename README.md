@@ -75,6 +75,7 @@ General-purpose page shell. Accepts `.Body`, `.Tab`, and `.Section` child slots 
 | `topBar` | `ReactNode` | Top breadcrumb bar. Pass `<PageTopBar left="..." />` or omit. |
 | `title` | `ReactNode` | Page title |
 | `description` | `ReactNode` | Subtitle below the title |
+| `status` | `ReactNode` | Badge or tag rendered inline next to the title |
 | `actions` | `ReactNode` | Page-level actions (Add, Export, etc.) next to the title |
 | `toolbarLeft` / `toolbarRight` | `ReactNode` | Toolbar slots above the content area |
 | `theme` | `CSSProperties` | Inline CSS variable overrides |
@@ -341,6 +342,7 @@ export function SqlEditorPage() {
 |---|---|---|
 | `topBar` | `ReactNode` | Top bar above the workbench |
 | `title` / `description` | `ReactNode` | Header copy above the panes |
+| `status` | `ReactNode` | Badge or tag rendered inline next to the title |
 | `headerRight` / `actions` | `ReactNode` | Header action slots |
 | `leftPane` / `rightPane` | `ReactNode` | Optional side panes |
 | `mainPane` | `ReactNode` | Primary editor or preview area |

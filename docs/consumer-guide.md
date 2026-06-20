@@ -160,7 +160,7 @@ Applications may customize:
 - DesignKit variables such as `--designkit-page-padding-x`, `--designkit-page-padding-y`,
   `--designkit-panel-gap`, and `--designkit-toolbar-height`.
 - Template `theme` props.
-- Public slots such as `actions`, `toolbar`, `topBar`, `sidebar`, `header`,
+- Public slots such as `actions`, `status`, `toolbar`, `topBar`, `sidebar`, `header`,
   `lead`, `aside`, and children.
 - Public component variants and documented `className` props.
 - Domain-specific content, forms, permissions, routing, and data access.
