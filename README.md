@@ -13,21 +13,28 @@ npm install @loykin/designkit
 
 Requires React 19 and Tailwind CSS v4. UI components are based on [shadcn/ui](https://ui.shadcn.com) — if your app has shadcn set up, theming integrates automatically via shared CSS variables (`--primary`, `--background`, `--radius`, etc.).
 
-Import the styles in your global CSS:
+shadcn/ui is the component and semantic-token convention, not a runtime
+dependency. Consumers do not need to install the shadcn CLI, but they must use
+Tailwind CSS v4 and should define the shared semantic variables they want to
+customize.
+
+Import Tailwind and DesignKit from the same global CSS entry:
 
 ```css
 /* globals.css */
+@import "tailwindcss";
 @import "@loykin/designkit/styles";
 ```
 
-The styles file includes pre-built Tailwind utility classes — no `@source` configuration required. You can also import the stylesheet from your app entry, as shown below.
+`@loykin/designkit/styles` registers the package's compiled JavaScript as a
+Tailwind source. The consuming application's Tailwind v4 build generates the
+utilities for both the application and DesignKit in one cascade. DesignKit does
+not ship a second, pre-built copy of Tailwind utilities.
 
 ## Quick Start
 
 ```tsx
 import { DataBodyTemplate, PageTopBar, Button } from '@loykin/designkit'
-import '@loykin/designkit/styles'
-
 export function UsersPage() {
   return (
     <DataBodyTemplate

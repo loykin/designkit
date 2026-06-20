@@ -6,7 +6,7 @@ import {
   DetailBodyTemplate,
   PageTopBar,
 } from '@loykin/designkit'
-import '@loykin/designkit/styles'
+import './index.css'
 
 function LeadSlot({ label }: { label: string }) {
   return (
@@ -72,6 +72,9 @@ function DetailCase({ variant }: { variant: 'media' | 'record' | 'full' }) {
 function App() {
   return (
     <main style={{ display: 'grid', gap: 24, padding: 24 }}>
+      <div data-consumer-responsive-check className="hidden md:block">
+        Responsive utility check
+      </div>
       <DetailCase variant="media" />
       <DetailCase variant="record" />
       <DetailCase variant="full" />

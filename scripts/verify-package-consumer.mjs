@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
+import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -64,8 +64,10 @@ try {
           '@types/react': version('devDependencies', '@types/react'),
           '@types/react-dom': version('devDependencies', '@types/react-dom'),
           '@vitejs/plugin-react': version('devDependencies', '@vitejs/plugin-react'),
+          '@tailwindcss/vite': version('devDependencies', '@tailwindcss/vite'),
           react: version('peerDependencies', 'react'),
           'react-dom': version('peerDependencies', 'react-dom'),
+          tailwindcss: version('peerDependencies', 'tailwindcss'),
           typescript: version('devDependencies', 'typescript'),
           vite: version('devDependencies', 'vite'),
         },
@@ -96,6 +98,7 @@ try {
           isolatedModules: true,
           noEmit: true,
           jsx: 'react-jsx',
+          types: ['vite/client'],
         },
         include: ['src'],
       },
@@ -108,6 +111,7 @@ try {
   writeFileSync(join(appDir, 'index.html'), readFileSync(join(templateDir, 'index.html'), 'utf8'))
   mkdirSync(join(appDir, 'src'), { recursive: true })
   writeFileSync(join(appDir, 'src/main.tsx'), readFileSync(join(templateDir, 'src/main.tsx'), 'utf8'))
+  writeFileSync(join(appDir, 'src/index.css'), readFileSync(join(templateDir, 'src/index.css'), 'utf8'))
 
   run('pnpm', ['install', '--ignore-scripts'], { cwd: appDir })
 
@@ -135,6 +139,32 @@ console.log(JSON.stringify({ appReact, designkitReact, appReactDom, designkitRea
 
   run('pnpm', ['type-check'], { cwd: appDir })
   run('pnpm', ['build'], { cwd: appDir })
+
+  const publishedStyles = readFileSync(join(appDir, 'node_modules/@loykin/designkit/dist/styles.css'), 'utf8')
+  if (!publishedStyles.startsWith('@source "./";')) {
+    throw new Error('Published styles do not register DesignKit dist as a Tailwind source')
+  }
+  if (/\.hidden\s*\{\s*display:\s*none/.test(publishedStyles)) {
+    throw new Error('Published styles contain pre-built Tailwind utilities')
+  }
+
+  const cssAsset = readdirSync(join(appDir, 'dist/assets')).find((file) => file.endsWith('.css'))
+  if (!cssAsset) throw new Error('Consumer build did not emit a CSS asset')
+  const consumerCss = readFileSync(join(appDir, 'dist/assets', cssAsset), 'utf8')
+  const hiddenIndex = consumerCss.indexOf('.hidden{display:none}')
+  const responsiveBlockIndex = consumerCss.indexOf('.md\\:block')
+  if (hiddenIndex === -1) {
+    throw new Error('Consumer Tailwind build did not discover DesignKit utility classes')
+  }
+  if (!consumerCss.includes('.min-h-svh{min-height:100svh}')) {
+    throw new Error('Consumer Tailwind build did not scan the published DesignKit package')
+  }
+  if (responsiveBlockIndex === -1) {
+    throw new Error('Consumer Tailwind build did not emit the responsive override regression case')
+  }
+  if (responsiveBlockIndex < hiddenIndex) {
+    throw new Error('Responsive application utility was emitted before the base hidden utility')
+  }
 
   console.log(duplicateCheck.trim())
   console.log(`Consumer package verification passed: ${appDir}`)

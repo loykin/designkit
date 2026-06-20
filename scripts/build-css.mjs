@@ -1,5 +1,4 @@
-import { execSync } from 'child_process'
-import { mkdirSync } from 'fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -7,7 +6,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 mkdirSync(join(root, 'dist'), { recursive: true })
 
-execSync(
-  'node_modules/.bin/tailwindcss -i src/styles/build-input.css -o dist/styles.css --minify',
-  { stdio: 'inherit', cwd: root },
-)
+const tokens = readFileSync(join(root, 'src/styles/index.css'), 'utf8')
+
+// Consumers compile DesignKit's utility classes with their own Tailwind v4 build.
+// The source path is relative to the published stylesheet in dist/.
+writeFileSync(join(root, 'dist/styles.css'), `@source "./";\n\n${tokens}`)

@@ -4,7 +4,7 @@
 
 - **Package**: `@loykin/designkit`
 - **Description**: React page template and UI component library with theming support
-- **Stack**: React 19, base-ui, CVA, clsx, tailwind-merge, lucide-react, Zustand
+- **Stack**: React 19, Tailwind CSS v4, shadcn/ui conventions, base-ui, CVA, clsx, tailwind-merge, lucide-react, Zustand
 - **Monorepo**: root (library), `playground/` (Vite dev server)
 
 ## Commands
@@ -17,14 +17,14 @@ pnpm dev            # watch mode + playground dev server
 pnpm type-check     # tsc --noEmit
 pnpm lint           # eslint
 pnpm test           # vitest run
-pnpm test:consumer  # pack + verify installation, types, bundling, single React runtime
+pnpm test:consumer  # pack + verify Tailwind discovery, installation, types, bundling, single React runtime
 ```
 
 ## Architecture
 
 ### Entry Points
 - `src/index.ts` — public API exports
-- `src/styles/index.css` — published as `@loykin/designkit/styles`
+- `src/styles/index.css` — token bridge used to build `@loykin/designkit/styles`
 
 ### Source Layout
 ```
@@ -63,6 +63,12 @@ src/
 
 ## Styling
 
+- Tailwind CSS v4 is a required peer dependency and part of DesignKit's public consumer contract.
+- DesignKit follows shadcn/ui's source-based model: package components contain Tailwind class strings, and the consuming application's Tailwind build generates their utilities.
+- shadcn/ui is an architecture and semantic-token convention, not a DesignKit runtime dependency; do not add the shadcn CLI or package as a runtime dependency.
+- `@loykin/designkit/styles` registers the published `dist` directory with `@source`; consumers import it after `tailwindcss` in the same global CSS entry.
+- Never bundle `tailwindcss`, `tailwindcss/utilities`, or pre-built global utility classes into DesignKit's published CSS.
+- Do not add a Tailwind class prefix solely to isolate DesignKit. Utility ordering and deduplication come from the single consumer-owned Tailwind build.
 - CSS custom properties use `--designkit-` prefix for DesignKit-owned tokens
 - Shared shadcn variables (`--primary`, `--background`, `--radius`, etc.) are supported as fallbacks
 - `useStyleInjector` writes both `:root` (light) and `.dark` (dark tonal) blocks, plus per-template `.layout-<id>` overrides
@@ -109,6 +115,7 @@ Avoid:
 - Treat exported component names, prop names, and behavior as versioned API.
 - Prefer additive changes; breaking changes require a major-version bump and migration notes.
 - Keep React and ReactDOM as peer dependencies to prevent duplicate runtimes.
+- Keep Tailwind CSS v4 as a peer dependency; Tailwind v3 and Tailwind-free consumers are outside the supported contract.
 
 ## Playground Rules
 
@@ -127,6 +134,9 @@ pnpm test
 pnpm build
 pnpm test:consumer
 ```
+
+The consumer test must verify package installation, types, bundling, a single
+React runtime, Tailwind source discovery, and responsive utility ordering.
 
 For visual or styling changes, also inspect the playground — the consumer test does not perform visual regression testing.
 

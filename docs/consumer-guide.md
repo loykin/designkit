@@ -23,19 +23,18 @@ Install the package:
 npm install @loykin/designkit
 ```
 
-Import the published design tokens:
-
-```tsx
-import '@loykin/designkit/styles'
-```
-
-DesignKit currently uses Tailwind CSS v4 utilities. The published styles file
-includes pre-built utility classes, so no `@source` configuration is required:
+DesignKit requires Tailwind CSS v4. Import Tailwind and the published DesignKit
+styles from the same global CSS entry:
 
 ```css
 @import "tailwindcss";
 @import "@loykin/designkit/styles";
 ```
+
+The DesignKit stylesheet registers the package's `dist` directory as a
+Tailwind source. The application therefore generates its own utilities and
+DesignKit's utilities together. Do not add a second DesignKit `@source` rule,
+and do not expect DesignKit to provide pre-built Tailwind utility CSS.
 
 If the application also uses `@loykin/gridkit`, import gridkit styles last:
 
@@ -174,7 +173,6 @@ import {
   DataBodyTemplate,
   PageTopBar,
 } from '@loykin/designkit'
-import '@loykin/designkit/styles'
 
 export function UsersPage() {
   return (
