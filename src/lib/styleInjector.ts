@@ -54,7 +54,6 @@ function buildTokenMap({
 
   return {
     '--designkit-radius': `${radius}rem`,
-    '--gridkit-radius': `${radius}rem`,
     '--radius': `${radius}rem`,
     '--radius-sm': `${(radius * 0.6).toFixed(4)}rem`,
     '--radius-md': `${(radius * 0.8).toFixed(4)}rem`,
@@ -66,9 +65,6 @@ function buildTokenMap({
     '--designkit-primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
     '--designkit-primary-foreground': 'oklch(0.985 0 0)',
     '--designkit-ring': `oklch(0.50 ${primaryChroma} ${primaryHue})`,
-    '--gridkit-primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
-    '--gridkit-primary-foreground': 'oklch(0.985 0 0)',
-    '--gridkit-ring': `oklch(0.50 ${primaryChroma} ${primaryHue})`,
     '--primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
     '--primary-foreground': 'oklch(0.985 0 0)',
     '--color-primary': `oklch(0.52 ${primaryChroma} ${primaryHue})`,
@@ -92,8 +88,6 @@ function buildTokenMap({
     '--designkit-border': `oklch(0.922 ${c(0.04)} ${primaryHue})`,
     '--designkit-input': `oklch(0.922 ${c(0.04)} ${primaryHue})`,
     '--designkit-muted': `oklch(0.970 ${c(0.02)} ${primaryHue})`,
-    '--gridkit-border': `oklch(0.922 ${c(0.04)} ${primaryHue})`,
-    '--gridkit-muted': `oklch(0.970 ${c(0.02)} ${primaryHue})`,
 
     '--designkit-font-scale': fontScale,
     '--designkit-line-height': lineHeight,
@@ -140,8 +134,6 @@ function buildDarkTonalTokens(primaryHue: number, primaryChroma: number): TokenM
     '--designkit-border': `oklch(0.32  ${c(0.06)} ${primaryHue})`,
     '--designkit-input': `oklch(0.35  ${c(0.06)} ${primaryHue})`,
     '--designkit-muted': `oklch(0.269 ${c(0.03)} ${primaryHue})`,
-    '--gridkit-border': `oklch(0.32  ${c(0.06)} ${primaryHue})`,
-    '--gridkit-muted': `oklch(0.269 ${c(0.03)} ${primaryHue})`,
   }
 }
 

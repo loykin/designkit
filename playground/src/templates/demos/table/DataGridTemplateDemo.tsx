@@ -184,6 +184,8 @@ function GridContent({
         isFetchingNextPage={isFetching}
         fetchNextPage={fetchNextPage}
         tableKey="table-infinity-template"
+        fillParent
+        openBottom
       />
     )
   }
@@ -282,7 +284,7 @@ export function DataGridTemplateDemo({
       description={description}
       contentClassName={variant === 'infinity' ? 'pb-0' : undefined}
     >
-      <DataBodyTemplate.Body className="[&_.gridkit-shell]:h-full [&_.gridkit-frame]:min-h-0 [&_.gridkit-frame]:flex-1">
+      <DataBodyTemplate.Body>
         <GridContent
           variant={variant}
           visibleData={visibleData}
