@@ -84,9 +84,7 @@ export function LoginBodyTemplate({
   className,
 }: LoginBodyTemplateProps) {
   const brandPanel = (
-    <div className="hidden lg:flex lg:w-1/2 bg-primary flex-col">
-      {brand ?? <DefaultBrand />}
-    </div>
+    <div className="hidden lg:flex lg:w-1/2 bg-primary flex-col">{brand ?? <DefaultBrand />}</div>
   )
 
   if (layout === 'split') {
@@ -97,7 +95,9 @@ export function LoginBodyTemplate({
       >
         {side === 'left' && brandPanel}
         <div className="flex flex-1 items-center justify-center p-8">
-          <FormCard card={card} cardWidth={cardWidth}>{children}</FormCard>
+          <FormCard card={card} cardWidth={cardWidth}>
+            {children}
+          </FormCard>
         </div>
         {side === 'right' && brandPanel}
       </div>
@@ -113,7 +113,9 @@ export function LoginBodyTemplate({
       )}
       style={theme}
     >
-      <FormCard card={card} cardWidth={cardWidth}>{children}</FormCard>
+      <FormCard card={card} cardWidth={cardWidth}>
+        {children}
+      </FormCard>
     </div>
   )
 }

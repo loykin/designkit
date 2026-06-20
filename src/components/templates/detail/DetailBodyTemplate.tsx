@@ -105,7 +105,8 @@ function DetailBodySection({
     <section
       className={cn(
         'min-h-0',
-        surface === 'card' && 'rounded-(--radius) border bg-card p-(--designkit-panel-gap) text-card-foreground shadow-sm',
+        surface === 'card' &&
+          'rounded-(--radius) border bg-card p-(--designkit-panel-gap) text-card-foreground shadow-sm',
         surface === 'bordered' && 'rounded-(--radius) border p-(--designkit-panel-gap)',
         className,
       )}
@@ -125,9 +126,7 @@ function DetailBodySection({
 }
 
 function renderChildren(nodes: React.ReactNode) {
-  return Children.toArray(nodes).map((child, i) => (
-    <Fragment key={i}>{child}</Fragment>
-  ))
+  return Children.toArray(nodes).map((child, i) => <Fragment key={i}>{child}</Fragment>)
 }
 
 function DetailBodyTemplateRoot({
@@ -162,15 +161,16 @@ function DetailBodyTemplateRoot({
     </div>
   ) : null
   const mediaSlot = media ? (
-    <div className={cn('min-h-0 overflow-hidden rounded-(--radius) border bg-card', mediaClassName)}>
+    <div
+      className={cn('min-h-0 overflow-hidden rounded-(--radius) border bg-card', mediaClassName)}
+    >
       {media}
     </div>
   ) : null
-  const leadGridClass = variant === 'media'
-    ? 'xl:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]'
-    : 'xl:grid-cols-2'
-  const defaultHeader = (eyebrow || title || description || status || actions)
-    ? (
+  const leadGridClass =
+    variant === 'media' ? 'xl:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]' : 'xl:grid-cols-2'
+  const defaultHeader =
+    eyebrow || title || description || status || actions ? (
       <DetailBodyHeader
         eyebrow={eyebrow}
         title={title}
@@ -178,16 +178,14 @@ function DetailBodyTemplateRoot({
         status={status}
         actions={actions}
       />
-    )
-    : null
-  const defaultLead = (media || summary)
-    ? (
+    ) : null
+  const defaultLead =
+    media || summary ? (
       <div className={cn('grid gap-(--designkit-panel-gap)', leadGridClass)}>
         {mediaSlot}
         {summarySlot}
       </div>
-    )
-    : null
+    ) : null
   const body = hasTabs ? (
     <div className="min-h-0">
       <DataPage.Tabs>
@@ -203,14 +201,10 @@ function DetailBodyTemplateRoot({
           </DataPage.Tab>
         ))}
       </DataPage.Tabs>
-      <div className="pt-(--designkit-panel-gap)">
-        {selectedTab?.props.children}
-      </div>
+      <div className="pt-(--designkit-panel-gap)">{selectedTab?.props.children}</div>
     </div>
   ) : (
-    <div className="space-y-(--designkit-panel-gap)">
-      {renderChildren(children)}
-    </div>
+    <div className="space-y-(--designkit-panel-gap)">{renderChildren(children)}</div>
   )
   const leadSlot = lead ?? defaultLead
   const outsideAsideSlot = variant === 'full' ? null : aside
@@ -233,11 +227,7 @@ function DetailBodyTemplateRoot({
         )}
       >
         <div className="min-w-0">{body}</div>
-        {hasRecordInspector && (
-          <div className="space-y-(--designkit-panel-gap)">
-            {leadSlot}
-          </div>
-        )}
+        {hasRecordInspector && <div className="space-y-(--designkit-panel-gap)">{leadSlot}</div>}
       </div>
     ),
     full: (
@@ -251,7 +241,12 @@ function DetailBodyTemplateRoot({
           >
             {leadSlot && <div className="space-y-(--designkit-panel-gap)">{leadSlot}</div>}
             {insideAsideSlot && (
-              <div className={cn('min-h-0 rounded-(--radius) border bg-card p-(--designkit-panel-gap)', asideClassName)}>
+              <div
+                className={cn(
+                  'min-h-0 rounded-(--radius) border bg-card p-(--designkit-panel-gap)',
+                  asideClassName,
+                )}
+              >
                 {insideAsideSlot}
               </div>
             )}
@@ -263,7 +258,11 @@ function DetailBodyTemplateRoot({
   } satisfies Record<DetailBodyVariant, React.ReactNode>
 
   return (
-    <DataPage className={cn('layout-detail', className)} style={theme} data-detail-variant={variant}>
+    <DataPage
+      className={cn('layout-detail', className)}
+      style={theme}
+      data-detail-variant={variant}
+    >
       {topBar && <div className="shrink-0">{topBar}</div>}
       {header ?? defaultHeader}
 
@@ -284,7 +283,12 @@ function DetailBodyTemplateRoot({
           </main>
 
           {outsideAsideSlot && (
-            <aside className={cn('min-h-0 border-t bg-background lg:border-l lg:border-t-0', asideClassName)}>
+            <aside
+              className={cn(
+                'min-h-0 border-t bg-background lg:border-l lg:border-t-0',
+                asideClassName,
+              )}
+            >
               <div
                 className={cn(
                   'px-(--designkit-page-padding-x) py-(--designkit-page-padding-y)',

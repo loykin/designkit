@@ -125,9 +125,7 @@ function GroupWrapper({
   }
   if (variant === 'bordered') {
     if (layout === 'inline') {
-      return (
-        <div className="overflow-hidden rounded-(--radius) border divide-y">{children}</div>
-      )
+      return <div className="overflow-hidden rounded-(--radius) border divide-y">{children}</div>
     }
     return <div className="rounded-(--radius) border p-(--designkit-panel-gap)">{children}</div>
   }
@@ -193,7 +191,12 @@ function renderGroupProps(props: DataBodyGroupProps) {
 
   if (layout === 'horizontal') {
     return (
-      <div className={cn('grid grid-cols-1 gap-(--designkit-panel-gap) py-(--designkit-panel-gap) sm:grid-cols-3 sm:gap-[calc(var(--designkit-panel-gap)*2)]', className)}>
+      <div
+        className={cn(
+          'grid grid-cols-1 gap-(--designkit-panel-gap) py-(--designkit-panel-gap) sm:grid-cols-3 sm:gap-[calc(var(--designkit-panel-gap)*2)]',
+          className,
+        )}
+      >
         <div>
           <p className={cn('text-sm font-medium', danger && 'text-destructive')}>{title}</p>
           {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
@@ -345,10 +348,7 @@ function Root({
   const summaryEl = childArray.find(isDataBodySummary)
   const bodyChildren = childArray.filter(
     (c) =>
-      !isDataBodyTab(c) &&
-      !isDataBodySummary(c) &&
-      !isDataBodySection(c) &&
-      !isDataBodyBody(c),
+      !isDataBodyTab(c) && !isDataBodySummary(c) && !isDataBodySection(c) && !isDataBodyBody(c),
   )
 
   const hasTabs = tabs.length > 0

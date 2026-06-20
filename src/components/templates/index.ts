@@ -14,7 +14,10 @@ export interface TemplateNavigationGroup {
 }
 
 export { DashboardBodyTemplate, DashboardPanel } from './dashboard/DashboardBodyTemplate'
-export type { DashboardBodyTemplateProps, DashboardPanelProps } from './dashboard/DashboardBodyTemplate'
+export type {
+  DashboardBodyTemplateProps,
+  DashboardPanelProps,
+} from './dashboard/DashboardBodyTemplate'
 export { WorkbenchBodyTemplate } from './workbench/WorkbenchBodyTemplate'
 export type { WorkbenchBodyTemplateProps } from './workbench/WorkbenchBodyTemplate'
 export { DataBodyTemplate } from './databody/DataBodyTemplate'
@@ -44,7 +47,14 @@ export { ColorsBodyTemplate } from './typography/ColorsBodyTemplate'
 export type { ColorsBodyTemplateProps } from './typography/ColorsBodyTemplate'
 export { DataPage } from './datapage/DataPage'
 export { LoginBodyTemplate } from './auth/LoginBodyTemplate'
-export type { LoginBodyTemplateProps, LoginLayout, LoginSide, LoginCard, LoginBg, LoginCardWidth } from './auth/LoginBodyTemplate'
+export type {
+  LoginBodyTemplateProps,
+  LoginLayout,
+  LoginSide,
+  LoginCard,
+  LoginBg,
+  LoginCardWidth,
+} from './auth/LoginBodyTemplate'
 export { PageTopBar, buildTopBar, PageBreadcrumb } from './datapage/PageTopBar'
 export type { PageTopBarProps, PageTopBarVariant, PageBreadcrumbItem } from './datapage/PageTopBar'
 export type {

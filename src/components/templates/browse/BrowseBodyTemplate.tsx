@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { DataPage } from '@/components/templates/datapage/DataPage'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
 import { SlidersHorizontal } from 'lucide-react'
@@ -92,19 +86,14 @@ export function BrowseBodyTemplate({
                 </SheetContent>
               </Sheet>
             )}
-            {toolbar && (
-              <div className="flex min-w-0 flex-1 items-center gap-2">{toolbar}</div>
-            )}
+            {toolbar && <div className="flex min-w-0 flex-1 items-center gap-2">{toolbar}</div>}
           </div>
         )}
 
         {/* Content: sidebar (desktop) + main */}
         <div className="flex min-h-0 flex-1 overflow-hidden">
           {!isNarrow && (
-            <aside
-              className="shrink-0 overflow-hidden border-r"
-              style={{ width: sidebarWidth }}
-            >
+            <aside className="shrink-0 overflow-hidden border-r" style={{ width: sidebarWidth }}>
               <ScrollArea className="h-full">
                 <div className="px-(--designkit-page-padding-x) py-(--designkit-page-padding-y)">
                   {sidebar}

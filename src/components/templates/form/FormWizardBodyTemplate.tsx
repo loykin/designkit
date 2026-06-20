@@ -94,8 +94,8 @@ export function FormWizardBodyTemplate({
       </div>
 
       <DataPage.Content>
-        {current && (
-          variant === 'card' ? (
+        {current &&
+          (variant === 'card' ? (
             <Card>
               <CardContent className="p-(--designkit-panel-gap)">
                 <form id={current.key} onSubmit={handleStepSubmit}>
@@ -119,8 +119,7 @@ export function FormWizardBodyTemplate({
               </div>
               {current.content}
             </form>
-          )
-        )}
+          ))}
       </DataPage.Content>
 
       <DataPage.Footer>

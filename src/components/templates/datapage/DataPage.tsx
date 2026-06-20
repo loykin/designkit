@@ -122,7 +122,10 @@ function Actions({ children, className }: DataPageActionsProps) {
   return (
     <div
       data-slot="data-page-actions"
-      className={cn('flex shrink-0 items-center gap-[calc(var(--designkit-panel-gap)*0.5)]', className)}
+      className={cn(
+        'flex shrink-0 items-center gap-[calc(var(--designkit-panel-gap)*0.5)]',
+        className,
+      )}
     >
       {children}
     </div>

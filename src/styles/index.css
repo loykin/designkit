@@ -54,7 +54,7 @@
   --designkit-card: var(--card, oklch(0.205 0 0));
   --designkit-card-foreground: var(--card-foreground, oklch(0.712 0 0));
   --designkit-muted: var(--muted, oklch(0.269 0 0));
-  --designkit-muted-foreground: var(--muted-foreground, oklch(0.580 0 0));
+  --designkit-muted-foreground: var(--muted-foreground, oklch(0.58 0 0));
   --designkit-border: var(--border, oklch(1 0 0 / 18%));
   --designkit-input: var(--input, oklch(1 0 0 / 22%));
   /* dark mode: slightly lighter than background, semi-transparent */
@@ -82,23 +82,23 @@
  * Must be loaded AFTER @loykin/gridkit/styles so these declarations win.
  */
 :root {
-  --gridkit-background:           var(--designkit-background);
-  --gridkit-foreground:           var(--designkit-foreground);
-  --gridkit-popover:              var(--designkit-card);
-  --gridkit-popover-foreground:   var(--designkit-card-foreground);
-  --gridkit-primary:              var(--designkit-primary);
-  --gridkit-primary-foreground:   var(--designkit-primary-foreground);
-  --gridkit-secondary:            var(--designkit-secondary);
+  --gridkit-background: var(--designkit-background);
+  --gridkit-foreground: var(--designkit-foreground);
+  --gridkit-popover: var(--designkit-card);
+  --gridkit-popover-foreground: var(--designkit-card-foreground);
+  --gridkit-primary: var(--designkit-primary);
+  --gridkit-primary-foreground: var(--designkit-primary-foreground);
+  --gridkit-secondary: var(--designkit-secondary);
   --gridkit-secondary-foreground: var(--designkit-secondary-foreground);
-  --gridkit-muted:                var(--designkit-muted);
-  --gridkit-muted-foreground:     var(--designkit-muted-foreground);
-  --gridkit-accent:               var(--designkit-accent);
-  --gridkit-accent-foreground:    var(--designkit-accent-foreground);
-  --gridkit-destructive:          var(--designkit-destructive);
-  --gridkit-border:               var(--designkit-border);
-  --gridkit-input:                var(--designkit-input);
-  --gridkit-ring:                 var(--designkit-ring);
-  --gridkit-radius:               var(--designkit-radius);
+  --gridkit-muted: var(--designkit-muted);
+  --gridkit-muted-foreground: var(--designkit-muted-foreground);
+  --gridkit-accent: var(--designkit-accent);
+  --gridkit-accent-foreground: var(--designkit-accent-foreground);
+  --gridkit-destructive: var(--designkit-destructive);
+  --gridkit-border: var(--designkit-border);
+  --gridkit-input: var(--designkit-input);
+  --gridkit-ring: var(--designkit-ring);
+  --gridkit-radius: var(--designkit-radius);
 }
 
 /*
@@ -110,23 +110,22 @@
  * Must be loaded AFTER basekit package styles so these declarations win.
  */
 :root {
-  --bk-background:           var(--designkit-background);
-  --bk-foreground:           var(--designkit-foreground);
-  --bk-popover:              var(--designkit-card);
-  --bk-popover-foreground:   var(--designkit-card-foreground);
-  --bk-muted:                var(--designkit-muted);
-  --bk-muted-foreground:     var(--designkit-muted-foreground);
-  --bk-border:               var(--designkit-border);
-  --bk-input:                var(--designkit-input);
-  --bk-ring:                 var(--designkit-ring);
-  --bk-primary:              var(--designkit-primary);
-  --bk-primary-foreground:   var(--designkit-primary-foreground);
-  --bk-secondary:            var(--designkit-secondary);
+  --bk-background: var(--designkit-background);
+  --bk-foreground: var(--designkit-foreground);
+  --bk-popover: var(--designkit-card);
+  --bk-popover-foreground: var(--designkit-card-foreground);
+  --bk-muted: var(--designkit-muted);
+  --bk-muted-foreground: var(--designkit-muted-foreground);
+  --bk-border: var(--designkit-border);
+  --bk-input: var(--designkit-input);
+  --bk-ring: var(--designkit-ring);
+  --bk-primary: var(--designkit-primary);
+  --bk-primary-foreground: var(--designkit-primary-foreground);
+  --bk-secondary: var(--designkit-secondary);
   --bk-secondary-foreground: var(--designkit-secondary-foreground);
-  --bk-accent:               var(--designkit-accent);
-  --bk-accent-foreground:    var(--designkit-accent-foreground);
-  --bk-destructive:          var(--designkit-destructive);
-  --bk-radius:               var(--designkit-radius);
-  --bk-switch-thumb:         oklch(1 0 0);
+  --bk-accent: var(--designkit-accent);
+  --bk-accent-foreground: var(--designkit-accent-foreground);
+  --bk-destructive: var(--designkit-destructive);
+  --bk-radius: var(--designkit-radius);
+  --bk-switch-thumb: oklch(1 0 0);
 }
-

@@ -63,7 +63,10 @@ export function PageBreadcrumb({ items }: { items: PageBreadcrumbItem[] }) {
 
 function normalizeBreadcrumb(left: React.ReactNode): React.ReactNode {
   if (typeof left === 'string') {
-    const items = left.split('/').map((s) => s.trim()).filter(Boolean)
+    const items = left
+      .split('/')
+      .map((s) => s.trim())
+      .filter(Boolean)
     return <PageBreadcrumb items={items} />
   }
   return left
@@ -111,9 +114,11 @@ export function PageTopBar({
   sidebarTrigger,
 }: PageTopBarProps) {
   const trigger =
-    sidebarTrigger === false ? null
-    : sidebarTrigger !== undefined ? sidebarTrigger
-    : <AutoSidebarTrigger />
+    sidebarTrigger === false ? null : sidebarTrigger !== undefined ? (
+      sidebarTrigger
+    ) : (
+      <AutoSidebarTrigger />
+    )
 
   return (
     <div

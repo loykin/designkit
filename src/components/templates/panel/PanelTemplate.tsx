@@ -36,9 +36,7 @@ function PanelTemplateSection({
                 {title}
               </p>
             )}
-            {description && (
-              <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>
-            )}
+            {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
           </div>
           {actions && <div className="shrink-0">{actions}</div>}
         </div>
@@ -67,21 +65,15 @@ function PanelTemplateRoot({
             </p>
           )}
           <div className="flex items-center gap-2">
-            {title && (
-              <h2 className="min-w-0 flex-1 truncate text-sm font-semibold">{title}</h2>
-            )}
-            {actions && (
-              <div className="flex shrink-0 items-center gap-1">{actions}</div>
-            )}
+            {title && <h2 className="min-w-0 flex-1 truncate text-sm font-semibold">{title}</h2>}
+            {actions && <div className="flex shrink-0 items-center gap-1">{actions}</div>}
           </div>
         </div>
       )}
       <div className={cn('min-h-0 flex-1 overflow-y-auto px-4 py-4', bodyClassName)}>
         <div className="space-y-5">{children}</div>
       </div>
-      {footer && (
-        <div className="shrink-0 border-t px-4 py-3">{footer}</div>
-      )}
+      {footer && <div className="shrink-0 border-t px-4 py-3">{footer}</div>}
     </div>
   )
 }

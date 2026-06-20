@@ -130,35 +130,34 @@ export function WorkbenchBodyTemplate({
   const [rightWidth, setRightWidth] = useState(rightPaneWidth)
   const [bottomHeight, setBottomHeight] = useState(bottomPaneHeight)
 
-  const startResize = useCallback((
-    event: React.PointerEvent,
-    axis: ResizeAxis,
-    applyDelta: (delta: number) => void,
-  ) => {
-    if (!resizable) return
+  const startResize = useCallback(
+    (event: React.PointerEvent, axis: ResizeAxis, applyDelta: (delta: number) => void) => {
+      if (!resizable) return
 
-    const start = axis === 'x' ? event.clientX : event.clientY
-    event.currentTarget.setPointerCapture(event.pointerId)
+      const start = axis === 'x' ? event.clientX : event.clientY
+      event.currentTarget.setPointerCapture(event.pointerId)
 
-    const previousCursor = document.body.style.cursor
-    const previousUserSelect = document.body.style.userSelect
-    document.body.style.cursor = axis === 'x' ? 'col-resize' : 'row-resize'
-    document.body.style.userSelect = 'none'
+      const previousCursor = document.body.style.cursor
+      const previousUserSelect = document.body.style.userSelect
+      document.body.style.cursor = axis === 'x' ? 'col-resize' : 'row-resize'
+      document.body.style.userSelect = 'none'
 
-    const onPointerMove = (moveEvent: PointerEvent) => {
-      applyDelta((axis === 'x' ? moveEvent.clientX : moveEvent.clientY) - start)
-    }
+      const onPointerMove = (moveEvent: PointerEvent) => {
+        applyDelta((axis === 'x' ? moveEvent.clientX : moveEvent.clientY) - start)
+      }
 
-    const onPointerUp = () => {
-      document.body.style.cursor = previousCursor
-      document.body.style.userSelect = previousUserSelect
-      window.removeEventListener('pointermove', onPointerMove)
-      window.removeEventListener('pointerup', onPointerUp)
-    }
+      const onPointerUp = () => {
+        document.body.style.cursor = previousCursor
+        document.body.style.userSelect = previousUserSelect
+        window.removeEventListener('pointermove', onPointerMove)
+        window.removeEventListener('pointerup', onPointerUp)
+      }
 
-    window.addEventListener('pointermove', onPointerMove)
-    window.addEventListener('pointerup', onPointerUp, { once: true })
-  }, [resizable])
+      window.addEventListener('pointermove', onPointerMove)
+      window.addEventListener('pointerup', onPointerUp, { once: true })
+    },
+    [resizable],
+  )
 
   const headerRightContent = headerRight ?? toolbar
   const showHeader = title || description || headerRightContent || actions
@@ -174,7 +173,9 @@ export function WorkbenchBodyTemplate({
           <div className="flex min-h-[var(--designkit-toolbar-height)] items-center justify-between gap-3">
             <div className="min-w-0">
               {title && <h1 className="truncate text-sm font-semibold">{title}</h1>}
-              {description && <p className="mt-0.5 truncate text-xs text-muted-foreground">{description}</p>}
+              {description && (
+                <p className="mt-0.5 truncate text-xs text-muted-foreground">{description}</p>
+              )}
             </div>
             {(headerRightContent || actions) && (
               <div className="flex shrink-0 items-center gap-2">
@@ -219,7 +220,10 @@ export function WorkbenchBodyTemplate({
         {showLeftPane && (
           <>
             <aside
-              className={cn('hidden min-h-0 shrink-0 overflow-hidden border-r bg-card/45 md:flex md:flex-col', leftPaneClassName)}
+              className={cn(
+                'hidden min-h-0 shrink-0 overflow-hidden border-r bg-card/45 md:flex md:flex-col',
+                leftPaneClassName,
+              )}
               style={{ width: leftWidth }}
             >
               {leftPane}
@@ -239,9 +243,7 @@ export function WorkbenchBodyTemplate({
           </>
         )}
         <main className={cn('flex min-w-0 flex-1 flex-col overflow-hidden', mainPaneClassName)}>
-          <div className="min-h-0 flex-1 overflow-hidden">
-            {mainPane ?? children}
-          </div>
+          <div className="min-h-0 flex-1 overflow-hidden">{mainPane ?? children}</div>
           {showBottomPane && (
             <>
               {resizable && (
@@ -251,13 +253,18 @@ export function WorkbenchBodyTemplate({
                   onPointerDown={(event) => {
                     const start = bottomHeight
                     startResize(event, 'y', (delta) => {
-                      setBottomHeight(clamp(start - delta, minBottomPaneHeight, maxBottomPaneHeight))
+                      setBottomHeight(
+                        clamp(start - delta, minBottomPaneHeight, maxBottomPaneHeight),
+                      )
                     })
                   }}
                 />
               )}
               <section
-                className={cn('min-h-0 shrink-0 overflow-auto border-t bg-card/40 md:overflow-hidden', bottomPaneClassName)}
+                className={cn(
+                  'min-h-0 shrink-0 overflow-auto border-t bg-card/40 md:overflow-hidden',
+                  bottomPaneClassName,
+                )}
                 style={{ height: bottomHeight }}
               >
                 {bottomPane}
@@ -280,7 +287,10 @@ export function WorkbenchBodyTemplate({
               />
             )}
             <aside
-              className={cn('hidden min-h-0 shrink-0 overflow-hidden border-l bg-card/45 md:flex md:flex-col', rightPaneClassName)}
+              className={cn(
+                'hidden min-h-0 shrink-0 overflow-hidden border-l bg-card/45 md:flex md:flex-col',
+                rightPaneClassName,
+              )}
               style={{ width: rightWidth }}
             >
               {rightPane}
