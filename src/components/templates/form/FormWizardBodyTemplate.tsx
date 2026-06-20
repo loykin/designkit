@@ -17,6 +17,7 @@ export interface FormWizardStep {
 export interface FormWizardBodyTemplateProps {
   theme?: React.CSSProperties
   title?: string
+  status?: React.ReactNode
   topBar?: React.ReactNode
   variant?: FormWizardVariant
   steps: FormWizardStep[]
@@ -29,6 +30,7 @@ export interface FormWizardBodyTemplateProps {
 export function FormWizardBodyTemplate({
   theme,
   title,
+  status,
   topBar,
   variant = 'plain',
   steps,
@@ -50,7 +52,7 @@ export function FormWizardBodyTemplate({
     <DataPage className="layout-form-wizard" style={theme}>
       {topBar && <div className="shrink-0">{topBar}</div>}
       <DataPage.Header>
-        <DataPage.TitleBlock title={title} />
+        <DataPage.TitleBlock title={title} status={status} />
       </DataPage.Header>
 
       {/* Step indicator */}

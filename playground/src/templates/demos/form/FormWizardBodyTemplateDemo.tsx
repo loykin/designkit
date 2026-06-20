@@ -196,6 +196,7 @@ export function FormWizardBodyTemplateDemo({
       variant={variant}
       topBar={buildTopBar({ topBarShow, topBarVariant, topBarBg, left: 'Pages / Form / Wizard' })}
       title="Create Account"
+      status={<Badge variant="secondary">Beta</Badge>}
       steps={steps}
       activeStep={activeStep}
       onNext={() => setActiveStep((s) => Math.min(s + 1, steps.length - 1))}
@@ -208,7 +209,7 @@ export function FormWizardBodyTemplateDemo({
 export function buildFormWizardBodyTemplateCode({ themeProp }: TemplateCodeContext) {
   return [
     `import { useState } from 'react'`,
-    `import { FormWizardBodyTemplate, type FormWizardStep } from '@loykin/designkit'`,
+    `import { FormWizardBodyTemplate, Badge, type FormWizardStep } from '@loykin/designkit'`,
     `import '@loykin/designkit/styles'`,
     '',
     `const steps: FormWizardStep[] = [`,
@@ -222,6 +223,7 @@ export function buildFormWizardBodyTemplateCode({ themeProp }: TemplateCodeConte
     `  return (`,
     `    <FormWizardBodyTemplate${themeProp}`,
     `      title="Setup Wizard"`,
+    `      status={<Badge variant="secondary">Beta</Badge>}`,
     `      steps={steps}`,
     `      activeStep={step}`,
     `      onNext={() => setStep((s) => Math.min(s + 1, steps.length - 1))}`,

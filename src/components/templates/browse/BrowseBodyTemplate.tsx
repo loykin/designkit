@@ -25,6 +25,7 @@ export interface BrowseBodyTemplateProps {
   topBar?: React.ReactNode
   title?: React.ReactNode
   description?: React.ReactNode
+  status?: React.ReactNode
   actions?: React.ReactNode
   sidebar: React.ReactNode
   sidebarTitle?: string
@@ -41,6 +42,7 @@ export function BrowseBodyTemplate({
   topBar,
   title,
   description,
+  status,
   actions,
   sidebar,
   sidebarTitle = 'Filters',
@@ -51,7 +53,7 @@ export function BrowseBodyTemplate({
   children,
 }: BrowseBodyTemplateProps) {
   const isNarrow = useIsNarrow()
-  const hasHeader = title || description || actions
+  const hasHeader = title || description || status || actions
 
   return (
     <DataPage className={cn('layout-browse', className)} style={theme}>
@@ -59,7 +61,7 @@ export function BrowseBodyTemplate({
 
       {hasHeader && (
         <DataPage.Header>
-          <DataPage.TitleBlock title={title} description={description} />
+          <DataPage.TitleBlock title={title} description={description} status={status} />
           <DataPage.Actions>{actions}</DataPage.Actions>
         </DataPage.Header>
       )}

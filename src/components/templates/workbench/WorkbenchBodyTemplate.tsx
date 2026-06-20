@@ -13,6 +13,7 @@ export interface WorkbenchBodyTemplateProps {
   contentClassName?: string
   title?: ReactNode
   description?: ReactNode
+  status?: ReactNode
   topBar?: ReactNode
   /** Right side of the built-in workbench header. Prefer this over toolbar for new code. */
   headerRight?: ReactNode
@@ -97,6 +98,7 @@ export function WorkbenchBodyTemplate({
   contentClassName,
   title,
   description,
+  status,
   topBar,
   headerRight,
   toolbar,
@@ -160,7 +162,7 @@ export function WorkbenchBodyTemplate({
   )
 
   const headerRightContent = headerRight ?? toolbar
-  const showHeader = title || description || headerRightContent || actions
+  const showHeader = title || description || status || headerRightContent || actions
   const showLeftPane = leftPane && !leftPaneCollapsed
   const showRightPane = rightPane && !rightPaneCollapsed
   const showBottomPane = bottomPane && !bottomPaneCollapsed
@@ -172,7 +174,12 @@ export function WorkbenchBodyTemplate({
         <header className="shrink-0 border-b px-(--designkit-page-padding-x) py-[calc(var(--designkit-page-padding-y)*0.75)]">
           <div className="flex min-h-[var(--designkit-toolbar-height)] items-center justify-between gap-3">
             <div className="min-w-0">
-              {title && <h1 className="truncate text-sm font-semibold">{title}</h1>}
+              {(title || status) && (
+                <div className="flex min-w-0 items-center gap-2">
+                  {title && <h1 className="min-w-0 truncate text-sm font-semibold">{title}</h1>}
+                  {status && <span className="shrink-0">{status}</span>}
+                </div>
+              )}
               {description && (
                 <p className="mt-0.5 truncate text-xs text-muted-foreground">{description}</p>
               )}

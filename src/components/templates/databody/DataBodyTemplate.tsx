@@ -311,6 +311,7 @@ export interface DataBodyTemplateProps {
   topBar?: React.ReactNode
   title?: React.ReactNode
   description?: React.ReactNode
+  status?: React.ReactNode
   actions?: React.ReactNode
   toolbarLeft?: React.ReactNode
   toolbarRight?: React.ReactNode
@@ -332,6 +333,7 @@ function Root({
   topBar,
   title,
   description,
+  status,
   actions,
   toolbarLeft,
   toolbarRight,
@@ -370,7 +372,7 @@ function Root({
       <DataPage className={cn('layout-databody', className)} style={theme}>
         <TopBarSlot topBar={topBar} />
         <DataPage.Header>
-          <DataPage.TitleBlock title={title} description={description} />
+          <DataPage.TitleBlock title={title} description={description} status={status} />
           <DataPage.Actions>{actions}</DataPage.Actions>
         </DataPage.Header>
 
@@ -398,7 +400,7 @@ function Root({
       <DataPage className={cn('layout-sectioned', className)} style={theme}>
         <TopBarSlot topBar={topBar} />
         <DataPage.Header>
-          <DataPage.TitleBlock title={title} description={description} />
+          <DataPage.TitleBlock title={title} description={description} status={status} />
           <DataPage.Actions>{actions}</DataPage.Actions>
         </DataPage.Header>
 
@@ -451,7 +453,7 @@ function Root({
     <DataPage className={cn('layout-databody', className)} style={theme}>
       <TopBarSlot topBar={topBar} />
       <DataPage.Header>
-        <DataPage.TitleBlock title={title} description={description} />
+        <DataPage.TitleBlock title={title} description={description} status={status} />
         <DataPage.Actions>{actions}</DataPage.Actions>
       </DataPage.Header>
 

@@ -295,6 +295,7 @@ export function DataBodyTemplateDemo({ theme, topBarShow, topBarVariant, topBarB
       theme={theme}
       topBar={buildTopBar({ topBarShow, topBarVariant, topBarBg, left: 'Design / Body Template' })}
       title="Body Template"
+      status={<Badge variant="secondary">Beta</Badge>}
       description="Compound body shell with optional tabs and arbitrary content"
     >
       <DataBodyTemplate.Tab id="overview" label="Overview">

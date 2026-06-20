@@ -16,6 +16,7 @@ export interface DataPageTitleBlockProps {
   title?: React.ReactNode
   description?: React.ReactNode
   breadcrumb?: React.ReactNode
+  status?: React.ReactNode
   className?: string
 }
 
@@ -104,13 +105,18 @@ function Header({ children, className }: DataPageHeaderProps) {
   )
 }
 
-function TitleBlock({ title, description, breadcrumb, className }: DataPageTitleBlockProps) {
-  if (!title && !description && !breadcrumb) return null
+function TitleBlock({ title, description, breadcrumb, status, className }: DataPageTitleBlockProps) {
+  if (!title && !description && !breadcrumb && !status) return null
 
   return (
     <div data-slot="data-page-title-block" className={cn('min-w-0 flex-1', className)}>
       {breadcrumb && <div className="mb-2 text-xs text-muted-foreground">{breadcrumb}</div>}
-      {title && <h1 className="truncate text-xl font-semibold">{title}</h1>}
+      {(title || status) && (
+        <div className="flex min-w-0 items-center gap-2">
+          {title && <h1 className="min-w-0 truncate text-xl font-semibold">{title}</h1>}
+          {status && <span className="shrink-0">{status}</span>}
+        </div>
+      )}
       {description && <p className="mt-1.5 text-sm text-muted-foreground">{description}</p>}
     </div>
   )

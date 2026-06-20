@@ -220,6 +220,7 @@ export function WorkbenchPanelEditorDemo({ theme }: { theme?: CSSProperties }) {
         </>
       }
       title="Panel editor"
+      status={<Badge variant="outline">Draft</Badge>}
       description="Latency panel"
       mainPane={<PanelPreview />}
       rightPane={<PanelInspector />}
@@ -370,6 +371,7 @@ export function WorkbenchSqlEditorDemo({ theme }: { theme?: CSSProperties }) {
         </>
       }
       title="SQL editor"
+      status={<Badge variant="default">Connected</Badge>}
       description="Warehouse analytics"
       leftPane={<SchemaBrowser />}
       mainPane={<SqlEditor />}
@@ -385,7 +387,7 @@ export function WorkbenchSqlEditorDemo({ theme }: { theme?: CSSProperties }) {
 export function buildWorkbenchTemplateCode({ themeProp, definition }: TemplateCodeContext) {
   const isSql = definition.id === 'workbench-sql-editor'
 
-  return `import { WorkbenchBodyTemplate, PageTopBar, Button } from '@loykin/designkit'
+  return `import { WorkbenchBodyTemplate, PageTopBar, Button, Badge } from '@loykin/designkit'
 
 export function ${isSql ? 'SqlEditorPage' : 'PanelEditorPage'}() {
   return (
@@ -393,6 +395,7 @@ export function ${isSql ? 'SqlEditorPage' : 'PanelEditorPage'}() {
       theme={${themeProp}}
       topBar={<PageTopBar left="${isSql ? 'Data / Query editor' : 'Dashboards / Edit panel'}" />}
       title="${isSql ? 'SQL editor' : 'Panel editor'}"
+      status={<Badge variant="${isSql ? 'default' : 'outline'}">${isSql ? 'Connected' : 'Draft'}</Badge>}
       headerRight={<Button variant="outline" size="sm">${isSql ? 'Run' : 'Query'}</Button>}
       leftPane={${isSql ? '<SchemaBrowser />' : 'undefined'}}
       mainPane={${isSql ? '<SqlEditor />' : '<PanelPreview />'}}

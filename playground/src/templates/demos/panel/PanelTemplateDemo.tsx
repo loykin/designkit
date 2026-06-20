@@ -166,6 +166,7 @@ function RunPanel({ run }: { run: PipelineRun }) {
     <PanelTemplate
       eyebrow={run.id}
       title={run.pipeline}
+      status={<Badge variant={STATUS_BADGE_VARIANT[run.status]}>{STATUS_LABEL[run.status]}</Badge>}
       actions={
         <>
           <Button variant="ghost" size="icon-sm" title="Re-run">
@@ -322,7 +323,7 @@ export function PanelTemplateDemo({ theme }: { theme?: React.CSSProperties }) {
 
 export function buildPanelTemplateCode({ themeProp }: TemplateCodeContext) {
   return [
-    `import { PanelTemplate, DataPage, PageTopBar } from '@loykin/designkit'`,
+    `import { PanelTemplate, DataPage, PageTopBar, Badge } from '@loykin/designkit'`,
     `import { SidePanelProvider, useSidePanel } from '@loykin/side-panel'`,
     `import '@loykin/side-panel/styles'`,
     ``,
@@ -332,6 +333,7 @@ export function buildPanelTemplateCode({ themeProp }: TemplateCodeContext) {
     `    <PanelTemplate`,
     `      eyebrow={item.id}`,
     `      title={item.name}`,
+    `      status={<Badge variant="secondary">{item.status}</Badge>}`,
     `      actions={<Button variant="ghost" size="icon-sm"><ExternalLink className="h-3.5 w-3.5" /></Button>}`,
     `      footer={`,
     `        <div className="flex justify-end gap-2">`,

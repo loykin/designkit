@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 export interface PanelTemplateProps {
   title?: React.ReactNode
   eyebrow?: React.ReactNode
+  status?: React.ReactNode
   actions?: React.ReactNode
   footer?: React.ReactNode
   children?: React.ReactNode
@@ -49,6 +50,7 @@ function PanelTemplateSection({
 function PanelTemplateRoot({
   title,
   eyebrow,
+  status,
   actions,
   footer,
   children,
@@ -65,7 +67,10 @@ function PanelTemplateRoot({
             </p>
           )}
           <div className="flex items-center gap-2">
-            {title && <h2 className="min-w-0 flex-1 truncate text-sm font-semibold">{title}</h2>}
+            <div className="flex min-w-0 flex-1 items-center gap-2">
+              {title && <h2 className="min-w-0 truncate text-sm font-semibold">{title}</h2>}
+              {status && <span className="shrink-0">{status}</span>}
+            </div>
             {actions && <div className="flex shrink-0 items-center gap-1">{actions}</div>}
           </div>
         </div>

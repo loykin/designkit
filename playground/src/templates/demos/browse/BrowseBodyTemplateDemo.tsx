@@ -364,6 +364,7 @@ export function BrowseBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
       theme={theme}
       topBar={<PageTopBar left="Store / Women" />}
       title="Sneakers"
+      status={<Badge variant="secondary">{total}</Badge>}
       sidebar={sidebar}
       sidebarTitle="Filters"
       toolbar={toolbar}
