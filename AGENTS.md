@@ -23,10 +23,12 @@ pnpm test:consumer  # pack + verify Tailwind discovery, installation, types, bun
 ## Architecture
 
 ### Entry Points
+
 - `src/index.ts` — public API exports
 - `src/styles/index.css` — token bridge used to build `@loykin/designkit/styles`
 
 ### Source Layout
+
 ```
 src/
   components/
@@ -40,19 +42,21 @@ src/
 ```
 
 ### Templates (`src/components/templates/`)
-| Template | Purpose |
-|----------|---------|
-| `DataBodyTemplate` | General data, list, tab, and settings pages |
-| `DetailBodyTemplate` | Entity and record detail pages |
-| `FormWizardBodyTemplate` | Multi-step forms |
-| `DashboardBodyTemplate` | Dashboard chrome and panel layout |
-| `WorkbenchBodyTemplate` | Editor and multi-pane workspaces |
-| `BrowseBodyTemplate` | Filterable browsing experiences |
-| `LoginBodyTemplate` | Authentication layouts |
-| `DataPage` | Page container with `PageTopBar` |
-| `TypographyBodyTemplate` / `ColorsBodyTemplate` | Design reference pages |
+
+| Template                                        | Purpose                                     |
+| ----------------------------------------------- | ------------------------------------------- |
+| `DataBodyTemplate`                              | General data, list, tab, and settings pages |
+| `DetailBodyTemplate`                            | Entity and record detail pages              |
+| `FormWizardBodyTemplate`                        | Multi-step forms                            |
+| `DashboardBodyTemplate`                         | Dashboard chrome and panel layout           |
+| `WorkbenchBodyTemplate`                         | Editor and multi-pane workspaces            |
+| `BrowseBodyTemplate`                            | Filterable browsing experiences             |
+| `LoginBodyTemplate`                             | Authentication layouts                      |
+| `DataPage`                                      | Page container with `PageTopBar`            |
+| `TypographyBodyTemplate` / `ColorsBodyTemplate` | Design reference pages                      |
 
 ### Key Types & Patterns
+
 - `TemplateId` — union of all template id strings (`src/store/types.ts`)
 - `ShellId` — `'sidebar' | 'header'`
 - `DensityId` — `'compact' | 'default' | 'comfortable'`
@@ -71,7 +75,7 @@ src/
 - Do not add a Tailwind class prefix solely to isolate DesignKit. Utility ordering and deduplication come from the single consumer-owned Tailwind build.
 - CSS custom properties use `--designkit-` prefix for DesignKit-owned tokens
 - Shared shadcn variables (`--primary`, `--background`, `--radius`, etc.) are supported as fallbacks
-- `useStyleInjector` writes both `:root` (light) and `.dark` (dark tonal) blocks, plus per-template `.layout-<id>` overrides
+- `useStyleInjector` writes `:root` (light), `.dark` (dark tonal), and per-template `.layout-<id>` overrides inside `@layer designkit`
 - State styling uses `data-*` attributes; avoid relying on generated class ordering
 
 ## Repository Boundaries
@@ -96,6 +100,7 @@ Do not copy a DesignKit component into another project to make a visual variatio
 ## Customization Contract
 
 Preferred customization points:
+
 - Shared shadcn-style variables: `--background`, `--primary`, `--border`, `--radius`
 - DesignKit variables: `--designkit-*`
 - The `theme` prop on page templates
@@ -103,6 +108,7 @@ Preferred customization points:
 - Documented component variants and `className` props
 
 Avoid:
+
 - Broad global selectors targeting DesignKit's internal DOM
 - `!important` overrides unless required for a documented integration
 - Importing files through package-internal paths
@@ -114,6 +120,7 @@ Avoid:
 - Export every intended public component and its useful prop types through the appropriate index file.
 - Treat exported component names, prop names, and behavior as versioned API.
 - Prefer additive changes; breaking changes require a major-version bump and migration notes.
+- Do not remove an exported API directly. Keep a deprecated export for at least one release and document the migration in `CHANGELOG.md`.
 - Keep React and ReactDOM as peer dependencies to prevent duplicate runtimes.
 - Keep Tailwind CSS v4 as a peer dependency; Tailwind v3 and Tailwind-free consumers are outside the supported contract.
 

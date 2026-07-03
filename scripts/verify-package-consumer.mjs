@@ -1,4 +1,12 @@
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync, mkdirSync, existsSync } from 'node:fs'
+import {
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+  mkdirSync,
+  existsSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -107,17 +115,28 @@ try {
     )}\n`,
   )
 
-  writeFileSync(join(appDir, 'vite.config.ts'), readFileSync(join(templateDir, 'vite.config.ts'), 'utf8'))
+  writeFileSync(
+    join(appDir, 'vite.config.ts'),
+    readFileSync(join(templateDir, 'vite.config.ts'), 'utf8'),
+  )
   writeFileSync(join(appDir, 'index.html'), readFileSync(join(templateDir, 'index.html'), 'utf8'))
   mkdirSync(join(appDir, 'src'), { recursive: true })
-  writeFileSync(join(appDir, 'src/main.tsx'), readFileSync(join(templateDir, 'src/main.tsx'), 'utf8'))
-  writeFileSync(join(appDir, 'src/index.css'), readFileSync(join(templateDir, 'src/index.css'), 'utf8'))
+  writeFileSync(
+    join(appDir, 'src/main.tsx'),
+    readFileSync(join(templateDir, 'src/main.tsx'), 'utf8'),
+  )
+  writeFileSync(
+    join(appDir, 'src/index.css'),
+    readFileSync(join(templateDir, 'src/index.css'), 'utf8'),
+  )
 
   run('pnpm', ['install', '--ignore-scripts'], { cwd: appDir })
 
-  const duplicateCheck = run('node', [
-    '-e',
-    `
+  const duplicateCheck = run(
+    'node',
+    [
+      '-e',
+      `
 const path = require('node:path')
 const entry = require.resolve('@loykin/designkit')
 const root = path.resolve(path.dirname(entry), '..')
@@ -129,7 +148,9 @@ if (appReact !== designkitReact) throw new Error('Duplicate React instance: ' + 
 if (appReactDom !== designkitReactDom) throw new Error('Duplicate ReactDOM instance: ' + designkitReactDom)
 console.log(JSON.stringify({ appReact, designkitReact, appReactDom, designkitReactDom }, null, 2))
 `,
-  ], { cwd: appDir, capture: true })
+    ],
+    { cwd: appDir, capture: true },
+  )
 
   const nestedReact = join(appDir, 'node_modules/@loykin/designkit/node_modules/react')
   const nestedReactDom = join(appDir, 'node_modules/@loykin/designkit/node_modules/react-dom')
@@ -140,9 +161,18 @@ console.log(JSON.stringify({ appReact, designkitReact, appReactDom, designkitRea
   run('pnpm', ['type-check'], { cwd: appDir })
   run('pnpm', ['build'], { cwd: appDir })
 
-  const publishedStyles = readFileSync(join(appDir, 'node_modules/@loykin/designkit/dist/styles.css'), 'utf8')
+  const publishedStyles = readFileSync(
+    join(appDir, 'node_modules/@loykin/designkit/dist/styles.css'),
+    'utf8',
+  )
   if (!publishedStyles.startsWith('@source "./";')) {
     throw new Error('Published styles do not register DesignKit dist as a Tailwind source')
+  }
+  if (!publishedStyles.includes('@theme inline') || !publishedStyles.includes('--color-border:')) {
+    throw new Error('Published styles do not provide the shadcn/Tailwind semantic theme bridge')
+  }
+  if (!publishedStyles.includes('@custom-variant dark')) {
+    throw new Error('Published styles do not provide the class-based dark variant')
   }
   if (/\.hidden\s*\{\s*display:\s*none/.test(publishedStyles)) {
     throw new Error('Published styles contain pre-built Tailwind utilities')
@@ -158,6 +188,12 @@ console.log(JSON.stringify({ appReact, designkitReact, appReactDom, designkitRea
   }
   if (!consumerCss.includes('.min-h-svh{min-height:100svh}')) {
     throw new Error('Consumer Tailwind build did not scan the published DesignKit package')
+  }
+  if (!consumerCss.includes('.border-border{')) {
+    throw new Error('Consumer Tailwind build did not emit shadcn semantic border utilities')
+  }
+  if (!consumerCss.includes('.bg-background{')) {
+    throw new Error('Consumer Tailwind build did not emit shadcn semantic background utilities')
   }
   if (responsiveBlockIndex === -1) {
     throw new Error('Consumer Tailwind build did not emit the responsive override regression case')

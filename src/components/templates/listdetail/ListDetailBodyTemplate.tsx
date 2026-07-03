@@ -48,8 +48,9 @@ export function ListDetailBodyTemplate({
       {topBar && <div className="shrink-0">{topBar}</div>}
       <div className="flex min-h-0 flex-1 overflow-hidden">
         <aside
+          data-slot="list-detail-list"
           className={cn(
-            'min-h-0 shrink-0 overflow-hidden border-r',
+            'min-h-0 shrink-0 overflow-hidden border-r border-border',
             detail
               ? 'hidden lg:flex lg:w-[var(--ld-list-width)] lg:flex-col'
               : 'flex w-full flex-col lg:w-[var(--ld-list-width)]',
@@ -66,7 +67,7 @@ export function ListDetailBodyTemplate({
           )}
         >
           {detail && onBack && (
-            <div className="flex shrink-0 items-center border-b px-3 py-2 lg:hidden">
+            <div className="flex shrink-0 items-center border-b border-border px-3 py-2 lg:hidden">
               <Button variant="ghost" size="sm" className="-ml-1 gap-1" onClick={onBack}>
                 <ChevronLeft className="h-4 w-4" />
                 {backLabel}

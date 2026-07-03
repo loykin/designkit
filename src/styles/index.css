@@ -7,6 +7,54 @@
  * are wired into the playground.
  */
 
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background, var(--designkit-background));
+  --color-foreground: var(--foreground, var(--designkit-foreground));
+  --color-card: var(--card, var(--designkit-card));
+  --color-card-foreground: var(--card-foreground, var(--designkit-card-foreground));
+  --color-popover: var(--popover, var(--designkit-card));
+  --color-popover-foreground: var(--popover-foreground, var(--designkit-card-foreground));
+  --color-primary: var(--primary, var(--designkit-primary));
+  --color-primary-foreground: var(--primary-foreground, var(--designkit-primary-foreground));
+  --color-secondary: var(--secondary, var(--designkit-secondary));
+  --color-secondary-foreground: var(--secondary-foreground, var(--designkit-secondary-foreground));
+  --color-muted: var(--muted, var(--designkit-muted));
+  --color-muted-foreground: var(--muted-foreground, var(--designkit-muted-foreground));
+  --color-accent: var(--accent, var(--designkit-accent));
+  --color-accent-foreground: var(--accent-foreground, var(--designkit-accent-foreground));
+  --color-destructive: var(--destructive, var(--designkit-destructive));
+  --color-destructive-foreground: var(
+    --destructive-foreground,
+    var(--designkit-primary-foreground)
+  );
+  --color-border: var(--border, var(--designkit-border));
+  --color-input: var(--input, var(--designkit-input));
+  --color-ring: var(--ring, var(--designkit-ring));
+  --color-sidebar: var(--sidebar, var(--designkit-card));
+  --color-sidebar-foreground: var(--sidebar-foreground, var(--designkit-card-foreground));
+  --color-sidebar-primary: var(--sidebar-primary, var(--designkit-primary));
+  --color-sidebar-primary-foreground: var(
+    --sidebar-primary-foreground,
+    var(--designkit-primary-foreground)
+  );
+  --color-sidebar-accent: var(--sidebar-accent, var(--designkit-accent));
+  --color-sidebar-accent-foreground: var(
+    --sidebar-accent-foreground,
+    var(--designkit-accent-foreground)
+  );
+  --color-sidebar-border: var(--sidebar-border, var(--designkit-border));
+  --color-sidebar-ring: var(--sidebar-ring, var(--designkit-ring));
+  --radius-sm: calc(var(--radius, var(--designkit-radius)) * 0.6);
+  --radius-md: calc(var(--radius, var(--designkit-radius)) * 0.8);
+  --radius-lg: var(--radius, var(--designkit-radius));
+  --radius-xl: calc(var(--radius, var(--designkit-radius)) * 1.4);
+  --radius-2xl: calc(var(--radius, var(--designkit-radius)) * 1.8);
+  --radius-3xl: calc(var(--radius, var(--designkit-radius)) * 2.2);
+  --radius-4xl: calc(var(--radius, var(--designkit-radius)) * 2.6);
+}
+
 :root {
   --designkit-radius: var(--radius, 0.5rem);
   --designkit-background: var(--background, oklch(1 0 0));

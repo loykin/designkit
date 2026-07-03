@@ -106,8 +106,9 @@ function DetailBodySection({
       className={cn(
         'min-h-0',
         surface === 'card' &&
-          'rounded-(--radius) border bg-card p-(--designkit-panel-gap) text-card-foreground shadow-sm',
-        surface === 'bordered' && 'rounded-(--radius) border p-(--designkit-panel-gap)',
+          'rounded-(--radius) border border-border bg-card p-(--designkit-panel-gap) text-card-foreground shadow-sm',
+        surface === 'bordered' &&
+          'rounded-(--radius) border border-border p-(--designkit-panel-gap)',
         className,
       )}
     >
@@ -156,13 +157,16 @@ function DetailBodyTemplateRoot({
   const [activeTab, setActiveTab] = useState(() => tabs[0]?.props.id ?? '')
   const selectedTab = tabs.find((tab) => tab.props.id === activeTab) ?? tabs[0]
   const summarySlot = summary ? (
-    <div className="min-h-0 rounded-(--radius) border bg-card p-(--designkit-panel-gap) text-card-foreground">
+    <div className="min-h-0 rounded-(--radius) border border-border bg-card p-(--designkit-panel-gap) text-card-foreground">
       {summary}
     </div>
   ) : null
   const mediaSlot = media ? (
     <div
-      className={cn('min-h-0 overflow-hidden rounded-(--radius) border bg-card', mediaClassName)}
+      className={cn(
+        'min-h-0 overflow-hidden rounded-(--radius) border border-border bg-card',
+        mediaClassName,
+      )}
     >
       {media}
     </div>
@@ -243,7 +247,7 @@ function DetailBodyTemplateRoot({
             {insideAsideSlot && (
               <div
                 className={cn(
-                  'min-h-0 rounded-(--radius) border bg-card p-(--designkit-panel-gap)',
+                  'min-h-0 rounded-(--radius) border border-border bg-card p-(--designkit-panel-gap)',
                   asideClassName,
                 )}
               >
@@ -285,7 +289,7 @@ function DetailBodyTemplateRoot({
           {outsideAsideSlot && (
             <aside
               className={cn(
-                'min-h-0 border-t bg-background lg:border-l lg:border-t-0',
+                'min-h-0 border-t border-border bg-background lg:border-l lg:border-t-0',
                 asideClassName,
               )}
             >

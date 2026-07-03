@@ -40,7 +40,7 @@ export const DashboardPanel = forwardRef<HTMLDivElement, DashboardPanelProps>(
         ref={ref}
         className={cn(
           'group flex h-full flex-col overflow-hidden',
-          transparent ? '' : 'rounded-(--radius) border bg-card text-card-foreground',
+          transparent ? '' : 'rounded-(--radius) border border-border bg-card text-card-foreground',
           editable && 'ring-1 ring-border/60 ring-inset',
           className,
         )}
@@ -117,7 +117,7 @@ export function DashboardBodyTemplate({
     <DataPage className={cn('layout-dashboard', className)} style={theme}>
       {topBar && <div className="shrink-0">{topBar}</div>}
       {(title || toolbar) && (
-        <header className="shrink-0 border-b px-(--designkit-page-padding-x) py-(--designkit-page-padding-y)">
+        <header className="shrink-0 border-b border-border px-(--designkit-page-padding-x) py-(--designkit-page-padding-y)">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="min-w-0">
               {title && <h1 className="text-sm font-semibold truncate">{title}</h1>}

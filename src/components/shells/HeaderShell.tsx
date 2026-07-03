@@ -77,7 +77,7 @@ function MobileNavSheet({
         <span className="sr-only">Open menu</span>
       </SheetTrigger>
       <SheetContent side="left" className="w-64 p-0">
-        <SheetHeader className="border-b px-4 py-3">
+        <SheetHeader className="border-b border-border px-4 py-3">
           <SheetTitle className="text-sm">Menu</SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col gap-0.5 p-2">
@@ -271,7 +271,7 @@ export function HeaderShell({
 }: HeaderShellProps) {
   return (
     <div className="h-full flex flex-col">
-      <header className="flex h-12 shrink-0 items-center border-b px-4 bg-(--designkit-header) backdrop-blur-sm">
+      <header className="flex h-12 shrink-0 items-center border-b border-border px-4 bg-(--designkit-header) backdrop-blur-sm">
         {header ?? (
           <NavigationHeaderContent
             navigation={navigation}

@@ -78,7 +78,7 @@ function PanelTemplateRoot({
       <div className={cn('min-h-0 flex-1 overflow-y-auto px-4 py-4', bodyClassName)}>
         <div className="space-y-5">{children}</div>
       </div>
-      {footer && <div className="shrink-0 border-t px-4 py-3">{footer}</div>}
+      {footer && <div className="shrink-0 border-t border-border px-4 py-3">{footer}</div>}
     </div>
   )
 }

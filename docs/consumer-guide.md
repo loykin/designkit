@@ -27,24 +27,29 @@ DesignKit requires Tailwind CSS v4. Import Tailwind and the published DesignKit
 styles from the same global CSS entry:
 
 ```css
-@import "tailwindcss";
-@import "@loykin/designkit/styles";
+@import 'tailwindcss';
+@import '@loykin/designkit/styles';
 ```
 
 The DesignKit stylesheet registers the package's `dist` directory as a
 Tailwind source. The application therefore generates its own utilities and
 DesignKit's utilities together. Do not add a second DesignKit `@source` rule,
 and do not expect DesignKit to provide pre-built Tailwind utility CSS.
+It also provides the Tailwind v4 `@theme inline` bridge for shadcn-style
+semantic utilities such as `bg-background`, `text-foreground`, and
+`border-border`, plus the class-based `.dark` variant used by DesignKit
+components.
 
 If the application also uses `@loykin/gridkit`, import gridkit styles last:
 
 ```css
-@import "tailwindcss";
-@import "@loykin/designkit/styles";
-@import "@loykin/gridkit/styles";  /* must come last — uses @layer gridkit */
+@import 'tailwindcss';
+@import '@loykin/designkit/styles';
+@import '@loykin/gridkit/styles'; /* must come last — uses @layer gridkit */
 ```
 
-The application must define the semantic Tailwind/shadcn variables it wants to
+DesignKit ships usable fallback values for the shared semantic variables. The
+application only needs to define the Tailwind/shadcn variables it wants to
 control, including variables such as:
 
 ```css
@@ -80,17 +85,17 @@ component already supplied by DesignKit.
 
 ## Template Selection
 
-| Requirement | Template |
-| --- | --- |
-| Data, list, tabs, or settings page | `DataBodyTemplate` |
-| Settings page with vertical category nav | `DataBodyTemplate` with `DataBodyTemplate.Section` |
-| Selected item drives a detail pane (CRM, inbox, issue tracker) | `ListDetailBodyTemplate` |
-| Entity or record details | `DetailBodyTemplate` |
-| Multi-step form | `FormWizardBodyTemplate` |
-| Dashboard shell and panels | `DashboardBodyTemplate` |
-| Editor, multi-pane workspace, or agent chat | `WorkbenchBodyTemplate` |
-| Filter sidebar and browse results | `BrowseBodyTemplate` |
-| Authentication page | `LoginBodyTemplate` |
+| Requirement                                                    | Template                                           |
+| -------------------------------------------------------------- | -------------------------------------------------- |
+| Data, list, tabs, or settings page                             | `DataBodyTemplate`                                 |
+| Settings page with vertical category nav                       | `DataBodyTemplate` with `DataBodyTemplate.Section` |
+| Selected item drives a detail pane (CRM, inbox, issue tracker) | `ListDetailBodyTemplate`                           |
+| Entity or record details                                       | `DetailBodyTemplate`                               |
+| Multi-step form                                                | `FormWizardBodyTemplate`                           |
+| Dashboard shell and panels                                     | `DashboardBodyTemplate`                            |
+| Editor, multi-pane workspace, or agent chat                    | `WorkbenchBodyTemplate`                            |
+| Filter sidebar and browse results                              | `BrowseBodyTemplate`                               |
+| Authentication page                                            | `LoginBodyTemplate`                                |
 
 Avoid using `DataPage` directly in application pages. `DataPage` is a low-level
 layout primitive that the body templates compose internally. Consuming it
@@ -108,13 +113,17 @@ passing `detail` shows the detail pane, omitting it shows the list.
 ```tsx
 import { ListDetailBodyTemplate, PageTopBar } from '@loykin/designkit'
 
-<ListDetailBodyTemplate
-  topBar={<PageTopBar left="Issues" />}
-  listWidth={320}
-  list={<IssueList onSelect={setSelectedId} />}
-  detail={selected ? <IssueDetail issue={selected} /> : undefined}
-  emptyDetail={<p>Select an issue to view details</p>}
-/>
+export function IssuesPage() {
+  return (
+    <ListDetailBodyTemplate
+      topBar={<PageTopBar left="Issues" />}
+      listWidth={320}
+      list={<IssueList onSelect={setSelectedId} />}
+      detail={selected ? <IssueDetail issue={selected} /> : undefined}
+      emptyDetail={<p>Select an issue to view details</p>}
+    />
+  )
+}
 ```
 
 ### WorkbenchBodyTemplate with DataGridAgentChat
@@ -159,6 +168,8 @@ Applications may customize:
 - Semantic theme variables such as `--primary`, `--background`, and `--radius`.
 - DesignKit variables such as `--designkit-page-padding-x`, `--designkit-page-padding-y`,
   `--designkit-panel-gap`, and `--designkit-toolbar-height`.
+- Border variables such as `--border` and `--designkit-border`; keep these resolved
+  to a subtle separator tone, not foreground text color.
 - Template `theme` props.
 - Public slots such as `actions`, `status`, `toolbar`, `topBar`, `sidebar`, `header`,
   `lead`, `aside`, and children.
@@ -168,11 +179,7 @@ Applications may customize:
 Example:
 
 ```tsx
-import {
-  Button,
-  DataBodyTemplate,
-  PageTopBar,
-} from '@loykin/designkit'
+import { Button, DataBodyTemplate, PageTopBar } from '@loykin/designkit'
 
 export function UsersPage() {
   return (
@@ -181,10 +188,12 @@ export function UsersPage() {
       title="Users"
       description="Manage project members."
       actions={<Button>Add user</Button>}
-      theme={{
-        '--designkit-panel-gap': '1.25rem',
-        '--designkit-page-padding-x': '2rem',
-      } as React.CSSProperties}
+      theme={
+        {
+          '--designkit-panel-gap': '1.25rem',
+          '--designkit-page-padding-x': '2rem',
+        } as React.CSSProperties
+      }
     >
       <DataBodyTemplate.Body>
         {/* Project-owned data and business behavior */}
@@ -194,6 +203,14 @@ export function UsersPage() {
 }
 ```
 
+`PageTopBar.right` is sized for compact toolbar actions by default. When placing
+labeled filters, selects, or other taller controls in that slot, keep the default
+toolbar height and add enough minimum height for the content:
+
+```tsx
+<PageTopBar left="Admin / Users" right={<UserFilters />} minHeight="76px" />
+```
+
 ## Avoid
 
 - Copying DesignKit source files into the application.
@@ -201,6 +218,7 @@ export function UsersPage() {
   `@loykin/designkit/dist/...` or package source paths.
 - Querying or overriding undocumented internal DOM structure.
 - Broad global CSS overrides and routine use of `!important`.
+- Broad global border overrides to correct DesignKit template separators.
 - Reimplementing public DesignKit components for minor visual differences.
 - Placing project-specific API clients, schemas, or permissions in DesignKit.
 - Assuming every playground demo is exported by the npm package.

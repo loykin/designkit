@@ -80,7 +80,7 @@ function ColorSwatch({
   formula?: string
 }) {
   return (
-    <div className="overflow-hidden rounded-[var(--radius)] border">
+    <div className="overflow-hidden rounded-[var(--radius)] border border-border">
       <div className={`${bg} flex h-14 items-center justify-center`}>
         <span className={`${fg} text-sm font-semibold`}>Aa</span>
       </div>
@@ -192,7 +192,7 @@ export function ColorsBodyTemplate({ theme, breadcrumb }: ColorsBodyTemplateProp
               oklch(L, <span className="text-foreground">chroma × factor</span>, {primaryHue})
               {'  · '}factor = 2–6% of primary chroma
             </div>
-            <div className="overflow-hidden rounded-[var(--radius)] border divide-y text-xs font-mono">
+            <div className="overflow-hidden rounded-[var(--radius)] border border-border divide-y text-xs font-mono">
               <div className="grid grid-cols-[7rem_1fr_1fr] bg-muted/50 px-3 py-1.5 text-muted-foreground">
                 <span>token</span>
                 <span>light</span>
@@ -204,7 +204,7 @@ export function ColorsBodyTemplate({ theme, breadcrumb }: ColorsBodyTemplateProp
                   className="grid grid-cols-[7rem_1fr_1fr] items-center gap-x-3 px-3 py-2"
                 >
                   <div className="flex items-center gap-2">
-                    <div className={`${t.bg} h-5 w-5 shrink-0 rounded border`} />
+                    <div className={`${t.bg} h-5 w-5 shrink-0 rounded border border-border`} />
                     <span className="font-medium text-foreground">{t.name}</span>
                   </div>
                   <span className="text-muted-foreground">

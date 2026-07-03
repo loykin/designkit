@@ -17,6 +17,7 @@ export interface PageTopBarProps {
   right?: React.ReactNode
   variant?: PageTopBarVariant
   height?: string
+  minHeight?: string
   className?: string
   style?: React.CSSProperties
   children?: React.ReactNode
@@ -108,6 +109,7 @@ export function PageTopBar({
   right,
   variant = 'ghost',
   height = 'var(--designkit-toolbar-height)',
+  minHeight,
   className,
   style,
   children,
@@ -123,11 +125,11 @@ export function PageTopBar({
   return (
     <div
       className={cn(
-        'flex shrink-0 items-center justify-between gap-4 px-(--designkit-page-padding-x)',
-        variant === 'default' && 'border-b',
+        'flex shrink-0 items-center justify-between gap-4 overflow-visible px-(--designkit-page-padding-x)',
+        variant === 'default' && 'border-b border-border',
         className,
       )}
-      style={{ height, ...style }}
+      style={{ height, minHeight, ...style }}
     >
       <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
         {trigger}

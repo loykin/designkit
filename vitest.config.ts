@@ -1,13 +1,18 @@
 import { defineConfig } from 'vitest/config'
+import { resolve } from 'path'
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src'),
+    },
+  },
   test: {
     environment: 'node',
-    include:     ['src/**/*.test.ts'],
-    passWithNoTests: true,
+    include: ['src/**/*.test.ts'],
     coverage: {
       provider: 'v8',
-      include:  ['src/**/*.ts', '!src/**/*.test.ts', '!src/**/index.ts'],
+      include: ['src/**/*.ts', '!src/**/*.test.ts', '!src/**/index.ts'],
     },
   },
 })

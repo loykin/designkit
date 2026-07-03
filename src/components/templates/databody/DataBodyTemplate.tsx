@@ -125,9 +125,17 @@ function GroupWrapper({
   }
   if (variant === 'bordered') {
     if (layout === 'inline') {
-      return <div className="overflow-hidden rounded-(--radius) border divide-y">{children}</div>
+      return (
+        <div className="overflow-hidden rounded-(--radius) border border-border divide-y">
+          {children}
+        </div>
+      )
     }
-    return <div className="rounded-(--radius) border p-(--designkit-panel-gap)">{children}</div>
+    return (
+      <div className="rounded-(--radius) border border-border p-(--designkit-panel-gap)">
+        {children}
+      </div>
+    )
   }
   return <>{children}</>
 }
@@ -377,7 +385,7 @@ function Root({
         </DataPage.Header>
 
         {summaryEl && (
-          <div className="shrink-0 border-b px-(--designkit-page-padding-x) py-(--designkit-panel-gap)">
+          <div className="shrink-0 border-b border-border px-(--designkit-page-padding-x) py-(--designkit-panel-gap)">
             {summaryEl.props.children}
           </div>
         )}
@@ -405,7 +413,7 @@ function Root({
         </DataPage.Header>
 
         {summaryEl && (
-          <div className="shrink-0 border-b px-(--designkit-page-padding-x) py-(--designkit-panel-gap)">
+          <div className="shrink-0 border-b border-border px-(--designkit-page-padding-x) py-(--designkit-panel-gap)">
             {summaryEl.props.children}
           </div>
         )}
@@ -458,7 +466,7 @@ function Root({
       </DataPage.Header>
 
       {summaryEl && (
-        <div className="shrink-0 border-b px-(--designkit-page-padding-x) py-(--designkit-panel-gap)">
+        <div className="shrink-0 border-b border-border px-(--designkit-page-padding-x) py-(--designkit-panel-gap)">
           {summaryEl.props.children}
         </div>
       )}

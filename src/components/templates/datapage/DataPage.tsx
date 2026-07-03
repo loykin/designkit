@@ -105,7 +105,13 @@ function Header({ children, className }: DataPageHeaderProps) {
   )
 }
 
-function TitleBlock({ title, description, breadcrumb, status, className }: DataPageTitleBlockProps) {
+function TitleBlock({
+  title,
+  description,
+  breadcrumb,
+  status,
+  className,
+}: DataPageTitleBlockProps) {
   if (!title && !description && !breadcrumb && !status) return null
 
   return (
@@ -142,7 +148,10 @@ function Tabs({ children, className }: DataPageTabsProps) {
   if (!children) return null
 
   return (
-    <div data-slot="data-page-tabs" className={cn('shrink-0 border-b px-6', className)}>
+    <div
+      data-slot="data-page-tabs"
+      className={cn('shrink-0 border-b border-border px-6', className)}
+    >
       <div className="flex items-center gap-0 overflow-x-auto">{children}</div>
     </div>
   )
@@ -200,9 +209,10 @@ function Group({ children, className, surface = 'none' }: DataPageGroupProps) {
       data-surface={surface}
       className={cn(
         'min-h-0',
-        surface === 'bordered' && 'overflow-hidden rounded-[var(--radius)] border bg-background',
+        surface === 'bordered' &&
+          'overflow-hidden rounded-[var(--radius)] border border-border bg-background',
         surface === 'card' &&
-          'overflow-hidden rounded-[var(--radius)] border bg-card text-card-foreground shadow-sm',
+          'overflow-hidden rounded-[var(--radius)] border border-border bg-card text-card-foreground shadow-sm',
         className,
       )}
     >
@@ -266,7 +276,10 @@ function Footer({ children, className }: DataPageFooterProps) {
   if (!children) return null
 
   return (
-    <footer data-slot="data-page-footer" className={cn('shrink-0 border-t px-6 py-3', className)}>
+    <footer
+      data-slot="data-page-footer"
+      className={cn('shrink-0 border-t border-border px-6 py-3', className)}
+    >
       {children}
     </footer>
   )

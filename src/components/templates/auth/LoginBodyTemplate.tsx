@@ -64,7 +64,12 @@ function FormCard({
   const widthCls = cardWidthClass[cardWidth]
   if (card === 'card') {
     return (
-      <div className={cn('w-full rounded-2xl border bg-card px-8 py-10 shadow-lg', widthCls)}>
+      <div
+        className={cn(
+          'w-full rounded-2xl border border-border bg-card px-8 py-10 shadow-lg',
+          widthCls,
+        )}
+      >
         {children}
       </div>
     )

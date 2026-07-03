@@ -171,7 +171,7 @@ export function WorkbenchBodyTemplate({
     <DataPage className={cn('layout-workbench', className)} style={theme}>
       {topBar && <div className="shrink-0">{topBar}</div>}
       {showHeader && (
-        <header className="shrink-0 border-b px-(--designkit-page-padding-x) py-[calc(var(--designkit-page-padding-y)*0.75)]">
+        <header className="shrink-0 border-b border-border px-(--designkit-page-padding-x) py-[calc(var(--designkit-page-padding-y)*0.75)]">
           <div className="flex min-h-[var(--designkit-toolbar-height)] items-center justify-between gap-3">
             <div className="min-w-0">
               {(title || status) && (
@@ -194,14 +194,14 @@ export function WorkbenchBodyTemplate({
         </header>
       )}
       {(showLeftPane || showRightPane) && (
-        <div className="flex shrink-0 items-center gap-1.5 border-b px-2 py-1.5 md:hidden">
+        <div className="flex shrink-0 items-center gap-1.5 border-b border-border px-2 py-1.5 md:hidden">
           {showLeftPane && (
             <Sheet>
               <SheetTrigger render={<Button variant="outline" size="sm" />}>
                 {leftPaneLabel}
               </SheetTrigger>
               <SheetContent side="left" className="flex flex-col gap-0 p-0">
-                <SheetHeader className="shrink-0 border-b px-4 py-3">
+                <SheetHeader className="shrink-0 border-b border-border px-4 py-3">
                   <SheetTitle>{leftPaneLabel}</SheetTitle>
                 </SheetHeader>
                 <ScrollArea className="flex-1">{leftPane}</ScrollArea>
@@ -214,7 +214,7 @@ export function WorkbenchBodyTemplate({
                 {rightPaneLabel}
               </SheetTrigger>
               <SheetContent side="right" className="flex flex-col gap-0 p-0">
-                <SheetHeader className="shrink-0 border-b px-4 py-3">
+                <SheetHeader className="shrink-0 border-b border-border px-4 py-3">
                   <SheetTitle>{rightPaneLabel}</SheetTitle>
                 </SheetHeader>
                 <ScrollArea className="flex-1">{rightPane}</ScrollArea>
@@ -228,7 +228,7 @@ export function WorkbenchBodyTemplate({
           <>
             <aside
               className={cn(
-                'hidden min-h-0 shrink-0 overflow-hidden border-r bg-card/45 md:flex md:flex-col',
+                'hidden min-h-0 shrink-0 overflow-hidden border-r border-border bg-card/45 md:flex md:flex-col',
                 leftPaneClassName,
               )}
               style={{ width: leftWidth }}
@@ -269,7 +269,7 @@ export function WorkbenchBodyTemplate({
               )}
               <section
                 className={cn(
-                  'min-h-0 shrink-0 overflow-auto border-t bg-card/40 md:overflow-hidden',
+                  'min-h-0 shrink-0 overflow-auto border-t border-border bg-card/40 md:overflow-hidden',
                   bottomPaneClassName,
                 )}
                 style={{ height: bottomHeight }}
@@ -295,7 +295,7 @@ export function WorkbenchBodyTemplate({
             )}
             <aside
               className={cn(
-                'hidden min-h-0 shrink-0 overflow-hidden border-l bg-card/45 md:flex md:flex-col',
+                'hidden min-h-0 shrink-0 overflow-hidden border-l border-border bg-card/45 md:flex md:flex-col',
                 rightPaneClassName,
               )}
               style={{ width: rightWidth }}

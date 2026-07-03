@@ -183,7 +183,8 @@ export function useStyleInjector() {
       })
       .filter(Boolean)
 
-    el.textContent = [rootBlock, darkTonalBlock, ...tmplBlocks].join('\n\n')
+    const layerBody = [rootBlock, darkTonalBlock, ...tmplBlocks].join('\n\n')
+    el.textContent = `@layer designkit {\n${layerBody}\n}`
   }, [g, ov])
 
   useEffect(() => {
