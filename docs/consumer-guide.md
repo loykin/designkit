@@ -48,6 +48,10 @@ If the application also uses `@loykin/gridkit`, import gridkit styles last:
 @import '@loykin/gridkit/styles'; /* must come last — uses @layer gridkit */
 ```
 
+Gridkit remains a sibling package. It consumes shared semantic variables such
+as `--primary`, `--border`, and `--radius`; DesignKit does not publish
+`--gridkit-*` adapter tokens.
+
 DesignKit ships usable fallback values for the shared semantic variables. The
 application only needs to define the Tailwind/shadcn variables it wants to
 control, including variables such as:
@@ -65,6 +69,58 @@ control, including variables such as:
 
 Use the application's existing theme definitions when they already provide
 these variables.
+
+## Shared Token Contract
+
+All Loykin kits must treat shared shadcn-style semantic variables as the
+cross-package contract. Kit-specific variables are local escape hatches, not
+the source of truth.
+
+| Token                           | Type / unit                   | Meaning                                  |
+| ------------------------------- | ----------------------------- | ---------------------------------------- |
+| `--background` / `--foreground` | CSS color, preferably OKLCH   | Default app surface and text             |
+| `--card` / `--card-foreground`  | CSS color, preferably OKLCH   | Raised or framed surfaces                |
+| `--primary`                     | CSS color, preferably OKLCH   | Primary action/accent color              |
+| `--primary-foreground`          | CSS color, preferably OKLCH   | Text/icons on `--primary`                |
+| `--border` / `--input`          | CSS color, preferably OKLCH   | Subtle separators and form borders       |
+| `--ring`                        | CSS color, preferably OKLCH   | Focus ring color                         |
+| `--radius`                      | CSS length, for example `8px` | Base corner radius, not a numeric factor |
+
+Fallback order must be shared first, package namespace second, literal last:
+
+```css
+--kit-primary: var(--primary, var(--kit-primary-fallback, oklch(...)));
+```
+
+Do not reverse this to prefer a kit-specific variable over `--primary`; doing
+so makes app theme changes silently miss that kit. DesignKit follows the same
+rule by mapping Tailwind utilities through shared variables first and
+`--designkit-*` as fallback.
+
+Dark mode is class-based across kits. Use `.dark`, matching Tailwind's
+`@custom-variant dark (&:is(.dark *))`; do not mix in `prefers-color-scheme`
+for package defaults unless the consuming app explicitly owns that behavior.
+
+Runtime tokens from `useStyleInjector` are emitted inside `@layer designkit`.
+Unlayered app CSS has higher cascade priority, so an app-level `:root`
+definition of `--primary`, `--border`, `--radius`, or `--designkit-*` wins over
+the runtime theme injector. This is intentional: the app's global CSS is the
+final authority. Use `useStyleInjector({ scope })` when the runtime theme
+should apply only inside a container.
+
+When a single gridkit instance needs a different value, override the
+kit-specific variable on that component wrapper instead of changing the shared
+token globally:
+
+```tsx
+<DataGrid
+  styles={{
+    root: {
+      '--gridkit-border': 'transparent',
+    } as React.CSSProperties,
+  }}
+/>
+```
 
 When DesignKit is embedded in only part of a host application, scope runtime
 token injection to that host container:

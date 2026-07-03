@@ -75,7 +75,12 @@ src/
 - Do not add a Tailwind class prefix solely to isolate DesignKit. Utility ordering and deduplication come from the single consumer-owned Tailwind build.
 - CSS custom properties use `--designkit-` prefix for DesignKit-owned tokens
 - Shared shadcn variables (`--primary`, `--background`, `--radius`, etc.) are supported as fallbacks
+- Loykin kits share semantic tokens first (`--primary`, `--border`, `--radius`) and use package-specific variables only as local escape hatches; do not make sibling kits depend on `--designkit-*`
+- Shared token fallback order is shared semantic token first, package namespace second, literal fallback last
+- Shared token types are part of the contract: colors are CSS colors, preferably OKLCH; `--radius` is a CSS length, not a scale factor
+- Dark mode is class-based through `.dark`; avoid package defaults based on `prefers-color-scheme`
 - `useStyleInjector` writes `:root` by default, or the configured `scope`, plus dark tonal and per-template `.layout-<id>` overrides inside `@layer designkit`
+- Because `useStyleInjector` writes inside `@layer designkit`, unlayered app CSS wins over injected runtime tokens by design
 - State styling uses `data-*` attributes; avoid relying on generated class ordering
 
 ## Repository Boundaries

@@ -1,10 +1,9 @@
 /*
  * DesignKit preset bridge.
  *
- * DesignKit should own the shared design tokens and map them onto the
- * package-specific variables used by Loykin kits. This file is intentionally
- * small for now; package adapters will grow here as gridkit/chartkit/basekit
- * are wired into the playground.
+ * DesignKit owns shared semantic tokens and its own --designkit-* namespace.
+ * Sibling packages should consume shared variables such as --primary, --border,
+ * and --radius instead of depending on DesignKit-specific variables.
  */
 
 @custom-variant dark (&:is(.dark *));
@@ -56,23 +55,43 @@
 }
 
 :root {
-  --designkit-radius: var(--radius, 0.5rem);
-  --designkit-background: var(--background, oklch(1 0 0));
-  --designkit-foreground: var(--foreground, oklch(0.145 0 0));
-  --designkit-card: var(--card, oklch(1 0 0));
-  --designkit-card-foreground: var(--card-foreground, oklch(0.145 0 0));
-  --designkit-primary: var(--primary, oklch(0.205 0 0));
-  --designkit-primary-foreground: var(--primary-foreground, oklch(0.985 0 0));
-  --designkit-secondary: var(--secondary, oklch(0.97 0 0));
-  --designkit-secondary-foreground: var(--secondary-foreground, oklch(0.205 0 0));
-  --designkit-muted: var(--muted, oklch(0.97 0 0));
-  --designkit-muted-foreground: var(--muted-foreground, oklch(0.556 0 0));
-  --designkit-accent: var(--accent, oklch(0.97 0 0));
-  --designkit-accent-foreground: var(--accent-foreground, oklch(0.205 0 0));
-  --designkit-border: var(--border, oklch(0.922 0 0));
-  --designkit-input: var(--input, oklch(0.922 0 0));
-  --designkit-ring: var(--ring, oklch(0.708 0 0));
-  --designkit-destructive: var(--destructive, oklch(0.577 0.245 27.325));
+  --designkit-radius: 0.5rem;
+  --designkit-background: oklch(1 0 0);
+  --designkit-foreground: oklch(0.145 0 0);
+  --designkit-card: oklch(1 0 0);
+  --designkit-card-foreground: oklch(0.145 0 0);
+  --designkit-primary: oklch(0.205 0 0);
+  --designkit-primary-foreground: oklch(0.985 0 0);
+  --designkit-secondary: oklch(0.97 0 0);
+  --designkit-secondary-foreground: oklch(0.205 0 0);
+  --designkit-muted: oklch(0.97 0 0);
+  --designkit-muted-foreground: oklch(0.556 0 0);
+  --designkit-accent: oklch(0.97 0 0);
+  --designkit-accent-foreground: oklch(0.205 0 0);
+  --designkit-border: oklch(0.922 0 0);
+  --designkit-input: oklch(0.922 0 0);
+  --designkit-ring: oklch(0.708 0 0);
+  --designkit-destructive: oklch(0.577 0.245 27.325);
+
+  --radius: var(--designkit-radius);
+  --background: var(--designkit-background);
+  --foreground: var(--designkit-foreground);
+  --card: var(--designkit-card);
+  --card-foreground: var(--designkit-card-foreground);
+  --popover: var(--designkit-card);
+  --popover-foreground: var(--designkit-card-foreground);
+  --primary: var(--designkit-primary);
+  --primary-foreground: var(--designkit-primary-foreground);
+  --secondary: var(--designkit-secondary);
+  --secondary-foreground: var(--designkit-secondary-foreground);
+  --muted: var(--designkit-muted);
+  --muted-foreground: var(--designkit-muted-foreground);
+  --accent: var(--designkit-accent);
+  --accent-foreground: var(--designkit-accent-foreground);
+  --destructive: var(--designkit-destructive);
+  --border: var(--designkit-border);
+  --input: var(--designkit-input);
+  --ring: var(--designkit-ring);
 
   /* light mode: slightly darker than background, semi-transparent */
   --designkit-header: oklch(0.96 0 0 / 0.92);
@@ -97,14 +116,24 @@
 }
 
 .dark {
-  --designkit-background: var(--background, oklch(0.145 0 0));
-  --designkit-foreground: var(--foreground, oklch(0.685 0 0));
-  --designkit-card: var(--card, oklch(0.205 0 0));
-  --designkit-card-foreground: var(--card-foreground, oklch(0.712 0 0));
-  --designkit-muted: var(--muted, oklch(0.269 0 0));
-  --designkit-muted-foreground: var(--muted-foreground, oklch(0.58 0 0));
-  --designkit-border: var(--border, oklch(1 0 0 / 18%));
-  --designkit-input: var(--input, oklch(1 0 0 / 22%));
+  --designkit-background: oklch(0.145 0 0);
+  --designkit-foreground: oklch(0.685 0 0);
+  --designkit-card: oklch(0.205 0 0);
+  --designkit-card-foreground: oklch(0.712 0 0);
+  --designkit-muted: oklch(0.269 0 0);
+  --designkit-muted-foreground: oklch(0.58 0 0);
+  --designkit-border: oklch(1 0 0 / 18%);
+  --designkit-input: oklch(1 0 0 / 22%);
+  --background: var(--designkit-background);
+  --foreground: var(--designkit-foreground);
+  --card: var(--designkit-card);
+  --card-foreground: var(--designkit-card-foreground);
+  --popover: var(--designkit-card);
+  --popover-foreground: var(--designkit-card-foreground);
+  --muted: var(--designkit-muted);
+  --muted-foreground: var(--designkit-muted-foreground);
+  --border: var(--designkit-border);
+  --input: var(--designkit-input);
   /* dark mode: slightly lighter than background, semi-transparent */
   --designkit-header: oklch(0.22 0 0 / 0.88);
 }
@@ -121,32 +150,6 @@
   --designkit-page-padding-y: 1.25rem;
   --designkit-panel-gap: 1.25rem;
   --designkit-toolbar-height: 3rem;
-}
-
-/*
- * Gridkit adapter.
- *
- * Maps --gridkit-* tokens onto the designkit token set.
- * Must be loaded AFTER @loykin/gridkit/styles so these declarations win.
- */
-:root {
-  --gridkit-background: var(--designkit-background);
-  --gridkit-foreground: var(--designkit-foreground);
-  --gridkit-popover: var(--designkit-card);
-  --gridkit-popover-foreground: var(--designkit-card-foreground);
-  --gridkit-primary: var(--designkit-primary);
-  --gridkit-primary-foreground: var(--designkit-primary-foreground);
-  --gridkit-secondary: var(--designkit-secondary);
-  --gridkit-secondary-foreground: var(--designkit-secondary-foreground);
-  --gridkit-muted: var(--designkit-muted);
-  --gridkit-muted-foreground: var(--designkit-muted-foreground);
-  --gridkit-accent: var(--designkit-accent);
-  --gridkit-accent-foreground: var(--designkit-accent-foreground);
-  --gridkit-destructive: var(--designkit-destructive);
-  --gridkit-border: var(--designkit-border);
-  --gridkit-input: var(--designkit-input);
-  --gridkit-ring: var(--designkit-ring);
-  --gridkit-radius: var(--designkit-radius);
 }
 
 /*

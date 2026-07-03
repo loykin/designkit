@@ -174,6 +174,19 @@ console.log(JSON.stringify({ appReact, designkitReact, appReactDom, designkitRea
   if (!publishedStyles.includes('@custom-variant dark')) {
     throw new Error('Published styles do not provide the class-based dark variant')
   }
+  if (
+    !publishedStyles.includes('--primary: var(--designkit-primary);') ||
+    !publishedStyles.includes('--border: var(--designkit-border);') ||
+    !publishedStyles.includes('--radius: var(--designkit-radius);')
+  ) {
+    throw new Error('Published styles do not emit shared semantic token defaults')
+  }
+  if (
+    publishedStyles.includes('--gridkit-primary:') ||
+    publishedStyles.includes('--gridkit-radius:')
+  ) {
+    throw new Error('Published styles must not emit DesignKit-owned gridkit adapter tokens')
+  }
   if (/\.hidden\s*\{\s*display:\s*none/.test(publishedStyles)) {
     throw new Error('Published styles contain pre-built Tailwind utilities')
   }

@@ -21,7 +21,6 @@ import { useMemo, useState } from 'react'
 function radiusVarLines(r: number): string[] {
   return [
     `  --designkit-radius:       ${r}rem;`,
-    `  --gridkit-radius:  ${r}rem;`,
     `  --radius:          ${r}rem;`,
     `  --radius-sm:  ${(r * 0.6).toFixed(4)}rem;`,
     `  --radius-md:  ${(r * 0.8).toFixed(4)}rem;`,
@@ -35,9 +34,6 @@ function colorVarLines(chroma: number, hue: number): string[] {
     `  --designkit-primary:                    oklch(0.52 ${chroma} ${hue});`,
     `  --designkit-primary-foreground:         oklch(0.985 0 0);`,
     `  --designkit-ring:                       oklch(0.5 ${chroma} ${hue});`,
-    `  --gridkit-primary:               oklch(0.52 ${chroma} ${hue});`,
-    `  --gridkit-primary-foreground:    oklch(0.985 0 0);`,
-    `  --gridkit-ring:                  oklch(0.5 ${chroma} ${hue});`,
     `  --primary:             oklch(0.52 ${chroma} ${hue});`,
     `  --primary-foreground:  oklch(0.985 0 0);`,
     `  --ring:                oklch(0.5 ${chroma} ${hue});`,
@@ -138,12 +134,10 @@ function buildThemeProp(ov: TemplateOverride, globalHue: number): string {
   const themeEntries: string[] = []
   if (ov.radius !== undefined) {
     themeEntries.push(`    '--designkit-radius': '${ov.radius}rem',`)
-    themeEntries.push(`    '--gridkit-radius': '${ov.radius}rem',`)
     themeEntries.push(`    '--radius': '${ov.radius}rem',`)
   }
   if (ov.primaryChroma !== undefined) {
     themeEntries.push(`    '--designkit-primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
-    themeEntries.push(`    '--gridkit-primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
     themeEntries.push(`    '--primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
   }
   if (ov.density !== undefined) {

@@ -22,3 +22,5 @@ All notable changes to `@loykin/designkit` are documented here.
   `LegacyTemplateId`/`TemplateId` compatibility.
 - Added `useStyleInjector({ scope })` for container-scoped runtime theme
   injection.
+- Removed the DesignKit-owned `--gridkit-*` adapter; sibling kits should consume
+  shared semantic tokens such as `--primary`, `--border`, and `--radius`.
