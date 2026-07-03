@@ -1,4 +1,4 @@
-import type { TemplateOverride, TemplateId } from '@loykin/designkit'
+import type { TemplateOverride } from '@loykin/designkit'
 import type { DataGridTemplateVariant } from './demos/table/DataGridTemplateDemo'
 
 export type TemplateGroup = 'Table' | 'Pages' | 'Design' | 'Auth' | 'Dashboard' | 'Workbench'
@@ -39,7 +39,7 @@ export interface TemplateOptionSpec {
 }
 
 export interface TemplateDefinition {
-  id: TemplateId
+  id: string
   label: string
   /** Short label used only in nav sub-menu (omit to fall back to label) */
   navigationLabel?: string
@@ -47,7 +47,7 @@ export interface TemplateDefinition {
   navigationSubgroupLabel?: string
   group: TemplateGroup
   navigationGroup: TemplateNavigationGroupId
-  navigationParent?: TemplateId
+  navigationParent?: string
   layoutClassName: string
   exportComponent: string
   exportKind: TemplateExportKind
@@ -549,16 +549,18 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
   },
 ]
 
-export function getTemplateDefinition(id: TemplateId) {
+export type PlaygroundTemplateId = (typeof TEMPLATE_DEFINITIONS)[number]['id']
+
+export function getTemplateDefinition(id: string) {
   return TEMPLATE_DEFINITIONS.find((definition) => definition.id === id)
 }
 
-export function createTemplateOverrides(): Record<TemplateId, TemplateOverride> {
+export function createTemplateOverrides(): Record<string, TemplateOverride> {
   return TEMPLATE_DEFINITIONS.reduce(
     (acc, definition) => {
       acc[definition.id] = { ...definition.preset }
       return acc
     },
-    {} as Record<TemplateId, TemplateOverride>,
+    {} as Record<string, TemplateOverride>,
   )
 }

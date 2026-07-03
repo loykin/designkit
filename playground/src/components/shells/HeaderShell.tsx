@@ -1,15 +1,23 @@
 import { Fragment, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
-  Avatar, AvatarFallback,
+  Avatar,
+  AvatarFallback,
   Button,
-  NavigationMenu, NavigationMenuContent, NavigationMenuItem,
-  NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger,
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
   Separator,
-  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
   cn,
 } from '@loykin/designkit'
-import type { TemplateId } from '@loykin/designkit'
 import type { TemplateNavigationGroup, TemplateNavigationItem } from '~/templates'
 import { Bell, Menu, Settings } from 'lucide-react'
 
@@ -18,7 +26,7 @@ export interface HeaderShellProps {
   children: React.ReactNode
 }
 
-function itemIsActive(item: TemplateNavigationItem, activeItemId?: TemplateId) {
+function itemIsActive(item: TemplateNavigationItem, activeItemId?: string) {
   return item.id === activeItemId || item.children?.some((c) => c.id === activeItemId) === true
 }
 
@@ -48,7 +56,7 @@ function MobileNavSheet({
   shellId,
 }: {
   navigation: TemplateNavigationGroup[]
-  activeItemId?: TemplateId
+  activeItemId?: string
   shellId: string
 }) {
   const [open, setOpen] = useState(false)
@@ -121,20 +129,27 @@ function NavigationHeaderContent({
   shellId,
 }: {
   navigation?: TemplateNavigationGroup[]
-  activeItemId?: TemplateId
+  activeItemId?: string
   shellId: string
 }) {
   if (!navigation?.length) {
     return (
       <>
         <div className="flex items-center gap-2 mr-6">
-          <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">A</div>
+          <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">
+            A
+          </div>
           <span className="text-sm font-semibold hidden sm:inline">Acme Corp</span>
         </div>
         <nav className="hidden items-center gap-1 md:flex">
           {demoNav.map((item) => (
-            <Button key={item} variant="ghost" size="sm"
-              className={item === 'Users' ? 'bg-accent text-foreground font-medium' : 'text-muted-foreground'}
+            <Button
+              key={item}
+              variant="ghost"
+              size="sm"
+              className={
+                item === 'Users' ? 'bg-accent text-foreground font-medium' : 'text-muted-foreground'
+              }
             >
               {item}
             </Button>
@@ -150,12 +165,16 @@ function NavigationHeaderContent({
       {/* Mobile: hamburger */}
       <div className="flex items-center gap-2 md:hidden">
         <MobileNavSheet navigation={navigation} activeItemId={activeItemId} shellId={shellId} />
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">D</div>
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">
+          D
+        </div>
       </div>
 
       {/* Desktop: logo + nav */}
       <div className="mr-4 hidden items-center gap-2 md:flex">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">D</div>
+        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">
+          D
+        </div>
         <span className="text-sm font-semibold">DesignKit</span>
       </div>
 
@@ -174,10 +193,14 @@ function NavigationHeaderContent({
                   <NavigationMenuItem key={item.id} value={item.id}>
                     {(item.children?.length ?? 0) > 0 ? (
                       <>
-                        <NavigationMenuTrigger className={cn(
-                          'h-8 text-sm',
-                          active ? 'text-foreground font-medium' : 'text-muted-foreground font-normal',
-                        )}>
+                        <NavigationMenuTrigger
+                          className={cn(
+                            'h-8 text-sm',
+                            active
+                              ? 'text-foreground font-medium'
+                              : 'text-muted-foreground font-normal',
+                          )}
+                        >
                           {item.label}
                         </NavigationMenuTrigger>
                         <NavigationMenuContent>
@@ -202,7 +225,9 @@ function NavigationHeaderContent({
                         render={<Link to={`/${shellId}/${item.id}`} />}
                         className={cn(
                           'h-8 px-2.5 py-1.5 text-sm',
-                          active ? 'bg-accent text-foreground font-medium' : 'text-muted-foreground',
+                          active
+                            ? 'bg-accent text-foreground font-medium'
+                            : 'text-muted-foreground',
                         )}
                       >
                         {item.label}
@@ -229,7 +254,7 @@ export function HeaderShell({ navigation, children }: HeaderShellProps) {
       <header className="flex h-12 shrink-0 items-center border-b px-4 bg-(--designkit-header) backdrop-blur-sm">
         <NavigationHeaderContent
           navigation={navigation}
-          activeItemId={templateId as TemplateId | undefined}
+          activeItemId={templateId}
           shellId={shellId}
         />
       </header>

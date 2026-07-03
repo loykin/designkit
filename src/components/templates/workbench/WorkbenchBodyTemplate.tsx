@@ -1,4 +1,4 @@
-import React, { type CSSProperties, type ReactNode, useCallback, useState } from 'react'
+import React, { type CSSProperties, type ReactNode, useCallback, useEffect, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { DataPage } from '../datapage/DataPage'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
@@ -6,6 +6,12 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 type ResizeAxis = 'x' | 'y'
+
+export interface WorkbenchResizeState {
+  leftPaneWidth: number
+  rightPaneWidth: number
+  bottomPaneHeight: number
+}
 
 export interface WorkbenchBodyTemplateProps {
   theme?: CSSProperties
@@ -38,6 +44,7 @@ export interface WorkbenchBodyTemplateProps {
   maxRightPaneWidth?: number
   minBottomPaneHeight?: number
   maxBottomPaneHeight?: number
+  onResize?: (state: WorkbenchResizeState) => void
   leftPaneClassName?: string
   mainPaneClassName?: string
   rightPaneClassName?: string
@@ -54,23 +61,39 @@ function clamp(value: number, min: number, max: number) {
 
 function ResizeHandle({
   axis,
+  label,
+  min,
+  max,
+  value,
   onPointerDown,
+  onKeyDown,
   className,
 }: {
   axis: ResizeAxis
+  label: string
+  min: number
+  max: number
+  value: number
   onPointerDown: React.PointerEventHandler<HTMLDivElement>
+  onKeyDown: React.KeyboardEventHandler<HTMLDivElement>
   className?: string
 }) {
   return (
     <div
       role="separator"
+      tabIndex={0}
+      aria-label={label}
       aria-orientation={axis === 'x' ? 'vertical' : 'horizontal'}
+      aria-valuemin={min}
+      aria-valuemax={max}
+      aria-valuenow={value}
       className={cn(
-        'group/resize relative z-10 shrink-0 touch-none bg-transparent',
+        'group/resize relative z-10 shrink-0 touch-none bg-transparent outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
         axis === 'x' ? '-mx-1 w-2 cursor-col-resize' : '-my-1 h-2 cursor-row-resize',
         className,
       )}
       onPointerDown={onPointerDown}
+      onKeyDown={onKeyDown}
     >
       <div
         className={cn(
@@ -121,6 +144,7 @@ export function WorkbenchBodyTemplate({
   maxRightPaneWidth = 520,
   minBottomPaneHeight = 120,
   maxBottomPaneHeight = 420,
+  onResize,
   leftPaneClassName,
   mainPaneClassName,
   rightPaneClassName,
@@ -131,6 +155,99 @@ export function WorkbenchBodyTemplate({
   const [leftWidth, setLeftWidth] = useState(leftPaneWidth)
   const [rightWidth, setRightWidth] = useState(rightPaneWidth)
   const [bottomHeight, setBottomHeight] = useState(bottomPaneHeight)
+
+  useEffect(() => {
+    setLeftWidth(leftPaneWidth)
+  }, [leftPaneWidth])
+
+  useEffect(() => {
+    setRightWidth(rightPaneWidth)
+  }, [rightPaneWidth])
+
+  useEffect(() => {
+    setBottomHeight(bottomPaneHeight)
+  }, [bottomPaneHeight])
+
+  const updateResizeState = useCallback(
+    (patch: Partial<WorkbenchResizeState>) => {
+      const next = {
+        leftPaneWidth: leftWidth,
+        rightPaneWidth: rightWidth,
+        bottomPaneHeight: bottomHeight,
+        ...patch,
+      }
+
+      if (patch.leftPaneWidth !== undefined) setLeftWidth(patch.leftPaneWidth)
+      if (patch.rightPaneWidth !== undefined) setRightWidth(patch.rightPaneWidth)
+      if (patch.bottomPaneHeight !== undefined) setBottomHeight(patch.bottomPaneHeight)
+
+      onResize?.(next)
+    },
+    [bottomHeight, leftWidth, onResize, rightWidth],
+  )
+
+  const updateLeftWidth = useCallback(
+    (next: number) => {
+      updateResizeState({
+        leftPaneWidth: clamp(next, minLeftPaneWidth, maxLeftPaneWidth),
+      })
+    },
+    [maxLeftPaneWidth, minLeftPaneWidth, updateResizeState],
+  )
+
+  const updateRightWidth = useCallback(
+    (next: number) => {
+      updateResizeState({
+        rightPaneWidth: clamp(next, minRightPaneWidth, maxRightPaneWidth),
+      })
+    },
+    [maxRightPaneWidth, minRightPaneWidth, updateResizeState],
+  )
+
+  const updateBottomHeight = useCallback(
+    (next: number) => {
+      updateResizeState({
+        bottomPaneHeight: clamp(next, minBottomPaneHeight, maxBottomPaneHeight),
+      })
+    },
+    [maxBottomPaneHeight, minBottomPaneHeight, updateResizeState],
+  )
+
+  const handleResizeKey = useCallback(
+    (
+      event: React.KeyboardEvent,
+      options: {
+        value: number
+        min: number
+        max: number
+        decreaseKeys: string[]
+        increaseKeys: string[]
+        update: (next: number) => void
+      },
+    ) => {
+      const step = event.shiftKey ? 48 : 12
+      if (options.decreaseKeys.includes(event.key)) {
+        event.preventDefault()
+        options.update(options.value - step)
+        return
+      }
+      if (options.increaseKeys.includes(event.key)) {
+        event.preventDefault()
+        options.update(options.value + step)
+        return
+      }
+      if (event.key === 'Home') {
+        event.preventDefault()
+        options.update(options.min)
+        return
+      }
+      if (event.key === 'End') {
+        event.preventDefault()
+        options.update(options.max)
+      }
+    },
+    [],
+  )
 
   const startResize = useCallback(
     (event: React.PointerEvent, axis: ResizeAxis, applyDelta: (delta: number) => void) => {
@@ -238,13 +355,27 @@ export function WorkbenchBodyTemplate({
             {resizable && (
               <ResizeHandle
                 axis="x"
+                label="Resize left pane"
+                min={minLeftPaneWidth}
+                max={maxLeftPaneWidth}
+                value={leftWidth}
                 className="hidden md:flex"
                 onPointerDown={(event) => {
                   const start = leftWidth
                   startResize(event, 'x', (delta) => {
-                    setLeftWidth(clamp(start + delta, minLeftPaneWidth, maxLeftPaneWidth))
+                    updateLeftWidth(start + delta)
                   })
                 }}
+                onKeyDown={(event) =>
+                  handleResizeKey(event, {
+                    value: leftWidth,
+                    min: minLeftPaneWidth,
+                    max: maxLeftPaneWidth,
+                    decreaseKeys: ['ArrowLeft'],
+                    increaseKeys: ['ArrowRight'],
+                    update: updateLeftWidth,
+                  })
+                }
               />
             )}
           </>
@@ -256,15 +387,27 @@ export function WorkbenchBodyTemplate({
               {resizable && (
                 <ResizeHandle
                   axis="y"
+                  label="Resize bottom pane"
+                  min={minBottomPaneHeight}
+                  max={maxBottomPaneHeight}
+                  value={bottomHeight}
                   className="hidden md:flex"
                   onPointerDown={(event) => {
                     const start = bottomHeight
                     startResize(event, 'y', (delta) => {
-                      setBottomHeight(
-                        clamp(start - delta, minBottomPaneHeight, maxBottomPaneHeight),
-                      )
+                      updateBottomHeight(start - delta)
                     })
                   }}
+                  onKeyDown={(event) =>
+                    handleResizeKey(event, {
+                      value: bottomHeight,
+                      min: minBottomPaneHeight,
+                      max: maxBottomPaneHeight,
+                      decreaseKeys: ['ArrowDown'],
+                      increaseKeys: ['ArrowUp'],
+                      update: updateBottomHeight,
+                    })
+                  }
                 />
               )}
               <section
@@ -284,13 +427,27 @@ export function WorkbenchBodyTemplate({
             {resizable && (
               <ResizeHandle
                 axis="x"
+                label="Resize right pane"
+                min={minRightPaneWidth}
+                max={maxRightPaneWidth}
+                value={rightWidth}
                 className="hidden md:flex"
                 onPointerDown={(event) => {
                   const start = rightWidth
                   startResize(event, 'x', (delta) => {
-                    setRightWidth(clamp(start - delta, minRightPaneWidth, maxRightPaneWidth))
+                    updateRightWidth(start - delta)
                   })
                 }}
+                onKeyDown={(event) =>
+                  handleResizeKey(event, {
+                    value: rightWidth,
+                    min: minRightPaneWidth,
+                    max: maxRightPaneWidth,
+                    decreaseKeys: ['ArrowRight'],
+                    increaseKeys: ['ArrowLeft'],
+                    update: updateRightWidth,
+                  })
+                }
               />
             )}
             <aside

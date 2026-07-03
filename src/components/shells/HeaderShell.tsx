@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/navigation-menu'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
-import type { TemplateId } from '@/store/types'
 import type { TemplateNavigationGroup, TemplateNavigationItem } from '@/components/templates'
 import { Bell, Menu, Settings } from 'lucide-react'
 
@@ -21,14 +20,14 @@ import { Bell, Menu, Settings } from 'lucide-react'
 export interface HeaderShellProps {
   header?: React.ReactNode
   navigation?: TemplateNavigationGroup[]
-  activeItemId?: TemplateId
-  onItemSelect?: (id: TemplateId) => void
+  activeItemId?: string
+  onItemSelect?: (id: string) => void
   children: React.ReactNode
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function itemIsActive(item: TemplateNavigationItem, activeItemId?: TemplateId) {
+function itemIsActive(item: TemplateNavigationItem, activeItemId?: string) {
   return item.id === activeItemId || item.children?.some((c) => c.id === activeItemId) === true
 }
 
@@ -63,7 +62,7 @@ function MobileNavSheet({
 }: Pick<HeaderShellProps, 'navigation' | 'activeItemId' | 'onItemSelect'>) {
   const [open, setOpen] = useState(false)
 
-  const handleSelect = (id: TemplateId) => {
+  const handleSelect = (id: string) => {
     onItemSelect?.(id)
     setOpen(false)
   }
@@ -130,7 +129,7 @@ function NavigationHeaderContent({
 }: Pick<HeaderShellProps, 'navigation' | 'activeItemId' | 'onItemSelect'>) {
   const [menuValue, setMenuValue] = useState('')
 
-  const handleSelect = (id: TemplateId) => {
+  const handleSelect = (id: string) => {
     onItemSelect?.(id)
     setMenuValue('')
   }

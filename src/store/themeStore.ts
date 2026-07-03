@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { ThemeState, TemplateOverride, TemplateId } from './types'
+import type { ThemeState, TemplateOverride } from './types'
 
 export const useThemeStore = create<ThemeState>((set) => ({
   global: {
@@ -11,14 +11,14 @@ export const useThemeStore = create<ThemeState>((set) => ({
     density: 'default',
     darkMode: false,
   },
-  overrides: {} as Record<TemplateId, TemplateOverride>,
+  overrides: {} as Record<string, TemplateOverride>,
   activeShell: 'sidebar',
-  activeTemplate: 'table',
+  activeTemplate: 'databody',
   setGlobal: (patch) => set((s) => ({ global: { ...s.global, ...patch } })),
   setOverride: (id, patch) =>
     set((s) => ({
       overrides: { ...s.overrides, [id]: { ...s.overrides[id], ...patch } },
     })),
-  setShell: (shell) => set({ activeShell: shell }),
-  setTemplate: (template) => set({ activeTemplate: template }),
+  setShell: () => undefined,
+  setTemplate: () => undefined,
 }))

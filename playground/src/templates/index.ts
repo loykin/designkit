@@ -1,7 +1,19 @@
 import { createElement, type ComponentType } from 'react'
-import type { TemplateId } from '@loykin/designkit'
 import { TypographyBodyTemplate, ColorsBodyTemplate } from '@loykin/designkit'
-import { FileText, LayoutDashboard, Table2, Layers, Type, Palette, KeyRound, BarChart2, PanelTop, PanelsTopLeft, PanelLeftOpen, PanelRight } from 'lucide-react'
+import {
+  FileText,
+  LayoutDashboard,
+  Table2,
+  Layers,
+  Type,
+  Palette,
+  KeyRound,
+  BarChart2,
+  PanelTop,
+  PanelsTopLeft,
+  PanelLeftOpen,
+  PanelRight,
+} from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
 import type { TemplateCodeBuilder } from './code'
 
@@ -13,11 +25,12 @@ export type {
   TemplateNavigationGroupId,
   TemplateOptionSpec,
   TemplateOptionChoice,
+  PlaygroundTemplateId,
 } from './definitions'
 export type { TemplateCodeBuilder, TemplateCodeContext } from './code'
 
 export interface TemplateConfig {
-  id: TemplateId
+  id: PlaygroundTemplateId
   label: string
   component: ComponentType<{ theme?: React.CSSProperties }>
   buildCode?: TemplateCodeBuilder
@@ -30,12 +43,18 @@ export type { TemplateNavigationItem, TemplateNavigationGroup } from '@loykin/de
 import { DataGridTemplateDemo, buildDataGridTemplateCode } from './demos/table/DataGridTemplateDemo'
 import type { TemplateNavigationGroup } from '@loykin/designkit'
 import type { DataGridTemplateVariant } from './demos/table/DataGridTemplateDemo'
-import { DataBodyTemplateDemo, buildDataBodyTemplateCode } from './demos/databody/DataBodyTemplateDemo'
+import {
+  DataBodyTemplateDemo,
+  buildDataBodyTemplateCode,
+} from './demos/databody/DataBodyTemplateDemo'
 import {
   DetailBodyTemplateDemo,
   buildDetailBodyTemplateCode,
 } from './demos/databody/DetailBodyTemplateDemo'
-import { SplitBodyTemplateDemo, buildSplitBodyTemplateCode } from './demos/databody/SplitBodyTemplateDemo'
+import {
+  SplitBodyTemplateDemo,
+  buildSplitBodyTemplateCode,
+} from './demos/databody/SplitBodyTemplateDemo'
 import {
   TabbedBodyTemplateDemo,
   buildTabbedBodyTemplateCode,
@@ -57,19 +76,31 @@ import {
   SectionedBodyTemplateDemo,
   buildSectionedBodyTemplateCode,
 } from './demos/sectioned/SectionedBodyTemplateDemo'
-import { LoginBodyTemplateDemo, buildLoginBodyTemplateCode } from './demos/auth/LoginBodyTemplateDemo'
+import {
+  LoginBodyTemplateDemo,
+  buildLoginBodyTemplateCode,
+} from './demos/auth/LoginBodyTemplateDemo'
 import { LoginForgotDemo, buildLoginForgotCode } from './demos/auth/LoginForgotDemo'
 import { LoginResetDemo, buildLoginResetCode } from './demos/auth/LoginResetDemo'
 import { LoginOtpDemo, buildLoginOtpCode } from './demos/auth/LoginOtpDemo'
-import { DashboardBodyTemplateDemo, buildDashboardTemplateCode } from './demos/dashboard/DashboardBodyTemplateDemo'
+import {
+  DashboardBodyTemplateDemo,
+  buildDashboardTemplateCode,
+} from './demos/dashboard/DashboardBodyTemplateDemo'
 import {
   WorkbenchPanelEditorDemo,
   WorkbenchSqlEditorDemo,
   buildWorkbenchTemplateCode,
 } from './demos/workbench/WorkbenchBodyTemplateDemos'
 import { AgentChatDemo, buildAgentChatCode } from './demos/workbench/AgentChatDemo'
-import { BrowseBodyTemplateDemo, buildBrowseBodyTemplateCode } from './demos/browse/BrowseBodyTemplateDemo'
-import { ListDetailBodyTemplateDemo, buildListDetailBodyTemplateCode } from './demos/listdetail/ListDetailBodyTemplateDemo'
+import {
+  BrowseBodyTemplateDemo,
+  buildBrowseBodyTemplateCode,
+} from './demos/browse/BrowseBodyTemplateDemo'
+import {
+  ListDetailBodyTemplateDemo,
+  buildListDetailBodyTemplateCode,
+} from './demos/listdetail/ListDetailBodyTemplateDemo'
 import { PanelTemplateDemo, buildPanelTemplateCode } from './demos/panel/PanelTemplateDemo'
 import {
   DetailBodyTemplateDemo as ProductDetailBodyTemplateDemo,
@@ -95,7 +126,7 @@ function DataGridTemplatePreview(props: {
   return createElement(DataGridTemplateDemo, props)
 }
 
-function createDataGridPreview(id: TemplateId) {
+function createDataGridPreview(id: PlaygroundTemplateId) {
   const definition = TEMPLATE_DEFINITIONS.find((item) => item.id === id)
   return function DataGridPreview({
     theme,
@@ -121,7 +152,10 @@ function createDataGridPreview(id: TemplateId) {
   }
 }
 
-const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSProperties }>> = {
+const previewComponents: Record<
+  PlaygroundTemplateId,
+  ComponentType<{ theme?: React.CSSProperties }>
+> = {
   table: createDataGridPreview('table'),
   'table-infinity': createDataGridPreview('table-infinity'),
   'table-drag': createDataGridPreview('table-drag'),
@@ -154,7 +188,7 @@ const previewComponents: Record<TemplateId, ComponentType<{ theme?: React.CSSPro
   'detail-full': createDetailPreview('full'),
 }
 
-const codeBuilders: Partial<Record<TemplateId, TemplateCodeBuilder>> = {
+const codeBuilders: Partial<Record<PlaygroundTemplateId, TemplateCodeBuilder>> = {
   table: buildDataGridTemplateCode,
   'table-infinity': buildDataGridTemplateCode,
   'table-drag': buildDataGridTemplateCode,
@@ -193,7 +227,7 @@ export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition)
   buildCode: codeBuilders[definition.id],
 }))
 
-const iconById: Partial<Record<TemplateId, ComponentType<{ className?: string }>>> = {
+const iconById: Partial<Record<PlaygroundTemplateId, ComponentType<{ className?: string }>>> = {
   table: Table2,
   'table-card': Layers,
   databody: LayoutDashboard,
@@ -223,7 +257,17 @@ const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: st
   PanelTemplate: PanelRight,
 }
 
-const navigationLabelOrder = ['Common', 'DataBodyTemplate', 'DetailBodyTemplate', 'ListDetailBodyTemplate', 'PanelTemplate', 'FormWizardBodyTemplate', 'LoginBodyTemplate', 'DashboardBodyTemplate', 'WorkbenchBodyTemplate']
+const navigationLabelOrder = [
+  'Common',
+  'DataBodyTemplate',
+  'DetailBodyTemplate',
+  'ListDetailBodyTemplate',
+  'PanelTemplate',
+  'FormWizardBodyTemplate',
+  'LoginBodyTemplate',
+  'DashboardBodyTemplate',
+  'WorkbenchBodyTemplate',
+]
 
 export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder
   .map((groupId) => {
@@ -244,12 +288,12 @@ export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrd
           icon: iconById[definition.id] ?? navigationGroupIcon[label],
           children: hasChildren
             ? [
-              { id: definition.id, label: definition.navigationLabel ?? definition.label },
-              ...childDefs.map((child) => ({
-                id: child.id,
-                label: child.navigationLabel ?? child.label,
-              })),
-            ]
+                { id: definition.id, label: definition.navigationLabel ?? definition.label },
+                ...childDefs.map((child) => ({
+                  id: child.id,
+                  label: child.navigationLabel ?? child.label,
+                })),
+              ]
             : [],
         }
       }),

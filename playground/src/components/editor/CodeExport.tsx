@@ -1,5 +1,5 @@
 import {
-  useThemeStore,
+  Button,
   Sheet,
   SheetContent,
   SheetHeader,
@@ -9,12 +9,14 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-  Button,
+  useThemeStore,
 } from '@loykin/designkit'
 import { TEMPLATES, getTemplateDefinition } from '~/templates'
 import { Code2 } from 'lucide-react'
-import type { DensityId, TemplateId, TemplateOverride } from '@loykin/designkit'
+import type { DensityId, TemplateOverride } from '@loykin/designkit'
+import type { PlaygroundTemplateId } from '~/templates'
 import { CodeBlock } from './CodeBlock'
+import { useMemo, useState } from 'react'
 
 function radiusVarLines(r: number): string[] {
   return [
@@ -114,7 +116,8 @@ function buildCSSCode(
 
   const overrideLines: string[] = []
   if (ov.radius !== undefined) overrideLines.push(...radiusVarLines(ov.radius))
-  if (ov.primaryChroma !== undefined) overrideLines.push(...colorVarLines(ov.primaryChroma, globalHue))
+  if (ov.primaryChroma !== undefined)
+    overrideLines.push(...colorVarLines(ov.primaryChroma, globalHue))
   if (
     ov.density !== undefined ||
     ov.pagePaddingY !== undefined ||
@@ -131,10 +134,7 @@ function buildCSSCode(
   return global + override
 }
 
-function buildThemeProp(
-  ov: TemplateOverride,
-  globalHue: number,
-): string {
+function buildThemeProp(ov: TemplateOverride, globalHue: number): string {
   const themeEntries: string[] = []
   if (ov.radius !== undefined) {
     themeEntries.push(`    '--designkit-radius': '${ov.radius}rem',`)
@@ -147,7 +147,9 @@ function buildThemeProp(
     themeEntries.push(`    '--primary': 'oklch(0.52 ${ov.primaryChroma} ${globalHue})',`)
   }
   if (ov.density !== undefined) {
-    themeEntries.push(`    '--designkit-density': '${ov.density === 'compact' ? 0.85 : ov.density === 'comfortable' ? 1.15 : 1}',`)
+    themeEntries.push(
+      `    '--designkit-density': '${ov.density === 'compact' ? 0.85 : ov.density === 'comfortable' ? 1.15 : 1}',`,
+    )
   }
   if (ov.pagePaddingY !== undefined) {
     themeEntries.push(`    '--designkit-page-padding-y': '${ov.pagePaddingY}',`)
@@ -159,13 +161,11 @@ function buildThemeProp(
     themeEntries.push(`    '--designkit-toolbar-height': '${ov.toolbarHeight}',`)
   }
 
-  return themeEntries.length
-    ? `\n  theme={{\n${themeEntries.join('\n')}\n  }}`
-    : ''
+  return themeEntries.length ? `\n  theme={{\n${themeEntries.join('\n')}\n  }}` : ''
 }
 
 function buildComponentCode(
-  tmplId: TemplateId,
+  tmplId: PlaygroundTemplateId,
   ov: TemplateOverride,
   globalHue: number,
 ): string {
@@ -175,99 +175,133 @@ function buildComponentCode(
   const themeProp = buildThemeProp(ov, globalHue)
   const template = TEMPLATES.find((item) => item.id === tmplId)
 
-  return template?.buildCode?.({
-    definition,
-    themeProp,
-    layoutClassName: definition.layoutClassName,
-  }) ?? ''
+  return (
+    template?.buildCode?.({
+      definition,
+      themeProp,
+      layoutClassName: definition.layoutClassName,
+    }) ?? ''
+  )
 }
 
-export function CodeExport() {
-  const { global: g, overrides, activeTemplate } = useThemeStore()
+function CodeExportContent({ activeTemplate }: { activeTemplate: PlaygroundTemplateId }) {
+  const { global: g, overrides } = useThemeStore()
   const ov = overrides[activeTemplate] ?? {}
   const definition = getTemplateDefinition(activeTemplate)
   const layoutClassName = definition?.layoutClassName ?? `layout-${activeTemplate}`
 
-  const cssCode = buildCSSCode(
-    g.radius, g.primaryChroma, g.primaryHue,
-    g.fontScale, g.lineHeight, g.density,
-    layoutClassName, ov,
+  const cssCode = useMemo(
+    () =>
+      buildCSSCode(
+        g.radius,
+        g.primaryChroma,
+        g.primaryHue,
+        g.fontScale,
+        g.lineHeight,
+        g.density,
+        layoutClassName,
+        ov,
+      ),
+    [
+      g.density,
+      g.fontScale,
+      g.lineHeight,
+      g.primaryChroma,
+      g.primaryHue,
+      g.radius,
+      layoutClassName,
+      ov,
+    ],
   )
 
-  const componentCode = buildComponentCode(
-    activeTemplate, ov,
-    g.primaryHue,
+  const componentCode = useMemo(
+    () => buildComponentCode(activeTemplate, ov, g.primaryHue),
+    [activeTemplate, g.primaryHue, ov],
   )
 
   return (
-    <Sheet>
-      <SheetTrigger
-        render={
-          <Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs" />
-        }
-      >
+    <SheetContent className="data-[side=right]:w-[min(90vw,760px)] data-[side=right]:sm:max-w-190 flex flex-col gap-0 p-0">
+      <SheetHeader className="px-6 py-4 border-b shrink-0">
+        <SheetTitle className="text-sm">
+          Export —{' '}
+          <span className="capitalize text-muted-foreground font-normal">{activeTemplate}</span>
+        </SheetTitle>
+      </SheetHeader>
+
+      <div className="flex-1 overflow-auto px-6 py-4">
+        <Tabs defaultValue="css">
+          <TabsList className="mb-4">
+            <TabsTrigger value="css">CSS Variables</TabsTrigger>
+            <TabsTrigger value="component">Component</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="css" className="space-y-3 mt-0">
+            <p className="text-xs text-muted-foreground">
+              Add to your project's <code className="bg-muted px-1 rounded">globals.css</code> or
+              shadow the variables per-template using{' '}
+              <code className="bg-muted px-1 rounded">.layout-{activeTemplate}</code>.
+            </p>
+            <CodeBlock code={cssCode} language="css" />
+          </TabsContent>
+
+          <TabsContent value="component" className="space-y-3 mt-0">
+            <p className="text-xs text-muted-foreground">
+              Import the template and pass the <code className="bg-muted px-1 rounded">theme</code>{' '}
+              prop with your CSS variable overrides.
+            </p>
+            <CodeBlock code={componentCode} language="tsx" />
+            <div className="rounded-md border p-3 bg-muted/30 space-y-1">
+              <p className="text-xs font-medium">Current settings</p>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-muted-foreground font-mono mt-1">
+                <span>Global radius</span>
+                <span>{g.radius}rem</span>
+                {ov.radius !== undefined && (
+                  <>
+                    <span>{activeTemplate} radius</span>
+                    <span>{ov.radius}rem</span>
+                  </>
+                )}
+                {ov.density !== undefined && (
+                  <>
+                    <span>{activeTemplate} density</span>
+                    <span>{ov.density}</span>
+                  </>
+                )}
+                {ov.panelGap !== undefined && (
+                  <>
+                    <span>{activeTemplate} gap</span>
+                    <span>{ov.panelGap}</span>
+                  </>
+                )}
+                <span>Hue</span>
+                <span>{g.primaryHue}°</span>
+                <span>Chroma</span>
+                <span>{g.primaryChroma.toFixed(3)}</span>
+                <span>Font scale</span>
+                <span>{g.fontScale.toFixed(2)}</span>
+                <span>Line height</span>
+                <span>{g.lineHeight.toFixed(2)}</span>
+                <span>Density</span>
+                <span>{g.density}</span>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </SheetContent>
+  )
+}
+
+export function CodeExport({ activeTemplate }: { activeTemplate: PlaygroundTemplateId }) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger render={<Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs" />}>
         <Code2 className="h-3.5 w-3.5" />
         Code
       </SheetTrigger>
-      <SheetContent className="data-[side=right]:w-[min(90vw,760px)] data-[side=right]:sm:max-w-190 flex flex-col gap-0 p-0">
-        <SheetHeader className="px-6 py-4 border-b shrink-0">
-          <SheetTitle className="text-sm">
-            Export — <span className="capitalize text-muted-foreground font-normal">{activeTemplate}</span>
-          </SheetTitle>
-        </SheetHeader>
-
-        <div className="flex-1 overflow-auto px-6 py-4">
-          <Tabs defaultValue="css">
-            <TabsList className="mb-4">
-              <TabsTrigger value="css">CSS Variables</TabsTrigger>
-              <TabsTrigger value="component">Component</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="css" className="space-y-3 mt-0">
-              <p className="text-xs text-muted-foreground">
-                Add to your project's <code className="bg-muted px-1 rounded">globals.css</code> or shadow the variables per-template using <code className="bg-muted px-1 rounded">.layout-{activeTemplate}</code>.
-              </p>
-              <CodeBlock code={cssCode} language="css" />
-            </TabsContent>
-
-            <TabsContent value="component" className="space-y-3 mt-0">
-              <p className="text-xs text-muted-foreground">
-                Import the template and pass the <code className="bg-muted px-1 rounded">theme</code> prop with your CSS variable overrides.
-              </p>
-              <CodeBlock code={componentCode} language="tsx" />
-              <div className="rounded-md border p-3 bg-muted/30 space-y-1">
-                <p className="text-xs font-medium">Current settings</p>
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-muted-foreground font-mono mt-1">
-                  <span>Global radius</span>
-                  <span>{g.radius}rem</span>
-                  {ov.radius !== undefined && <>
-                    <span>{activeTemplate} radius</span>
-                    <span>{ov.radius}rem</span>
-                  </>}
-                  {ov.density !== undefined && <>
-                    <span>{activeTemplate} density</span>
-                    <span>{ov.density}</span>
-                  </>}
-                  {ov.panelGap !== undefined && <>
-                    <span>{activeTemplate} gap</span>
-                    <span>{ov.panelGap}</span>
-                  </>}
-                  <span>Hue</span>
-                  <span>{g.primaryHue}°</span>
-                  <span>Chroma</span>
-                  <span>{g.primaryChroma.toFixed(3)}</span>
-                  <span>Font scale</span>
-                  <span>{g.fontScale.toFixed(2)}</span>
-                  <span>Line height</span>
-                  <span>{g.lineHeight.toFixed(2)}</span>
-                  <span>Density</span>
-                  <span>{g.density}</span>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </SheetContent>
+      {open && <CodeExportContent activeTemplate={activeTemplate} />}
     </Sheet>
   )
 }

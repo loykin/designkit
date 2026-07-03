@@ -1,6 +1,25 @@
 export type ShellId = 'sidebar' | 'header'
 export type DensityId = 'compact' | 'default' | 'comfortable'
-export type TemplateId =
+export type CurrentTemplateId =
+  | 'form-wizard'
+  | 'databody'
+  | 'sectioned'
+  | 'typography'
+  | 'colors'
+  | 'login'
+  | 'dashboard'
+  | 'workbench'
+  | 'browse'
+  | 'detail'
+  | 'list-detail'
+  | 'panel'
+
+/**
+ * @deprecated Playground/demo template identifiers remain available for one
+ * release for source compatibility. New code should use `CurrentTemplateId`
+ * for shipped DesignKit layouts or app-owned string ids for playground routes.
+ */
+export type LegacyTemplateId =
   | 'table'
   | 'table-infinity'
   | 'table-drag'
@@ -9,28 +28,19 @@ export type TemplateId =
   | 'tabbed'
   | 'form'
   | 'form-stacked'
-  | 'form-wizard'
   | 'form-inline'
-  | 'databody'
   | 'databody-detail'
   | 'databody-split'
-  | 'sectioned'
-  | 'typography'
-  | 'colors'
-  | 'login'
   | 'login-forgot'
   | 'login-reset'
   | 'login-otp'
-  | 'dashboard'
   | 'workbench-panel-editor'
   | 'workbench-sql-editor'
   | 'workbench-agent-chat'
-  | 'browse'
-  | 'detail'
   | 'detail-record'
   | 'detail-full'
-  | 'list-detail'
-  | 'panel'
+
+export type TemplateId = CurrentTemplateId | LegacyTemplateId
 
 export interface GlobalTheme {
   radius: number
@@ -53,11 +63,25 @@ export interface TemplateOverride {
 
 export interface ThemeState {
   global: GlobalTheme
-  overrides: Record<TemplateId, TemplateOverride>
+  overrides: Record<string, TemplateOverride>
+  /**
+   * @deprecated Playground navigation state is no longer managed by DesignKit.
+   * Keep route or view state in the consuming app instead.
+   */
   activeShell: ShellId
-  activeTemplate: TemplateId
+  /**
+   * @deprecated Playground navigation state is no longer managed by DesignKit.
+   * Keep route or view state in the consuming app instead.
+   */
+  activeTemplate: string
   setGlobal: (patch: Partial<GlobalTheme>) => void
-  setOverride: (id: TemplateId, patch: Partial<TemplateOverride>) => void
+  setOverride: (id: string, patch: Partial<TemplateOverride>) => void
+  /**
+   * @deprecated No-op compatibility shim. Keep shell routing in the consuming app.
+   */
   setShell: (shell: ShellId) => void
-  setTemplate: (template: TemplateId) => void
+  /**
+   * @deprecated No-op compatibility shim. Keep template routing in the consuming app.
+   */
+  setTemplate: (template: string) => void
 }

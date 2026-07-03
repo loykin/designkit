@@ -1,12 +1,24 @@
 import { Link, useParams } from 'react-router-dom'
 import {
-  Avatar, AvatarFallback,
-  Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
-  SidebarGroupLabel, SidebarHeader, SidebarInset, SidebarMenu, SidebarMenuButton,
-  SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
-  SidebarProvider, SidebarRail,
+  Avatar,
+  AvatarFallback,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
 } from '@loykin/designkit'
-import type { TemplateId } from '@loykin/designkit'
 import type { TemplateNavigationGroup, TemplateNavigationItem } from '~/templates'
 import { LayoutDashboard, Table2, LayoutGrid, Layers, FileText, Settings, Bell } from 'lucide-react'
 
@@ -15,20 +27,20 @@ export interface SidebarShellProps {
   children: React.ReactNode
 }
 
-function itemIsActive(item: TemplateNavigationItem, activeItemId?: TemplateId) {
+function itemIsActive(item: TemplateNavigationItem, activeItemId?: string) {
   return item.id === activeItemId || item.children?.some((c) => c.id === activeItemId) === true
 }
 
 const demoNav = [
-  { icon: Table2,          label: 'Users',     active: true  },
-  { icon: LayoutDashboard, label: 'Overview',  active: false },
-  { icon: LayoutGrid,      label: 'Products',  active: false },
-  { icon: Layers,          label: 'Reports',   active: false },
-  { icon: FileText,        label: 'Documents', active: false },
+  { icon: Table2, label: 'Users', active: true },
+  { icon: LayoutDashboard, label: 'Overview', active: false },
+  { icon: LayoutGrid, label: 'Products', active: false },
+  { icon: Layers, label: 'Reports', active: false },
+  { icon: FileText, label: 'Documents', active: false },
 ]
 
 const demoSystem = [
-  { icon: Bell,     label: 'Alerts',   active: false },
+  { icon: Bell, label: 'Alerts', active: false },
   { icon: Settings, label: 'Settings', active: false },
 ]
 
@@ -38,7 +50,7 @@ function NavigationSidebarContent({
   shellId,
 }: {
   navigation?: TemplateNavigationGroup[]
-  activeItemId?: TemplateId
+  activeItemId?: string
   shellId: string
 }) {
   if (!navigation?.length) {
@@ -46,7 +58,9 @@ function NavigationSidebarContent({
       <>
         <SidebarHeader>
           <div className="flex items-center gap-2 px-2 py-1">
-            <div className="h-7 w-7 rounded-(--radius) bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">A</div>
+            <div className="h-7 w-7 rounded-(--radius) bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">
+              A
+            </div>
             <span className="text-sm font-semibold">Acme Corp</span>
           </div>
         </SidebarHeader>
@@ -58,7 +72,8 @@ function NavigationSidebarContent({
                 {demoNav.map((item) => (
                   <SidebarMenuItem key={item.label}>
                     <SidebarMenuButton isActive={item.active}>
-                      <item.icon /><span>{item.label}</span>
+                      <item.icon />
+                      <span>{item.label}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -72,7 +87,8 @@ function NavigationSidebarContent({
                 {demoSystem.map((item) => (
                   <SidebarMenuItem key={item.label}>
                     <SidebarMenuButton isActive={item.active}>
-                      <item.icon /><span>{item.label}</span>
+                      <item.icon />
+                      <span>{item.label}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -99,7 +115,9 @@ function NavigationSidebarContent({
     <>
       <SidebarHeader>
         <div className="flex items-center gap-2 px-2 py-1">
-          <div className="flex h-7 w-7 items-center justify-center rounded-(--radius) bg-primary text-xs font-bold text-primary-foreground">D</div>
+          <div className="flex h-7 w-7 items-center justify-center rounded-(--radius) bg-primary text-xs font-bold text-primary-foreground">
+            D
+          </div>
           <span className="text-sm font-semibold">DesignKit</span>
         </div>
       </SidebarHeader>
@@ -117,7 +135,9 @@ function NavigationSidebarContent({
                     <SidebarMenuItem key={item.id}>
                       <SidebarMenuButton
                         isActive={active && !item.children?.length}
-                        render={<Link to={!item.children?.length ? `/${shellId}/${item.id}` : '#'} />}
+                        render={
+                          <Link to={!item.children?.length ? `/${shellId}/${item.id}` : '#'} />
+                        }
                       >
                         {Icon && <Icon />}
                         <span>{item.label}</span>
@@ -158,7 +178,7 @@ export function SidebarShell({ navigation, children }: SidebarShellProps) {
         <Sidebar>
           <NavigationSidebarContent
             navigation={navigation}
-            activeItemId={templateId as TemplateId | undefined}
+            activeItemId={templateId}
             shellId={shellId}
           />
           <SidebarRail />

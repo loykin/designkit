@@ -104,6 +104,21 @@ coordination, and density tokens will not apply. Use one of the body templates
 above and reach for `DataPage` only when building a new reusable template that
 is not covered by any existing one.
 
+## UI Primitive Contract
+
+DesignKit exports shadcn-compatible UI primitives such as `Button`, `Card`,
+`Input`, `Select`, `Tabs`, `Sheet`, `Tooltip`, `Avatar`, and `Badge` from
+`@loykin/designkit`. They are real public exports, not only internal template
+implementation details.
+
+Use these primitives when composing content inside DesignKit template slots, or
+when the consuming app has not already standardized on its own shadcn component
+set. If the app already owns a shadcn/ui layer, it may use those local
+components in DesignKit slots as long as they share the same Tailwind v4 build
+and semantic variables (`--background`, `--foreground`, `--primary`,
+`--border`, `--radius`). Do not import DesignKit primitive source files through
+package-internal paths.
+
 ### ListDetailBodyTemplate
 
 Two-pane master-detail layout. The list pane has a fixed width; the detail pane
@@ -148,6 +163,7 @@ const events: AgentChatEvent[] = [
 <WorkbenchBodyTemplate
   topBar={<PageTopBar variant="default" left="Data Agent" />}
   leftPaneWidth={220}
+  onResize={(sizes) => saveWorkbenchSizes(sizes)}
   leftPane={<ConversationList />}
   mainPane={
     <DataGridAgentChat

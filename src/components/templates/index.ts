@@ -1,8 +1,7 @@
 import type { ComponentType } from 'react'
-import type { TemplateId } from '@/store/types'
 
 export interface TemplateNavigationItem {
-  id: TemplateId
+  id: string
   label: string
   icon?: ComponentType<{ className?: string }>
   children?: TemplateNavigationItem[]
@@ -19,7 +18,10 @@ export type {
   DashboardPanelProps,
 } from './dashboard/DashboardBodyTemplate'
 export { WorkbenchBodyTemplate } from './workbench/WorkbenchBodyTemplate'
-export type { WorkbenchBodyTemplateProps } from './workbench/WorkbenchBodyTemplate'
+export type {
+  WorkbenchBodyTemplateProps,
+  WorkbenchResizeState,
+} from './workbench/WorkbenchBodyTemplate'
 export { DataBodyTemplate } from './databody/DataBodyTemplate'
 export { BrowseBodyTemplate } from './browse/BrowseBodyTemplate'
 export type { BrowseBodyTemplateProps } from './browse/BrowseBodyTemplate'

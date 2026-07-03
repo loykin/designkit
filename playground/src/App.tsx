@@ -14,29 +14,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@loykin/designkit'
-import type { TemplateId, ShellId } from '@loykin/designkit'
+import type { ShellId } from '@loykin/designkit'
 import { TEMPLATES, TEMPLATE_NAVIGATION, TEMPLATE_DEFINITIONS } from './templates'
+import type { PlaygroundTemplateId } from './templates'
 import { HeaderShell } from './components/shells/HeaderShell'
 import { SidebarShell } from './components/shells/SidebarShell'
 
 const SHELLS = [
   { id: 'sidebar' as ShellId, label: 'Sidebar', component: SidebarShell },
-  { id: 'header'  as ShellId, label: 'Header',  component: HeaderShell  },
+  { id: 'header' as ShellId, label: 'Header', component: HeaderShell },
 ]
 import { StyleControls } from './components/editor/StyleEditor'
 import { CodeExport } from './components/editor/CodeExport'
 
-function initTemplateProps(): Partial<Record<TemplateId, Record<string, string>>> {
-  return TEMPLATE_DEFINITIONS.reduce<Partial<Record<TemplateId, Record<string, string>>>>(
+function initTemplateProps(): Partial<Record<PlaygroundTemplateId, Record<string, string>>> {
+  return TEMPLATE_DEFINITIONS.reduce<Partial<Record<PlaygroundTemplateId, Record<string, string>>>>(
     (acc, def) => {
       if (def.options?.length) {
-        acc[def.id as TemplateId] = Object.fromEntries(
-          def.options.map((opt) => [opt.key, opt.defaultValue])
-        )
+        acc[def.id] = Object.fromEntries(def.options.map((opt) => [opt.key, opt.defaultValue]))
       }
       return acc
     },
-    {}
+    {},
   )
 }
 
@@ -45,7 +44,7 @@ function AppView() {
 
   const { shell: shellParam = 'sidebar', templateId = 'table' } = useParams()
   const navigate = useNavigate()
-  const { setShell, setTemplate, setOverride, global: g, overrides } = useThemeStore()
+  const { setOverride, global: g, overrides } = useThemeStore()
   const [templateProps, setTemplateProps] = useState(initTemplateProps)
 
   // Initialize store overrides from template definition presets on first mount
@@ -55,33 +54,24 @@ function AppView() {
         setOverride(def.id, def.preset)
       }
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Sync URL params → store (for StyleEditor / CodeExport)
-  useEffect(() => {
-    const validShell = SHELLS.find((s) => s.id === shellParam)
-    if (validShell) setShell(shellParam as ShellId)
-  }, [shellParam])
+  const activeShell = shellParam as ShellId
+  const activeTemplate = templateId as PlaygroundTemplateId
 
-  useEffect(() => {
-    const validTemplate = TEMPLATES.find((t) => t.id === templateId)
-    if (validTemplate) setTemplate(templateId as TemplateId)
-  }, [templateId])
-
-  const activeShell    = shellParam as ShellId
-  const activeTemplate = templateId as TemplateId
-
-  const shell    = SHELLS.find((s) => s.id === activeShell) ?? SHELLS[0]
+  const shell = SHELLS.find((s) => s.id === activeShell) ?? SHELLS[0]
   const template = TEMPLATES.find((t) => t.id === activeTemplate) ?? TEMPLATES[0]
   const activeDefinition = TEMPLATE_DEFINITIONS.find((d) => d.id === activeTemplate)
 
   const ShellComponent = shell.component
-  const BodyComponent  = template.component as ComponentType<{ theme?: CSSProperties } & Record<string, unknown>>
+  const BodyComponent = template.component as ComponentType<
+    { theme?: CSSProperties } & Record<string, unknown>
+  >
 
   const templateTheme = buildTemplateTheme(g, overrides[activeTemplate])
 
-  const setTemplateOption = (id: TemplateId, key: string, value: string) => {
+  const setTemplateOption = (id: PlaygroundTemplateId, key: string, value: string) => {
     setTemplateProps((prev) => ({
       ...prev,
       [id]: { ...(prev[id] ?? {}), [key]: value },
@@ -89,7 +79,7 @@ function AppView() {
   }
 
   const activeOptions = activeDefinition?.options ?? []
-  const activeProps   = templateProps[activeTemplate] ?? {}
+  const activeProps = templateProps[activeTemplate] ?? {}
 
   const handleShellSelect = (id: ShellId) => navigate(`/${id}/${activeTemplate}`)
 
@@ -124,7 +114,9 @@ function AppView() {
                     <span className="text-xs text-muted-foreground shrink-0">{opt.label}</span>
                     <Select
                       value={activeProps[opt.key] ?? opt.defaultValue}
-                      onValueChange={(v) => v !== null && setTemplateOption(activeTemplate, opt.key, v)}
+                      onValueChange={(v) =>
+                        v !== null && setTemplateOption(activeTemplate, opt.key, v)
+                      }
                     >
                       <SelectTrigger className="h-7 w-24 text-xs px-2">
                         <SelectValue />
@@ -144,8 +136,8 @@ function AppView() {
           )}
 
           <div className="ml-auto flex items-center gap-2">
-            <CodeExport />
-            <StyleControls />
+            <CodeExport activeTemplate={activeTemplate} />
+            <StyleControls activeTemplate={activeTemplate} />
           </div>
         </header>
 

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useThemeStore } from '@/store/themeStore'
-import type { DensityId, TemplateId } from '@/store/types'
+import type { DensityId } from '@/store/types'
 
 const STYLE_ID = 'designkit-vars'
 
@@ -158,7 +158,7 @@ export function useStyleInjector() {
     const rootBlock = `:root {\n${tokenMapToCss(buildTokenMap(g))}\n}`
     const darkTonalBlock = `.dark {\n${tokenMapToCss(buildDarkTonalTokens(g.primaryHue, g.primaryChroma))}\n}`
 
-    const tmplBlocks = (Object.entries(ov) as [TemplateId, (typeof ov)[TemplateId]][])
+    const tmplBlocks = Object.entries(ov)
       .map(([id, o]) => {
         if (
           o.radius === undefined &&

@@ -17,7 +17,6 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import type { TemplateId } from '@/store/types'
 import type { TemplateNavigationGroup, TemplateNavigationItem } from '@/components/templates'
 import { LayoutDashboard, Table2, LayoutGrid, Layers, FileText, Settings, Bell } from 'lucide-react'
 
@@ -27,8 +26,8 @@ export interface SidebarShellProps {
   /** Sidebar slot: override entire sidebar contents */
   sidebar?: React.ReactNode
   navigation?: TemplateNavigationGroup[]
-  activeItemId?: TemplateId
-  onItemSelect?: (id: TemplateId) => void
+  activeItemId?: string
+  onItemSelect?: (id: string) => void
   children: React.ReactNode
 }
 
@@ -47,7 +46,7 @@ const demoSystem = [
   { icon: Settings, label: 'Settings', active: false },
 ]
 
-function itemIsActive(item: TemplateNavigationItem, activeItemId?: TemplateId) {
+function itemIsActive(item: TemplateNavigationItem, activeItemId?: string) {
   return (
     item.id === activeItemId || item.children?.some((child) => child.id === activeItemId) === true
   )

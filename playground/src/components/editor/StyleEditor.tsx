@@ -11,6 +11,7 @@ import {
 } from '@loykin/designkit'
 import { Sun, Moon, Settings2 } from 'lucide-react'
 import type { DensityId } from '@loykin/designkit'
+import type { PlaygroundTemplateId } from '~/templates'
 
 function val(v: number | readonly number[]) {
   return Array.isArray(v) ? v[0] : (v as number)
@@ -35,14 +36,24 @@ function densityDefaults(density: DensityId) {
 }
 
 function NumInput({
-  value, min, max, step, onChange,
+  value,
+  min,
+  max,
+  step,
+  onChange,
 }: {
-  value: number; min: number; max: number; step: number; onChange: (n: number) => void
+  value: number
+  min: number
+  max: number
+  step: number
+  onChange: (n: number) => void
 }) {
   return (
     <input
       type="number"
-      min={min} max={max} step={step}
+      min={min}
+      max={max}
+      step={step}
       value={value}
       onChange={(e) => {
         const n = parseFloat(e.target.value)
@@ -54,17 +65,31 @@ function NumInput({
 }
 
 function SliderRow({
-  label, value, min, max, step, onChange,
+  label,
+  value,
+  min,
+  max,
+  step,
+  onChange,
 }: {
-  label: string; value: number; min: number; max: number; step: number
+  label: string
+  value: number
+  min: number
+  max: number
+  step: number
   onChange: (n: number) => void
 }) {
   return (
     <div className="flex items-center gap-2">
       <span className="text-xs text-muted-foreground w-16 shrink-0">{label}</span>
-      <Slider min={min} max={max} step={step} value={[value]}
+      <Slider
+        min={min}
+        max={max}
+        step={step}
+        value={[value]}
         onValueChange={(v) => onChange(val(v))}
-        className="flex-1" />
+        className="flex-1"
+      />
       <NumInput value={value} min={min} max={max} step={step} onChange={onChange} />
     </div>
   )
@@ -76,8 +101,8 @@ const densityItems: { id: DensityId; label: string }[] = [
   { id: 'comfortable', label: 'Comfort' },
 ]
 
-export function StyleControls() {
-  const { global: g, overrides, activeTemplate, setGlobal, setOverride } = useThemeStore()
+export function StyleControls({ activeTemplate }: { activeTemplate: PlaygroundTemplateId }) {
+  const { global: g, overrides, setGlobal, setOverride } = useThemeStore()
   const ov = overrides[activeTemplate] ?? {}
   const activeLabel = activeTemplate
     .split('-')
@@ -106,9 +131,7 @@ export function StyleControls() {
 
       <Sheet>
         <SheetTrigger
-          render={
-            <Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs" />
-          }
+          render={<Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs" />}
         >
           <Settings2 className="h-3.5 w-3.5" />
           Style
@@ -116,125 +139,181 @@ export function StyleControls() {
         <SheetContent className="data-[side=right]:w-[min(90vw,460px)] data-[side=right]:sm:max-w-[460px] flex flex-col gap-0 p-0">
           <SheetHeader className="px-6 py-4 border-b shrink-0">
             <SheetTitle className="text-sm">
-              Style — <span className="capitalize text-muted-foreground font-normal">{activeTemplate}</span>
+              Style —{' '}
+              <span className="capitalize text-muted-foreground font-normal">{activeTemplate}</span>
             </SheetTitle>
           </SheetHeader>
 
           <div className="flex-1 overflow-auto px-6 py-4 space-y-5">
             <div className="space-y-3">
-            <p className="text-xs font-semibold">Color</p>
-            <SliderRow label="Hue"
-              value={g.primaryHue} min={0} max={360} step={1}
-              onChange={(n) => setGlobal({ primaryHue: n })} />
-            <div className="ml-[4.5rem] h-2 rounded-full" style={{
-              background: 'linear-gradient(to right,oklch(0.6 0.2 0),oklch(0.6 0.2 60),oklch(0.6 0.2 120),oklch(0.6 0.2 180),oklch(0.6 0.2 240),oklch(0.6 0.2 300),oklch(0.6 0.2 360))'
-            }} />
-            <SliderRow label="Chroma"
-              value={g.primaryChroma} min={0} max={0.3} step={0.005}
-              onChange={(n) => setGlobal({ primaryChroma: n })} />
+              <p className="text-xs font-semibold">Color</p>
+              <SliderRow
+                label="Hue"
+                value={g.primaryHue}
+                min={0}
+                max={360}
+                step={1}
+                onChange={(n) => setGlobal({ primaryHue: n })}
+              />
+              <div
+                className="ml-[4.5rem] h-2 rounded-full"
+                style={{
+                  background:
+                    'linear-gradient(to right,oklch(0.6 0.2 0),oklch(0.6 0.2 60),oklch(0.6 0.2 120),oklch(0.6 0.2 180),oklch(0.6 0.2 240),oklch(0.6 0.2 300),oklch(0.6 0.2 360))',
+                }}
+              />
+              <SliderRow
+                label="Chroma"
+                value={g.primaryChroma}
+                min={0}
+                max={0.3}
+                step={0.005}
+                onChange={(n) => setGlobal({ primaryChroma: n })}
+              />
             </div>
 
             <Separator />
 
             <div className="space-y-3">
-            <p className="text-xs font-semibold">Layout</p>
-            <div className="grid grid-cols-3 gap-1 rounded-md border bg-muted/30 p-1">
-              {densityItems.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setGlobal({ density: item.id })}
-                  className={[
-                    'h-7 rounded-[calc(var(--radius)-2px)] px-2 text-[11px] transition-colors',
-                    g.density === item.id
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground',
-                  ].join(' ')}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-            <SliderRow label="Radius"
-              value={g.radius} min={0} max={2} step={0.0625}
-              onChange={(n) => setGlobal({ radius: n })} />
-            </div>
-
-            <Separator />
-
-            <div className="space-y-3">
-            <p className="text-xs font-semibold">Typography</p>
-            <SliderRow label="Size"
-              value={g.fontScale} min={0.8} max={1.25} step={0.01}
-              onChange={(n) => setGlobal({ fontScale: n })} />
-            <SliderRow label="Leading"
-              value={g.lineHeight} min={0.85} max={1.25} step={0.01}
-              onChange={(n) => setGlobal({ lineHeight: n })} />
+              <p className="text-xs font-semibold">Layout</p>
+              <div className="grid grid-cols-3 gap-1 rounded-md border bg-muted/30 p-1">
+                {densityItems.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setGlobal({ density: item.id })}
+                    className={[
+                      'h-7 rounded-[calc(var(--radius)-2px)] px-2 text-[11px] transition-colors',
+                      g.density === item.id
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground',
+                    ].join(' ')}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+              <SliderRow
+                label="Radius"
+                value={g.radius}
+                min={0}
+                max={2}
+                step={0.0625}
+                onChange={(n) => setGlobal({ radius: n })}
+              />
             </div>
 
             <Separator />
 
             <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <p className="text-xs font-semibold">{activeLabel} Override</p>
-              {hasOverride && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setOverride(activeTemplate, {
-                    radius: undefined,
-                    primaryChroma: undefined,
-                    density: undefined,
-                    pagePaddingY: undefined,
-                    panelGap: undefined,
-                    toolbarHeight: undefined,
-                  })}
-                  className="h-5 px-1 text-[10px] text-muted-foreground"
-                >
-                  reset
-                </Button>
-              )}
+              <p className="text-xs font-semibold">Typography</p>
+              <SliderRow
+                label="Size"
+                value={g.fontScale}
+                min={0.8}
+                max={1.25}
+                step={0.01}
+                onChange={(n) => setGlobal({ fontScale: n })}
+              />
+              <SliderRow
+                label="Leading"
+                value={g.lineHeight}
+                min={0.85}
+                max={1.25}
+                step={0.01}
+                onChange={(n) => setGlobal({ lineHeight: n })}
+              />
             </div>
-            <SliderRow label="Radius"
-              value={ov.radius ?? g.radius} min={0} max={2} step={0.0625}
-              onChange={(n) => setOverride(activeTemplate, { radius: n })} />
-            <SliderRow label="Chroma"
-              value={ov.primaryChroma ?? g.primaryChroma} min={0} max={0.3} step={0.005}
-              onChange={(n) => setOverride(activeTemplate, { primaryChroma: n })} />
-            <div className="grid grid-cols-3 gap-1 rounded-md border bg-muted/30 p-1">
-              {densityItems.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setOverride(activeTemplate, {
-                    density: item.id,
-                    pagePaddingY: undefined,
-                    panelGap: undefined,
-                    toolbarHeight: undefined,
-                  })}
-                  className={[
-                    'h-7 rounded-[calc(var(--radius)-2px)] px-2 text-[11px] transition-colors',
-                    (ov.density ?? g.density) === item.id
-                      ? 'bg-background text-foreground shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground',
-                  ].join(' ')}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-            <SliderRow label="Page Y"
-              value={remToNumber(ov.pagePaddingY, activeDensityDefaults.pagePaddingY)}
-              min={0.5} max={2} step={0.0625}
-              onChange={(n) => setOverride(activeTemplate, { pagePaddingY: remValue(n) })} />
-            <SliderRow label="Gap"
-              value={remToNumber(ov.panelGap, activeDensityDefaults.panelGap)}
-              min={0.5} max={2} step={0.0625}
-              onChange={(n) => setOverride(activeTemplate, { panelGap: remValue(n) })} />
-            <SliderRow label="Toolbar"
-              value={remToNumber(ov.toolbarHeight, activeDensityDefaults.toolbarHeight)}
-              min={2} max={4} step={0.0625}
-              onChange={(n) => setOverride(activeTemplate, { toolbarHeight: remValue(n) })} />
+
+            <Separator />
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold">{activeLabel} Override</p>
+                {hasOverride && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      setOverride(activeTemplate, {
+                        radius: undefined,
+                        primaryChroma: undefined,
+                        density: undefined,
+                        pagePaddingY: undefined,
+                        panelGap: undefined,
+                        toolbarHeight: undefined,
+                      })
+                    }
+                    className="h-5 px-1 text-[10px] text-muted-foreground"
+                  >
+                    reset
+                  </Button>
+                )}
+              </div>
+              <SliderRow
+                label="Radius"
+                value={ov.radius ?? g.radius}
+                min={0}
+                max={2}
+                step={0.0625}
+                onChange={(n) => setOverride(activeTemplate, { radius: n })}
+              />
+              <SliderRow
+                label="Chroma"
+                value={ov.primaryChroma ?? g.primaryChroma}
+                min={0}
+                max={0.3}
+                step={0.005}
+                onChange={(n) => setOverride(activeTemplate, { primaryChroma: n })}
+              />
+              <div className="grid grid-cols-3 gap-1 rounded-md border bg-muted/30 p-1">
+                {densityItems.map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() =>
+                      setOverride(activeTemplate, {
+                        density: item.id,
+                        pagePaddingY: undefined,
+                        panelGap: undefined,
+                        toolbarHeight: undefined,
+                      })
+                    }
+                    className={[
+                      'h-7 rounded-[calc(var(--radius)-2px)] px-2 text-[11px] transition-colors',
+                      (ov.density ?? g.density) === item.id
+                        ? 'bg-background text-foreground shadow-sm'
+                        : 'text-muted-foreground hover:text-foreground',
+                    ].join(' ')}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+              <SliderRow
+                label="Page Y"
+                value={remToNumber(ov.pagePaddingY, activeDensityDefaults.pagePaddingY)}
+                min={0.5}
+                max={2}
+                step={0.0625}
+                onChange={(n) => setOverride(activeTemplate, { pagePaddingY: remValue(n) })}
+              />
+              <SliderRow
+                label="Gap"
+                value={remToNumber(ov.panelGap, activeDensityDefaults.panelGap)}
+                min={0.5}
+                max={2}
+                step={0.0625}
+                onChange={(n) => setOverride(activeTemplate, { panelGap: remValue(n) })}
+              />
+              <SliderRow
+                label="Toolbar"
+                value={remToNumber(ov.toolbarHeight, activeDensityDefaults.toolbarHeight)}
+                min={2}
+                max={4}
+                step={0.0625}
+                onChange={(n) => setOverride(activeTemplate, { toolbarHeight: remValue(n) })}
+              />
             </div>
           </div>
         </SheetContent>
