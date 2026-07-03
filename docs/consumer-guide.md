@@ -66,6 +66,16 @@ control, including variables such as:
 Use the application's existing theme definitions when they already provide
 these variables.
 
+When DesignKit is embedded in only part of a host application, scope runtime
+token injection to that host container:
+
+```tsx
+useStyleInjector({ scope: '#admin-shell' })
+```
+
+The default remains `:root`, which is appropriate when DesignKit owns the whole
+application shell.
+
 ## Agent Implementation Order
 
 When implementing a page:

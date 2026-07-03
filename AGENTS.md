@@ -62,7 +62,7 @@ src/
 - `DensityId` — `'compact' | 'default' | 'comfortable'`
 - `GlobalTheme` — global theme settings (`radius`, `primaryHue`, `primaryChroma`, `fontScale`, `lineHeight`, `density`, `darkMode`)
 - `TemplateOverride` — per-template token overrides keyed by `TemplateId`
-- `useStyleInjector()` — React hook that writes CSS custom properties to `<style id="designkit-vars">`
+- `useStyleInjector()` — React hook that writes CSS custom properties to `<style id="designkit-vars">`; accepts `{ scope }` for container-scoped injection
 - `buildTemplateTheme()` — returns an inline `React.CSSProperties` token map for external usage
 
 ## Styling
@@ -75,7 +75,7 @@ src/
 - Do not add a Tailwind class prefix solely to isolate DesignKit. Utility ordering and deduplication come from the single consumer-owned Tailwind build.
 - CSS custom properties use `--designkit-` prefix for DesignKit-owned tokens
 - Shared shadcn variables (`--primary`, `--background`, `--radius`, etc.) are supported as fallbacks
-- `useStyleInjector` writes `:root` (light), `.dark` (dark tonal), and per-template `.layout-<id>` overrides inside `@layer designkit`
+- `useStyleInjector` writes `:root` by default, or the configured `scope`, plus dark tonal and per-template `.layout-<id>` overrides inside `@layer designkit`
 - State styling uses `data-*` attributes; avoid relying on generated class ordering
 
 ## Repository Boundaries

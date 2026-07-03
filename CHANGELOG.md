@@ -20,3 +20,5 @@ All notable changes to `@loykin/designkit` are documented here.
 - Removed playground navigation state usage from DesignKit internals, added
   `CurrentTemplateId`, and kept old playground ids under deprecated
   `LegacyTemplateId`/`TemplateId` compatibility.
+- Added `useStyleInjector({ scope })` for container-scoped runtime theme
+  injection.

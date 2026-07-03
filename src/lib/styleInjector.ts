@@ -18,6 +18,14 @@ interface DesignTokenInput {
 
 type TokenMap = Record<`--${string}`, string | number>
 
+export interface StyleInjectorOptions {
+  /**
+   * CSS selector that receives the generated DesignKit variables.
+   * Defaults to `:root`. Use this when embedding DesignKit inside a scoped host.
+   */
+  scope?: string
+}
+
 function buildTokenMap({
   radius,
   primaryHue,
@@ -143,9 +151,25 @@ function tokenMapToCss(tokens: TokenMap) {
     .join('\n')
 }
 
-export function useStyleInjector() {
+function getScopedTarget(scopeSelector: string) {
+  if (scopeSelector === ':root') return document.documentElement
+  return document.querySelector<HTMLElement>(scopeSelector)
+}
+
+function getDarkSelector(scopeSelector: string) {
+  if (scopeSelector === ':root') return '.dark'
+  return `${scopeSelector}.dark, .dark ${scopeSelector}`
+}
+
+function getLayoutSelector(scopeSelector: string, layoutClassName: string) {
+  if (scopeSelector === ':root') return `.${layoutClassName}`
+  return `${scopeSelector}.${layoutClassName}, ${scopeSelector} .${layoutClassName}`
+}
+
+export function useStyleInjector(options: StyleInjectorOptions = {}) {
   const g = useThemeStore((s) => s.global)
   const ov = useThemeStore((s) => s.overrides)
+  const scopeSelector = options.scope?.trim() || ':root'
 
   useEffect(() => {
     let el = document.getElementById(STYLE_ID) as HTMLStyleElement | null
@@ -155,8 +179,8 @@ export function useStyleInjector() {
       document.head.appendChild(el)
     }
 
-    const rootBlock = `:root {\n${tokenMapToCss(buildTokenMap(g))}\n}`
-    const darkTonalBlock = `.dark {\n${tokenMapToCss(buildDarkTonalTokens(g.primaryHue, g.primaryChroma))}\n}`
+    const rootBlock = `${scopeSelector} {\n${tokenMapToCss(buildTokenMap(g))}\n}`
+    const darkTonalBlock = `${getDarkSelector(scopeSelector)} {\n${tokenMapToCss(buildDarkTonalTokens(g.primaryHue, g.primaryChroma))}\n}`
 
     const tmplBlocks = Object.entries(ov)
       .map(([id, o]) => {
@@ -179,25 +203,28 @@ export function useStyleInjector() {
           toolbarHeight: o.toolbarHeight,
         })
         const layoutClassName = `layout-${id}`
-        return `.${layoutClassName} {\n${tokenMapToCss(tokens)}\n}`
+        return `${getLayoutSelector(scopeSelector, layoutClassName)} {\n${tokenMapToCss(tokens)}\n}`
       })
       .filter(Boolean)
 
     const layerBody = [rootBlock, darkTonalBlock, ...tmplBlocks].join('\n\n')
     el.textContent = `@layer designkit {\n${layerBody}\n}`
-  }, [g, ov])
+  }, [g, ov, scopeSelector])
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', g.darkMode)
-  }, [g.darkMode])
+    getScopedTarget(scopeSelector)?.classList.toggle('dark', g.darkMode)
+  }, [g.darkMode, scopeSelector])
 
   useEffect(() => {
+    const target = getScopedTarget(scopeSelector)
+    if (!target) return
+
     if (g.density === 'default') {
-      document.documentElement.removeAttribute('data-designkit-density')
+      target.removeAttribute('data-designkit-density')
       return
     }
-    document.documentElement.dataset.designkitDensity = g.density
-  }, [g.density])
+    target.dataset.designkitDensity = g.density
+  }, [g.density, scopeSelector])
 }
 
 /** Returns CSS custom properties for a template — used as inline style for external usage */
