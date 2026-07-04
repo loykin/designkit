@@ -21,10 +21,8 @@ export interface WorkbenchBodyTemplateProps {
   description?: ReactNode
   status?: ReactNode
   topBar?: ReactNode
-  /** Right side of the built-in workbench header. Prefer this over toolbar for new code. */
+  /** Right side of the built-in workbench header. */
   headerRight?: ReactNode
-  /** @deprecated Use headerRight. */
-  toolbar?: ReactNode
   actions?: ReactNode
   leftPane?: ReactNode
   mainPane?: ReactNode
@@ -124,7 +122,6 @@ export function WorkbenchBodyTemplate({
   status,
   topBar,
   headerRight,
-  toolbar,
   actions,
   leftPane,
   mainPane,
@@ -278,8 +275,7 @@ export function WorkbenchBodyTemplate({
     [resizable],
   )
 
-  const headerRightContent = headerRight ?? toolbar
-  const showHeader = title || description || status || headerRightContent || actions
+  const showHeader = title || description || status || headerRight || actions
   const showLeftPane = leftPane && !leftPaneCollapsed
   const showRightPane = rightPane && !rightPaneCollapsed
   const showBottomPane = bottomPane && !bottomPaneCollapsed
@@ -301,9 +297,9 @@ export function WorkbenchBodyTemplate({
                 <p className="mt-0.5 truncate text-xs text-muted-foreground">{description}</p>
               )}
             </div>
-            {(headerRightContent || actions) && (
+            {(headerRight || actions) && (
               <div className="flex shrink-0 items-center gap-2">
-                {headerRightContent}
+                {headerRight}
                 {actions}
               </div>
             )}

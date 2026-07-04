@@ -12,13 +12,9 @@ export const useThemeStore = create<ThemeState>((set) => ({
     darkMode: false,
   },
   overrides: {} as Record<string, TemplateOverride>,
-  activeShell: 'sidebar',
-  activeTemplate: 'databody',
   setGlobal: (patch) => set((s) => ({ global: { ...s.global, ...patch } })),
   setOverride: (id, patch) =>
     set((s) => ({
       overrides: { ...s.overrides, [id]: { ...s.overrides[id], ...patch } },
     })),
-  setShell: () => undefined,
-  setTemplate: () => undefined,
 }))
