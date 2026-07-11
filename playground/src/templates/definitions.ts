@@ -291,6 +291,18 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     options: topBarOptions,
   },
   {
+    id: 'databody-kubernetes',
+    label: 'Kubernetes Monitoring',
+    navigationLabel: 'Kubernetes',
+    group: 'Pages',
+    navigationGroup: 'DataBodyTemplate',
+    navigationParent: 'databody',
+    layoutClassName: 'layout-databody-kubernetes',
+    exportComponent: 'DataBodyTemplate',
+    exportKind: 'databody',
+    preset: {},
+  },
+  {
     id: 'form',
     label: 'Form Horizontal',
     navigationLabel: 'Horizontal',

@@ -13,6 +13,7 @@ import {
   PanelsTopLeft,
   PanelLeftOpen,
   PanelRight,
+  Boxes,
 } from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
 import type { TemplateCodeBuilder } from './code'
@@ -93,6 +94,7 @@ import {
   buildWorkbenchTemplateCode,
 } from './demos/workbench/WorkbenchBodyTemplateDemos'
 import { AgentChatDemo, buildAgentChatCode } from './demos/workbench/AgentChatDemo'
+import { KubernetesMonitoringDemo } from './demos/databody/KubernetesMonitoringDemo'
 import {
   BrowseBodyTemplateDemo,
   buildBrowseBodyTemplateCode,
@@ -180,6 +182,7 @@ const previewComponents: Record<
   'workbench-panel-editor': WorkbenchPanelEditorDemo,
   'workbench-sql-editor': WorkbenchSqlEditorDemo,
   'workbench-agent-chat': AgentChatDemo,
+  'databody-kubernetes': KubernetesMonitoringDemo,
   browse: BrowseBodyTemplateDemo,
   'list-detail': ListDetailBodyTemplateDemo,
   panel: PanelTemplateDemo,
@@ -240,6 +243,7 @@ const iconById: Partial<Record<PlaygroundTemplateId, ComponentType<{ className?:
   dashboard: BarChart2,
   'workbench-panel-editor': PanelsTopLeft,
   'workbench-sql-editor': PanelsTopLeft,
+  'databody-kubernetes': Boxes,
   detail: PanelTop,
   'detail-record': PanelTop,
   'detail-full': PanelTop,

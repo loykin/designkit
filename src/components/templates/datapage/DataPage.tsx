@@ -1,5 +1,8 @@
+import { createContext, useContext, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+
+const DataPageNestingContext = createContext(false)
 
 export interface DataPageProps {
   children: React.ReactNode
@@ -75,17 +78,33 @@ export interface DataPageFooterProps {
 }
 
 function Root({ children, className, style }: DataPageProps) {
+  const isNested = useContext(DataPageNestingContext)
+
+  useEffect(() => {
+    if (isNested) {
+      console.error(
+        '[DesignKit] Nested <DataPage> detected. Page-level templates (DataBodyTemplate, ' +
+          'WorkbenchBodyTemplate, DashboardBodyTemplate, BrowseBodyTemplate, DetailBodyTemplate, ' +
+          "…) already render a DataPage — don't nest one page-level template inside another " +
+          "template's slot (leftPane, rightPane, bottomPane, mainPane, children, …). Pick the one " +
+          'template that fits and compose inside it instead.',
+      )
+    }
+  }, [isNested])
+
   return (
-    <div
-      data-slot="data-page"
-      className={cn(
-        'designkit-theme h-full min-h-0 flex flex-col bg-background text-foreground',
-        className,
-      )}
-      style={style}
-    >
-      {children}
-    </div>
+    <DataPageNestingContext.Provider value={true}>
+      <div
+        data-slot="data-page"
+        className={cn(
+          'designkit-theme h-full min-h-0 flex flex-col bg-background text-foreground',
+          className,
+        )}
+        style={style}
+      >
+        {children}
+      </div>
+    </DataPageNestingContext.Provider>
   )
 }
 

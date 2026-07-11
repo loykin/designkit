@@ -102,6 +102,8 @@ When adding or changing a screen:
 
 Do not copy a DesignKit component into another project to make a visual variation — add a public variant, slot, or token when the requirement is broadly reusable.
 
+Do not nest one page-level template (`DataBodyTemplate`, `WorkbenchBodyTemplate`, `DashboardBodyTemplate`, `BrowseBodyTemplate`, `DetailBodyTemplate`, etc.) inside another page-level template's slot (`leftPane`, `rightPane`, `bottomPane`, `mainPane`, `children`, …). Every page-level template already wraps its content in `DataPage`; nesting two of them nests two page shells and duplicates chrome (headers, padding, and any built-in navigation-like pane). Pick the one template that fits and compose inside it — if its slots aren't expressive enough, extend that template instead of wrapping it in a second one.
+
 ## Customization Contract
 
 Preferred customization points:
@@ -134,6 +136,7 @@ Avoid:
 - Use the playground to demonstrate public APIs and supported customization.
 - Playground examples may integrate with `@loykin/gridkit` or other Loykin packages, but those integrations must not silently become core DesignKit dependencies.
 - When adding a playground template, verify whether it also needs a public library export.
+- Every playground demo is rendered inside `SidebarShell`/`HeaderShell` (`playground/src/App.tsx`), which already provides app-level navigation chrome. A demo must not add its own top-level navigation-style sidebar or header — that duplicates the shell. Before marking a new or changed demo done, load it in the browser at both `/sidebar/<id>` and `/header/<id>` and visually confirm there is exactly one navigation sidebar/header on screen.
 
 ## Verification
 
