@@ -173,9 +173,9 @@ is not covered by any existing one.
 ## UI Primitive Contract
 
 DesignKit exports shadcn-compatible UI primitives such as `Button`, `Card`,
-`Input`, `Select`, `Tabs`, `Sheet`, `Tooltip`, `Avatar`, and `Badge` from
-`@loykin/designkit`. They are real public exports, not only internal template
-implementation details.
+`Input`, `Select`, `Tabs`, `Sheet`, `AlertDialog`, `Tooltip`, `Avatar`, and
+`Badge` from `@loykin/designkit`. They are real public exports, not only
+internal template implementation details.
 
 Use these primitives when composing content inside DesignKit template slots, or
 when the consuming app has not already standardized on its own shadcn component
@@ -184,6 +184,51 @@ components in DesignKit slots as long as they share the same Tailwind v4 build
 and semantic variables (`--background`, `--foreground`, `--primary`,
 `--border`, `--radius`). Do not import DesignKit primitive source files through
 package-internal paths.
+
+### AlertDialog for confirm / destructive-action prompts
+
+`AlertDialog` wraps `@base-ui/react/alert-dialog` and, unlike `Sheet`, cannot
+be dismissed by an outside click or Escape by default — use it whenever the
+user must explicitly accept or cancel before an action proceeds (deleting a
+record, discarding unsaved changes). Compose `AlertDialogAction` with
+`variant="destructive"` for irreversible actions.
+
+```tsx
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+  Button,
+} from '@loykin/designkit'
+
+export function DeleteProjectButton({ onConfirm }: { onConfirm: () => void }) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger render={<Button variant="destructive">Delete project</Button>} />
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Delete this project?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction variant="destructive" onClick={onConfirm}>
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}
+```
 
 ### ListDetailBodyTemplate
 
