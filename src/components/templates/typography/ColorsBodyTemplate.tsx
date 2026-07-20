@@ -192,7 +192,7 @@ export function ColorsBodyTemplate({ theme, breadcrumb }: ColorsBodyTemplateProp
               oklch(L, <span className="text-foreground">chroma × factor</span>, {primaryHue})
               {'  · '}factor = 2–6% of primary chroma
             </div>
-            <div className="overflow-hidden rounded-[var(--radius)] border border-border divide-y text-xs font-mono">
+            <div className="overflow-hidden rounded-[var(--radius)] border border-border divide-y divide-border text-xs font-mono">
               <div className="grid grid-cols-[7rem_1fr_1fr] bg-muted/50 px-3 py-1.5 text-muted-foreground">
                 <span>token</span>
                 <span>light</span>

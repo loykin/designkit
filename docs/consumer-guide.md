@@ -70,6 +70,41 @@ control, including variables such as:
 Use the application's existing theme definitions when they already provide
 these variables.
 
+## Consumer CSS Parity
+
+DesignKit components must render correctly when a consumer imports only the
+documented CSS contract:
+
+```css
+@import 'tailwindcss';
+@import '@loykin/designkit/styles';
+```
+
+Do not rely on additional reset or base-layer rules from the DesignKit
+playground. In particular, the playground's broad `* { @apply border-border }`
+rule can hide a missing semantic border color in a component. Tailwind classes
+such as `divide-y` and `divide-x` establish divider width and style, but an
+unspecified divider color can resolve to `currentColor`. In a clean consumer,
+that makes separators use the foreground text color instead of `--border`.
+
+Component implementations own their border semantics. Pair divider utilities
+with an explicit semantic color, for example `divide-y divide-border`, and pair
+ordinary borders with the intended color such as `border border-border` or
+`border border-input`. Do not ask consuming applications to add a broad global
+border override to compensate for a DesignKit component.
+
+This contract must be checked in a clean consumer fixture as well as the
+DesignKit playground. A ResourceKit consumer reproduction showed why both are
+necessary: `DataBodyTemplate` used `border border-border divide-y`; the outer
+border was correct, while the dividers became foreground-colored outside the
+playground because `divide-border` was missing. The playground appeared correct
+only because its global base rule supplied the omitted color.
+
+The incident was corrected by adding `divide-border` to the inline bordered
+group in `DataBodyTemplate` and to the same implicit-divider pattern in
+`ColorsBodyTemplate`. A server-rendering regression test now asserts that the
+public `DataBodyTemplate` markup owns the semantic divider color.
+
 ## Shared Token Contract
 
 All Loykin kits must treat shared shadcn-style semantic variables as the
@@ -214,9 +249,7 @@ export function DeleteProjectButton({ onConfirm }: { onConfirm: () => void }) {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete this project?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone.
-          </AlertDialogDescription>
+          <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>

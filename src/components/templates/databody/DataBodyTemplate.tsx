@@ -126,7 +126,7 @@ function GroupWrapper({
   if (variant === 'bordered') {
     if (layout === 'inline') {
       return (
-        <div className="overflow-hidden rounded-(--radius) border border-border divide-y">
+        <div className="overflow-hidden rounded-(--radius) border border-border divide-y divide-border">
           {children}
         </div>
       )
