@@ -108,7 +108,7 @@ export function BrowseBodyTemplate({
           )}
           <div
             className={cn(
-              'min-w-0 flex-1 overflow-hidden px-(--designkit-page-padding-x) py-(--designkit-page-padding-y)',
+              'min-w-0 flex-1 overflow-auto px-(--designkit-page-padding-x) py-(--designkit-page-padding-y)',
               '[&_.gridkit-shell]:h-full [&_.gridkit-table-stack]:flex-1 [&_.gridkit-table-stack]:min-h-0',
               '[&_.gridkit-frame]:flex-1 [&_.gridkit-frame]:min-h-0 [&_.gridkit-frame]:overflow-auto',
               contentClassName,

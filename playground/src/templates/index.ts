@@ -108,6 +108,10 @@ import {
   DetailBodyTemplateDemo as ProductDetailBodyTemplateDemo,
   buildDetailTemplateCode,
 } from './demos/detail/DetailBodyTemplateDemo'
+import { BoardTableDemo, buildBoardTableCode } from './demos/content/BoardTableDemo'
+import { ThreadDetailDemo, buildThreadDetailCode } from './demos/content/ThreadDetailDemo'
+import { BlogFeedDemo, buildBlogFeedCode } from './demos/content/BlogFeedDemo'
+import { ArticleDetailDemo, buildArticleDetailCode } from './demos/content/ArticleDetailDemo'
 
 function createDetailPreview(detailVariant: 'media' | 'record' | 'full') {
   return function DetailPreview({ theme }: { theme?: React.CSSProperties }) {
@@ -164,6 +168,8 @@ const previewComponents: Record<
   'table-card': createDataGridPreview('table-card'),
   'table-card-list': createDataGridPreview('table-card-list'),
   databody: DataBodyTemplateDemo,
+  'board-table': BoardTableDemo,
+  'blog-feed': BlogFeedDemo,
   'databody-detail': DetailBodyTemplateDemo,
   'databody-split': SplitBodyTemplateDemo,
   tabbed: TabbedBodyTemplateDemo,
@@ -189,6 +195,8 @@ const previewComponents: Record<
   detail: createDetailPreview('media'),
   'detail-record': createDetailPreview('record'),
   'detail-full': createDetailPreview('full'),
+  'thread-detail': ThreadDetailDemo,
+  'article-detail': ArticleDetailDemo,
 }
 
 const codeBuilders: Partial<Record<PlaygroundTemplateId, TemplateCodeBuilder>> = {
@@ -198,6 +206,8 @@ const codeBuilders: Partial<Record<PlaygroundTemplateId, TemplateCodeBuilder>> =
   'table-card': buildDataGridTemplateCode,
   'table-card-list': buildDataGridTemplateCode,
   databody: buildDataBodyTemplateCode,
+  'board-table': buildBoardTableCode,
+  'blog-feed': buildBlogFeedCode,
   'databody-detail': buildDetailBodyTemplateCode,
   'databody-split': buildSplitBodyTemplateCode,
   tabbed: buildTabbedBodyTemplateCode,
@@ -220,6 +230,8 @@ const codeBuilders: Partial<Record<PlaygroundTemplateId, TemplateCodeBuilder>> =
   detail: buildDetailTemplateCode,
   'detail-record': buildDetailTemplateCode,
   'detail-full': buildDetailTemplateCode,
+  'thread-detail': buildThreadDetailCode,
+  'article-detail': buildArticleDetailCode,
 }
 
 export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
@@ -234,6 +246,8 @@ const iconById: Partial<Record<PlaygroundTemplateId, ComponentType<{ className?:
   table: Table2,
   'table-card': Layers,
   databody: LayoutDashboard,
+  'board-table': Table2,
+  'blog-feed': Layers,
   sectioned: FileText,
   form: FileText,
   'form-wizard': FileText,
@@ -247,6 +261,8 @@ const iconById: Partial<Record<PlaygroundTemplateId, ComponentType<{ className?:
   detail: PanelTop,
   'detail-record': PanelTop,
   'detail-full': PanelTop,
+  'thread-detail': FileText,
+  'article-detail': FileText,
   'list-detail': PanelLeftOpen,
   panel: PanelRight,
 }

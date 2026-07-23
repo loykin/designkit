@@ -377,7 +377,7 @@ export function WorkbenchBodyTemplate({
           </>
         )}
         <main className={cn('flex min-w-0 flex-1 flex-col overflow-hidden', mainPaneClassName)}>
-          <div className="min-h-0 flex-1 overflow-hidden">{mainPane ?? children}</div>
+          <div className="min-h-0 flex-1 overflow-auto">{mainPane ?? children}</div>
           {showBottomPane && (
             <>
               {resizable && (
