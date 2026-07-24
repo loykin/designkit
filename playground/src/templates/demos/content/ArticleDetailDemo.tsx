@@ -3,8 +3,6 @@ import {
   AvatarFallback,
   Badge,
   Button,
-  Card,
-  CardContent,
   DetailBodyTemplate,
   PageTopBar,
   Separator,
@@ -111,18 +109,18 @@ function Comment({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex gap-3">
+    <article className="flex gap-3">
       <Avatar size="sm">
         <AvatarFallback>{initials}</AvatarFallback>
       </Avatar>
-      <div className="min-w-0 flex-1 rounded-lg border border-border bg-card p-3">
+      <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-3">
           <span className="text-sm font-medium">{author}</span>
           <span className="text-xs text-muted-foreground">{time}</span>
         </div>
         <p className="mt-2 text-sm leading-6 text-foreground/85">{children}</p>
       </div>
-    </div>
+    </article>
   )
 }
 
@@ -206,21 +204,21 @@ export function ArticleDetailDemo({ theme }: { theme?: React.CSSProperties }) {
           </Button>
         </div>
 
-        <Card className="mt-8">
-          <CardContent>
-            <h2 className="text-base font-semibold">Discussion</h2>
-            <div className="mt-4 space-y-3">
-              <Comment initials="AK" author="Alex Kim" time="2 hours ago">
-                The distinction between a layout contract and a content model is especially helpful
-                here.
-              </Comment>
-              <Comment initials="JP" author="Jordan Park" time="48 minutes ago">
-                Shipping the examples first also gives us something concrete to test on both shells
-                before introducing another public component.
-              </Comment>
-            </div>
-          </CardContent>
-        </Card>
+        <section className="mt-8" aria-labelledby="article-discussion-title">
+          <h2 id="article-discussion-title" className="text-base font-semibold">
+            Discussion
+          </h2>
+          <div className="mt-5 space-y-6">
+            <Comment initials="AK" author="Alex Kim" time="2 hours ago">
+              The distinction between a layout contract and a content model is especially helpful
+              here.
+            </Comment>
+            <Comment initials="JP" author="Jordan Park" time="48 minutes ago">
+              Shipping the examples first also gives us something concrete to test on both shells
+              before introducing another public component.
+            </Comment>
+          </div>
+        </section>
       </article>
     </DetailBodyTemplate>
   )

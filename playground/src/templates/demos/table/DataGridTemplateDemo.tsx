@@ -219,6 +219,11 @@ function GridContent({
         minCardWidth={220}
         minColumns={variant === 'card-list' ? 1 : 2}
         renderCard={renderCard(variant)}
+        styles={{
+          root: { overflow: 'visible' },
+          frameInner: { overflow: 'visible' },
+          content: { paddingInline: 0 },
+        }}
       />
     )
   }
