@@ -159,7 +159,12 @@ export function BlogFeedDemo({ theme }: { theme?: React.CSSProperties }) {
           headerLeft={(table) => <GlobalSearch table={table} placeholder="Search articles…" />}
           minCardWidth={280}
           minColumns={1}
-          classNames={{ cardGrid: 'items-stretch' }}
+          classNames={{ content: 'items-stretch' }}
+          styles={{
+            root: { overflow: 'visible' },
+            frameInner: { overflow: 'visible' },
+            content: { paddingInline: 0 },
+          }}
         />
       </DataBodyTemplate.Body>
     </DataBodyTemplate>

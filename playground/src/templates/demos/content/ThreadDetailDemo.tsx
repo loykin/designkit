@@ -5,7 +5,6 @@ import {
   Button,
   DetailBodyTemplate,
   PageTopBar,
-  Separator,
 } from '@loykin/designkit'
 import { Bookmark, CheckCircle2, Heart, MessageSquare, MoreHorizontal, Reply } from 'lucide-react'
 import type { TemplateCodeContext } from '../../code'
@@ -55,7 +54,7 @@ const replies: ReplyItem[] = [
 function ThreadHeader() {
   return (
     <header className="shrink-0 px-(--designkit-page-padding-x) pt-(--designkit-page-padding-y)">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-4">
+      <div className="mx-auto flex max-w-4xl flex-wrap items-start justify-between gap-4 border-b border-border pb-4">
         <div className="min-w-0 max-w-4xl">
           <div className="mb-2 flex flex-wrap items-center gap-2">
             <Badge variant="outline">Help</Badge>
@@ -107,28 +106,23 @@ function Author({ name, initials, role }: { name: string; initials: string; role
   )
 }
 
-function ReplyCard({ reply }: { reply: ReplyItem }) {
+function ThreadReply({ reply }: { reply: ReplyItem }) {
   return (
     <article className="relative" style={{ marginLeft: `${Math.min(reply.depth, 3) * 28}px` }}>
-      {reply.depth > 0 && (
-        <div className="absolute -left-4 top-0 h-full w-px bg-border" aria-hidden="true" />
-      )}
-      <div className="rounded-lg border border-border bg-card p-4">
-        <div className="flex items-start justify-between gap-3">
-          <Author name={reply.author} initials={reply.initials} role={reply.role} />
-          <span className="shrink-0 text-xs text-muted-foreground">{reply.time}</span>
-        </div>
-        <p className="mt-4 text-sm leading-6 text-foreground/90">{reply.body}</p>
-        <div className="mt-3 flex items-center gap-1">
-          <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground">
-            <Heart className="size-3.5" />
-            {reply.likes}
-          </Button>
-          <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground">
-            <Reply className="size-3.5" />
-            Reply
-          </Button>
-        </div>
+      <div className="flex items-start justify-between gap-3">
+        <Author name={reply.author} initials={reply.initials} role={reply.role} />
+        <span className="shrink-0 text-xs text-muted-foreground">{reply.time}</span>
+      </div>
+      <p className="mt-3 text-sm leading-6 text-foreground/90">{reply.body}</p>
+      <div className="mt-2 flex items-center gap-1">
+        <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground">
+          <Heart className="size-3.5" />
+          {reply.likes}
+        </Button>
+        <Button variant="ghost" size="sm" className="h-7 text-xs text-muted-foreground">
+          <Reply className="size-3.5" />
+          Reply
+        </Button>
       </div>
     </article>
   )
@@ -142,14 +136,14 @@ export function ThreadDetailDemo({ theme }: { theme?: React.CSSProperties }) {
       variant="full"
       topBar={<PageTopBar left="Community / Help / BRD-1039" />}
       header={<ThreadHeader />}
+      layoutClassName="mx-auto w-full max-w-[calc(56rem+2*var(--designkit-page-padding-x))]"
     >
-      <article className="mx-auto max-w-4xl rounded-lg border border-border bg-card p-5 sm:p-6">
+      <article className="border-b border-border pb-6">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <Author name="Sam Lee" initials="SL" />
           <span className="text-xs text-muted-foreground">38 minutes ago</span>
         </div>
-        <Separator className="my-5" />
-        <div className="space-y-4 text-sm leading-7 text-foreground/90">
+        <div className="mt-5 space-y-4 text-sm leading-7 text-foreground/90">
           <p>
             We have a discussion table with six columns on desktop: topic, category, author,
             replies, views, and last activity. Showing all of them on mobile makes the table
@@ -174,16 +168,15 @@ export function ThreadDetailDemo({ theme }: { theme?: React.CSSProperties }) {
       <DetailBodyTemplate.Section
         title="Replies"
         description={`${replies.length} replies · nested replies use progressive indentation`}
-        className="mx-auto max-w-4xl"
       >
-        <div className="space-y-3">
+        <div className="space-y-6">
           {replies.map((reply) => (
-            <ReplyCard key={reply.id} reply={reply} />
+            <ThreadReply key={reply.id} reply={reply} />
           ))}
         </div>
       </DetailBodyTemplate.Section>
 
-      <section className="mx-auto max-w-4xl rounded-lg border border-border bg-card p-4">
+      <section className="border-t border-border pt-5">
         <h2 className="text-sm font-semibold">Join the discussion</h2>
         <textarea
           aria-label="Reply"
@@ -206,6 +199,7 @@ export function buildThreadDetailCode(_context: TemplateCodeContext) {
     `  variant="full"`,
     `  topBar={<PageTopBar left="Community / Topic" />}`,
     `  header={<ThreadHeader topic={topic} />}`,
+    `  layoutClassName="mx-auto w-full max-w-[calc(56rem+2*var(--designkit-page-padding-x))]"`,
     `>`,
     `  <ThreadPost post={topic} />`,
     `  <DetailBodyTemplate.Section title="Replies">`,

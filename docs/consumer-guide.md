@@ -333,6 +333,8 @@ Applications may customize:
 - Template `theme` props.
 - Public slots such as `actions`, `status`, `toolbar`, `topBar`, `sidebar`, `header`,
   `lead`, `aside`, and children.
+- `DetailBodyTemplate.layoutClassName` for constraining the shared content + aside
+  layout container without targeting internal DOM.
 - Public component variants and documented `className` props.
 - Domain-specific content, forms, permissions, routing, and data access.
 

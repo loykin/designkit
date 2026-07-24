@@ -135,6 +135,7 @@ export function ArticleDetailDemo({ theme }: { theme?: React.CSSProperties }) {
       topBar={<PageTopBar left="Journal / Design systems" />}
       header={<ArticleHeader />}
       aside={<ArticleAside />}
+      layoutClassName="mx-auto w-full max-w-[calc(64rem+2*var(--designkit-page-padding-x))]"
     >
       <article className="mx-auto max-w-3xl">
         <div className="relative mb-8 h-48 overflow-hidden rounded-xl bg-gradient-to-br from-violet-500 via-indigo-500 to-sky-500 sm:h-64">

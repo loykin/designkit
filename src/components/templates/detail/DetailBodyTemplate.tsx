@@ -20,6 +20,8 @@ export interface DetailBodyTemplateProps {
   aside?: React.ReactNode
   summary?: React.ReactNode
   stickyAside?: boolean
+  /** Class applied to the inner content + aside layout container. */
+  layoutClassName?: string
   contentClassName?: string
   mediaClassName?: string
   asideClassName?: string
@@ -146,6 +148,7 @@ function DetailBodyTemplateRoot({
   aside,
   summary,
   stickyAside = true,
+  layoutClassName,
   contentClassName,
   mediaClassName,
   asideClassName,
@@ -275,6 +278,7 @@ function DetailBodyTemplateRoot({
           className={cn(
             'grid h-full min-h-0 grid-cols-1 overflow-hidden',
             outsideAsideSlot && 'lg:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)]',
+            layoutClassName,
           )}
         >
           <main
