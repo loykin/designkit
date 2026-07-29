@@ -1,5 +1,6 @@
 import type { TemplateOverride } from '@loykin/designkit'
-import type { DataGridTemplateVariant } from './demos/table/DataGridTemplateDemo'
+
+export type DataGridTemplateVariant = 'standard' | 'infinity' | 'drag' | 'card' | 'card-list'
 
 export type TemplateGroup = 'Table' | 'Pages' | 'Design' | 'Auth' | 'Dashboard' | 'Workbench'
 export type TemplateNavigationGroupId =

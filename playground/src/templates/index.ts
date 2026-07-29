@@ -1,4 +1,4 @@
-import { createElement, type ComponentType } from 'react'
+import type { ComponentType } from 'react'
 import { TypographyBodyTemplate, ColorsBodyTemplate } from '@loykin/designkit'
 import {
   FileText,
@@ -44,9 +44,13 @@ export interface TemplateConfig {
 
 export type { TemplateNavigationItem, TemplateNavigationGroup } from '@loykin/designkit'
 
-import { DataGridTemplateDemo, buildDataGridTemplateCode } from './demos/table/DataGridTemplateDemo'
+import { buildDataGridTemplateCode } from './demos/table/DataGridTemplateCode'
+import { StandardDataGridDemo } from './demos/table/StandardDataGridDemo'
+import { InfiniteDataGridDemo } from './demos/table/InfiniteDataGridDemo'
+import { DraggableDataGridDemo } from './demos/table/DraggableDataGridDemo'
+import { CardGridDemo } from './demos/table/CardGridDemo'
+import { CardListDemo } from './demos/table/CardListDemo'
 import type { TemplateNavigationGroup } from '@loykin/designkit'
-import type { DataGridTemplateVariant } from './demos/table/DataGridTemplateDemo'
 import {
   DataBodyTemplateDemo,
   buildDataBodyTemplateCode,
@@ -91,11 +95,9 @@ import {
   DashboardBodyTemplateDemo,
   buildDashboardTemplateCode,
 } from './demos/dashboard/DashboardBodyTemplateDemo'
-import {
-  WorkbenchPanelEditorDemo,
-  WorkbenchSqlEditorDemo,
-  buildWorkbenchTemplateCode,
-} from './demos/workbench/WorkbenchBodyTemplateDemos'
+import { buildWorkbenchTemplateCode } from './demos/workbench/WorkbenchBodyTemplateDemos'
+import { WorkbenchPanelEditorDemo } from './demos/workbench/WorkbenchPanelEditorDemo'
+import { WorkbenchSqlEditorDemo } from './demos/workbench/WorkbenchSqlEditorDemo'
 import { AgentChatDemo, buildAgentChatCode } from './demos/workbench/AgentChatDemo'
 import { KubernetesMonitoringDemo } from './demos/databody/KubernetesMonitoringDemo'
 import {
@@ -107,69 +109,24 @@ import {
   buildListDetailBodyTemplateCode,
 } from './demos/listdetail/ListDetailBodyTemplateDemo'
 import { PanelTemplateDemo, buildPanelTemplateCode } from './demos/panel/PanelTemplateDemo'
-import {
-  DetailBodyTemplateDemo as ProductDetailBodyTemplateDemo,
-  buildDetailTemplateCode,
-} from './demos/detail/DetailBodyTemplateDemo'
+import { buildDetailTemplateCode } from './demos/detail/DetailBodyTemplateDemo'
+import { ProductMediaDetailDemo } from './demos/detail/ProductMediaDetailDemo'
+import { OrderRecordDetailDemo } from './demos/detail/OrderRecordDetailDemo'
+import { ProductFullDetailDemo } from './demos/detail/ProductFullDetailDemo'
 import { BoardTableDemo, buildBoardTableCode } from './demos/content/BoardTableDemo'
 import { ThreadDetailDemo, buildThreadDetailCode } from './demos/content/ThreadDetailDemo'
 import { BlogFeedDemo, buildBlogFeedCode } from './demos/content/BlogFeedDemo'
 import { ArticleDetailDemo, buildArticleDetailCode } from './demos/content/ArticleDetailDemo'
 
-function createDetailPreview(detailVariant: 'media' | 'record' | 'full') {
-  return function DetailPreview({ theme }: { theme?: React.CSSProperties }) {
-    return createElement(ProductDetailBodyTemplateDemo, { theme, detailVariant })
-  }
-}
-
-function DataGridTemplatePreview(props: {
-  theme?: React.CSSProperties
-  variant: DataGridTemplateVariant
-  layoutClassName: string
-  title: React.ReactNode
-  description?: React.ReactNode
-  topBarShow?: string
-  topBarVariant?: string
-  topBarBg?: string
-}) {
-  return createElement(DataGridTemplateDemo, props)
-}
-
-function createDataGridPreview(id: PlaygroundTemplateId) {
-  const definition = TEMPLATE_DEFINITIONS.find((item) => item.id === id)
-  return function DataGridPreview({
-    theme,
-    topBarShow,
-    topBarVariant,
-    topBarBg,
-  }: {
-    theme?: React.CSSProperties
-    topBarShow?: string
-    topBarVariant?: string
-    topBarBg?: string
-  }) {
-    return createElement(DataGridTemplatePreview, {
-      theme,
-      variant: definition?.preview?.variant ?? 'standard',
-      layoutClassName: definition?.layoutClassName ?? `layout-${id}`,
-      title: definition?.preview?.title ?? 'Users',
-      description: definition?.preview?.description,
-      topBarShow,
-      topBarVariant,
-      topBarBg,
-    })
-  }
-}
-
 const previewComponents: Record<
   PlaygroundTemplateId,
   ComponentType<{ theme?: React.CSSProperties }>
 > = {
-  table: createDataGridPreview('table'),
-  'table-infinity': createDataGridPreview('table-infinity'),
-  'table-drag': createDataGridPreview('table-drag'),
-  'table-card': createDataGridPreview('table-card'),
-  'table-card-list': createDataGridPreview('table-card-list'),
+  table: StandardDataGridDemo,
+  'table-infinity': InfiniteDataGridDemo,
+  'table-drag': DraggableDataGridDemo,
+  'table-card': CardGridDemo,
+  'table-card-list': CardListDemo,
   databody: DataBodyTemplateDemo,
   'board-table': BoardTableDemo,
   'blog-feed': BlogFeedDemo,
@@ -195,9 +152,9 @@ const previewComponents: Record<
   browse: BrowseBodyTemplateDemo,
   'list-detail': ListDetailBodyTemplateDemo,
   panel: PanelTemplateDemo,
-  detail: createDetailPreview('media'),
-  'detail-record': createDetailPreview('record'),
-  'detail-full': createDetailPreview('full'),
+  detail: ProductMediaDetailDemo,
+  'detail-record': OrderRecordDetailDemo,
+  'detail-full': ProductFullDetailDemo,
   'thread-detail': ThreadDetailDemo,
   'article-detail': ArticleDetailDemo,
 }
@@ -254,11 +211,11 @@ function toPreviewSource(source: string): string {
 }
 
 const previewSourcePathById: Partial<Record<PlaygroundTemplateId, string>> = {
-  table: './demos/table/DataGridTemplateDemo.tsx',
-  'table-infinity': './demos/table/DataGridTemplateDemo.tsx',
-  'table-drag': './demos/table/DataGridTemplateDemo.tsx',
-  'table-card': './demos/table/DataGridTemplateDemo.tsx',
-  'table-card-list': './demos/table/DataGridTemplateDemo.tsx',
+  table: './demos/table/StandardDataGridDemo.tsx',
+  'table-infinity': './demos/table/InfiniteDataGridDemo.tsx',
+  'table-drag': './demos/table/DraggableDataGridDemo.tsx',
+  'table-card': './demos/table/CardGridDemo.tsx',
+  'table-card-list': './demos/table/CardListDemo.tsx',
   databody: './demos/databody/DataBodyTemplateDemo.tsx',
   'databody-detail': './demos/databody/DetailBodyTemplateDemo.tsx',
   'databody-split': './demos/databody/SplitBodyTemplateDemo.tsx',
@@ -274,15 +231,15 @@ const previewSourcePathById: Partial<Record<PlaygroundTemplateId, string>> = {
   'login-reset': './demos/auth/LoginResetDemo.tsx',
   'login-otp': './demos/auth/LoginOtpDemo.tsx',
   dashboard: './demos/dashboard/DashboardBodyTemplateDemo.tsx',
-  'workbench-panel-editor': './demos/workbench/WorkbenchBodyTemplateDemos.tsx',
-  'workbench-sql-editor': './demos/workbench/WorkbenchBodyTemplateDemos.tsx',
+  'workbench-panel-editor': './demos/workbench/WorkbenchPanelEditorDemo.tsx',
+  'workbench-sql-editor': './demos/workbench/WorkbenchSqlEditorDemo.tsx',
   'workbench-agent-chat': './demos/workbench/AgentChatDemo.tsx',
   browse: './demos/browse/BrowseBodyTemplateDemo.tsx',
   'list-detail': './demos/listdetail/ListDetailBodyTemplateDemo.tsx',
   panel: './demos/panel/PanelTemplateDemo.tsx',
-  detail: './demos/detail/DetailBodyTemplateDemo.tsx',
-  'detail-record': './demos/detail/DetailBodyTemplateDemo.tsx',
-  'detail-full': './demos/detail/DetailBodyTemplateDemo.tsx',
+  detail: './demos/detail/ProductMediaDetailDemo.tsx',
+  'detail-record': './demos/detail/OrderRecordDetailDemo.tsx',
+  'detail-full': './demos/detail/ProductFullDetailDemo.tsx',
   'board-table': './demos/content/BoardTableDemo.tsx',
   'blog-feed': './demos/content/BlogFeedDemo.tsx',
   'thread-detail': './demos/content/ThreadDetailDemo.tsx',

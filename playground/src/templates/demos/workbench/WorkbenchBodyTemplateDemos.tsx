@@ -1,30 +1,21 @@
-import { useState } from 'react'
-import type { CSSProperties, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import {
   Badge,
   Button,
   Input,
-  PageTopBar,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
   Switch,
-  WorkbenchBodyTemplate,
 } from '@loykin/designkit'
 import {
   ChevronDown,
   Database,
-  FileCode2,
-  PanelRightClose,
-  PanelRightOpen,
   Play,
-  Save,
   Search,
-  SlidersHorizontal,
   Wand2,
-  X,
 } from 'lucide-react'
 import type { TemplateCodeContext } from '../../code'
 
@@ -70,7 +61,7 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   )
 }
 
-function PanelPreview() {
+export function PanelPreview() {
   const bars = [46, 58, 42, 76, 61, 88, 72, 95, 64, 79, 68, 84]
 
   return (
@@ -100,7 +91,7 @@ function PanelPreview() {
   )
 }
 
-function PanelInspector() {
+export function PanelInspector() {
   return (
     <div className="flex h-full flex-col">
       <PaneHeader title="Panel options" />
@@ -149,7 +140,7 @@ function PanelInspector() {
   )
 }
 
-function QueryPane() {
+export function QueryPane() {
   return (
     <div className="flex h-full flex-col bg-background">
       <PaneHeader
@@ -181,65 +172,13 @@ function QueryPane() {
   )
 }
 
-export function WorkbenchPanelEditorDemo({ theme }: { theme?: CSSProperties }) {
-  const [rightCollapsed, setRightCollapsed] = useState(false)
-  const [bottomCollapsed, setBottomCollapsed] = useState(false)
-
-  return (
-    <WorkbenchBodyTemplate
-      theme={theme}
-      className="layout-workbench-panel-editor"
-      topBar={
-        <PageTopBar
-          left="Dashboards / Infrastructure / Edit panel"
-          right={
-            <div className="flex items-center gap-1.5">
-              <Button variant="ghost" size="sm"><X />Cancel</Button>
-              <Button variant="outline" size="sm">Apply</Button>
-              <Button size="sm"><Save />Save</Button>
-            </div>
-          }
-        />
-      }
-      headerRight={
-        <>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setBottomCollapsed((value) => !value)}
-          >
-            <FileCode2 />Query
-          </Button>
-          <Button
-            variant="outline"
-            size="icon-sm"
-            onClick={() => setRightCollapsed((value) => !value)}
-          >
-            {rightCollapsed ? <PanelRightOpen /> : <PanelRightClose />}
-          </Button>
-        </>
-      }
-      title="Panel editor"
-      status={<Badge variant="outline">Draft</Badge>}
-      description="Latency panel"
-      mainPane={<PanelPreview />}
-      rightPane={<PanelInspector />}
-      bottomPane={<QueryPane />}
-      rightPaneCollapsed={rightCollapsed}
-      bottomPaneCollapsed={bottomCollapsed}
-      rightPaneWidth={340}
-      bottomPaneHeight={220}
-    />
-  )
-}
-
 const schemas = [
   ['public.users', ['id', 'email', 'plan', 'created_at']],
   ['public.sessions', ['id', 'user_id', 'started_at', 'duration_ms']],
   ['billing.invoices', ['id', 'account_id', 'amount', 'status']],
 ]
 
-function SchemaBrowser() {
+export function SchemaBrowser() {
   return (
     <div className="flex h-full flex-col">
       <PaneHeader title="Schema" />
@@ -270,7 +209,7 @@ function SchemaBrowser() {
   )
 }
 
-function SqlEditor() {
+export function SqlEditor() {
   return (
     <div className="flex h-full flex-col bg-background">
       <PaneHeader
@@ -295,7 +234,7 @@ function SqlEditor() {
   )
 }
 
-function ResultsPane() {
+export function ResultsPane() {
   const rows = [
     ['2026-05-28', '18,420', '842'],
     ['2026-05-27', '18,109', '801'],
@@ -330,57 +269,6 @@ function ResultsPane() {
         </table>
       </div>
     </div>
-  )
-}
-
-export function WorkbenchSqlEditorDemo({ theme }: { theme?: CSSProperties }) {
-  const [leftCollapsed, setLeftCollapsed] = useState(false)
-  const [bottomCollapsed, setBottomCollapsed] = useState(false)
-
-  return (
-    <WorkbenchBodyTemplate
-      theme={theme}
-      className="layout-workbench-sql-editor"
-      topBar={
-        <PageTopBar
-          left="Data / Query editor"
-          right={
-            <div className="flex items-center gap-1.5">
-              <Button variant="outline" size="sm"><SlidersHorizontal />Explain</Button>
-              <Button size="sm"><Play />Run</Button>
-            </div>
-          }
-        />
-      }
-      headerRight={
-        <>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setLeftCollapsed((value) => !value)}
-          >
-            <Database />Schema
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setBottomCollapsed((value) => !value)}
-          >
-            Results
-          </Button>
-        </>
-      }
-      title="SQL editor"
-      status={<Badge variant="default">Connected</Badge>}
-      description="Warehouse analytics"
-      leftPane={<SchemaBrowser />}
-      mainPane={<SqlEditor />}
-      bottomPane={<ResultsPane />}
-      leftPaneCollapsed={leftCollapsed}
-      bottomPaneCollapsed={bottomCollapsed}
-      leftPaneWidth={280}
-      bottomPaneHeight={230}
-    />
   )
 }
 

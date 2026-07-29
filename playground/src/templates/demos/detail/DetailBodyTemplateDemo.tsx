@@ -1,9 +1,7 @@
-import React from 'react'
 import {
   Badge,
   Button,
   DetailBodyTemplate,
-  PageTopBar,
   Separator,
 } from '@loykin/designkit'
 import {
@@ -75,7 +73,7 @@ function ProductGallery() {
   )
 }
 
-function ProductAsideSlot() {
+export function ProductAsideSlot() {
   return (
     <div className="space-y-4 rounded-(--radius) border bg-card p-4 text-card-foreground shadow-sm">
       <div className="flex items-start justify-between gap-3">
@@ -188,7 +186,7 @@ function Summary() {
   )
 }
 
-function ProductLeadSlot({ variant }: { variant: 'media' | 'full' }) {
+export function ProductLeadSlot({ variant }: { variant: 'media' | 'full' }) {
   return (
     <div
       className={[
@@ -207,7 +205,7 @@ function ProductLeadSlot({ variant }: { variant: 'media' | 'full' }) {
   )
 }
 
-function RecordLeadSlot() {
+export function RecordLeadSlot() {
   return (
     <div className="space-y-(--designkit-panel-gap)">
       <DetailBodyTemplate.Section title="Order record" surface="card">
@@ -241,7 +239,7 @@ function RecordLeadSlot() {
   )
 }
 
-function RecordAsideSlot() {
+export function RecordAsideSlot() {
   return (
     <div className="space-y-4 rounded-(--radius) border bg-card p-4 text-card-foreground shadow-sm">
       <div>
@@ -285,7 +283,7 @@ function RecordAsideSlot() {
   )
 }
 
-function ProductContentTabs() {
+export function ProductContentTabs() {
   return [
     <DetailBodyTemplate.Tab key="overview" id="overview" label="Overview">
         <div className="grid gap-(--designkit-panel-gap) xl:grid-cols-[minmax(0,1fr)_20rem]">
@@ -342,7 +340,7 @@ function ProductContentTabs() {
   ]
 }
 
-function RecordContentTabs() {
+export function RecordContentTabs() {
   return [
     <DetailBodyTemplate.Tab key="timeline" id="timeline" label="Timeline">
         <DetailBodyTemplate.Section title="Activity timeline" surface="card">
@@ -387,44 +385,6 @@ function RecordContentTabs() {
         </DetailBodyTemplate.Section>
     </DetailBodyTemplate.Tab>,
   ]
-}
-
-export function DetailBodyTemplateDemo({
-  theme,
-  detailVariant = 'media',
-}: {
-  theme?: React.CSSProperties
-  detailVariant?: string
-}) {
-  const variant = detailVariant === 'full' ? 'full' : detailVariant === 'record' ? 'record' : 'media'
-  const isRecord = variant === 'record'
-  const productVariant = variant === 'full' ? 'full' : 'media'
-
-  return (
-    <DetailBodyTemplate
-      variant={variant}
-      theme={theme}
-      topBar={<PageTopBar left={isRecord ? 'Operations / Orders / ORD-2026-0527-1842' : 'Store / Sneakers / Air Max 270'} />}
-      header={
-        <DetailBodyTemplate.Header
-          eyebrow={isRecord ? 'Order · Operations' : 'Nike · Lifestyle'}
-          title={isRecord ? 'ORD-2026-0527-1842' : 'Air Max 270'}
-          description={isRecord ? 'Single order record with payment, fulfillment, activity, and operational controls.' : 'Everyday sneaker with visible Air cushioning and a breathable mesh upper.'}
-          status={<Badge>{isRecord ? 'Needs review' : 'In stock'}</Badge>}
-          actions={
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">{isRecord ? 'Add note' : 'Share'}</Button>
-              <Button size="sm">{isRecord ? 'Resolve' : 'Publish'}</Button>
-            </div>
-          }
-        />
-      }
-      lead={isRecord ? <RecordLeadSlot /> : <ProductLeadSlot variant={productVariant} />}
-      aside={isRecord ? <RecordAsideSlot /> : <ProductAsideSlot />}
-    >
-      {isRecord ? RecordContentTabs() : ProductContentTabs()}
-    </DetailBodyTemplate>
-  )
 }
 
 export function buildDetailTemplateCode({ definition, themeProp }: TemplateCodeContext) {
