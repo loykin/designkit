@@ -17,4 +17,12 @@ describe('DataBodyTemplate', () => {
 
     expect(markup).toContain('divide-y divide-border')
   })
+
+  it('fails clearly when a compound component is rendered without its template root', () => {
+    expect(() =>
+      renderToStaticMarkup(
+        <DataBodyTemplate.Group title="Invalid usage">Content</DataBodyTemplate.Group>,
+      ),
+    ).toThrow('<DataBodyTemplate.Group> must be rendered inside <DataBodyTemplate>')
+  })
 })

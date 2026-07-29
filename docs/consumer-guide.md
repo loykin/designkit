@@ -205,6 +205,47 @@ coordination, and density tokens will not apply. Use one of the body templates
 above and reach for `DataPage` only when building a new reusable template that
 is not covered by any existing one.
 
+## DataBodyTemplate Compound Contract
+
+`DataBodyTemplate` is the required page-level root for all of its compound
+members. Never render `DataBodyTemplate.Group`, `Tab`, `Section`, `Body`, `Row`,
+`Field`, or `Summary` as a standalone component.
+
+```tsx
+// Correct
+<DataBodyTemplate title="Settings">
+  <DataBodyTemplate.Group title="Profile">
+    <DataBodyTemplate.Row label="Name">
+      <Input />
+    </DataBodyTemplate.Row>
+  </DataBodyTemplate.Group>
+</DataBodyTemplate>
+```
+
+```tsx
+// Incorrect: throws at render time because the required root is missing
+<DataBodyTemplate.Group title="Profile">
+  <DataBodyTemplate.Row label="Name">
+    <Input />
+  </DataBodyTemplate.Row>
+</DataBodyTemplate.Group>
+```
+
+Choose exactly one primary child mode for each root:
+
+- Direct content or `Group` children for a plain page.
+- `Tab` children for tabbed content.
+- `Section` children for left-navigation settings.
+- One `Body` child for a single full-height pane.
+
+Do not mix `Tab`, `Section`, and `Body` siblings in one root. Do not nest another
+page-level template inside any of these slots. `DataBodyTemplate.Group` defaults
+to `layout="stacked"`, so omit the prop unless another layout is needed.
+
+These rules should be copied into a consuming repository's `AGENTS.md`. Package
+JSDoc and runtime validation provide additional guidance, but an agent working
+in an application may not inspect dependency source before generating code.
+
 ## UI Primitive Contract
 
 DesignKit exports shadcn-compatible UI primitives such as `Button`, `Card`,

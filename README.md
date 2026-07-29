@@ -2,8 +2,9 @@
 
 React page template library. Provides ready-to-use page layouts for admin and dashboard applications.
 
-For AI-assisted implementation in consuming applications, see the
-[DesignKit Consumer Agent Guide](docs/consumer-guide.md).
+For AI-assisted implementation in consuming applications, follow the published
+compound-component contract below. The same rules are included in the package's
+TypeScript declarations so editors and coding agents can discover them.
 
 ## Installation
 
@@ -58,6 +59,12 @@ export function UsersPage() {
 ### DataBodyTemplate
 
 General-purpose page shell. Accepts `.Body`, `.Tab`, and `.Section` child slots which determine the layout mode automatically.
+
+> **Compound-component contract:** `DataBodyTemplate` is the required root.
+> Never render `.Group`, `.Tab`, `.Section`, `.Body`, `.Summary`, `.Row`, or
+> `.Field` without it. Choose one primary mode—direct content/groups, `Tab`,
+> `Section`, or `Body`—and do not mix those modes in one root. Invalid standalone
+> usage throws at render time.
 
 ```tsx
 <DataBodyTemplate
@@ -142,6 +149,8 @@ Groups content within a tab or section. The `layout` prop controls the visual st
 | `inline` | Table-style rows (detail view) |
 | `split` | Left list + right detail |
 
+`layout` defaults to `stacked`; omit it when the stacked arrangement is intended.
+
 | Prop | Type | Description |
 |---|---|---|
 | `layout` | `GroupLayout` | Visual structure — see table above |
@@ -153,16 +162,18 @@ Groups content within a tab or section. The `layout` prop controls the visual st
 | `className` | `string` | Class applied to the group root element |
 
 ```tsx
-<DataBodyTemplate.Tab id="settings" label="Settings">
-  <DataBodyTemplate.Group layout="horizontal" title="Identity" description="Basic information">
-    <DataBodyTemplate.Row label="Name" required>
-      <Input defaultValue="Sarah Kim" />
-    </DataBodyTemplate.Row>
-    <DataBodyTemplate.Row label="Email">
-      <Input type="email" defaultValue="sarah@acme.com" />
-    </DataBodyTemplate.Row>
-  </DataBodyTemplate.Group>
-</DataBodyTemplate.Tab>
+<DataBodyTemplate title="Settings">
+  <DataBodyTemplate.Tab id="settings" label="Settings">
+    <DataBodyTemplate.Group layout="horizontal" title="Identity" description="Basic information">
+      <DataBodyTemplate.Row label="Name" required>
+        <Input defaultValue="Sarah Kim" />
+      </DataBodyTemplate.Row>
+      <DataBodyTemplate.Row label="Email">
+        <Input type="email" defaultValue="sarah@acme.com" />
+      </DataBodyTemplate.Row>
+    </DataBodyTemplate.Group>
+  </DataBodyTemplate.Tab>
+</DataBodyTemplate>
 ```
 
 #### DataBodyTemplate.Field
@@ -170,10 +181,12 @@ Groups content within a tab or section. The `layout` prop controls the visual st
 Read-only key-value display.
 
 ```tsx
-<DataBodyTemplate.Group layout="inline" title="Identity">
-  <DataBodyTemplate.Field label="Email">sarah@acme.com</DataBodyTemplate.Field>
-  <DataBodyTemplate.Field label="Role"><Badge>Admin</Badge></DataBodyTemplate.Field>
-</DataBodyTemplate.Group>
+<DataBodyTemplate title="Profile">
+  <DataBodyTemplate.Group layout="inline" title="Identity">
+    <DataBodyTemplate.Field label="Email">sarah@acme.com</DataBodyTemplate.Field>
+    <DataBodyTemplate.Field label="Role"><Badge>Admin</Badge></DataBodyTemplate.Field>
+  </DataBodyTemplate.Group>
+</DataBodyTemplate>
 ```
 
 #### DataBodyTemplate.Summary

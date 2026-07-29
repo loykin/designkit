@@ -16,7 +16,7 @@ import { Code2 } from 'lucide-react'
 import type { DensityId, TemplateOverride } from '@loykin/designkit'
 import type { PlaygroundTemplateId } from '~/templates'
 import { CodeBlock } from './CodeBlock'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 function radiusVarLines(r: number): string[] {
   return [
@@ -212,6 +212,11 @@ function CodeExportContent({ activeTemplate }: { activeTemplate: PlaygroundTempl
     () => buildComponentCode(activeTemplate, ov, g.primaryHue),
     [activeTemplate, g.primaryHue, ov],
   )
+  const previewCode = useMemo(
+    () => TEMPLATES.find((item) => item.id === activeTemplate)?.sourceCode ?? '',
+    [activeTemplate],
+  )
+  const defaultTab = previewCode ? 'preview' : componentCode ? 'starter' : 'css'
 
   return (
     <SheetContent className="data-[side=right]:w-[min(90vw,760px)] data-[side=right]:sm:max-w-190 flex flex-col gap-0 p-0">
@@ -223,10 +228,11 @@ function CodeExportContent({ activeTemplate }: { activeTemplate: PlaygroundTempl
       </SheetHeader>
 
       <div className="flex-1 overflow-auto px-6 py-4">
-        <Tabs defaultValue="css">
+        <Tabs key={activeTemplate} defaultValue={defaultTab}>
           <TabsList className="mb-4">
             <TabsTrigger value="css">CSS Variables</TabsTrigger>
-            <TabsTrigger value="component">Component</TabsTrigger>
+            {previewCode && <TabsTrigger value="preview">Preview source</TabsTrigger>}
+            {componentCode && <TabsTrigger value="starter">Starter</TabsTrigger>}
           </TabsList>
 
           <TabsContent value="css" className="space-y-3 mt-0">
@@ -238,48 +244,60 @@ function CodeExportContent({ activeTemplate }: { activeTemplate: PlaygroundTempl
             <CodeBlock code={cssCode} language="css" />
           </TabsContent>
 
-          <TabsContent value="component" className="space-y-3 mt-0">
-            <p className="text-xs text-muted-foreground">
-              Import the template and pass the <code className="bg-muted px-1 rounded">theme</code>{' '}
-              prop with your CSS variable overrides.
-            </p>
-            <CodeBlock code={componentCode} language="tsx" />
-            <div className="rounded-md border p-3 bg-muted/30 space-y-1">
-              <p className="text-xs font-medium">Current settings</p>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-muted-foreground font-mono mt-1">
-                <span>Global radius</span>
-                <span>{g.radius}rem</span>
-                {ov.radius !== undefined && (
-                  <>
-                    <span>{activeTemplate} radius</span>
-                    <span>{ov.radius}rem</span>
-                  </>
-                )}
-                {ov.density !== undefined && (
-                  <>
-                    <span>{activeTemplate} density</span>
-                    <span>{ov.density}</span>
-                  </>
-                )}
-                {ov.panelGap !== undefined && (
-                  <>
-                    <span>{activeTemplate} gap</span>
-                    <span>{ov.panelGap}</span>
-                  </>
-                )}
-                <span>Hue</span>
-                <span>{g.primaryHue}°</span>
-                <span>Chroma</span>
-                <span>{g.primaryChroma.toFixed(3)}</span>
-                <span>Font scale</span>
-                <span>{g.fontScale.toFixed(2)}</span>
-                <span>Line height</span>
-                <span>{g.lineHeight.toFixed(2)}</span>
-                <span>Density</span>
-                <span>{g.density}</span>
+          {previewCode && (
+            <TabsContent value="preview" className="space-y-3 mt-0">
+              <p className="text-xs text-muted-foreground">
+                This is the exact playground source used to render the selected preview, including
+                its sample data and supporting components.
+              </p>
+              <CodeBlock code={previewCode} language="tsx" />
+            </TabsContent>
+          )}
+
+          {componentCode && (
+            <TabsContent value="starter" className="space-y-3 mt-0">
+              <p className="text-xs text-muted-foreground">
+                A smaller consumer starting point. Use Preview source when you need to reproduce the
+                screen exactly.
+              </p>
+              <CodeBlock code={componentCode} language="tsx" />
+              <div className="rounded-md border p-3 bg-muted/30 space-y-1">
+                <p className="text-xs font-medium">Current settings</p>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-muted-foreground font-mono mt-1">
+                  <span>Global radius</span>
+                  <span>{g.radius}rem</span>
+                  {ov.radius !== undefined && (
+                    <>
+                      <span>{activeTemplate} radius</span>
+                      <span>{ov.radius}rem</span>
+                    </>
+                  )}
+                  {ov.density !== undefined && (
+                    <>
+                      <span>{activeTemplate} density</span>
+                      <span>{ov.density}</span>
+                    </>
+                  )}
+                  {ov.panelGap !== undefined && (
+                    <>
+                      <span>{activeTemplate} gap</span>
+                      <span>{ov.panelGap}</span>
+                    </>
+                  )}
+                  <span>Hue</span>
+                  <span>{g.primaryHue}°</span>
+                  <span>Chroma</span>
+                  <span>{g.primaryChroma.toFixed(3)}</span>
+                  <span>Font scale</span>
+                  <span>{g.fontScale.toFixed(2)}</span>
+                  <span>Line height</span>
+                  <span>{g.lineHeight.toFixed(2)}</span>
+                  <span>Density</span>
+                  <span>{g.density}</span>
+                </div>
               </div>
-            </div>
-          </TabsContent>
+            </TabsContent>
+          )}
         </Tabs>
       </div>
     </SheetContent>
@@ -287,15 +305,13 @@ function CodeExportContent({ activeTemplate }: { activeTemplate: PlaygroundTempl
 }
 
 export function CodeExport({ activeTemplate }: { activeTemplate: PlaygroundTemplateId }) {
-  const [open, setOpen] = useState(false)
-
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet>
       <SheetTrigger render={<Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs" />}>
         <Code2 className="h-3.5 w-3.5" />
         Code
       </SheetTrigger>
-      {open && <CodeExportContent activeTemplate={activeTemplate} />}
+      <CodeExportContent activeTemplate={activeTemplate} />
     </Sheet>
   )
 }

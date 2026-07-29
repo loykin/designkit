@@ -17,6 +17,8 @@ import {
 } from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
 import type { TemplateCodeBuilder } from './code'
+import typographyPreviewSource from '../../../src/components/templates/typography/TypographyBodyTemplate.tsx?raw'
+import colorsPreviewSource from '../../../src/components/templates/typography/ColorsBodyTemplate.tsx?raw'
 
 export { TEMPLATE_DEFINITIONS, createTemplateOverrides, getTemplateDefinition } from './definitions'
 export type {
@@ -34,6 +36,7 @@ export interface TemplateConfig {
   id: PlaygroundTemplateId
   label: string
   component: ComponentType<{ theme?: React.CSSProperties }>
+  sourceCode?: string
   buildCode?: TemplateCodeBuilder
   group?: string
   description?: string
@@ -234,11 +237,71 @@ const codeBuilders: Partial<Record<PlaygroundTemplateId, TemplateCodeBuilder>> =
   'article-detail': buildArticleDetailCode,
 }
 
+const previewSourceModules = import.meta.glob('./demos/**/*.tsx', {
+  eager: true,
+  query: '?raw',
+  import: 'default',
+}) as Record<string, string>
+
+function toPreviewSource(source: string): string {
+  const builderStart = source.search(/\nexport function build[A-Z]\w*Code\b/)
+  const previewOnly = builderStart === -1 ? source : source.slice(0, builderStart)
+
+  return previewOnly
+    .replace(/^import type \{ TemplateCodeContext \} from ['"][^'"]+['"]\r?\n/m, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trimEnd()
+}
+
+const previewSourcePathById: Partial<Record<PlaygroundTemplateId, string>> = {
+  table: './demos/table/DataGridTemplateDemo.tsx',
+  'table-infinity': './demos/table/DataGridTemplateDemo.tsx',
+  'table-drag': './demos/table/DataGridTemplateDemo.tsx',
+  'table-card': './demos/table/DataGridTemplateDemo.tsx',
+  'table-card-list': './demos/table/DataGridTemplateDemo.tsx',
+  databody: './demos/databody/DataBodyTemplateDemo.tsx',
+  'databody-detail': './demos/databody/DetailBodyTemplateDemo.tsx',
+  'databody-split': './demos/databody/SplitBodyTemplateDemo.tsx',
+  'databody-kubernetes': './demos/databody/KubernetesMonitoringDemo.tsx',
+  tabbed: './demos/tabbed/TabbedBodyTemplateDemo.tsx',
+  form: './demos/form/FormBodyTemplateDemo.tsx',
+  'form-stacked': './demos/form/FormStackedBodyTemplateDemo.tsx',
+  'form-wizard': './demos/form/FormWizardBodyTemplateDemo.tsx',
+  'form-inline': './demos/form/FormInlineBodyTemplateDemo.tsx',
+  sectioned: './demos/sectioned/SectionedBodyTemplateDemo.tsx',
+  login: './demos/auth/LoginBodyTemplateDemo.tsx',
+  'login-forgot': './demos/auth/LoginForgotDemo.tsx',
+  'login-reset': './demos/auth/LoginResetDemo.tsx',
+  'login-otp': './demos/auth/LoginOtpDemo.tsx',
+  dashboard: './demos/dashboard/DashboardBodyTemplateDemo.tsx',
+  'workbench-panel-editor': './demos/workbench/WorkbenchBodyTemplateDemos.tsx',
+  'workbench-sql-editor': './demos/workbench/WorkbenchBodyTemplateDemos.tsx',
+  'workbench-agent-chat': './demos/workbench/AgentChatDemo.tsx',
+  browse: './demos/browse/BrowseBodyTemplateDemo.tsx',
+  'list-detail': './demos/listdetail/ListDetailBodyTemplateDemo.tsx',
+  panel: './demos/panel/PanelTemplateDemo.tsx',
+  detail: './demos/detail/DetailBodyTemplateDemo.tsx',
+  'detail-record': './demos/detail/DetailBodyTemplateDemo.tsx',
+  'detail-full': './demos/detail/DetailBodyTemplateDemo.tsx',
+  'board-table': './demos/content/BoardTableDemo.tsx',
+  'blog-feed': './demos/content/BlogFeedDemo.tsx',
+  'thread-detail': './demos/content/ThreadDetailDemo.tsx',
+  'article-detail': './demos/content/ArticleDetailDemo.tsx',
+}
+
+const libraryPreviewSources: Partial<Record<PlaygroundTemplateId, string>> = {
+  typography: typographyPreviewSource,
+  colors: colorsPreviewSource,
+}
+
 export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
   id: definition.id,
   label: definition.label,
   group: definition.group,
   component: previewComponents[definition.id],
+  sourceCode:
+    toPreviewSource(previewSourceModules[previewSourcePathById[definition.id] ?? ''] ?? '') ||
+    libraryPreviewSources[definition.id],
   buildCode: codeBuilders[definition.id],
 }))
 

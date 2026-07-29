@@ -189,9 +189,15 @@
 }
 
 .dk-code-block {
+  max-height: calc(100vh - 12rem);
+  overflow: auto;
   background: var(--muted);
   color: var(--foreground);
   font-size: 12px;
+}
+
+.dk-code-block .cm-editor {
+  background: transparent;
 }
 
 .dk-code-block .cm-scroller {
@@ -218,6 +224,7 @@
   background: transparent;
 }
 
-.dk-code-block.cm-focused {
+.dk-code-block.cm-focused,
+.dk-code-block .cm-editor.cm-focused {
   outline: none;
 }

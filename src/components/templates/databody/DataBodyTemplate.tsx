@@ -3,8 +3,25 @@ import { DataPage } from '@/components/templates/datapage/DataPage'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 
+const DataBodyTemplateContext = React.createContext(false)
+
+function useDataBodyTemplateParent(component: string) {
+  if (!React.useContext(DataBodyTemplateContext)) {
+    throw new Error(
+      `[DesignKit] <DataBodyTemplate.${component}> must be rendered inside <DataBodyTemplate>. ` +
+        `Wrap it like: <DataBodyTemplate><DataBodyTemplate.${component}>...</DataBodyTemplate.${component}></DataBodyTemplate>.`,
+    )
+  }
+}
+
 // ─── Tab ──────────────────────────────────────────────────────────────────────
 
+/**
+ * Defines one tab inside `DataBodyTemplate`.
+ *
+ * Must be rendered beneath a `DataBodyTemplate` root. Do not mix `Tab`, `Section`,
+ * and `Body` as sibling layout modes in the same root.
+ */
 export interface DataBodyTabProps {
   id: string
   label: React.ReactNode
@@ -14,6 +31,7 @@ export interface DataBodyTabProps {
 }
 
 function DataBodyTab(_props: DataBodyTabProps) {
+  useDataBodyTemplateParent('Tab')
   return null
 }
 
@@ -23,12 +41,19 @@ function isDataBodyTab(node: React.ReactNode): node is React.ReactElement<DataBo
 
 // ─── Body (single pane) ───────────────────────────────────────────────────────
 
+/**
+ * Defines the single-pane body of `DataBodyTemplate`.
+ *
+ * Must be rendered beneath a `DataBodyTemplate` root. Use this instead of `Tab`
+ * or `Section` when the page has one full-height content pane.
+ */
 export interface DataBodyBodyProps {
   children?: React.ReactNode
   className?: string
 }
 
 function DataBodyBody(_props: DataBodyBodyProps) {
+  useDataBodyTemplateParent('Body')
   return null
 }
 
@@ -38,6 +63,12 @@ function isDataBodyBody(node: React.ReactNode): node is React.ReactElement<DataB
 
 // ─── Section ──────────────────────────────────────────────────────────────────
 
+/**
+ * Defines one section in the left-navigation layout of `DataBodyTemplate`.
+ *
+ * Must be rendered beneath a `DataBodyTemplate` root. Do not combine sections
+ * with `Tab` or `Body` siblings in the same root.
+ */
 export interface DataBodySectionProps {
   id: string
   label: React.ReactNode
@@ -47,6 +78,7 @@ export interface DataBodySectionProps {
 }
 
 function DataBodySection(_props: DataBodySectionProps) {
+  useDataBodyTemplateParent('Section')
   return null
 }
 
@@ -60,11 +92,13 @@ function isDataBodySection(
 
 // ─── Summary ──────────────────────────────────────────────────────────────────
 
+/** Adds summary content beneath the header of a `DataBodyTemplate` root. */
 export interface DataBodySummaryProps {
   children?: React.ReactNode
 }
 
 function DataBodySummary(_props: DataBodySummaryProps) {
+  useDataBodyTemplateParent('Summary')
   return null
 }
 
@@ -88,8 +122,17 @@ const layoutDefaultVariant: Record<GroupLayout, GroupVariant> = {
   split: 'bordered',
 }
 
+/**
+ * Groups related content inside `DataBodyTemplate`.
+ *
+ * `DataBodyTemplate.Group` is a compound child and must never be rendered as a
+ * standalone page component. Wrap it in `DataBodyTemplate`, optionally inside a
+ * `Tab`, `Section`, or `Body`.
+ */
 export interface DataBodyGroupProps {
+  /** Visual arrangement of the group. @defaultValue `'stacked'` */
   layout?: GroupLayout
+  /** Surface treatment. Defaults depend on `layout`. */
   variant?: GroupVariant
   title?: React.ReactNode
   description?: React.ReactNode
@@ -100,6 +143,7 @@ export interface DataBodyGroupProps {
 }
 
 function DataBodyGroup(props: DataBodyGroupProps) {
+  useDataBodyTemplateParent('Group')
   return renderGroupProps(props)
 }
 
@@ -263,6 +307,7 @@ function renderGroupProps(props: DataBodyGroupProps) {
 
 // ─── Field (read-only display) ────────────────────────────────────────────────
 
+/** Read-only label/value content for a `DataBodyTemplate.Group`. */
 export interface DataBodyFieldProps {
   label: string
   description?: string
@@ -270,6 +315,7 @@ export interface DataBodyFieldProps {
 }
 
 function DataBodyField({ label, description, children }: DataBodyFieldProps) {
+  useDataBodyTemplateParent('Field')
   return (
     <div
       className="flex flex-col gap-y-1 px-4 py-3 sm:grid sm:items-start sm:gap-x-4 sm:gap-y-0"
@@ -286,6 +332,7 @@ function DataBodyField({ label, description, children }: DataBodyFieldProps) {
 
 // ─── Row ──────────────────────────────────────────────────────────────────────
 
+/** Form label/control content for a `DataBodyTemplate.Group`. */
 export interface DataBodyRowProps {
   label: string
   description?: string
@@ -294,6 +341,7 @@ export interface DataBodyRowProps {
 }
 
 function DataBodyRow({ label, description, required, children }: DataBodyRowProps) {
+  useDataBodyTemplateParent('Row')
   return (
     <div
       className="flex flex-col gap-y-1.5 px-4 py-3 sm:grid sm:items-start sm:gap-x-4 sm:gap-y-0"
@@ -313,6 +361,12 @@ function DataBodyRow({ label, description, required, children }: DataBodyRowProp
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
+/**
+ * Props for the required root of the `DataBodyTemplate` compound component.
+ *
+ * Choose one primary child mode: direct content/groups, `Tab`, `Section`, or
+ * `Body`. Do not combine those layout modes in the same root.
+ */
 export interface DataBodyTemplateProps {
   theme?: React.CSSProperties
   className?: string
@@ -335,7 +389,7 @@ function TopBarSlot({ topBar }: { topBar?: React.ReactNode }) {
   return <div className="shrink-0">{topBar}</div>
 }
 
-function Root({
+function RootContent({
   theme,
   className,
   topBar,
@@ -510,6 +564,32 @@ function Root({
   )
 }
 
+function Root(props: DataBodyTemplateProps) {
+  return (
+    <DataBodyTemplateContext.Provider value>
+      <RootContent {...props} />
+    </DataBodyTemplateContext.Provider>
+  )
+}
+
+/**
+ * Page-level template for data, list, tab, form, and settings experiences.
+ *
+ * Compound members such as `DataBodyTemplate.Group`, `Tab`, `Section`, `Body`,
+ * `Row`, and `Field` must be rendered beneath this root. Rendering a compound
+ * member without the root throws a descriptive runtime error.
+ *
+ * @example
+ * ```tsx
+ * <DataBodyTemplate title="Settings">
+ *   <DataBodyTemplate.Group title="Profile">
+ *     <DataBodyTemplate.Row label="Name">
+ *       <Input />
+ *     </DataBodyTemplate.Row>
+ *   </DataBodyTemplate.Group>
+ * </DataBodyTemplate>
+ * ```
+ */
 export const DataBodyTemplate = Object.assign(Root, {
   Body: DataBodyBody,
   Tab: DataBodyTab,

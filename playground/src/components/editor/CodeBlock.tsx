@@ -21,7 +21,12 @@ function CopyButton({ text }: { text: string }) {
   }
 
   return (
-    <Button variant="ghost" size="sm" onClick={copy} className="h-7 gap-1.5 text-xs text-muted-foreground">
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={copy}
+      className="h-7 gap-1.5 text-xs text-muted-foreground"
+    >
       {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5" />}
       {copied ? 'Copied' : 'Copy'}
     </Button>
@@ -30,9 +35,7 @@ function CopyButton({ text }: { text: string }) {
 
 export function CodeBlock({ code, language }: CodeBlockProps) {
   const extensions = useMemo(
-    () => [
-      language === 'css' ? css() : javascript({ jsx: true, typescript: true }),
-    ],
+    () => [language === 'css' ? css() : javascript({ jsx: true, typescript: true })],
     [language],
   )
 

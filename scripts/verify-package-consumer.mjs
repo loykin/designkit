@@ -132,6 +132,23 @@ try {
 
   run('pnpm', ['install', '--ignore-scripts'], { cwd: appDir })
 
+  const installedPackageRoot = join(appDir, 'node_modules/@loykin/designkit')
+  const publishedTypes = readFileSync(join(installedPackageRoot, 'dist/index.d.ts'), 'utf8')
+  const publishedReadme = readFileSync(join(installedPackageRoot, 'README.md'), 'utf8')
+  const compoundContract =
+    'Compound members such as `DataBodyTemplate.Group`, `Tab`, `Section`, `Body`'
+
+  if (!publishedTypes.includes(compoundContract)) {
+    throw new Error('Published type declarations do not include the DataBodyTemplate contract')
+  }
+  if (
+    !publishedReadme.includes('`DataBodyTemplate` is the required root') ||
+    !publishedReadme.includes('Invalid standalone') ||
+    !publishedReadme.includes('usage throws at render time')
+  ) {
+    throw new Error('Published README does not include the DataBodyTemplate contract')
+  }
+
   const duplicateCheck = run(
     'node',
     [
