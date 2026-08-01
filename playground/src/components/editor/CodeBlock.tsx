@@ -5,7 +5,7 @@ import { javascript } from '@codemirror/lang-javascript'
 import { Button } from '@loykin/designkit'
 import { Check, Copy } from 'lucide-react'
 
-export type CodeBlockLanguage = 'css' | 'tsx'
+export type CodeBlockLanguage = 'css' | 'tsx' | 'text'
 
 export interface CodeBlockProps {
   code: string
@@ -35,7 +35,10 @@ function CopyButton({ text }: { text: string }) {
 
 export function CodeBlock({ code, language }: CodeBlockProps) {
   const extensions = useMemo(
-    () => [language === 'css' ? css() : javascript({ jsx: true, typescript: true })],
+    () =>
+      language === 'text'
+        ? []
+        : [language === 'css' ? css() : javascript({ jsx: true, typescript: true })],
     [language],
   )
 

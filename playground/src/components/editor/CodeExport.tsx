@@ -216,13 +216,17 @@ function CodeExportContent({ activeTemplate }: { activeTemplate: PlaygroundTempl
     () => TEMPLATES.find((item) => item.id === activeTemplate)?.sourceCode ?? '',
     [activeTemplate],
   )
-  const defaultTab = previewCode ? 'preview' : componentCode ? 'starter' : 'css'
+  const aiGuide = useMemo(
+    () => TEMPLATES.find((item) => item.id === activeTemplate)?.aiGuide ?? '',
+    [activeTemplate],
+  )
+  const defaultTab = aiGuide ? 'guide' : previewCode ? 'preview' : componentCode ? 'starter' : 'css'
 
   return (
     <SheetContent className="data-[side=right]:w-[min(90vw,760px)] data-[side=right]:sm:max-w-190 flex flex-col gap-0 p-0">
       <SheetHeader className="px-6 py-4 border-b shrink-0">
         <SheetTitle className="text-sm">
-          Export —{' '}
+          {aiGuide ? 'Guide & Export' : 'Export'} —{' '}
           <span className="capitalize text-muted-foreground font-normal">{activeTemplate}</span>
         </SheetTitle>
       </SheetHeader>
@@ -230,10 +234,21 @@ function CodeExportContent({ activeTemplate }: { activeTemplate: PlaygroundTempl
       <div className="flex-1 overflow-auto px-6 py-4">
         <Tabs key={activeTemplate} defaultValue={defaultTab}>
           <TabsList className="mb-4">
+            {aiGuide && <TabsTrigger value="guide">AI Guide</TabsTrigger>}
             <TabsTrigger value="css">CSS Variables</TabsTrigger>
             {previewCode && <TabsTrigger value="preview">Preview source</TabsTrigger>}
             {componentCode && <TabsTrigger value="starter">Starter</TabsTrigger>}
           </TabsList>
+
+          {aiGuide && (
+            <TabsContent value="guide" className="space-y-3 mt-0">
+              <p className="text-xs text-muted-foreground">
+                Copy this contract into an AI task before asking it to implement or revise a
+                resource-management page.
+              </p>
+              <CodeBlock code={aiGuide} language="text" />
+            </TabsContent>
+          )}
 
           <TabsContent value="css" className="space-y-3 mt-0">
             <p className="text-xs text-muted-foreground">
@@ -305,11 +320,13 @@ function CodeExportContent({ activeTemplate }: { activeTemplate: PlaygroundTempl
 }
 
 export function CodeExport({ activeTemplate }: { activeTemplate: PlaygroundTemplateId }) {
+  const hasAiGuide = Boolean(TEMPLATES.find((item) => item.id === activeTemplate)?.aiGuide)
+
   return (
     <Sheet>
       <SheetTrigger render={<Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs" />}>
         <Code2 className="h-3.5 w-3.5" />
-        Code
+        {hasAiGuide ? 'Guide' : 'Code'}
       </SheetTrigger>
       <CodeExportContent activeTemplate={activeTemplate} />
     </Sheet>

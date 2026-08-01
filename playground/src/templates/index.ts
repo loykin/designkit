@@ -16,9 +16,11 @@ import {
   Boxes,
 } from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
+import type { PlaygroundTemplateId } from './definitions'
 import type { TemplateCodeBuilder } from './code'
 import typographyPreviewSource from '../../../src/components/templates/typography/TypographyBodyTemplate.tsx?raw'
 import colorsPreviewSource from '../../../src/components/templates/typography/ColorsBodyTemplate.tsx?raw'
+import dataBodyResourceAiGuide from './demos/databody/DataBodyResourceGuide.md?raw'
 
 export { TEMPLATE_DEFINITIONS, createTemplateOverrides, getTemplateDefinition } from './definitions'
 export type {
@@ -37,6 +39,7 @@ export interface TemplateConfig {
   label: string
   component: ComponentType<{ theme?: React.CSSProperties }>
   sourceCode?: string
+  aiGuide?: string
   buildCode?: TemplateCodeBuilder
   group?: string
   description?: string
@@ -55,6 +58,10 @@ import {
   DataBodyTemplateDemo,
   buildDataBodyTemplateCode,
 } from './demos/databody/DataBodyTemplateDemo'
+import {
+  DataBodyResourceGuide,
+  buildDataBodyResourceGuideCode,
+} from './demos/databody/DataBodyResourceGuide'
 import {
   DetailBodyTemplateDemo,
   buildDetailBodyTemplateCode,
@@ -122,6 +129,7 @@ const previewComponents: Record<
   PlaygroundTemplateId,
   ComponentType<{ theme?: React.CSSProperties }>
 > = {
+  'databody-resource-guide': DataBodyResourceGuide,
   table: StandardDataGridDemo,
   'table-infinity': InfiniteDataGridDemo,
   'table-drag': DraggableDataGridDemo,
@@ -160,6 +168,7 @@ const previewComponents: Record<
 }
 
 const codeBuilders: Partial<Record<PlaygroundTemplateId, TemplateCodeBuilder>> = {
+  'databody-resource-guide': buildDataBodyResourceGuideCode,
   table: buildDataGridTemplateCode,
   'table-infinity': buildDataGridTemplateCode,
   'table-drag': buildDataGridTemplateCode,
@@ -205,12 +214,13 @@ function toPreviewSource(source: string): string {
   const previewOnly = builderStart === -1 ? source : source.slice(0, builderStart)
 
   return previewOnly
-    .replace(/^import type \{ TemplateCodeContext \} from ['"][^'"]+['"]\r?\n/m, '')
+    .replace(/^import type \{ TemplateCodeContext } from ['"][^'"]+['"]\r?\n/m, '')
     .replace(/\n{3,}/g, '\n\n')
     .trimEnd()
 }
 
 const previewSourcePathById: Partial<Record<PlaygroundTemplateId, string>> = {
+  'databody-resource-guide': './demos/databody/DataBodyResourceGuide.tsx',
   table: './demos/table/StandardDataGridDemo.tsx',
   'table-infinity': './demos/table/InfiniteDataGridDemo.tsx',
   'table-drag': './demos/table/DraggableDataGridDemo.tsx',
@@ -260,9 +270,11 @@ export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition)
     toPreviewSource(previewSourceModules[previewSourcePathById[definition.id] ?? ''] ?? '') ||
     libraryPreviewSources[definition.id],
   buildCode: codeBuilders[definition.id],
+  aiGuide: definition.id === 'databody-resource-guide' ? dataBodyResourceAiGuide : undefined,
 }))
 
 const iconById: Partial<Record<PlaygroundTemplateId, ComponentType<{ className?: string }>>> = {
+  'databody-resource-guide': FileText,
   table: Table2,
   'table-card': Layers,
   databody: LayoutDashboard,

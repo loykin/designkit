@@ -152,6 +152,18 @@ const loginOptions: TemplateOptionSpec[] = [
 ]
 
 export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
+  // ── DataBodyTemplate guides ──────────────────────────────────────────────────
+  {
+    id: 'databody-resource-guide',
+    label: 'User Management',
+    navigationLabel: 'User Management',
+    group: 'Pages',
+    navigationGroup: 'DataBodyTemplate',
+    layoutClassName: 'layout-databody-resource-guide',
+    exportComponent: 'DataBodyTemplate',
+    exportKind: 'databody',
+    preset: {},
+  },
   // ── DataGridView (nested under DataBodyTemplate) ─────────────────────────────
   {
     id: 'table',

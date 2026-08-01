@@ -161,7 +161,7 @@ function TemplateRedirect() {
 export default function App() {
   return (
     <Routes>
-      <Route path="/:shell/:templateId" element={<AppView />} />
+      <Route path="/:shell/:templateId/*" element={<AppView />} />
       <Route path="/:templateId" element={<TemplateRedirect />} />
       <Route path="*" element={<Navigate to="/sidebar/table" replace />} />
     </Routes>

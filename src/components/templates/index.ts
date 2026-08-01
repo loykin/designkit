@@ -78,6 +78,7 @@ export type {
   DataBodyTabProps,
   DataBodySectionProps,
   DataBodySummaryProps,
+  DataBodyResourceProps,
   DataBodyGroupProps,
   DataBodyRowProps,
   DataBodyFieldProps,

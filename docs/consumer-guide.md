@@ -208,8 +208,8 @@ is not covered by any existing one.
 ## DataBodyTemplate Compound Contract
 
 `DataBodyTemplate` is the required page-level root for all of its compound
-members. Never render `DataBodyTemplate.Group`, `Tab`, `Section`, `Body`, `Row`,
-`Field`, or `Summary` as a standalone component.
+members. Never render `DataBodyTemplate.Resource`, `Group`, `Tab`, `Section`,
+`Body`, `Row`, `Field`, or `Summary` as a standalone component.
 
 ```tsx
 // Correct
@@ -245,6 +245,147 @@ to `layout="stacked"`, so omit the prop unless another layout is needed.
 These rules should be copied into a consuming repository's `AGENTS.md`. Package
 JSDoc and runtime validation provide additional guidance, but an agent working
 in an application may not inspect dependency source before generating code.
+
+## DataBodyTemplate Resource Management Guide
+
+Use one resource boundary for each independently queried table. The boundary
+owns that table's search, filters, resource actions, selection actions, async
+status, content, and pagination. `DataBodyTemplate.Resource` provides this
+layout without adding a data-fetching dependency to DesignKit.
+
+Keep the page hierarchy visible in the template's `topBar`. A list page may use
+`Data / Users`; its creation page should extend that hierarchy to
+`Data / Users / Add user`, with the Users crumb linking back to the list. Do not
+drop the breadcrumb when navigating between list, detail, create, or edit pages.
+
+```tsx
+function UsersTab() {
+  const [search, setSearch] = useState('')
+  const [role, setRole] = useState('all')
+  const [page, setPage] = useState(1)
+  const usersQuery = useQuery({
+    queryKey: ['users', search, role, page],
+    queryFn: () => listUsers({ search, role, page }),
+    placeholderData: keepPreviousData,
+  })
+
+  const hasData = usersQuery.data !== undefined
+
+  return (
+    <DataBodyTemplate.Resource
+      toolbarLeft={
+        <>
+          <UserSearch value={search} onChange={setSearch} />
+          <RoleFilter value={role} onChange={setRole} />
+        </>
+      }
+      toolbarRight={
+        <>
+          <Button>Add user</Button>
+        </>
+      }
+      refreshing={usersQuery.isFetching && hasData}
+      footer={<UserPagination page={page} onPageChange={setPage} />}
+    >
+      <DataGrid data={usersQuery.data?.items ?? []} isLoading={usersQuery.isPending && !hasData} />
+    </DataBodyTemplate.Resource>
+  )
+}
+```
+
+For a tabbed management page, split each tab into a component. Hooks must live
+inside the component for the resource they load; do not call every tab's query
+from the page parent and select the result with `activeTab` conditionals.
+
+```tsx
+<DataBodyTemplate title="Users">
+  <DataBodyTemplate.Tab id="users" label="Users">
+    <UsersTab />
+  </DataBodyTemplate.Tab>
+  <DataBodyTemplate.Tab id="sessions" label="Sessions">
+    <SessionsTab />
+  </DataBodyTemplate.Tab>
+  <DataBodyTemplate.Tab id="history" label="History">
+    <HistoryTab />
+  </DataBodyTemplate.Tab>
+</DataBodyTemplate>
+```
+
+### Action ownership
+
+Place an action according to the smallest scope it affects.
+
+| Scope                       | Location                                  | Examples                         |
+| --------------------------- | ----------------------------------------- | -------------------------------- |
+| Whole application           | App shell                                 | Theme, sign out                  |
+| Whole page across every tab | Page header `actions`                     | Page help, page-wide settings    |
+| Active tab's resource       | `Resource.toolbarRight`                   | Add user, export history         |
+| Selected rows               | `Resource.toolbarLeft` or a selection bar | Revoke selected, delete selected |
+| One row                     | Row action or detail Sheet                | Inspect, edit, suspend           |
+
+`Add user` belongs to the Users tab, not the page header. A tab-specific action
+must remain beneath its tab even when it is the visually primary action. It
+navigates to a dedicated creation page rather than opening a Sheet. Search and
+filters belong together on the resource toolbar's left. Export, view controls,
+and the primary create action belong on the right. Pagination belongs beneath
+the table and should use the table package's public pagination component when
+one is available.
+
+### List, detail, and form destinations
+
+```text
+User list page
+├─ Select row → concise read-only detail Sheet
+├─ Add user   → dedicated create page
+└─ Edit user  → dedicated edit page
+```
+
+- The resource list is a page.
+- Create and edit forms are dedicated pages by default. Forms need room for
+  validation, permissions, help text, responsive layouts, and future fields.
+- Compose those forms with the established stacked `DataBodyTemplate.Group`
+  pattern. Preserve its page padding and width instead of adding an arbitrary
+  centered max-width wrapper or a second action divider.
+- Use a Sheet for concise, mostly read-only detail when preserving the list
+  context is valuable.
+- Promote detail to a page when it is long, editable, multi-section,
+  permission-sensitive, or independently linkable.
+- Use a modal only for confirmation or narrowly scoped input. Do not use a
+  Sheet or modal as the default container for entity creation.
+
+GridKit renders its footer inside `gridkit-table-stack`, so outer resource gaps
+do not create space between the table frame and pagination. Use GridKit's public
+footer class slot when the pagination bar needs separation:
+
+```tsx
+<DataGrid
+  classNames={{ footer: 'pt-3' }}
+  footer={(table) => <DataGridPaginationBar table={table} totalCount={total} />}
+/>
+```
+
+### Async data states
+
+Do not equate TanStack Query's `isFetching` with an empty loading state.
+
+| State                                                   | Existing rows | Required presentation                                 |
+| ------------------------------------------------------- | ------------- | ----------------------------------------------------- |
+| Initial load (`isPending && data === undefined`)        | None          | Grid body skeleton                                    |
+| Background refresh (`isFetching && data !== undefined`) | Preserve      | Small refresh indicator                               |
+| Stale error (`isError && data !== undefined`)           | Preserve      | Non-destructive stale-data notice                     |
+| Initial error (`isError && data === undefined`)         | None          | Error and retry in the resource body                  |
+| Empty result                                            | None          | Grid empty state with toolbar and pagination retained |
+
+Never replace the entire `DataGrid`, resource toolbar, or pagination during a
+background refresh. Do not change a Grid `key` when refetching. Query mutations
+should invalidate the narrowest resource key that changed; invalidating the
+page-level key can refetch unrelated inactive tabs.
+
+The DesignKit playground's **DataBodyTemplate / User Management**
+screen is the canonical executable example. Its preview source includes
+TanStack Query, mock APIs, isolated Users/Sessions/History tab components,
+search, filters, mutations, polling, stale-data behavior, pagination, and a
+detail Sheet. Copy that implementation before composing a new management page.
 
 ## UI Primitive Contract
 

@@ -27,6 +27,12 @@ export interface DataBodyTabProps {
   label: React.ReactNode
   count?: number
   disabled?: boolean
+  /** Search and filter controls scoped to this tab. */
+  toolbarLeft?: React.ReactNode
+  /** Actions scoped to this tab, such as resource creation and export. */
+  toolbarRight?: React.ReactNode
+  /** Content rendered beneath the active tab body, such as pagination. */
+  footer?: React.ReactNode
   children: React.ReactNode
 }
 
@@ -107,6 +113,76 @@ function isDataBodySummary(
 ): node is React.ReactElement<DataBodySummaryProps> {
   return Boolean(
     node && typeof node === 'object' && 'type' in node && node.type === DataBodySummary,
+  )
+}
+
+// ─── Resource ─────────────────────────────────────────────────────────────────
+
+/**
+ * Keeps controls, async status, data content, and pagination in one resource boundary.
+ * Render it inside a `Tab` or `Body` when those controls are scoped to that content.
+ */
+export interface DataBodyResourceProps {
+  toolbarLeft?: React.ReactNode
+  toolbarRight?: React.ReactNode
+  refreshing?: boolean
+  refreshingLabel?: string
+  notice?: React.ReactNode
+  footer?: React.ReactNode
+  children?: React.ReactNode
+  className?: string
+  bodyClassName?: string
+}
+
+function DataBodyResource({
+  toolbarLeft,
+  toolbarRight,
+  refreshing,
+  refreshingLabel = 'Refreshing',
+  notice,
+  footer,
+  children,
+  className,
+  bodyClassName,
+}: DataBodyResourceProps) {
+  useDataBodyTemplateParent('Resource')
+
+  return (
+    <section
+      data-slot="data-body-resource"
+      data-refreshing={refreshing ? 'true' : 'false'}
+      className={cn('flex min-h-0 flex-col', className)}
+    >
+      {(toolbarLeft || toolbarRight || refreshing) && (
+        <DataPage.GroupToolbar>
+          <div className="flex min-w-0 flex-wrap items-center gap-2">{toolbarLeft}</div>
+          <div className="flex shrink-0 items-center gap-2">
+            {refreshing && (
+              <span
+                className="flex items-center gap-1.5 text-xs text-muted-foreground"
+                role="status"
+              >
+                <span className="size-3 animate-spin rounded-full border-2 border-muted border-t-primary" />
+                {refreshingLabel}
+              </span>
+            )}
+            <DataPage.Actions>{toolbarRight}</DataPage.Actions>
+          </div>
+        </DataPage.GroupToolbar>
+      )}
+      {notice && <div className="mb-3 shrink-0">{notice}</div>}
+      <DataPage.GroupBody className={cn('min-h-0 flex-1', bodyClassName)}>
+        {children}
+      </DataPage.GroupBody>
+      {footer && (
+        <div
+          className="mt-3 shrink-0 border-t border-border pt-3"
+          data-slot="data-body-resource-footer"
+        >
+          {footer}
+        </div>
+      )}
+    </section>
   )
 }
 
@@ -445,8 +521,14 @@ function RootContent({
         )}
 
         <DataPage.Content className={contentClassName}>
-          <DataPage.Group className="h-full">
-            <DataPage.GroupBody className={cn('h-full', bodyEl.props.className)}>
+          <DataPage.Group className="flex h-full flex-col">
+            {(toolbarLeft || toolbarRight) && (
+              <DataPage.GroupToolbar>
+                <div className="flex min-w-0 items-center gap-2">{toolbarLeft}</div>
+                <DataPage.Actions>{toolbarRight}</DataPage.Actions>
+              </DataPage.GroupToolbar>
+            )}
+            <DataPage.GroupBody className={cn('min-h-0 flex-1', bodyEl.props.className)}>
               {bodyEl.props.children}
             </DataPage.GroupBody>
           </DataPage.Group>
@@ -510,6 +592,8 @@ function RootContent({
 
   // ── Tabbed / plain layout ─────────────────────────────────────────────────
   const activeTabNode = tabs.find((tab) => tab.props.id === activeId) ?? tabs[0]
+  const activeToolbarLeft = activeTabNode?.props.toolbarLeft ?? toolbarLeft
+  const activeToolbarRight = activeTabNode?.props.toolbarRight ?? toolbarRight
 
   return (
     <DataPage className={cn('layout-databody', className)} style={theme}>
@@ -542,10 +626,10 @@ function RootContent({
       )}
 
       <DataPage.Content className={contentClassName}>
-        {(toolbarLeft || toolbarRight) && (
+        {(activeToolbarLeft || activeToolbarRight) && (
           <DataPage.GroupToolbar>
-            <div className="flex min-w-0 items-center gap-2">{toolbarLeft}</div>
-            <DataPage.Actions>{toolbarRight}</DataPage.Actions>
+            <div className="flex min-w-0 items-center gap-2">{activeToolbarLeft}</div>
+            <DataPage.Actions>{activeToolbarRight}</DataPage.Actions>
           </DataPage.GroupToolbar>
         )}
         {hasTabs ? (
@@ -560,6 +644,9 @@ function RootContent({
           </DataPage.GroupBody>
         )}
       </DataPage.Content>
+      {activeTabNode?.props.footer && (
+        <DataPage.Footer>{activeTabNode.props.footer}</DataPage.Footer>
+      )}
     </DataPage>
   )
 }
@@ -575,8 +662,8 @@ function Root(props: DataBodyTemplateProps) {
 /**
  * Page-level template for data, list, tab, form, and settings experiences.
  *
- * Compound members such as `DataBodyTemplate.Group`, `Tab`, `Section`, `Body`,
- * `Row`, and `Field` must be rendered beneath this root. Rendering a compound
+ * Compound members such as `DataBodyTemplate.Resource`, `Group`, `Tab`, `Section`,
+ * `Body`, `Row`, and `Field` must be rendered beneath this root. Rendering a compound
  * member without the root throws a descriptive runtime error.
  *
  * @example
@@ -595,6 +682,7 @@ export const DataBodyTemplate = Object.assign(Root, {
   Tab: DataBodyTab,
   Section: DataBodySection,
   Summary: DataBodySummary,
+  Resource: DataBodyResource,
   Group: DataBodyGroup,
   Row: DataBodyRow,
   Field: DataBodyField,

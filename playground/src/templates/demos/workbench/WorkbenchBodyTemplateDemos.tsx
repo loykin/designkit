@@ -10,22 +10,10 @@ import {
   SelectValue,
   Switch,
 } from '@loykin/designkit'
-import {
-  ChevronDown,
-  Database,
-  Play,
-  Search,
-  Wand2,
-} from 'lucide-react'
+import { ChevronDown, Database, Play, Search, Wand2 } from 'lucide-react'
 import type { TemplateCodeContext } from '../../code'
 
-function PaneHeader({
-  title,
-  right,
-}: {
-  title: string
-  right?: ReactNode
-}) {
+function PaneHeader({ title, right }: { title: string; right?: ReactNode }) {
   return (
     <div className="flex h-10 shrink-0 items-center justify-between border-b px-3">
       <span className="text-xs font-medium">{title}</span>
@@ -34,13 +22,7 @@ function PaneHeader({
   )
 }
 
-function InspectorSection({
-  title,
-  children,
-}: {
-  title: string
-  children: ReactNode
-}) {
+function InspectorSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="border-b p-3">
       <div className="mb-3 flex items-center justify-between">
@@ -78,10 +60,7 @@ export function PanelPreview() {
           <div className="relative flex h-full items-end gap-2">
             {bars.map((height, index) => (
               <div key={index} className="flex min-w-0 flex-1 flex-col justify-end">
-                <div
-                  className="rounded-t-sm bg-primary/75"
-                  style={{ height: `${height}%` }}
-                />
+                <div className="rounded-t-sm bg-primary/75" style={{ height: `${height}%` }} />
               </div>
             ))}
           </div>
@@ -99,7 +78,9 @@ export function PanelInspector() {
         <InspectorSection title="Visualization">
           <Field label="Type">
             <Select defaultValue="timeseries">
-              <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="h-8 text-xs">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="timeseries">Time series</SelectItem>
                 <SelectItem value="bar">Bar chart</SelectItem>
@@ -109,7 +90,9 @@ export function PanelInspector() {
           </Field>
           <Field label="Stacking">
             <Select defaultValue="none">
-              <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+              <SelectTrigger className="h-8 text-xs">
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">None</SelectItem>
                 <SelectItem value="normal">Normal</SelectItem>
@@ -147,8 +130,13 @@ export function QueryPane() {
         title="Query"
         right={
           <>
-            <Button variant="ghost" size="icon-xs"><Wand2 /></Button>
-            <Button variant="outline" size="xs"><Play />Run</Button>
+            <Button variant="ghost" size="icon-xs">
+              <Wand2 />
+            </Button>
+            <Button variant="outline" size="xs">
+              <Play />
+              Run
+            </Button>
           </>
         }
       />
@@ -156,7 +144,9 @@ export function QueryPane() {
         <div className="border-r p-3">
           <div className="mb-2 text-[11px] font-medium text-muted-foreground">Data source</div>
           <Select defaultValue="prometheus">
-            <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="h-8 text-xs">
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="prometheus">Prometheus</SelectItem>
               <SelectItem value="postgres">Postgres</SelectItem>
@@ -165,14 +155,16 @@ export function QueryPane() {
         </div>
         <textarea
           className="h-full resize-none bg-muted/25 p-3 font-mono text-xs leading-5 outline-none"
-          defaultValue={'histogram_quantile(0.95,\n  sum(rate(http_request_duration_seconds_bucket[5m])) by (le)\n)'}
+          defaultValue={
+            'histogram_quantile(0.95,\n  sum(rate(http_request_duration_seconds_bucket[5m])) by (le)\n)'
+          }
         />
       </div>
     </div>
   )
 }
 
-const schemas = [
+const schemas: Array<[string, string[]]> = [
   ['public.users', ['id', 'email', 'plan', 'created_at']],
   ['public.sessions', ['id', 'user_id', 'started_at', 'duration_ms']],
   ['billing.invoices', ['id', 'account_id', 'amount', 'status']],
@@ -214,18 +206,22 @@ export function SqlEditor() {
     <div className="flex h-full flex-col bg-background">
       <PaneHeader
         title="retention.sql"
-        right={<Badge variant="outline" className="h-5 rounded-md px-1.5 text-[10px]">Postgres</Badge>}
+        right={
+          <Badge variant="outline" className="h-5 rounded-md px-1.5 text-[10px]">
+            Postgres
+          </Badge>
+        }
       />
       <textarea
         className="min-h-0 flex-1 resize-none bg-muted/20 p-4 font-mono text-xs leading-6 outline-none"
         spellCheck={false}
         defaultValue={[
           'select',
-          '  date_trunc(\'day\', started_at) as day,',
+          "  date_trunc('day', started_at) as day,",
           '  count(distinct user_id) as active_users,',
           '  percentile_cont(0.95) within group (order by duration_ms) as p95_duration',
           'from public.sessions',
-          'where started_at >= now() - interval \'30 days\'',
+          "where started_at >= now() - interval '30 days'",
           'group by 1',
           'order by 1 desc;',
         ].join('\n')}
@@ -253,7 +249,9 @@ export function ResultsPane() {
           <thead className="sticky top-0 bg-muted">
             <tr>
               {['day', 'active_users', 'p95_duration'].map((column) => (
-                <th key={column} className="border-b px-3 py-2 font-medium">{column}</th>
+                <th key={column} className="border-b px-3 py-2 font-medium">
+                  {column}
+                </th>
               ))}
             </tr>
           </thead>
@@ -261,7 +259,9 @@ export function ResultsPane() {
             {rows.map((row) => (
               <tr key={row[0]} className="border-b">
                 {row.map((cell) => (
-                  <td key={cell} className="px-3 py-2 text-muted-foreground">{cell}</td>
+                  <td key={cell} className="px-3 py-2 text-muted-foreground">
+                    {cell}
+                  </td>
                 ))}
               </tr>
             ))}
