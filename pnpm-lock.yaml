@@ -40,7 +40,7 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.8.0(jiti@2.7.0))
       '@loykin/gridkit':
-        specifier: ^0.2.0-dev.4
+        specifier: ^0.2.2
         version: 0.2.2(@tanstack/react-table@8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@tanstack/react-virtual@3.13.25(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(@types/react@19.2.17)(immer@11.1.15)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
       '@types/node':
         specifier: ^26.0.0
