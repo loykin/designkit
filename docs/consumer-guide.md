@@ -248,6 +248,22 @@ in an application may not inspect dependency source before generating code.
 
 ## DataBodyTemplate Resource Management Guide
 
+The normative AI contract is
+[DataBodyTemplate Resource Management Contract](./guides/databody-resource-management.md).
+The Playground renders that exact Markdown in its **AI Guide** tab, so the docs
+and the copyable agent instructions cannot drift independently. The section
+below is a human-oriented summary. Users are the executable sample domain, not
+the scope of the pattern. Use the normative contract when generating or
+reviewing implementation code for any resource.
+
+- Pattern ID: `databody.resource-management`
+- Executable reference: Playground **Resource Management**
+- Executable sub-resources: Users, Sessions, History
+- Selection guidance: the normative contract records applicable examples such
+  as teams, credentials, projects, tokens, and jobs, along with explicit
+  counterexamples for dashboards, settings, browse pages, wizards, and detail
+  pages.
+
 Use one resource boundary for each independently queried table. The boundary
 owns that table's search, filters, resource actions, selection actions, async
 status, content, and pagination. `DataBodyTemplate.Resource` provides this
@@ -284,10 +300,18 @@ function UsersTab() {
           <Button>Add user</Button>
         </>
       }
-      refreshing={usersQuery.isFetching && hasData}
-      footer={<UserPagination page={page} onPageChange={setPage} />}
     >
-      <DataGrid data={usersQuery.data?.items ?? []} isLoading={usersQuery.isPending && !hasData} />
+      <DataGrid
+        data={usersQuery.data?.items ?? []}
+        isLoading={usersQuery.isPending && !hasData}
+        classNames={{ footer: 'pt-3' }}
+        pagination={{
+          pageSize: PAGE_SIZE,
+          pageIndex: page - 1,
+          onPageChange: (pageIndex) => setPage(pageIndex + 1),
+        }}
+        footer={(table) => <DataGridPaginationBar table={table} />}
+      />
     </DataBodyTemplate.Resource>
   )
 }
@@ -298,7 +322,10 @@ inside the component for the resource they load; do not call every tab's query
 from the page parent and select the result with `activeTab` conditionals.
 
 ```tsx
-<DataBodyTemplate title="Users">
+<DataBodyTemplate
+  topBar={<PageTopBar left={<PageBreadcrumb items={['Data', 'Users']} />} />}
+  title="Users"
+>
   <DataBodyTemplate.Tab id="users" label="Users">
     <UsersTab />
   </DataBodyTemplate.Tab>
@@ -321,7 +348,7 @@ Place an action according to the smallest scope it affects.
 | Whole page across every tab | Page header `actions`                     | Page help, page-wide settings    |
 | Active tab's resource       | `Resource.toolbarRight`                   | Add user, export history         |
 | Selected rows               | `Resource.toolbarLeft` or a selection bar | Revoke selected, delete selected |
-| One row                     | Row action or detail Sheet                | Inspect, edit, suspend           |
+| One row                     | Row action or detail Sheet                | Inspect, suspend                 |
 
 `Add user` belongs to the Users tab, not the page header. A tab-specific action
 must remain beneath its tab even when it is the visually primary action. It
@@ -371,7 +398,7 @@ Do not equate TanStack Query's `isFetching` with an empty loading state.
 | State                                                   | Existing rows | Required presentation                                 |
 | ------------------------------------------------------- | ------------- | ----------------------------------------------------- |
 | Initial load (`isPending && data === undefined`)        | None          | Grid body skeleton                                    |
-| Background refresh (`isFetching && data !== undefined`) | Preserve      | Small refresh indicator                               |
+| Background refresh (`isFetching && data !== undefined`) | Preserve      | Keep the grid unchanged; no indicator by default      |
 | Stale error (`isError && data !== undefined`)           | Preserve      | Non-destructive stale-data notice                     |
 | Initial error (`isError && data === undefined`)         | None          | Error and retry in the resource body                  |
 | Empty result                                            | None          | Grid empty state with toolbar and pagination retained |
@@ -381,7 +408,12 @@ background refresh. Do not change a Grid `key` when refetching. Query mutations
 should invalidate the narrowest resource key that changed; invalidating the
 page-level key can refetch unrelated inactive tabs.
 
-The DesignKit playground's **DataBodyTemplate / User Management**
+Automatic polling should remain silent. Use the optional `Resource.refreshing`
+indicator only for an explicit user-initiated refresh or when freshness
+feedback is operationally important. Initial loading with no existing data is
+the GridKit `isLoading` skeleton state.
+
+The DesignKit playground's **DataBodyTemplate / Resource Management**
 screen is the canonical executable example. Its preview source includes
 TanStack Query, mock APIs, isolated Users/Sessions/History tab components,
 search, filters, mutations, polling, stale-data behavior, pagination, and a

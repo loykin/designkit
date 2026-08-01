@@ -136,7 +136,7 @@ try {
   const publishedTypes = readFileSync(join(installedPackageRoot, 'dist/index.d.ts'), 'utf8')
   const publishedReadme = readFileSync(join(installedPackageRoot, 'README.md'), 'utf8')
   const compoundContract =
-    'Compound members such as `DataBodyTemplate.Group`, `Tab`, `Section`, `Body`'
+    'Compound members such as `DataBodyTemplate.Resource`, `Group`, `Tab`, `Section`'
 
   if (!publishedTypes.includes(compoundContract)) {
     throw new Error('Published type declarations do not include the DataBodyTemplate contract')

@@ -155,8 +155,8 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
   // ── DataBodyTemplate guides ──────────────────────────────────────────────────
   {
     id: 'databody-resource-guide',
-    label: 'User Management',
-    navigationLabel: 'User Management',
+    label: 'Resource Management',
+    navigationLabel: 'Resource Management',
     group: 'Pages',
     navigationGroup: 'DataBodyTemplate',
     layoutClassName: 'layout-databody-resource-guide',

@@ -29,7 +29,6 @@ import {
 } from '@loykin/designkit'
 import { Filter, Plus, Search } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
-import type { TemplateCodeContext } from '../../code'
 
 type UserRole = 'Admin' | 'Editor' | 'Viewer'
 type UserStatus = 'active' | 'invited' | 'suspended'
@@ -313,7 +312,6 @@ function UsersTab({ onAddUser }: { onAddUser: () => void }) {
 
   return (
     <DataBodyTemplate.Resource
-      refreshing={query.isFetching && hasData}
       toolbarLeft={
         <>
           <SearchField
@@ -385,7 +383,6 @@ function SessionsTab() {
 
   return (
     <DataBodyTemplate.Resource
-      refreshing={query.isFetching && hasData}
       toolbarLeft={
         <>
           <SearchField
@@ -457,7 +454,6 @@ function HistoryTab() {
 
   return (
     <DataBodyTemplate.Resource
-      refreshing={query.isFetching && hasData}
       toolbarLeft={
         <>
           <SearchField
@@ -682,40 +678,4 @@ export function DataBodyResourceGuide({ theme }: { theme?: React.CSSProperties }
       )}
     </QueryClientProvider>
   )
-}
-
-export function buildDataBodyResourceGuideCode({ themeProp }: TemplateCodeContext) {
-  return [
-    `import { QueryClient, QueryClientProvider } from '@tanstack/react-query'`,
-    `import { DataBodyTemplate, PageBreadcrumb, PageTopBar } from '@loykin/designkit'`,
-    `import '@loykin/designkit/styles'`,
-    '',
-    `const queryClient = new QueryClient()`,
-    '',
-    `export function UsersPage() {`,
-    `  return (`,
-    `    <QueryClientProvider client={queryClient}>`,
-    `      <DataBodyTemplate${themeProp}`,
-    `        topBar={<PageTopBar left={<PageBreadcrumb items={['Data', 'Users']} />} />}`,
-    `        title="Users"`,
-    `      >`,
-    `        <DataBodyTemplate.Tab id="users" label="Users">`,
-    `          <UsersTab />`,
-    `        </DataBodyTemplate.Tab>`,
-    `        <DataBodyTemplate.Tab id="sessions" label="Sessions">`,
-    `          <SessionsTab />`,
-    `        </DataBodyTemplate.Tab>`,
-    `        <DataBodyTemplate.Tab id="history" label="History">`,
-    `          <HistoryTab />`,
-    `        </DataBodyTemplate.Tab>`,
-    `      </DataBodyTemplate>`,
-    `    </QueryClientProvider>`,
-    `  )`,
-    `}`,
-    '',
-    `function UsersTab() {`,
-    `  // Own this tab's query, search, filters, actions, selection, and pagination here.`,
-    `  return <DataBodyTemplate.Resource>{/* toolbar + DataGrid + pagination */}</DataBodyTemplate.Resource>`,
-    `}`,
-  ].join('\n')
 }

@@ -20,7 +20,7 @@ import type { PlaygroundTemplateId } from './definitions'
 import type { TemplateCodeBuilder } from './code'
 import typographyPreviewSource from '../../../src/components/templates/typography/TypographyBodyTemplate.tsx?raw'
 import colorsPreviewSource from '../../../src/components/templates/typography/ColorsBodyTemplate.tsx?raw'
-import dataBodyResourceAiGuide from './demos/databody/DataBodyResourceGuide.md?raw'
+import dataBodyResourceAiGuide from '../../../docs/guides/databody-resource-management.md?raw'
 
 export { TEMPLATE_DEFINITIONS, createTemplateOverrides, getTemplateDefinition } from './definitions'
 export type {
@@ -58,10 +58,7 @@ import {
   DataBodyTemplateDemo,
   buildDataBodyTemplateCode,
 } from './demos/databody/DataBodyTemplateDemo'
-import {
-  DataBodyResourceGuide,
-  buildDataBodyResourceGuideCode,
-} from './demos/databody/DataBodyResourceGuide'
+import { DataBodyResourceGuide } from './demos/databody/DataBodyResourceGuide'
 import {
   DetailBodyTemplateDemo,
   buildDetailBodyTemplateCode,
@@ -168,7 +165,6 @@ const previewComponents: Record<
 }
 
 const codeBuilders: Partial<Record<PlaygroundTemplateId, TemplateCodeBuilder>> = {
-  'databody-resource-guide': buildDataBodyResourceGuideCode,
   table: buildDataGridTemplateCode,
   'table-infinity': buildDataGridTemplateCode,
   'table-drag': buildDataGridTemplateCode,
