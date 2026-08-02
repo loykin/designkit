@@ -106,7 +106,7 @@ export function InfiniteDataGridDemo({
       }
       title="Users"
       description="gridkit DataGridInfinity"
-      contentClassName="pb-0"
+      contentClassName="pb-(--designkit-page-padding-x)"
     >
       <DataBodyTemplate.Body>
         <DataGridInfinity
@@ -121,7 +121,6 @@ export function InfiniteDataGridDemo({
           fetchNextPage={fetchNextPage}
           tableKey="table-infinity-template"
           fillParent
-          openBottom
         />
       </DataBodyTemplate.Body>
     </DataBodyTemplate>
