@@ -22,6 +22,7 @@ import type { TemplateCodeBuilder } from './code'
 import typographyPreviewSource from '../../../src/components/templates/typography/TypographyBodyTemplate.tsx?raw'
 import colorsPreviewSource from '../../../src/components/templates/typography/ColorsBodyTemplate.tsx?raw'
 import managedTableAiGuide from '../../../docs/guides/managed-table.md?raw'
+import formWorkflowAiGuide from '../../../docs/guides/form-workflow.md?raw'
 import publishingWorkflowAiGuide from '../../../docs/guides/publishing-workflow.md?raw'
 import commerceWorkflowAiGuide from '../../../docs/guides/commerce-workflow.md?raw'
 
@@ -63,6 +64,7 @@ import {
   buildDataBodyTemplateCode,
 } from './demos/databody/DataBodyTemplateDemo'
 import { DataBodyManagedTableGuide } from './demos/databody/DataBodyManagedTableGuide'
+import { FormWorkflowGuide } from './demos/guides/FormWorkflowGuide'
 import { PublishingWorkflowGuide } from './demos/guides/PublishingWorkflowGuide'
 import { CommerceWorkflowGuide } from './demos/guides/CommerceWorkflowGuide'
 import {
@@ -133,6 +135,7 @@ const previewComponents: Record<
   ComponentType<{ theme?: React.CSSProperties }>
 > = {
   'databody-managed-table-guide': DataBodyManagedTableGuide,
+  'form-workflow-guide': FormWorkflowGuide,
   'publishing-workflow-guide': PublishingWorkflowGuide,
   'commerce-workflow-guide': CommerceWorkflowGuide,
   table: StandardDataGridDemo,
@@ -225,6 +228,7 @@ function toPreviewSource(source: string): string {
 
 const previewSourcePathById: Partial<Record<PlaygroundTemplateId, string>> = {
   'databody-managed-table-guide': './demos/databody/DataBodyManagedTableGuide.tsx',
+  'form-workflow-guide': './demos/guides/FormWorkflowGuide.tsx',
   'publishing-workflow-guide': './demos/guides/PublishingWorkflowGuide.tsx',
   'commerce-workflow-guide': './demos/guides/CommerceWorkflowGuide.tsx',
   table: './demos/table/StandardDataGridDemo.tsx',
@@ -269,6 +273,7 @@ const libraryPreviewSources: Partial<Record<PlaygroundTemplateId, string>> = {
 
 const aiGuideByPatternId: Record<string, string> = {
   'managed-table': managedTableAiGuide,
+  'form-workflow': formWorkflowAiGuide,
   'publishing-workflow': publishingWorkflowAiGuide,
   'commerce-workflow': commerceWorkflowAiGuide,
 }
@@ -288,6 +293,7 @@ export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition)
 
 const iconById: Partial<Record<PlaygroundTemplateId, ComponentType<{ className?: string }>>> = {
   'databody-managed-table-guide': FileText,
+  'form-workflow-guide': FileText,
   'publishing-workflow-guide': FileText,
   'commerce-workflow-guide': Layers,
   table: Table2,
@@ -376,6 +382,12 @@ const guideNavigation: TemplateNavigationGroup = {
       label: 'Resource Management',
       icon: Database,
       children: [{ id: 'databody-managed-table-guide', label: 'Managed Table' }],
+    },
+    {
+      id: 'form-workflow-guide',
+      label: 'Forms',
+      icon: FileText,
+      children: [{ id: 'form-workflow-guide', label: 'Stacked Form' }],
     },
     {
       id: 'publishing-workflow-guide',

@@ -15,6 +15,15 @@
       "contract": "managed-table.md"
     },
     {
+      "id": "form-workflow",
+      "title": "Forms / Stacked Form",
+      "summary": "Canonical stacked page structure and modular section boundaries for create, edit, and settings forms.",
+      "useWhen": ["create form", "edit form", "settings form", "multiple form sections"],
+      "templates": ["DataBodyTemplate"],
+      "playgroundPaths": ["/sidebar/form-workflow-guide", "/header/form-workflow-guide"],
+      "contract": "form-workflow.md"
+    },
+    {
       "id": "publishing-workflow",
       "title": "Publishing / Blog → Article",
       "summary": "Searchable content collection connected to a stable, independently queried article route.",

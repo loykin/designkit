@@ -24,6 +24,7 @@ describe('published implementation guides', () => {
     expect(packageJson.designkit.guideManifest).toBe('./docs/guides/manifest.json')
     expect(manifest.guides.map((guide: { id: string }) => guide.id)).toEqual([
       'managed-table',
+      'form-workflow',
       'publishing-workflow',
       'commerce-workflow',
     ])
@@ -38,12 +39,18 @@ describe('published implementation guides', () => {
     expect(readme).toContain('## Building with AI')
     expect(readme).toContain('npx @loykin/designkit guide list')
     expect(readme).toContain('Template demos are visual API references.')
+    expect(readme).toContain('React Hook Form is installed in the Playground')
+
+    for (const guide of manifest.guides) {
+      expect(readme, guide.id).toContain(`npx @loykin/designkit guide ${guide.id}`)
+    }
   })
 
   it('lists guides and prints the canonical AI prompt', () => {
     const list = runCli(['guide', 'list'])
     expect(list.status).toBe(0)
     expect(list.stdout).toContain('managed-table')
+    expect(list.stdout).toContain('form-workflow')
     expect(list.stdout).toContain('publishing-workflow')
     expect(list.stdout).toContain('commerce-workflow')
 

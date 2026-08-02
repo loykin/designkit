@@ -5,6 +5,7 @@ The Playground's **Guides** group contains complete product flows. Existing temp
 | Workflow            | Pattern ID            | Connected destinations                 | Contract                                        |
 | ------------------- | --------------------- | -------------------------------------- | ----------------------------------------------- |
 | Resource Management | `managed-table`       | table → detail Sheet; create/edit page | [Managed Table](./managed-table.md)             |
+| Forms               | `form-workflow`       | create, edit, and settings pages       | [Stacked Form](./form-workflow.md)              |
 | Publishing          | `publishing-workflow` | blog collection → article route        | [Publishing Workflow](./publishing-workflow.md) |
 | Commerce            | `commerce-workflow`   | filtered catalog → product route       | [Commerce Workflow](./commerce-workflow.md)     |
 

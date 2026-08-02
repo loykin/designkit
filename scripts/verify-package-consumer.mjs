@@ -62,6 +62,7 @@ try {
     'cli/designkit.mjs',
     'docs/guides/manifest.json',
     'docs/guides/managed-table.md',
+    'docs/guides/form-workflow.md',
     'docs/guides/publishing-workflow.md',
     'docs/guides/commerce-workflow.md',
   ]) {
@@ -169,15 +170,21 @@ try {
   }
   if (
     !publishedReadme.includes('npx @loykin/designkit guide list') ||
-    !publishedReadme.includes('Template demos are visual API references')
+    !publishedReadme.includes('Template demos are visual API references') ||
+    !publishedReadme.includes('React Hook Form is installed in the Playground')
   ) {
     throw new Error('Published README does not explain implementation guide discovery')
   }
   if (
     publishedGuideManifest.guides.map((guide) => guide.id).join(',') !==
-    'managed-table,publishing-workflow,commerce-workflow'
+    'managed-table,form-workflow,publishing-workflow,commerce-workflow'
   ) {
     throw new Error('Published guide manifest does not match the supported workflow registry')
+  }
+  for (const guide of publishedGuideManifest.guides) {
+    if (!publishedReadme.includes(`npx @loykin/designkit guide ${guide.id}`)) {
+      throw new Error(`Published README does not announce the ${guide.id} guide command`)
+    }
   }
 
   const guideBin = join(appDir, 'node_modules/.bin/designkit')
@@ -188,6 +195,7 @@ try {
   })
   if (
     !guideList.includes('managed-table') ||
+    !guideList.includes('form-workflow') ||
     !guideList.includes('publishing-workflow') ||
     !guideList.includes('commerce-workflow')
   ) {

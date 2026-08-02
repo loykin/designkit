@@ -18,7 +18,7 @@ The Playground's **Guides / Resource Management / Managed Table** screen is the 
 | -------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------- |
 | Executable pattern   | `Guides / Resource Management / Managed Table` | Complete list, tabs, queries, create route, form, pagination, and concise detail Sheet |
 | Supporting reference | `DataBodyTemplate / Table / Standard`          | Base GridKit table composition and table sizing                                        |
-| Supporting reference | `DataBodyTemplate / Form / Stacked`            | Create/edit form spacing, padding, and action alignment                                |
+| Supporting contract  | `Guides / Forms / Stacked Form`                | Create/edit form spacing, modular Groups, and action alignment                         |
 | Supporting reference | `DetailBodyTemplate / Detail / Record`         | Full-page destination when detail outgrows a Sheet                                     |
 | Supporting reference | `FormWizardBodyTemplate / Wizard`              | Multi-step destination when create/edit outgrows a stacked form                        |
 | Counterexample       | `DashboardBodyTemplate / Dashboard`            | Monitoring panels are not an administrative table                                      |
@@ -32,7 +32,7 @@ Only the entry marked **Executable pattern** implements this pattern end to end.
 | -------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------- |
 | Collection list, tabs, search, filters, pagination | `DataBodyTemplate` + `DataBodyTemplate.Resource` | `Guides / Resource Management / Managed Table` |
 | Base table behavior                                | GridKit `DataGrid`                               | `DataBodyTemplate / Table / Standard`          |
-| Simple create/edit route                           | stacked `DataBodyTemplate.Group`                 | `DataBodyTemplate / Form / Stacked`            |
+| Simple create/edit route                           | stacked `DataBodyTemplate.Group`                 | `Guides / Forms / Stacked Form`                |
 | Concise read-only inspection                       | `Sheet`                                          | `Managed Table` row detail                     |
 | Complex full-page detail route                     | `DetailBodyTemplate`                             | `DetailBodyTemplate / Detail / Record`         |
 | Multi-step create/edit route                       | `FormWizardBodyTemplate`                         | `FormWizardBodyTemplate / Wizard`              |
@@ -302,7 +302,7 @@ Grid rules:
 
 ## Create and edit form page
 
-Create and edit forms use the established Form / Stacked composition. Preserve the template-owned page width and padding.
+Create and edit forms follow the canonical `form-workflow` contract in **Guides / Forms / Stacked Form**. Preserve the template-owned page width and padding, and split semantic Groups into named section components.
 
 ```tsx
 function UserCreatePage() {

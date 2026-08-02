@@ -11,8 +11,15 @@ loading behavior, action placement, and the correct page templates.
 | Product workflow    | Guide ID              | Connected destinations                 |
 | ------------------- | --------------------- | -------------------------------------- |
 | Administrative CRUD | `managed-table`       | table → detail Sheet; create/edit page |
+| Forms               | `form-workflow`       | create, edit, and settings pages       |
 | Publishing          | `publishing-workflow` | blog collection → article route        |
 | Commerce            | `commerce-workflow`   | filtered catalog → product route       |
+
+The executable **Forms / Stacked Form** Playground guide uses React Hook Form
+to demonstrate shared state, controlled DesignKit inputs, validation, and
+modular section components. React Hook Form is installed in the Playground
+only; it is not a dependency or peer dependency of `@loykin/designkit` and is
+not required to preserve the form design contract.
 
 List the guides included with the installed package:
 
@@ -24,6 +31,7 @@ Print a complete contract for a developer or coding agent:
 
 ```bash
 npx @loykin/designkit guide managed-table
+npx @loykin/designkit guide form-workflow --prompt
 npx @loykin/designkit guide publishing-workflow --prompt
 npx @loykin/designkit guide commerce-workflow
 ```

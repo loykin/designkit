@@ -169,6 +169,17 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     preset: {},
   },
   {
+    id: 'form-workflow-guide',
+    label: 'Stacked Form',
+    patternId: 'form-workflow',
+    group: 'Pages',
+    navigationGroup: 'Guides',
+    layoutClassName: 'layout-guide-form-workflow',
+    exportComponent: 'DataBodyTemplate',
+    exportKind: 'databody',
+    preset: {},
+  },
+  {
     id: 'publishing-workflow-guide',
     label: 'Blog → Article',
     patternId: 'publishing-workflow',

@@ -104,6 +104,49 @@ Do not copy a DesignKit component into another project to make a visual variatio
 
 Do not nest one page-level template (`DataBodyTemplate`, `WorkbenchBodyTemplate`, `DashboardBodyTemplate`, `BrowseBodyTemplate`, `DetailBodyTemplate`, etc.) inside another page-level template's slot (`leftPane`, `rightPane`, `bottomPane`, `mainPane`, `children`, …). Every page-level template already wraps its content in `DataPage`; nesting two of them nests two page shells and duplicates chrome (headers, padding, and any built-in navigation-like pane). Pick the one template that fits and compose inside it — if its slots aren't expressive enough, extend that template instead of wrapping it in a second one.
 
+## Implementation Guides
+
+- Before implementing or reviewing a product workflow, inspect `docs/guides/manifest.json` and select the matching contract in `docs/guides/`.
+- Entries under the Playground's **Guides** navigation are normative end-to-end implementation contracts. Existing template groups are visual API references only; do not infer product structure from a template demo when a matching Guide exists.
+- The current guide IDs are `managed-table`, `form-workflow`, `publishing-workflow`, and `commerce-workflow`.
+- Do not add an AI Guide to a visual template merely because a workflow happens to use that template.
+
+### Guide maintenance gate
+
+Guide maintenance is part of DesignKit development, not optional follow-up documentation. Before marking a change complete, determine whether it changes or demonstrates any of the following:
+
+- page hierarchy, route destinations, or template selection;
+- action, toolbar, filter, form, detail, pagination, loading, refresh, or error placement;
+- query/state boundaries or the component boundary intended to isolate updates;
+- a workflow already named in `docs/guides/manifest.json`;
+- a new complete product workflow shown in the Playground.
+
+If any item applies, update every affected AI Guide in the same change. A Guide-impacting change is incomplete until all applicable surfaces below agree:
+
+1. The executable Playground Guide demo.
+2. Its canonical `docs/guides/<guide-id>.md` contract, including code and review checklist.
+3. `docs/guides/manifest.json` metadata and `docs/guides/README.md` index.
+4. Playground definition, `patternId`, raw Markdown import, AI Guide mapping, source mapping, and Guides navigation.
+5. The root npm `README.md` discovery table and an `npx @loykin/designkit guide <guide-id>` example.
+6. `docs/consumer-guide.md` cross-references when template selection or consumer behavior changed.
+7. Guide registry, distribution, CLI, and packed-consumer tests.
+8. This `AGENTS.md` when the rule future agents must follow changed.
+
+The CLI reads the canonical Markdown through `docs/guides/manifest.json`. Never maintain separate CLI-only guide prose. After changing a Guide, run both `node cli/designkit.mjs guide list` and `node cli/designkit.mjs guide <guide-id> --prompt` and verify that the new content is present. When no Guide is affected, explicitly record that conclusion in the final handoff instead of silently skipping the check.
+
+### Form workflow — required contract
+
+For every ordinary create, edit, or settings screen, read and follow `docs/guides/form-workflow.md` before changing code.
+
+- Use a full route page by default. A Sheet is not the default form container.
+- Use one `DataBodyTemplate` root and `DataBodyTemplate.Group layout="stacked"` for every semantic form section.
+- Create, edit, and settings domains do not select different layouts. They all use the stacked form shape; only the number of Groups and save boundaries vary.
+- Implement each semantic Group as a named component, like tab-scoped content. Keep section-only state, pending indicators, validation, and errors inside that section boundary when possible.
+- The route component owns only page-level breadcrumb, title, description, and routing concerns. Do not lift Group-specific state into the page header.
+- One create/edit operation normally owns one form across all Groups and one bottom action row. Split settings into separate forms only when those categories are independently saved.
+- Keep Cancel before the right-aligned primary submit action. Validation text belongs directly below its field; form-level failure belongs inside the same form boundary above its actions.
+- Form libraries are application choices and must not change the visual contract. The executable Playground example uses React Hook Form only to prove shared state across modular Groups; `react-hook-form` must remain a Playground-only dependency and must not be added to DesignKit dependencies or peer dependencies.
+
 ## Customization Contract
 
 Preferred customization points:
