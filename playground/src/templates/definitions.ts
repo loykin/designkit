@@ -4,6 +4,7 @@ export type DataGridTemplateVariant = 'standard' | 'infinity' | 'drag' | 'card' 
 
 export type TemplateGroup = 'Table' | 'Pages' | 'Design' | 'Auth' | 'Dashboard' | 'Workbench'
 export type TemplateNavigationGroupId =
+  | 'Guides'
   | 'DataBodyTemplate'
   | 'FormWizardBodyTemplate'
   | 'LoginBodyTemplate'
@@ -42,6 +43,8 @@ export interface TemplateOptionSpec {
 export interface TemplateDefinition {
   id: string
   label: string
+  /** Usage-pattern contract demonstrated by this executable example. */
+  patternId?: string
   /** Short label used only in nav sub-menu (omit to fall back to label) */
   navigationLabel?: string
   /** Section-header label for the nav group this item anchors (omit to fall back to label) */
@@ -152,16 +155,39 @@ const loginOptions: TemplateOptionSpec[] = [
 ]
 
 export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
-  // ── DataBodyTemplate guides ──────────────────────────────────────────────────
+  // ── End-to-end implementation guides ─────────────────────────────────────────
   {
-    id: 'databody-resource-guide',
-    label: 'Resource Management',
-    navigationLabel: 'Resource Management',
+    id: 'databody-managed-table-guide',
+    label: 'Managed Table',
+    navigationLabel: 'Managed Table',
+    patternId: 'managed-table',
     group: 'Pages',
-    navigationGroup: 'DataBodyTemplate',
-    layoutClassName: 'layout-databody-resource-guide',
+    navigationGroup: 'Guides',
+    layoutClassName: 'layout-databody-managed-table-guide',
     exportComponent: 'DataBodyTemplate',
     exportKind: 'databody',
+    preset: {},
+  },
+  {
+    id: 'publishing-workflow-guide',
+    label: 'Blog → Article',
+    patternId: 'publishing-workflow',
+    group: 'Pages',
+    navigationGroup: 'Guides',
+    layoutClassName: 'layout-guide-publishing',
+    exportComponent: 'DataBodyTemplate + DetailBodyTemplate',
+    exportKind: 'body-template',
+    preset: {},
+  },
+  {
+    id: 'commerce-workflow-guide',
+    label: 'Catalog → Product',
+    patternId: 'commerce-workflow',
+    group: 'Pages',
+    navigationGroup: 'Guides',
+    layoutClassName: 'layout-guide-commerce',
+    exportComponent: 'BrowseBodyTemplate + DetailBodyTemplate',
+    exportKind: 'body-template',
     preset: {},
   },
   // ── DataGridView (nested under DataBodyTemplate) ─────────────────────────────

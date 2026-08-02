@@ -2,6 +2,7 @@ import type { ComponentType } from 'react'
 import { TypographyBodyTemplate, ColorsBodyTemplate } from '@loykin/designkit'
 import {
   FileText,
+  Database,
   LayoutDashboard,
   Table2,
   Layers,
@@ -20,7 +21,9 @@ import type { PlaygroundTemplateId } from './definitions'
 import type { TemplateCodeBuilder } from './code'
 import typographyPreviewSource from '../../../src/components/templates/typography/TypographyBodyTemplate.tsx?raw'
 import colorsPreviewSource from '../../../src/components/templates/typography/ColorsBodyTemplate.tsx?raw'
-import dataBodyResourceAiGuide from '../../../docs/guides/databody-resource-management.md?raw'
+import managedTableAiGuide from '../../../docs/guides/managed-table.md?raw'
+import publishingWorkflowAiGuide from '../../../docs/guides/publishing-workflow.md?raw'
+import commerceWorkflowAiGuide from '../../../docs/guides/commerce-workflow.md?raw'
 
 export { TEMPLATE_DEFINITIONS, createTemplateOverrides, getTemplateDefinition } from './definitions'
 export type {
@@ -40,6 +43,7 @@ export interface TemplateConfig {
   component: ComponentType<{ theme?: React.CSSProperties }>
   sourceCode?: string
   aiGuide?: string
+  patternId?: string
   buildCode?: TemplateCodeBuilder
   group?: string
   description?: string
@@ -58,7 +62,9 @@ import {
   DataBodyTemplateDemo,
   buildDataBodyTemplateCode,
 } from './demos/databody/DataBodyTemplateDemo'
-import { DataBodyResourceGuide } from './demos/databody/DataBodyResourceGuide'
+import { DataBodyManagedTableGuide } from './demos/databody/DataBodyManagedTableGuide'
+import { PublishingWorkflowGuide } from './demos/guides/PublishingWorkflowGuide'
+import { CommerceWorkflowGuide } from './demos/guides/CommerceWorkflowGuide'
 import {
   DetailBodyTemplateDemo,
   buildDetailBodyTemplateCode,
@@ -126,7 +132,9 @@ const previewComponents: Record<
   PlaygroundTemplateId,
   ComponentType<{ theme?: React.CSSProperties }>
 > = {
-  'databody-resource-guide': DataBodyResourceGuide,
+  'databody-managed-table-guide': DataBodyManagedTableGuide,
+  'publishing-workflow-guide': PublishingWorkflowGuide,
+  'commerce-workflow-guide': CommerceWorkflowGuide,
   table: StandardDataGridDemo,
   'table-infinity': InfiniteDataGridDemo,
   'table-drag': DraggableDataGridDemo,
@@ -216,7 +224,9 @@ function toPreviewSource(source: string): string {
 }
 
 const previewSourcePathById: Partial<Record<PlaygroundTemplateId, string>> = {
-  'databody-resource-guide': './demos/databody/DataBodyResourceGuide.tsx',
+  'databody-managed-table-guide': './demos/databody/DataBodyManagedTableGuide.tsx',
+  'publishing-workflow-guide': './demos/guides/PublishingWorkflowGuide.tsx',
+  'commerce-workflow-guide': './demos/guides/CommerceWorkflowGuide.tsx',
   table: './demos/table/StandardDataGridDemo.tsx',
   'table-infinity': './demos/table/InfiniteDataGridDemo.tsx',
   'table-drag': './demos/table/DraggableDataGridDemo.tsx',
@@ -257,6 +267,12 @@ const libraryPreviewSources: Partial<Record<PlaygroundTemplateId, string>> = {
   colors: colorsPreviewSource,
 }
 
+const aiGuideByPatternId: Record<string, string> = {
+  'managed-table': managedTableAiGuide,
+  'publishing-workflow': publishingWorkflowAiGuide,
+  'commerce-workflow': commerceWorkflowAiGuide,
+}
+
 export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
   id: definition.id,
   label: definition.label,
@@ -266,11 +282,14 @@ export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition)
     toPreviewSource(previewSourceModules[previewSourcePathById[definition.id] ?? ''] ?? '') ||
     libraryPreviewSources[definition.id],
   buildCode: codeBuilders[definition.id],
-  aiGuide: definition.id === 'databody-resource-guide' ? dataBodyResourceAiGuide : undefined,
+  aiGuide: definition.patternId ? aiGuideByPatternId[definition.patternId] : undefined,
+  patternId: definition.patternId,
 }))
 
 const iconById: Partial<Record<PlaygroundTemplateId, ComponentType<{ className?: string }>>> = {
-  'databody-resource-guide': FileText,
+  'databody-managed-table-guide': FileText,
+  'publishing-workflow-guide': FileText,
+  'commerce-workflow-guide': Layers,
   table: Table2,
   'table-card': Layers,
   databody: LayoutDashboard,
@@ -317,7 +336,7 @@ const navigationLabelOrder = [
   'WorkbenchBodyTemplate',
 ]
 
-export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrder
+const templateNavigation: TemplateNavigationGroup[] = navigationLabelOrder
   .map((groupId) => {
     const definitions = TEMPLATE_DEFINITIONS.filter((d) => d.navigationGroup === groupId)
     const parentDefinitions = definitions.filter((d) => !d.navigationParent)
@@ -348,3 +367,33 @@ export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = navigationLabelOrd
     }
   })
   .filter((group) => group.items.length > 0)
+
+const guideNavigation: TemplateNavigationGroup = {
+  label: 'Guides',
+  items: [
+    {
+      id: 'databody-managed-table-guide',
+      label: 'Resource Management',
+      icon: Database,
+      children: [{ id: 'databody-managed-table-guide', label: 'Managed Table' }],
+    },
+    {
+      id: 'publishing-workflow-guide',
+      label: 'Publishing',
+      icon: FileText,
+      children: [{ id: 'publishing-workflow-guide', label: 'Blog → Article' }],
+    },
+    {
+      id: 'commerce-workflow-guide',
+      label: 'Commerce',
+      icon: Layers,
+      children: [{ id: 'commerce-workflow-guide', label: 'Catalog → Product' }],
+    },
+  ],
+}
+
+export const TEMPLATE_NAVIGATION: TemplateNavigationGroup[] = [
+  ...templateNavigation.slice(0, 1),
+  guideNavigation,
+  ...templateNavigation.slice(1),
+]

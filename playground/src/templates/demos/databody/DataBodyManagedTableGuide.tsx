@@ -29,6 +29,7 @@ import {
 } from '@loykin/designkit'
 import { Filter, Plus, Search } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
+import type { SortingState } from '@tanstack/react-table'
 
 type UserRole = 'Admin' | 'Editor' | 'Viewer'
 type UserStatus = 'active' | 'invited' | 'suspended'
@@ -57,6 +58,7 @@ type HistoryEvent = {
   action: 'user.created' | 'role.changed' | 'session.revoked'
   target: string
   occurredAt: string
+  sequence: number
 }
 
 type PageResult<T> = {
@@ -114,7 +116,32 @@ let history: HistoryEvent[] = names.slice(0, 16).map((name, index) => ({
   action: (['user.created', 'role.changed', 'session.revoked'] as const)[index % 3],
   target: name,
   occurredAt: `${index + 1} hours ago`,
+  sequence: names.length - index,
 }))
+
+const USERS_INITIAL_SORT: SortingState = [{ id: 'name', desc: false }]
+const SESSIONS_INITIAL_SORT: SortingState = [{ id: 'user', desc: false }]
+const HISTORY_INITIAL_SORT: SortingState = [{ id: 'occurredAt', desc: true }]
+
+function sortRows<T>(
+  rows: T[],
+  sorting: SortingState,
+  accessors: Record<string, (row: T) => string | number>,
+) {
+  const sort = sorting[0]
+  const accessor = sort ? accessors[sort.id] : undefined
+  if (!sort || !accessor) return rows
+
+  return [...rows].sort((left, right) => {
+    const leftValue = accessor(left)
+    const rightValue = accessor(right)
+    const comparison =
+      typeof leftValue === 'number' && typeof rightValue === 'number'
+        ? leftValue - rightValue
+        : String(leftValue).localeCompare(String(rightValue))
+    return sort.desc ? -comparison : comparison
+  })
+}
 
 async function waitForMockApi() {
   await new Promise((resolve) => window.setTimeout(resolve, 550))
@@ -125,7 +152,7 @@ function paginate<T>(rows: T[], page: number): PageResult<T> {
   return { items: rows.slice(start, start + PAGE_SIZE), total: rows.length }
 }
 
-async function listUsers(search: string, role: string, page: number) {
+async function listUsers(search: string, role: string, page: number, sorting: SortingState) {
   await waitForMockApi()
   const query = search.trim().toLowerCase()
   const filtered = users.filter(
@@ -133,7 +160,14 @@ async function listUsers(search: string, role: string, page: number) {
       (!query || `${user.name} ${user.email}`.toLowerCase().includes(query)) &&
       (role === 'all' || user.role === role),
   )
-  return paginate(filtered, page)
+  return paginate(
+    sortRows(filtered, sorting, {
+      name: (user) => user.name,
+      role: (user) => user.role,
+      status: (user) => user.status,
+    }),
+    page,
+  )
 }
 
 async function createUser(input: { name: string; email: string; role: UserRole }) {
@@ -153,33 +187,52 @@ async function createUser(input: { name: string; email: string; role: UserRole }
       action: 'user.created',
       target: user.name,
       occurredAt: 'Just now',
+      sequence: Date.now(),
     },
     ...history,
   ]
   return user
 }
 
-async function listSessions(search: string, status: string, page: number) {
+async function listSessions(search: string, status: string, page: number, sorting: SortingState) {
   await waitForMockApi()
   const query = search.trim().toLowerCase()
   return paginate(
-    sessions.filter(
-      (session) =>
-        (!query || `${session.user} ${session.device}`.toLowerCase().includes(query)) &&
-        (status === 'all' || session.status === status),
+    sortRows(
+      sessions.filter(
+        (session) =>
+          (!query || `${session.user} ${session.device}`.toLowerCase().includes(query)) &&
+          (status === 'all' || session.status === status),
+      ),
+      sorting,
+      {
+        user: (session) => session.user,
+        device: (session) => session.device,
+        location: (session) => session.location,
+        status: (session) => session.status,
+      },
     ),
     page,
   )
 }
 
-async function listHistory(search: string, action: string, page: number) {
+async function listHistory(search: string, action: string, page: number, sorting: SortingState) {
   await waitForMockApi()
   const query = search.trim().toLowerCase()
   return paginate(
-    history.filter(
-      (event) =>
-        (!query || `${event.actor} ${event.target}`.toLowerCase().includes(query)) &&
-        (action === 'all' || event.action === action),
+    sortRows(
+      history.filter(
+        (event) =>
+          (!query || `${event.actor} ${event.target}`.toLowerCase().includes(query)) &&
+          (action === 'all' || event.action === action),
+      ),
+      sorting,
+      {
+        actor: (event) => event.actor,
+        action: (event) => event.action,
+        target: (event) => event.target,
+        occurredAt: (event) => event.sequence,
+      },
     ),
     page,
   )
@@ -213,7 +266,7 @@ const userColumns: DataGridColumnDef<User>[] = [
       </Badge>
     ),
   },
-  { id: 'lastSeen', accessorKey: 'lastSeen', header: 'Last seen' },
+  { id: 'lastSeen', accessorKey: 'lastSeen', header: 'Last seen', enableSorting: false },
 ]
 
 const sessionColumns: DataGridColumnDef<Session>[] = [
@@ -226,7 +279,7 @@ const sessionColumns: DataGridColumnDef<Session>[] = [
     header: 'Status',
     cell: ({ row }) => <Badge variant="outline">{row.original.status}</Badge>,
   },
-  { id: 'lastActive', accessorKey: 'lastActive', header: 'Last active' },
+  { id: 'lastActive', accessorKey: 'lastActive', header: 'Last active', enableSorting: false },
 ]
 
 const historyColumns: DataGridColumnDef<HistoryEvent>[] = [
@@ -238,7 +291,12 @@ const historyColumns: DataGridColumnDef<HistoryEvent>[] = [
     cell: ({ row }) => <code className="text-xs">{row.original.action}</code>,
   },
   { id: 'target', accessorKey: 'target', header: 'Target' },
-  { id: 'occurredAt', accessorKey: 'occurredAt', header: 'Occurred' },
+  {
+    id: 'occurredAt',
+    accessorFn: (event) => event.sequence,
+    header: 'Occurred',
+    cell: ({ row }) => row.original.occurredAt,
+  },
 ]
 
 function SearchField({
@@ -296,10 +354,11 @@ function UsersTab({ onAddUser }: { onAddUser: () => void }) {
   const [search, setSearch] = useState('')
   const [role, setRole] = useState('all')
   const [page, setPage] = useState(1)
+  const [sorting, setSorting] = useState<SortingState>(USERS_INITIAL_SORT)
   const [selectedUser, setSelectedUser] = useState<User>()
   const query = useQuery({
-    queryKey: ['resource-guide', 'users', search, role, page],
-    queryFn: () => listUsers(search, role, page),
+    queryKey: ['resource-guide', 'users', search, role, page, sorting],
+    queryFn: () => listUsers(search, role, page, sorting),
     placeholderData: keepPreviousData,
     refetchInterval: 8_000,
   })
@@ -343,6 +402,12 @@ function UsersTab({ onAddUser }: { onAddUser: () => void }) {
         data={query.data?.items ?? []}
         columns={userColumns}
         getRowId={(row) => row.id}
+        initialSorting={USERS_INITIAL_SORT}
+        manualSorting
+        onSortingChange={(nextSorting) => {
+          setSorting(nextSorting)
+          setPage(1)
+        }}
         isLoading={query.isPending && !hasData}
         emptyMessage="No users match the current filters."
         tableWidthMode="fill-last"
@@ -373,9 +438,10 @@ function SessionsTab() {
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('all')
   const [page, setPage] = useState(1)
+  const [sorting, setSorting] = useState<SortingState>(SESSIONS_INITIAL_SORT)
   const query = useQuery({
-    queryKey: ['resource-guide', 'sessions', search, status, page],
-    queryFn: () => listSessions(search, status, page),
+    queryKey: ['resource-guide', 'sessions', search, status, page, sorting],
+    queryFn: () => listSessions(search, status, page, sorting),
     placeholderData: keepPreviousData,
     refetchInterval: 8_000,
   })
@@ -417,6 +483,12 @@ function SessionsTab() {
         data={query.data?.items ?? []}
         columns={sessionColumns}
         getRowId={(row) => row.id}
+        initialSorting={SESSIONS_INITIAL_SORT}
+        manualSorting
+        onSortingChange={(nextSorting) => {
+          setSorting(nextSorting)
+          setPage(1)
+        }}
         isLoading={query.isPending && !hasData}
         emptyMessage="No sessions match the current filters."
         tableWidthMode="fill-last"
@@ -444,9 +516,10 @@ function HistoryTab() {
   const [search, setSearch] = useState('')
   const [action, setAction] = useState('all')
   const [page, setPage] = useState(1)
+  const [sorting, setSorting] = useState<SortingState>(HISTORY_INITIAL_SORT)
   const query = useQuery({
-    queryKey: ['resource-guide', 'history', search, action, page],
-    queryFn: () => listHistory(search, action, page),
+    queryKey: ['resource-guide', 'history', search, action, page, sorting],
+    queryFn: () => listHistory(search, action, page, sorting),
     placeholderData: keepPreviousData,
     refetchInterval: 8_000,
   })
@@ -489,6 +562,12 @@ function HistoryTab() {
         data={query.data?.items ?? []}
         columns={historyColumns}
         getRowId={(row) => row.id}
+        initialSorting={HISTORY_INITIAL_SORT}
+        manualSorting
+        onSortingChange={(nextSorting) => {
+          setSorting(nextSorting)
+          setPage(1)
+        }}
         isLoading={query.isPending && !hasData}
         emptyMessage="No history events match the current filters."
         tableWidthMode="fill-last"
@@ -522,10 +601,10 @@ function UserListPage({
   return (
     <DataBodyTemplate
       theme={theme}
-      className="layout-databody-resource-guide"
+      className="layout-databody-managed-table-guide"
       topBar={<PageTopBar left={<PageBreadcrumb items={['Data', 'Users']} />} />}
       title="Users"
-      description="Canonical resource-management composition with isolated tab queries."
+      description="Canonical managed-table composition with isolated tab queries."
     >
       <DataBodyTemplate.Tab id="users" label="Users">
         <UsersTab onAddUser={onAddUser} />
@@ -569,7 +648,7 @@ function UserCreatePage({
   return (
     <DataBodyTemplate
       theme={theme}
-      className="layout-databody-resource-guide"
+      className="layout-databody-managed-table-guide"
       topBar={
         <PageTopBar
           left={<PageBreadcrumb items={['Data', { label: 'Users', href: listPath }, 'Add user']} />}
@@ -650,10 +729,10 @@ function UserCreatePage({
   )
 }
 
-export function DataBodyResourceGuide({ theme }: { theme?: React.CSSProperties }) {
+export function DataBodyManagedTableGuide({ theme }: { theme?: React.CSSProperties }) {
   const navigate = useNavigate()
   const params = useParams<'shell' | '*'>()
-  const listPath = `/${params.shell ?? 'sidebar'}/databody-resource-guide`
+  const listPath = `/${params.shell ?? 'sidebar'}/databody-managed-table-guide`
   const isCreatePage = params['*'] === 'new'
   const [queryClient] = useState(
     () =>

@@ -60,7 +60,6 @@ function MobileNavSheet({
   shellId: string
 }) {
   const [open, setOpen] = useState(false)
-  const allItems = navigation.flatMap((g) => g.items)
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -73,50 +72,57 @@ function MobileNavSheet({
           <SheetTitle className="text-sm">Menu</SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col gap-0.5 p-2">
-          {allItems.map((item) => {
-            const Icon = item.icon
-            const active = itemIsActive(item, activeItemId)
-            return (
-              <Fragment key={item.id}>
-                {!item.children?.length ? (
-                  <Link
-                    to={`/${shellId}/${item.id}`}
-                    onClick={() => setOpen(false)}
-                    className={cn(
-                      'flex items-center gap-2 rounded-(--radius) px-3 py-2 text-sm transition-colors',
-                      active
-                        ? 'bg-accent text-accent-foreground font-medium'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground',
-                    )}
-                  >
-                    {Icon && <Icon className="h-4 w-4 shrink-0" />}
-                    {item.label}
-                  </Link>
-                ) : (
-                  <>
-                    <span className="px-3 py-1.5 text-xs font-medium text-muted-foreground">
-                      {item.label}
-                    </span>
-                    {item.children.map((child) => (
+          {navigation.map((group) => (
+            <Fragment key={group.label}>
+              <span className="px-3 pb-1 pt-3 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground first:pt-1">
+                {group.label}
+              </span>
+              {group.items.map((item) => {
+                const Icon = item.icon
+                const active = itemIsActive(item, activeItemId)
+                return (
+                  <Fragment key={item.id}>
+                    {!item.children?.length ? (
                       <Link
-                        key={child.id}
-                        to={`/${shellId}/${child.id}`}
+                        to={`/${shellId}/${item.id}`}
                         onClick={() => setOpen(false)}
                         className={cn(
-                          'flex items-center gap-2 rounded-(--radius) py-1.5 pl-7 pr-3 text-sm transition-colors',
-                          child.id === activeItemId
+                          'flex items-center gap-2 rounded-(--radius) px-3 py-2 text-sm transition-colors',
+                          active
                             ? 'bg-accent text-accent-foreground font-medium'
                             : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                         )}
                       >
-                        {child.label}
+                        {Icon && <Icon className="h-4 w-4 shrink-0" />}
+                        {item.label}
                       </Link>
-                    ))}
-                  </>
-                )}
-              </Fragment>
-            )
-          })}
+                    ) : (
+                      <>
+                        <span className="px-3 py-1.5 text-xs font-medium text-muted-foreground">
+                          {item.label}
+                        </span>
+                        {item.children.map((child) => (
+                          <Link
+                            key={child.id}
+                            to={`/${shellId}/${child.id}`}
+                            onClick={() => setOpen(false)}
+                            className={cn(
+                              'flex items-center gap-2 rounded-(--radius) py-1.5 pl-7 pr-3 text-sm transition-colors',
+                              child.id === activeItemId
+                                ? 'bg-accent text-accent-foreground font-medium'
+                                : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                            )}
+                          >
+                            {child.label}
+                          </Link>
+                        ))}
+                      </>
+                    )}
+                  </Fragment>
+                )
+              })}
+            </Fragment>
+          ))}
         </nav>
       </SheetContent>
     </Sheet>
@@ -187,55 +193,106 @@ function NavigationHeaderContent({
                   <Separator orientation="vertical" className="mx-1 h-4 shrink-0" />
                 </li>
               )}
-              {group.items.map((item) => {
-                const active = itemIsActive(item, activeItemId)
-                return (
-                  <NavigationMenuItem key={item.id} value={item.id}>
-                    {(item.children?.length ?? 0) > 0 ? (
-                      <>
-                        <NavigationMenuTrigger
+              {group.label === 'Guides' ? (
+                <NavigationMenuItem value="guides">
+                  <NavigationMenuTrigger
+                    className={cn(
+                      'h-8 text-sm',
+                      group.items.some((item) => itemIsActive(item, activeItemId))
+                        ? 'text-foreground font-medium'
+                        : 'text-muted-foreground font-normal',
+                    )}
+                  >
+                    Guides
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <div className="w-56 p-2">
+                      {group.items.map((item) => {
+                        if (!item.children?.length) {
+                          return (
+                            <NavigationMenuLink
+                              key={item.id}
+                              active={item.id === activeItemId}
+                              render={<Link to={`/${shellId}/${item.id}`} />}
+                              className="w-full self-start px-3 py-2 text-sm font-semibold"
+                            >
+                              {item.label}
+                            </NavigationMenuLink>
+                          )
+                        }
+
+                        return (
+                          <section key={item.id} className="rounded-(--radius) p-1">
+                            <p className="px-2 pb-1 text-xs font-semibold text-foreground">
+                              {item.label}
+                            </p>
+                            {item.children.map((destination) => (
+                              <NavigationMenuLink
+                                key={destination.id}
+                                active={destination.id === activeItemId}
+                                render={<Link to={`/${shellId}/${destination.id}`} />}
+                                className="w-full px-2 py-1.5 text-sm"
+                              >
+                                {destination.label}
+                              </NavigationMenuLink>
+                            ))}
+                          </section>
+                        )
+                      })}
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              ) : (
+                group.items.map((item) => {
+                  const active = itemIsActive(item, activeItemId)
+                  return (
+                    <NavigationMenuItem key={item.id} value={item.id}>
+                      {(item.children?.length ?? 0) > 0 ? (
+                        <>
+                          <NavigationMenuTrigger
+                            className={cn(
+                              'h-8 text-sm',
+                              active
+                                ? 'text-foreground font-medium'
+                                : 'text-muted-foreground font-normal',
+                            )}
+                          >
+                            {item.label}
+                          </NavigationMenuTrigger>
+                          <NavigationMenuContent>
+                            <ul className="w-36 p-1">
+                              {item.children?.map((child) => (
+                                <li key={child.id}>
+                                  <NavigationMenuLink
+                                    active={child.id === activeItemId}
+                                    render={<Link to={`/${shellId}/${child.id}`} />}
+                                    className="w-full px-2 py-1.5 text-sm"
+                                  >
+                                    {child.label}
+                                  </NavigationMenuLink>
+                                </li>
+                              ))}
+                            </ul>
+                          </NavigationMenuContent>
+                        </>
+                      ) : (
+                        <NavigationMenuLink
+                          active={active}
+                          render={<Link to={`/${shellId}/${item.id}`} />}
                           className={cn(
-                            'h-8 text-sm',
+                            'h-8 px-2.5 py-1.5 text-sm',
                             active
-                              ? 'text-foreground font-medium'
-                              : 'text-muted-foreground font-normal',
+                              ? 'bg-accent text-foreground font-medium'
+                              : 'text-muted-foreground',
                           )}
                         >
                           {item.label}
-                        </NavigationMenuTrigger>
-                        <NavigationMenuContent>
-                          <ul className="w-36 p-1">
-                            {item.children?.map((child) => (
-                              <li key={child.id}>
-                                <NavigationMenuLink
-                                  active={child.id === activeItemId}
-                                  render={<Link to={`/${shellId}/${child.id}`} />}
-                                  className="w-full px-2 py-1.5 text-sm"
-                                >
-                                  {child.label}
-                                </NavigationMenuLink>
-                              </li>
-                            ))}
-                          </ul>
-                        </NavigationMenuContent>
-                      </>
-                    ) : (
-                      <NavigationMenuLink
-                        active={active}
-                        render={<Link to={`/${shellId}/${item.id}`} />}
-                        className={cn(
-                          'h-8 px-2.5 py-1.5 text-sm',
-                          active
-                            ? 'bg-accent text-foreground font-medium'
-                            : 'text-muted-foreground',
-                        )}
-                      >
-                        {item.label}
-                      </NavigationMenuLink>
-                    )}
-                  </NavigationMenuItem>
-                )
-              })}
+                        </NavigationMenuLink>
+                      )}
+                    </NavigationMenuItem>
+                  )
+                })
+              )}
             </Fragment>
           ))}
         </NavigationMenuList>

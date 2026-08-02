@@ -1,41 +1,46 @@
-# DataBodyTemplate Resource Management Contract for AI
+# Managed Table Pattern Contract for AI
 
-This is the normative implementation contract for a tabbed resource-management experience built with `@loykin/designkit`, `@loykin/gridkit`, TanStack Query, and React Router. Copy this entire document into an AI task before asking it to create or revise the page.
+This is the normative implementation contract for a tabbed administrative table built with `@loykin/designkit`, `@loykin/gridkit`, TanStack Query, and React Router. Copy this entire document into an AI task before asking it to create or revise the page.
 
-The Playground's **DataBodyTemplate / Resource Management** preview is the executable reference. Its records are only sample data; replace domain-specific names, fields, filters, and routes with the target resource while preserving the ownership and layout rules in this contract. If an implementation differs from this contract, revise the implementation rather than inventing a local layout.
+The Playground's **Guides / Resource Management / Managed Table** screen is the executable end-to-end reference. Its records are sample data; the pattern is defined by the table responsibilities and template composition below, not by that data domain. If an implementation differs from this contract, revise the implementation rather than inventing a local layout.
 
 ## Pattern identity and reference registry
 
-- Pattern ID: `databody.resource-management`
-- Page template: `DataBodyTemplate`
+- Pattern ID: `managed-table`
+- Primary list template: `DataBodyTemplate`
+- Full-detail template when required: `DetailBodyTemplate`
+- Multi-step create/edit template when required: `FormWizardBodyTemplate`
 - Resource boundary: `DataBodyTemplate.Resource`
-- Executable example: `Resource Management`
-- Playground route: `/sidebar/databody-resource-guide` and `/header/databody-resource-guide`
-- Preview source: `playground/src/templates/demos/databody/DataBodyResourceGuide.tsx`
+- Executable pattern route: `/sidebar/databody-managed-table-guide` and `/header/databody-managed-table-guide`
+- Executable pattern source: `playground/src/templates/demos/databody/DataBodyManagedTableGuide.tsx`
 
-| Status                  | Example  | What it demonstrates                                                                                                         |
-| ----------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Executable              | Users    | Tabs, isolated queries, search, role filter, Add user route, controlled pagination, background refresh, concise detail Sheet |
-| Executable sub-resource | Sessions | A tab-owned query with search, status filter, and pagination but no create action                                            |
-| Executable sub-resource | History  | A read-only audit resource with search, event filter, and pagination                                                         |
+| Status               | Playground reference                           | Role in this pattern                                                                   |
+| -------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Executable pattern   | `Guides / Resource Management / Managed Table` | Complete list, tabs, queries, create route, form, pagination, and concise detail Sheet |
+| Supporting reference | `DataBodyTemplate / Table / Standard`          | Base GridKit table composition and table sizing                                        |
+| Supporting reference | `DataBodyTemplate / Form / Stacked`            | Create/edit form spacing, padding, and action alignment                                |
+| Supporting reference | `DetailBodyTemplate / Detail / Record`         | Full-page destination when detail outgrows a Sheet                                     |
+| Supporting reference | `FormWizardBodyTemplate / Wizard`              | Multi-step destination when create/edit outgrows a stacked form                        |
+| Counterexample       | `DashboardBodyTemplate / Dashboard`            | Monitoring panels are not an administrative table                                      |
+| Counterexample       | `BrowseBodyTemplate / Browse`                  | Consumer discovery is not an administrative resource list                              |
 
-Only entries marked **Executable** are implemented references that can be inspected and copied. The applicability examples below are selection guidance, not claims that those screens already exist in the Playground.
+Only the entry marked **Executable pattern** implements this pattern end to end. Supporting references define the correct destination or visual sub-composition; they are not additional domain implementations of Managed Table.
 
-## Applicability examples
+## Pattern composition map
 
-Use this pattern when the page manages a collection with repeated records and most of the following capabilities: server-side querying, search or filters, resource-scoped actions, pagination, background refresh, and row inspection.
+| Responsibility                                     | Primary API                                      | Playground example to inspect                  |
+| -------------------------------------------------- | ------------------------------------------------ | ---------------------------------------------- |
+| Collection list, tabs, search, filters, pagination | `DataBodyTemplate` + `DataBodyTemplate.Resource` | `Guides / Resource Management / Managed Table` |
+| Base table behavior                                | GridKit `DataGrid`                               | `DataBodyTemplate / Table / Standard`          |
+| Simple create/edit route                           | stacked `DataBodyTemplate.Group`                 | `DataBodyTemplate / Form / Stacked`            |
+| Concise read-only inspection                       | `Sheet`                                          | `Managed Table` row detail                     |
+| Complex full-page detail route                     | `DetailBodyTemplate`                             | `DetailBodyTemplate / Detail / Record`         |
+| Multi-step create/edit route                       | `FormWizardBodyTemplate`                         | `FormWizardBodyTemplate / Wizard`              |
+| Destructive confirmation                           | `AlertDialog`                                    | UI primitive contract                          |
 
-| Representative resource | Typical tabs or views       | Resource action     | Detail destination        | Form destination                               | Why the pattern fits                                                               |
-| ----------------------- | --------------------------- | ------------------- | ------------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------- |
-| Users                   | Users, Sessions, History    | Add user            | Concise profile Sheet     | Create/edit page                               | Collection management with related tab resources                                   |
-| Teams                   | Teams, Members, Invitations | Create team         | Concise membership Sheet  | Create/edit page                               | Searchable collection with membership workflows                                    |
-| Service accounts        | Accounts, Keys, Activity    | Add service account | Metadata Sheet            | Create/edit page                               | Server data, credentials metadata, and audit history                               |
-| Credentials             | Credentials, Usage, History | Add credential      | Non-secret metadata Sheet | Create/edit page                               | Filtered collection with sensitive, validated forms                                |
-| Projects                | Active, Archived, Activity  | Create project      | Full detail page          | Create/edit page                               | The list fits, but complex detail is independently linkable                        |
-| API tokens              | Active, Revoked, Activity   | Create token        | Metadata Sheet            | Short modal only when creation is truly narrow | The list pattern fits even when a documented overlay exception applies to creation |
-| Jobs or runs            | Running, Completed, Failed  | Retry or cancel     | Run detail page           | Usually no create form                         | Operational collection with polling and status filters                             |
+## Pattern applicability
 
-The domain name does not select the pattern by itself. For example, a Project list may use this pattern while a Project dashboard or editor should not.
+Use this pattern when the screen manages a collection of repeated server records with most of these responsibilities: search or filters, resource-scoped actions, pagination, background refresh, and row inspection. The record name does not select the pattern; the screen responsibilities do.
 
 ## When not to use this pattern
 
@@ -51,7 +56,7 @@ The domain name does not select the pattern by itself. For example, a Project li
 
 ## Pattern selection questions
 
-Choose `databody.resource-management` when the answers are mostly yes:
+Choose `managed-table` when the answers are mostly yes:
 
 1. Is the primary object a collection of repeated records?
 2. Does the collection own search, filters, pagination, polling, or server state?
@@ -59,7 +64,7 @@ Choose `databody.resource-management` when the answers are mostly yes:
 4. Should concise row inspection preserve the list context?
 5. Can create/edit and complex detail use independent routes?
 
-If the first two answers are no, do not use this pattern. If multiple page-level templates appear necessary, select the one matching the dominant task instead of nesting templates.
+If the first two answers are no, do not use this pattern. This pattern may use different page-level templates on different routes, but each route still renders exactly one page-level template. Never nest those templates inside one another.
 
 ## Scope
 
@@ -226,6 +231,38 @@ During background refresh:
 - Initial loading with no data belongs to GridKit's `isLoading` skeleton state, not `Resource.refreshing`.
 
 After a mutation, invalidate only the affected resource keys. Do not invalidate a broad page key that refetches unrelated tabs.
+
+## Sorting and stable ordering
+
+Every table declares an initial order. Do not rely on source-array order or the timing of query responses.
+
+- Client-side tables use GridKit `initialSorting`.
+- Server-paginated tables keep `SortingState` in the resource component, include it in the TanStack Query key, pass `manualSorting`, and sort in the query/API before slicing the requested page.
+- Reset to page one when sorting changes.
+- Human labels such as `12 min ago` are display values, not sort keys. Use a timestamp, sequence, or numeric `accessorFn` while rendering the human label from `row.original`.
+- Add a stable tie-breaker such as the record ID when equal primary values are possible.
+- A draggable table is the exception: its persisted manual order is authoritative and column sorting is disabled.
+
+```tsx
+const INITIAL_SORTING: SortingState = [{ id: 'name', desc: false }]
+const [sorting, setSorting] = useState<SortingState>(INITIAL_SORTING)
+
+const query = useQuery({
+  queryKey: ['users', search, role, page, sorting],
+  queryFn: () => listUsers({ search, role, page, sorting }),
+})
+
+<DataGrid
+  initialSorting={INITIAL_SORTING}
+  manualSorting
+  onSortingChange={(nextSorting) => {
+    setSorting(nextSorting)
+    setPage(1)
+  }}
+/>
+```
+
+Sorting must happen before pagination in `listUsers`. Sorting only the six rows already returned for the current page produces a false order across pages.
 
 ## GridKit pagination
 

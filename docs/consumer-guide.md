@@ -246,23 +246,29 @@ These rules should be copied into a consuming repository's `AGENTS.md`. Package
 JSDoc and runtime validation provide additional guidance, but an agent working
 in an application may not inspect dependency source before generating code.
 
-## DataBodyTemplate Resource Management Guide
+## Pattern Guides
 
-The normative AI contract is
-[DataBodyTemplate Resource Management Contract](./guides/databody-resource-management.md).
-The Playground renders that exact Markdown in its **AI Guide** tab, so the docs
-and the copyable agent instructions cannot drift independently. The section
-below is a human-oriented summary. Users are the executable sample domain, not
-the scope of the pattern. Use the normative contract when generating or
-reviewing implementation code for any resource.
+Start with the [Pattern Guide Index](./guides/README.md). The Playground renders
+the same canonical Markdown in each matching example's **AI Guide** tab, so the
+docs and copyable agent instructions cannot drift independently.
 
-- Pattern ID: `databody.resource-management`
-- Executable reference: Playground **Resource Management**
-- Executable sub-resources: Users, Sessions, History
-- Selection guidance: the normative contract records applicable examples such
-  as teams, credentials, projects, tokens, and jobs, along with explicit
-  counterexamples for dashboards, settings, browse pages, wizards, and detail
-  pages.
+- [Managed Table Pattern Contract](./guides/managed-table.md) — administrative
+  table with search, filters, pagination, CRUD routes, and concise row detail
+- [Publishing Workflow Contract](./guides/publishing-workflow.md) — blog
+  collection connected to a routed article destination
+- [Commerce Workflow Contract](./guides/commerce-workflow.md) — filterable
+  catalog connected to a routed product destination
+
+The section below summarizes the Managed Table pattern. Use its normative
+contract when generating or reviewing an administrative table.
+
+- Pattern ID: `managed-table`
+- Executable reference: Playground **Guides / Resource Management / Managed Table**
+- Supporting references: **DataBodyTemplate / Table / Standard**,
+  **DataBodyTemplate / Form / Stacked**, **DetailBodyTemplate / Detail /
+  Record**, and **FormWizardBodyTemplate / Wizard**
+- Counterexamples: **DashboardBodyTemplate / Dashboard** and
+  **BrowseBodyTemplate / Browse**
 
 Use one resource boundary for each independently queried table. The boundary
 owns that table's search, filters, resource actions, selection actions, async
@@ -413,7 +419,7 @@ indicator only for an explicit user-initiated refresh or when freshness
 feedback is operationally important. Initial loading with no existing data is
 the GridKit `isLoading` skeleton state.
 
-The DesignKit playground's **DataBodyTemplate / Resource Management**
+The DesignKit playground's **Guides / Resource Management / Managed Table**
 screen is the canonical executable example. Its preview source includes
 TanStack Query, mock APIs, isolated Users/Sessions/History tab components,
 search, filters, mutations, polling, stale-data behavior, pagination, and a
