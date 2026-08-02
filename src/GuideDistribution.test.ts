@@ -24,6 +24,7 @@ describe('published implementation guides', () => {
     expect(packageJson.designkit.guideManifest).toBe('./docs/guides/manifest.json')
     expect(manifest.guides.map((guide: { id: string }) => guide.id)).toEqual([
       'managed-table',
+      'kubernetes-workspace',
       'form-workflow',
       'publishing-workflow',
       'commerce-workflow',
@@ -50,6 +51,7 @@ describe('published implementation guides', () => {
     const list = runCli(['guide', 'list'])
     expect(list.status).toBe(0)
     expect(list.stdout).toContain('managed-table')
+    expect(list.stdout).toContain('kubernetes-workspace')
     expect(list.stdout).toContain('form-workflow')
     expect(list.stdout).toContain('publishing-workflow')
     expect(list.stdout).toContain('commerce-workflow')

@@ -108,7 +108,7 @@ Do not nest one page-level template (`DataBodyTemplate`, `WorkbenchBodyTemplate`
 
 - Before implementing or reviewing a product workflow, inspect `docs/guides/manifest.json` and select the matching contract in `docs/guides/`.
 - Entries under the Playground's **Guides** navigation are normative end-to-end implementation contracts. Existing template groups are visual API references only; do not infer product structure from a template demo when a matching Guide exists.
-- The current guide IDs are `managed-table`, `form-workflow`, `publishing-workflow`, and `commerce-workflow`.
+- The current guide IDs are `managed-table`, `kubernetes-workspace`, `form-workflow`, `publishing-workflow`, and `commerce-workflow`.
 - Do not add an AI Guide to a visual template merely because a workflow happens to use that template.
 
 ### Guide maintenance gate

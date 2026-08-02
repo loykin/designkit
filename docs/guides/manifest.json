@@ -15,6 +15,23 @@
       "contract": "managed-table.md"
     },
     {
+      "id": "kubernetes-workspace",
+      "title": "Operations / Kubernetes Workspace",
+      "summary": "Operational resource collection with quick SidePanel inspection and persistent logs, shell, and events tools in a bottom dock.",
+      "useWhen": [
+        "Kubernetes operations",
+        "resource inspection",
+        "logs and shell",
+        "persistent tool dock"
+      ],
+      "templates": ["DataBodyTemplate", "PanelTemplate"],
+      "playgroundPaths": [
+        "/sidebar/kubernetes-workspace-guide",
+        "/header/kubernetes-workspace-guide"
+      ],
+      "contract": "kubernetes-workspace.md"
+    },
+    {
       "id": "form-workflow",
       "title": "Forms / Stacked Form",
       "summary": "Canonical stacked page structure and modular section boundaries for create, edit, and settings forms.",

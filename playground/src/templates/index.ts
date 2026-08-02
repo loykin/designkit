@@ -25,6 +25,7 @@ import managedTableAiGuide from '../../../docs/guides/managed-table.md?raw'
 import formWorkflowAiGuide from '../../../docs/guides/form-workflow.md?raw'
 import publishingWorkflowAiGuide from '../../../docs/guides/publishing-workflow.md?raw'
 import commerceWorkflowAiGuide from '../../../docs/guides/commerce-workflow.md?raw'
+import kubernetesWorkspaceAiGuide from '../../../docs/guides/kubernetes-workspace.md?raw'
 
 export { TEMPLATE_DEFINITIONS, createTemplateOverrides, getTemplateDefinition } from './definitions'
 export type {
@@ -111,7 +112,10 @@ import { buildWorkbenchTemplateCode } from './demos/workbench/WorkbenchBodyTempl
 import { WorkbenchPanelEditorDemo } from './demos/workbench/WorkbenchPanelEditorDemo'
 import { WorkbenchSqlEditorDemo } from './demos/workbench/WorkbenchSqlEditorDemo'
 import { AgentChatDemo, buildAgentChatCode } from './demos/workbench/AgentChatDemo'
-import { KubernetesMonitoringDemo } from './demos/databody/KubernetesMonitoringDemo'
+import {
+  KubernetesMonitoringDemo,
+  KubernetesWorkspaceGuide,
+} from './demos/databody/KubernetesMonitoringDemo'
 import {
   BrowseBodyTemplateDemo,
   buildBrowseBodyTemplateCode,
@@ -135,6 +139,7 @@ const previewComponents: Record<
   ComponentType<{ theme?: React.CSSProperties }>
 > = {
   'databody-managed-table-guide': DataBodyManagedTableGuide,
+  'kubernetes-workspace-guide': KubernetesWorkspaceGuide,
   'form-workflow-guide': FormWorkflowGuide,
   'publishing-workflow-guide': PublishingWorkflowGuide,
   'commerce-workflow-guide': CommerceWorkflowGuide,
@@ -228,6 +233,7 @@ function toPreviewSource(source: string): string {
 
 const previewSourcePathById: Partial<Record<PlaygroundTemplateId, string>> = {
   'databody-managed-table-guide': './demos/databody/DataBodyManagedTableGuide.tsx',
+  'kubernetes-workspace-guide': './demos/databody/KubernetesMonitoringDemo.tsx',
   'form-workflow-guide': './demos/guides/FormWorkflowGuide.tsx',
   'publishing-workflow-guide': './demos/guides/PublishingWorkflowGuide.tsx',
   'commerce-workflow-guide': './demos/guides/CommerceWorkflowGuide.tsx',
@@ -276,6 +282,7 @@ const aiGuideByPatternId: Record<string, string> = {
   'form-workflow': formWorkflowAiGuide,
   'publishing-workflow': publishingWorkflowAiGuide,
   'commerce-workflow': commerceWorkflowAiGuide,
+  'kubernetes-workspace': kubernetesWorkspaceAiGuide,
 }
 
 export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition) => ({
@@ -293,6 +300,7 @@ export const TEMPLATES: TemplateConfig[] = TEMPLATE_DEFINITIONS.map((definition)
 
 const iconById: Partial<Record<PlaygroundTemplateId, ComponentType<{ className?: string }>>> = {
   'databody-managed-table-guide': FileText,
+  'kubernetes-workspace-guide': Boxes,
   'form-workflow-guide': FileText,
   'publishing-workflow-guide': FileText,
   'commerce-workflow-guide': Layers,
@@ -382,6 +390,12 @@ const guideNavigation: TemplateNavigationGroup = {
       label: 'Resource Management',
       icon: Database,
       children: [{ id: 'databody-managed-table-guide', label: 'Managed Table' }],
+    },
+    {
+      id: 'kubernetes-workspace-guide',
+      label: 'Operations',
+      icon: Boxes,
+      children: [{ id: 'kubernetes-workspace-guide', label: 'Kubernetes Workspace' }],
     },
     {
       id: 'form-workflow-guide',

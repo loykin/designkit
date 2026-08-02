@@ -254,6 +254,8 @@ docs and copyable agent instructions cannot drift independently.
 
 - [Managed Table Pattern Contract](./guides/managed-table.md) — administrative
   table with search, filters, pagination, CRUD routes, and concise row detail
+- [Kubernetes Workspace Contract](./guides/kubernetes-workspace.md) — operational
+  resource table with SidePanel inspection and persistent Logs/Shell tools
 - [Stacked Form Workflow Contract](./guides/form-workflow.md) — canonical
   stacked structure and modular Group boundaries for create, edit, and settings forms
 - [Publishing Workflow Contract](./guides/publishing-workflow.md) — blog

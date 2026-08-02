@@ -62,6 +62,7 @@ try {
     'cli/designkit.mjs',
     'docs/guides/manifest.json',
     'docs/guides/managed-table.md',
+    'docs/guides/kubernetes-workspace.md',
     'docs/guides/form-workflow.md',
     'docs/guides/publishing-workflow.md',
     'docs/guides/commerce-workflow.md',
@@ -177,7 +178,7 @@ try {
   }
   if (
     publishedGuideManifest.guides.map((guide) => guide.id).join(',') !==
-    'managed-table,form-workflow,publishing-workflow,commerce-workflow'
+    'managed-table,kubernetes-workspace,form-workflow,publishing-workflow,commerce-workflow'
   ) {
     throw new Error('Published guide manifest does not match the supported workflow registry')
   }
@@ -195,6 +196,7 @@ try {
   })
   if (
     !guideList.includes('managed-table') ||
+    !guideList.includes('kubernetes-workspace') ||
     !guideList.includes('form-workflow') ||
     !guideList.includes('publishing-workflow') ||
     !guideList.includes('commerce-workflow')

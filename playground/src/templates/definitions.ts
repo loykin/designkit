@@ -169,6 +169,17 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     preset: {},
   },
   {
+    id: 'kubernetes-workspace-guide',
+    label: 'Kubernetes Workspace',
+    patternId: 'kubernetes-workspace',
+    group: 'Pages',
+    navigationGroup: 'Guides',
+    layoutClassName: 'layout-guide-kubernetes-workspace',
+    exportComponent: 'DataBodyTemplate + PanelTemplate',
+    exportKind: 'body-template',
+    preset: {},
+  },
+  {
     id: 'form-workflow-guide',
     label: 'Stacked Form',
     patternId: 'form-workflow',

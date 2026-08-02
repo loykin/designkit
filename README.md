@@ -8,12 +8,13 @@ Do not generate an application workflow from a template name alone. DesignKit
 ships versioned implementation guides that connect routes, query boundaries,
 loading behavior, action placement, and the correct page templates.
 
-| Product workflow    | Guide ID              | Connected destinations                 |
-| ------------------- | --------------------- | -------------------------------------- |
-| Administrative CRUD | `managed-table`       | table → detail Sheet; create/edit page |
-| Forms               | `form-workflow`       | create, edit, and settings pages       |
-| Publishing          | `publishing-workflow` | blog collection → article route        |
-| Commerce            | `commerce-workflow`   | filtered catalog → product route       |
+| Product workflow    | Guide ID               | Connected destinations                 |
+| ------------------- | ---------------------- | -------------------------------------- |
+| Administrative CRUD | `managed-table`        | table → detail Sheet; create/edit page |
+| Operations          | `kubernetes-workspace` | Pod table → detail panel → tool dock   |
+| Forms               | `form-workflow`        | create, edit, and settings pages       |
+| Publishing          | `publishing-workflow`  | blog collection → article route        |
+| Commerce            | `commerce-workflow`    | filtered catalog → product route       |
 
 The executable **Forms / Stacked Form** Playground guide uses React Hook Form
 to demonstrate shared state, controlled DesignKit inputs, validation, and
@@ -31,6 +32,7 @@ Print a complete contract for a developer or coding agent:
 
 ```bash
 npx @loykin/designkit guide managed-table
+npx @loykin/designkit guide kubernetes-workspace --prompt
 npx @loykin/designkit guide form-workflow --prompt
 npx @loykin/designkit guide publishing-workflow --prompt
 npx @loykin/designkit guide commerce-workflow

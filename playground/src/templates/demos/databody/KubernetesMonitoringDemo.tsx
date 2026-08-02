@@ -1,18 +1,20 @@
-import { useMemo, useState } from 'react'
-import type { CSSProperties } from 'react'
-import { DataGrid, type DataGridColumnDef } from '@loykin/gridkit'
+import { useMemo } from 'react'
+import type { CSSProperties, MouseEvent } from 'react'
+import type { Table } from '@tanstack/react-table'
+import { DataGrid, GlobalSearch, type DataGridColumnDef } from '@loykin/gridkit'
+import { ControlBarProvider, getTabType, registerTabType, useControlBar } from '@loykin/control-bar'
+import { SidePanelProvider, useSidePanel } from '@loykin/side-panel'
+import { FilterInput, type FilterInputConfig } from '@loykin/filter-input'
+import { Badge, Button, DataBodyTemplate, PageTopBar, PanelTemplate } from '@loykin/designkit'
 import {
-  Badge,
-  Button,
-  DataBodyTemplate,
-  Input,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@loykin/designkit'
-import { Database, MoreVertical, RefreshCw, Search } from 'lucide-react'
+  ChevronDown,
+  ChevronUp,
+  Clock3,
+  RefreshCw,
+  ScrollText,
+  SquareTerminal,
+  X,
+} from 'lucide-react'
 
 type PodStatus = 'Running' | 'Succeeded' | 'Failed' | 'Pending'
 
@@ -29,29 +31,161 @@ interface PodRow {
   status: PodStatus
 }
 
+interface PodPanelData {
+  pod: string
+  namespace: string
+  container: string
+}
+
+interface ClusterEventData {
+  cluster: string
+}
+
+interface PodsResourceProps {
+  pods: PodRow[]
+}
+
+interface PodDetailPanelProps {
+  pod: PodRow
+  onOpenLogs: () => void
+  onOpenShell: () => void
+}
+
+const CONTROL_DOCK_COLLAPSED_HEIGHT = 36
+const CONTROL_DOCK_EXPANDED_HEIGHT = 260
+
 const pods: PodRow[] = [
-  { id: '1', name: 'coredns-668d6bf9bc-2kqnf', namespace: 'kube-system', ready: '1/1', restarts: 0, controlledBy: 'ReplicaSet', node: 'desktop-control-plane', qos: 'Burstable', age: '12d', status: 'Running' },
-  { id: '2', name: 'coredns-668d6bf9bc-rj24f', namespace: 'kube-system', ready: '1/1', restarts: 0, controlledBy: 'ReplicaSet', node: 'desktop-control-plane', qos: 'Burstable', age: '12d', status: 'Running' },
-  { id: '3', name: 'etcd-desktop-control-plane', namespace: 'kube-system', ready: '1/1', restarts: 0, controlledBy: 'Node', node: 'desktop-control-plane', qos: 'Burstable', age: '12d', status: 'Running' },
-  { id: '4', name: 'kindnet-7z8lm', namespace: 'kube-system', ready: '1/1', restarts: 1, controlledBy: 'DaemonSet', node: 'desktop-control-plane', qos: 'Guaranteed', age: '12d', status: 'Running' },
-  { id: '5', name: 'kube-apiserver-desktop-control-plane', namespace: 'kube-system', ready: '1/1', restarts: 0, controlledBy: 'Node', node: 'desktop-control-plane', qos: 'Burstable', age: '12d', status: 'Running' },
-  { id: '6', name: 'metrics-server-75bf66d978-9kb8m', namespace: 'kube-system', ready: '1/1', restarts: 2, controlledBy: 'ReplicaSet', node: 'desktop-control-plane', qos: 'Burstable', age: '8d', status: 'Running' },
-  { id: '7', name: 'piper-agent-77d7c8d7b9-xkc2z', namespace: 'default', ready: '1/1', restarts: 0, controlledBy: 'ReplicaSet', node: 'desktop-worker', qos: 'BestEffort', age: '3h', status: 'Running' },
-  { id: '8', name: 'piper-agent-job-29188410-g4m9w', namespace: 'default', ready: '0/1', restarts: 0, controlledBy: 'Job', node: 'desktop-worker', qos: 'BestEffort', age: '22m', status: 'Succeeded' },
-  { id: '9', name: 'registry-6f6bf57c9f-2p4ln', namespace: 'default', ready: '0/1', restarts: 4, controlledBy: 'ReplicaSet', node: 'desktop-worker', qos: 'Burstable', age: '51m', status: 'Failed' },
-  { id: '10', name: 'web-6db6f8c9f8-jt6s4', namespace: 'production', ready: '0/1', restarts: 0, controlledBy: 'ReplicaSet', node: 'desktop-worker', qos: 'Burstable', age: '4m', status: 'Pending' },
+  {
+    id: '1',
+    name: 'coredns-668d6bf9bc-2kqnf',
+    namespace: 'kube-system',
+    ready: '1/1',
+    restarts: 0,
+    controlledBy: 'ReplicaSet',
+    node: 'desktop-control-plane',
+    qos: 'Burstable',
+    age: '12d',
+    status: 'Running',
+  },
+  {
+    id: '2',
+    name: 'coredns-668d6bf9bc-rj24f',
+    namespace: 'kube-system',
+    ready: '1/1',
+    restarts: 0,
+    controlledBy: 'ReplicaSet',
+    node: 'desktop-control-plane',
+    qos: 'Burstable',
+    age: '12d',
+    status: 'Running',
+  },
+  {
+    id: '3',
+    name: 'etcd-desktop-control-plane',
+    namespace: 'kube-system',
+    ready: '1/1',
+    restarts: 0,
+    controlledBy: 'Node',
+    node: 'desktop-control-plane',
+    qos: 'Burstable',
+    age: '12d',
+    status: 'Running',
+  },
+  {
+    id: '4',
+    name: 'kindnet-7z8lm',
+    namespace: 'kube-system',
+    ready: '1/1',
+    restarts: 1,
+    controlledBy: 'DaemonSet',
+    node: 'desktop-control-plane',
+    qos: 'Guaranteed',
+    age: '12d',
+    status: 'Running',
+  },
+  {
+    id: '5',
+    name: 'kube-apiserver-desktop-control-plane',
+    namespace: 'kube-system',
+    ready: '1/1',
+    restarts: 0,
+    controlledBy: 'Node',
+    node: 'desktop-control-plane',
+    qos: 'Burstable',
+    age: '12d',
+    status: 'Running',
+  },
+  {
+    id: '6',
+    name: 'metrics-server-75bf66d978-9kb8m',
+    namespace: 'kube-system',
+    ready: '1/1',
+    restarts: 2,
+    controlledBy: 'ReplicaSet',
+    node: 'desktop-control-plane',
+    qos: 'Burstable',
+    age: '8d',
+    status: 'Running',
+  },
+  {
+    id: '7',
+    name: 'piper-agent-77d7c8d7b9-xkc2z',
+    namespace: 'default',
+    ready: '1/1',
+    restarts: 0,
+    controlledBy: 'ReplicaSet',
+    node: 'desktop-worker',
+    qos: 'BestEffort',
+    age: '3h',
+    status: 'Running',
+  },
+  {
+    id: '8',
+    name: 'piper-agent-job-29188410-g4m9w',
+    namespace: 'default',
+    ready: '0/1',
+    restarts: 0,
+    controlledBy: 'Job',
+    node: 'desktop-worker',
+    qos: 'BestEffort',
+    age: '22m',
+    status: 'Succeeded',
+  },
+  {
+    id: '9',
+    name: 'registry-6f6bf57c9f-2p4ln',
+    namespace: 'default',
+    ready: '0/1',
+    restarts: 4,
+    controlledBy: 'ReplicaSet',
+    node: 'desktop-worker',
+    qos: 'Burstable',
+    age: '51m',
+    status: 'Failed',
+  },
+  {
+    id: '10',
+    name: 'web-6db6f8c9f8-jt6s4',
+    namespace: 'production',
+    ready: '0/1',
+    restarts: 0,
+    controlledBy: 'ReplicaSet',
+    node: 'desktop-worker',
+    qos: 'Burstable',
+    age: '4m',
+    status: 'Pending',
+  },
 ]
 
-const workloadTabs = [
-  ['overview', 'Overview'],
-  ['pods', 'Pods'],
-  ['deployments', 'Deployments'],
-  ['daemonsets', 'DaemonSets'],
-  ['statefulsets', 'StatefulSets'],
-  ['replicasets', 'ReplicaSets'],
-  ['jobs', 'Jobs'],
-  ['cronjobs', 'CronJobs'],
-] as const
+const namespaces = Array.from(new Set(pods.map((pod) => pod.namespace))).sort()
+
+const namespaceFilterConfig: FilterInputConfig = {
+  key: 'namespace',
+  type: 'select',
+  placeholder: 'Namespace',
+  options: namespaces.map((namespace) => ({ label: namespace, value: namespace })),
+  behavior: { clearable: true },
+}
 
 const statusVariant = {
   Running: 'default',
@@ -60,124 +194,439 @@ const statusVariant = {
   Pending: 'outline',
 } as const
 
-const columns: DataGridColumnDef<PodRow>[] = [
-  {
-    accessorKey: 'name',
-    header: 'Name',
-    size: 270,
-    cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
-  },
-  {
-    accessorKey: 'namespace',
-    header: 'Namespace',
-    cell: ({ row }) => <span className="text-primary underline-offset-2 hover:underline">{row.original.namespace}</span>,
-  },
-  { accessorKey: 'ready', header: 'Ready', size: 72 },
-  { accessorKey: 'restarts', header: 'Restarts', size: 82 },
-  {
-    accessorKey: 'controlledBy',
-    header: 'Controlled By',
-    cell: ({ row }) => <span className="text-primary">{row.original.controlledBy}</span>,
-  },
-  {
-    accessorKey: 'node',
-    header: 'Node',
-    cell: ({ row }) => <span className="text-primary">{row.original.node}</span>,
-  },
-  { accessorKey: 'qos', header: 'QoS', size: 100 },
-  { accessorKey: 'age', header: 'Age', size: 70 },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    size: 110,
-    cell: ({ row }) => (
-      <Badge variant={statusVariant[row.original.status]} className="font-normal">
-        {row.original.status}
-      </Badge>
-    ),
-  },
-  {
-    id: 'actions',
-    size: 42,
-    header: () => null,
-    cell: () => (
-      <Button variant="ghost" size="icon-xs" aria-label="Pod actions">
-        <MoreVertical />
-      </Button>
-    ),
-  },
-]
+function LogPanel({ pod, namespace, container }: PodPanelData) {
+  return (
+    <div className="h-full overflow-auto bg-background p-3 font-mono text-xs leading-5 text-foreground">
+      <div className="mb-2 text-muted-foreground">
+        Streaming {namespace}/{pod} · container/{container}
+      </div>
+      <div>2026-08-03T01:42:11.306Z INFO starting health probe server on :8081</div>
+      <div>2026-08-03T01:42:11.448Z INFO connected to kubernetes API</div>
+      <div>2026-08-03T01:42:12.021Z INFO cache synchronization completed</div>
+      <div className="text-primary">2026-08-03T01:42:16.912Z INFO ready to receive traffic</div>
+    </div>
+  )
+}
 
-export function KubernetesMonitoringDemo({ theme }: { theme?: CSSProperties }) {
-  const [activeResource, setActiveResource] = useState('pods')
-  const [namespace, setNamespace] = useState('all')
-  const [search, setSearch] = useState('')
+function ShellPanel({ pod, namespace, container }: PodPanelData) {
+  return (
+    <div className="h-full overflow-auto bg-background p-3 font-mono text-xs leading-5 text-foreground">
+      <div className="mb-2 text-muted-foreground">
+        kubectl exec · {namespace}/{pod} · {container}
+      </div>
+      <div>
+        $ kubectl exec -it {pod} -n {namespace} -- /bin/sh
+      </div>
+      <div className="text-primary">/{' #'} _</div>
+    </div>
+  )
+}
 
-  const visiblePods = useMemo(() => {
-    const query = search.trim().toLowerCase()
-    return pods.filter(
-      (pod) =>
-        (namespace === 'all' || pod.namespace === namespace) &&
-        (!query || pod.name.toLowerCase().includes(query) || pod.namespace.toLowerCase().includes(query)),
-    )
-  }, [namespace, search])
+function ClusterEventsPanel({ cluster }: ClusterEventData) {
+  return (
+    <div className="h-full overflow-auto bg-background p-3 text-xs text-foreground">
+      <div className="mb-2 font-medium">Events · {cluster}</div>
+      <div className="grid grid-cols-[5rem_6rem_minmax(0,1fr)] gap-x-3 gap-y-2 font-mono">
+        <span className="text-muted-foreground">2m</span>
+        <span>Normal</span>
+        <span>Scheduled production/web-6db6f8c9f8-jt6s4 on desktop-worker</span>
+        <span className="text-muted-foreground">7m</span>
+        <span className="text-destructive">Warning</span>
+        <span>BackOff restarting failed container registry</span>
+        <span className="text-muted-foreground">18m</span>
+        <span>Normal</span>
+        <span>Completed job/default/piper-agent-job-29188410</span>
+      </div>
+    </div>
+  )
+}
 
-  const activeLabel = workloadTabs.find(([id]) => id === activeResource)?.[1] ?? 'Pods'
+function PodDetailPanel({ pod, onOpenLogs, onOpenShell }: PodDetailPanelProps) {
+  const { close } = useSidePanel()
 
   return (
-    <DataBodyTemplate
-      theme={theme}
-      className="layout-databody-kubernetes"
-      title={activeLabel}
-      description={`${visiblePods.length} resources in docker-desktop`}
-      activeTab={activeResource}
-      onTabChange={setActiveResource}
-      contentClassName="min-h-0"
+    <PanelTemplate
+      eyebrow={`Pod · ${pod.namespace}`}
+      title={pod.name}
+      status={<Badge variant={statusVariant[pod.status]}>{pod.status}</Badge>}
       actions={
-        <Button variant="outline" size="sm">
+        <>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            aria-label={`Open shell for ${pod.name}`}
+            onClick={onOpenShell}
+          >
+            <SquareTerminal />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            aria-label={`Open logs for ${pod.name}`}
+            onClick={onOpenLogs}
+          >
+            <ScrollText />
+          </Button>
+          <div className="mx-1 h-4 w-px bg-border" aria-hidden="true" />
+          <Button variant="ghost" size="icon-xs" aria-label="Close" onClick={() => void close()}>
+            <X />
+          </Button>
+        </>
+      }
+    >
+      <PanelTemplate.Section title="Overview">
+        <dl className="space-y-2 text-sm">
+          {[
+            ['Status', pod.status],
+            ['Ready', pod.ready],
+            ['Restarts', String(pod.restarts)],
+            ['Age', pod.age],
+          ].map(([label, value]) => (
+            <div key={label} className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3">
+              <dt className="text-muted-foreground">{label}</dt>
+              <dd className="min-w-0 font-medium">{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </PanelTemplate.Section>
+
+      <PanelTemplate.Section title="Placement">
+        <dl className="space-y-2 text-sm">
+          {[
+            ['Node', pod.node],
+            ['Controlled by', pod.controlledBy],
+            ['QoS class', pod.qos],
+          ].map(([label, value]) => (
+            <div key={label} className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3">
+              <dt className="text-muted-foreground">{label}</dt>
+              <dd className="min-w-0 break-words font-mono text-xs">{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </PanelTemplate.Section>
+
+      <PanelTemplate.Section title="Identity">
+        <dl className="space-y-2 text-sm">
+          <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3">
+            <dt className="text-muted-foreground">Namespace</dt>
+            <dd className="min-w-0 break-words font-mono text-xs">{pod.namespace}</dd>
+          </div>
+          <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3">
+            <dt className="text-muted-foreground">Name</dt>
+            <dd className="min-w-0 break-words font-mono text-xs">{pod.name}</dd>
+          </div>
+        </dl>
+      </PanelTemplate.Section>
+    </PanelTemplate>
+  )
+}
+
+registerTabType<PodPanelData>('kubernetes-logs', {
+  label: 'Logs',
+  icon: <ScrollText className="size-3.5" />,
+  render: (data) => <LogPanel {...data} />,
+})
+
+registerTabType<PodPanelData>('kubernetes-shell', {
+  label: 'Shell',
+  icon: <SquareTerminal className="size-3.5" />,
+  render: (data) => <ShellPanel {...data} />,
+})
+
+registerTabType<ClusterEventData>('kubernetes-events', {
+  label: 'Events',
+  icon: <Clock3 className="size-3.5" />,
+  render: (data) => <ClusterEventsPanel {...data} />,
+})
+
+function NamespaceFilter({ table }: { table: Table<PodRow> }) {
+  const column = table.getColumn('namespace')
+  const value = (column?.getFilterValue() as string | undefined) ?? null
+
+  return (
+    <FilterInput
+      config={namespaceFilterConfig}
+      value={value}
+      onChange={(next) => column?.setFilterValue(next ?? undefined)}
+    />
+  )
+}
+
+function PodsResource({ pods }: PodsResourceProps) {
+  const { open, activate, tabs } = useControlBar()
+  const { open: openSidePanel } = useSidePanel()
+
+  const openPodPanel = (type: 'kubernetes-logs' | 'kubernetes-shell', pod: PodRow) => {
+    const label = `${type === 'kubernetes-logs' ? 'Logs' : 'Shell'} · ${pod.name}`
+    const existingTab = tabs.find((tab) => tab.type === type && tab.label === label)
+
+    if (existingTab) {
+      activate(existingTab.id)
+      return
+    }
+
+    open<PodPanelData>({
+      type,
+      label,
+      data: { pod: pod.name, namespace: pod.namespace, container: pod.name.split('-')[0] },
+    })
+  }
+
+  const openPodDetails = (pod: PodRow) => {
+    openSidePanel(
+      <PodDetailPanel
+        pod={pod}
+        onOpenLogs={() => openPodPanel('kubernetes-logs', pod)}
+        onOpenShell={() => openPodPanel('kubernetes-shell', pod)}
+      />,
+      { side: 'right', size: 420, minSize: 340, maxSize: 560, resizable: true },
+    )
+  }
+
+  const columns = useMemo<DataGridColumnDef<PodRow>[]>(
+    () => [
+      {
+        accessorKey: 'name',
+        header: 'Name',
+        size: 270,
+        cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+      },
+      {
+        accessorKey: 'namespace',
+        header: 'Namespace',
+        cell: ({ row }) => <span className="text-primary">{row.original.namespace}</span>,
+      },
+      { accessorKey: 'ready', header: 'Ready', size: 72 },
+      { accessorKey: 'restarts', header: 'Restarts', size: 82 },
+      {
+        accessorKey: 'controlledBy',
+        header: 'Controlled By',
+        cell: ({ row }) => <span className="text-primary">{row.original.controlledBy}</span>,
+      },
+      {
+        accessorKey: 'node',
+        header: 'Node',
+        cell: ({ row }) => <span className="text-primary">{row.original.node}</span>,
+      },
+      { accessorKey: 'qos', header: 'QoS', size: 100 },
+      { accessorKey: 'age', header: 'Age', size: 70 },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        size: 110,
+        cell: ({ row }) => (
+          <Badge variant={statusVariant[row.original.status]} className="font-normal">
+            {row.original.status}
+          </Badge>
+        ),
+      },
+      {
+        id: 'actions',
+        size: 76,
+        header: () => null,
+        cell: ({ row }) => (
+          <div className="flex items-center justify-end gap-0.5">
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              aria-label={`Open logs for ${row.original.name}`}
+              onClick={(event: MouseEvent<HTMLButtonElement>) => {
+                event.stopPropagation()
+                openPodPanel('kubernetes-logs', row.original)
+              }}
+            >
+              <ScrollText />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon-xs"
+              aria-label={`Open shell for ${row.original.name}`}
+              onClick={(event: MouseEvent<HTMLButtonElement>) => {
+                event.stopPropagation()
+                openPodPanel('kubernetes-shell', row.original)
+              }}
+            >
+              <SquareTerminal />
+            </Button>
+          </div>
+        ),
+      },
+    ],
+    [activate, open, tabs],
+  )
+
+  return (
+    <DataGrid
+      data={pods}
+      columns={columns}
+      getRowId={(row) => row.id}
+      onRowClick={openPodDetails}
+      rowCursor
+      tableWidthMode="fill-last"
+      fillParent
+      headerLeft={(table) => (
+        <>
+          <GlobalSearch table={table} placeholder="Search pods..." />
+          <NamespaceFilter table={table} />
+        </>
+      )}
+      headerRight={
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-8 gap-1.5 rounded-[var(--gridkit-radius)] text-xs"
+        >
           <RefreshCw />
           Refresh
         </Button>
       }
-      toolbarLeft={
-        <>
-          <Select value={namespace} onValueChange={(value) => value && setNamespace(value)}>
-            <SelectTrigger className="w-44">
-              <Database />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All namespaces</SelectItem>
-              <SelectItem value="default">default</SelectItem>
-              <SelectItem value="kube-system">kube-system</SelectItem>
-              <SelectItem value="production">production</SelectItem>
-            </SelectContent>
-          </Select>
-          <div className="relative w-64">
-            <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder={`Search ${activeLabel.toLowerCase()}...`}
-              className="pl-8"
-            />
-          </div>
-        </>
-      }
+    />
+  )
+}
+
+function KubernetesControlDock() {
+  const { activeTabId, activate, close, collapse, expand, isCollapsed, open, tabs } =
+    useControlBar()
+  const activeTab = tabs.find((tab) => tab.id === activeTabId)
+  const activeDefinition = activeTab ? getTabType(activeTab.type) : undefined
+  const expanded = tabs.length > 0 && !isCollapsed
+
+  const openClusterEvents = () => {
+    const existingTab = tabs.find((tab) => tab.type === 'kubernetes-events')
+    if (existingTab) {
+      activate(existingTab.id)
+      return
+    }
+
+    open<ClusterEventData>({
+      type: 'kubernetes-events',
+      label: 'Cluster events',
+      data: { cluster: 'docker-desktop' },
+    })
+  }
+
+  return (
+    <section
+      aria-label="Resource panels"
+      className="flex shrink-0 flex-col border-t border-border bg-background"
+      style={{
+        height: expanded ? CONTROL_DOCK_EXPANDED_HEIGHT : CONTROL_DOCK_COLLAPSED_HEIGHT,
+      }}
     >
-      {workloadTabs.map(([id, label]) => (
-        <DataBodyTemplate.Tab key={id} id={id} label={label} count={id === 'pods' ? visiblePods.length : undefined}>
-          <div className="h-[calc(100vh-17rem)] min-h-72">
-            <DataGrid
-              data={visiblePods}
-              columns={columns}
-              getRowId={(row) => row.id}
-              tableWidthMode="fill-last"
-              fillParent
+      <div className="flex h-9 shrink-0 items-center bg-muted/50">
+        <div className="flex min-w-0 flex-1 items-center overflow-x-auto">
+          {tabs.length === 0 ? (
+            <span className="px-3 text-xs text-muted-foreground">No active resource panels</span>
+          ) : (
+            tabs.map((tab) => {
+              const definition = getTabType(tab.type)
+              const active = tab.id === activeTabId
+              return (
+                <div
+                  key={tab.id}
+                  className={
+                    active
+                      ? 'flex h-9 shrink-0 items-center border-r border-border bg-background text-foreground'
+                      : 'flex h-9 shrink-0 items-center border-r border-border text-muted-foreground'
+                  }
+                >
+                  <button
+                    type="button"
+                    className="flex h-full items-center gap-1.5 px-3 text-xs"
+                    onClick={() => (active && expanded ? collapse() : activate(tab.id))}
+                  >
+                    {definition?.icon}
+                    <span className="max-w-64 truncate">{tab.label}</span>
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={`Close ${tab.label}`}
+                    className="mr-1 flex size-6 items-center justify-center rounded-(--radius) text-muted-foreground hover:bg-muted hover:text-foreground"
+                    onClick={() => close(tab.id)}
+                  >
+                    <X className="size-3" />
+                  </button>
+                </div>
+              )
+            })
+          )}
+        </div>
+        <div className="flex h-full shrink-0 items-center gap-1 border-l border-border px-2">
+          <Button variant="ghost" size="sm" className="h-7" onClick={openClusterEvents}>
+            <Clock3 className="size-3.5" />
+            Events
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            aria-label={expanded ? 'Collapse resource panels' : 'Expand resource panels'}
+            disabled={tabs.length === 0}
+            onClick={expanded ? collapse : expand}
+          >
+            {expanded ? <ChevronDown /> : <ChevronUp />}
+          </Button>
+        </div>
+      </div>
+      {expanded && activeTab && activeDefinition && (
+        <div className="min-h-0 flex-1 overflow-hidden">
+          {activeDefinition.render(activeTab.data)}
+        </div>
+      )}
+    </section>
+  )
+}
+
+interface KubernetesWorkspaceProps {
+  theme?: CSSProperties
+  guide?: boolean
+}
+
+function KubernetesWorkspace({ theme, guide = false }: KubernetesWorkspaceProps) {
+  return (
+    <div className="flex h-full min-h-0 flex-col overflow-hidden" style={theme}>
+      <div className="min-h-0 flex-1">
+        <DataBodyTemplate
+          theme={theme}
+          className={guide ? 'layout-guide-kubernetes-workspace' : 'layout-databody-kubernetes'}
+          topBar={
+            <PageTopBar
+              left={
+                guide
+                  ? 'Guides / Operations / Kubernetes Workspace'
+                  : 'Kubernetes / docker-desktop / Workloads'
+              }
             />
-          </div>
-        </DataBodyTemplate.Tab>
-      ))}
-    </DataBodyTemplate>
+          }
+          title="Pods"
+          description="Inspect workload health and open logs or a shell without leaving the resource list."
+          contentClassName="min-h-0 pb-(--designkit-page-padding-x)"
+        >
+          <DataBodyTemplate.Body className="h-full min-h-0">
+            <PodsResource pods={pods} />
+          </DataBodyTemplate.Body>
+        </DataBodyTemplate>
+      </div>
+      <KubernetesControlDock />
+    </div>
+  )
+}
+
+export function KubernetesMonitoringDemo({ theme }: { theme?: CSSProperties }) {
+  return (
+    <ControlBarProvider persistKey="designkit-kubernetes-workspace-v2">
+      <SidePanelProvider className="h-full min-h-0">
+        <KubernetesWorkspace theme={theme} />
+      </SidePanelProvider>
+    </ControlBarProvider>
+  )
+}
+
+export function KubernetesWorkspaceGuide({ theme }: { theme?: CSSProperties }) {
+  return (
+    <ControlBarProvider persistKey="designkit-kubernetes-workspace-guide-v1">
+      <SidePanelProvider className="h-full min-h-0">
+        <KubernetesWorkspace theme={theme} guide />
+      </SidePanelProvider>
+    </ControlBarProvider>
   )
 }

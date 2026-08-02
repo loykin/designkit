@@ -11,17 +11,22 @@ const agentInstructions = read('../AGENTS.md')
 const guideIndex = read('../docs/guides/README.md')
 const consumerGuide = read('../docs/consumer-guide.md')
 const managedGuide = read('../docs/guides/managed-table.md')
+const kubernetesGuide = read('../docs/guides/kubernetes-workspace.md')
 const formGuide = read('../docs/guides/form-workflow.md')
 const publishingGuide = read('../docs/guides/publishing-workflow.md')
 const commerceGuide = read('../docs/guides/commerce-workflow.md')
 const publishingDemo = read('../playground/src/templates/demos/guides/PublishingWorkflowGuide.tsx')
 const commerceDemo = read('../playground/src/templates/demos/guides/CommerceWorkflowGuide.tsx')
 const formDemo = read('../playground/src/templates/demos/guides/FormWorkflowGuide.tsx')
+const kubernetesDemo = read(
+  '../playground/src/templates/demos/databody/KubernetesMonitoringDemo.tsx',
+)
 
 describe('implementation guide registry', () => {
   it('keeps AI contracts only on complete Guides workflows', () => {
     for (const id of [
       'managed-table',
+      'kubernetes-workspace',
       'form-workflow',
       'publishing-workflow',
       'commerce-workflow',
@@ -34,9 +39,10 @@ describe('implementation guide registry', () => {
       expect(definitions).not.toContain(`patternId: '${removedTemplateContract}'`)
     }
 
-    expect(definitions.match(/patternId:/g)).toHaveLength(4)
+    expect(definitions.match(/patternId:/g)).toHaveLength(5)
     expect(registry).toContain("label: 'Guides'")
     expect(registry).toContain("label: 'Resource Management'")
+    expect(registry).toContain("label: 'Operations'")
     expect(registry).toContain("label: 'Forms'")
     expect(registry).toContain("label: 'Publishing'")
     expect(registry).toContain("label: 'Commerce'")
@@ -52,6 +58,7 @@ describe('implementation guide registry', () => {
 
     expect(consumerGuide).toContain('[Pattern Guide Index](./guides/README.md)')
     expect(consumerGuide).toContain('./guides/managed-table.md')
+    expect(consumerGuide).toContain('./guides/kubernetes-workspace.md')
     expect(consumerGuide).toContain('./guides/form-workflow.md')
     expect(consumerGuide).toContain('./guides/publishing-workflow.md')
     expect(consumerGuide).toContain('./guides/commerce-workflow.md')
@@ -91,6 +98,31 @@ describe('implementation guide registry', () => {
       'react-hook-form` must remain a Playground-only dependency',
     ]) {
       expect(agentInstructions).toContain(rule)
+    }
+  })
+
+  it('separates Kubernetes inspection from persistent resource tools', () => {
+    for (const rule of [
+      'SidePanelProvider',
+      'useSidePanel',
+      'PanelTemplate',
+      'onRowClick={openPodDetails}',
+      'GlobalSearch',
+      'FilterInput',
+      'KubernetesControlDock',
+      'No active resource panels',
+    ]) {
+      expect(kubernetesDemo).toContain(rule)
+    }
+
+    for (const rule of [
+      'Clicking a Pod row opens a read-oriented detail SidePanel.',
+      'It must not implicitly open logs or start a shell.',
+      'The dock participates in the workspace flex layout.',
+      "The content area's bottom padding must equal its horizontal page padding.",
+      'Detail, collection query, and dock tools have separate component/state boundaries.',
+    ]) {
+      expect(kubernetesGuide).toContain(rule)
     }
   })
 
