@@ -16,6 +16,7 @@ const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const templateDir = join(repoRoot, 'scripts/consumer-template')
 const pkg = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8'))
 const playgroundPkg = JSON.parse(readFileSync(join(repoRoot, 'playground/package.json'), 'utf8'))
+const consumerTypeScriptVersion = '~5.9.3'
 
 const workDir = mkdtempSync(join(tmpdir(), 'designkit-consumer-'))
 const appDir = join(workDir, 'app')
@@ -55,6 +56,19 @@ try {
   })
   const packInfo = JSON.parse(packOutput)
   const tarballPath = join(workDir, packInfo[0].filename)
+  const packedFiles = new Set(packInfo[0].files.map((file) => file.path))
+
+  for (const requiredFile of [
+    'cli/designkit.mjs',
+    'docs/guides/manifest.json',
+    'docs/guides/managed-table.md',
+    'docs/guides/publishing-workflow.md',
+    'docs/guides/commerce-workflow.md',
+  ]) {
+    if (!packedFiles.has(requiredFile)) {
+      throw new Error(`Published package is missing ${requiredFile}`)
+    }
+  }
 
   writeFileSync(
     join(appDir, 'package.json'),
@@ -76,7 +90,9 @@ try {
           react: version('peerDependencies', 'react'),
           'react-dom': version('peerDependencies', 'react-dom'),
           tailwindcss: version('peerDependencies', 'tailwindcss'),
-          typescript: version('devDependencies', 'typescript'),
+          // Keep the published-package fixture on stable TypeScript. The repository uses
+          // an experimental compiler alias whose supported tsconfig options differ.
+          typescript: consumerTypeScriptVersion,
           vite: version('devDependencies', 'vite'),
         },
         devDependencies: {},
@@ -135,6 +151,9 @@ try {
   const installedPackageRoot = join(appDir, 'node_modules/@loykin/designkit')
   const publishedTypes = readFileSync(join(installedPackageRoot, 'dist/index.d.ts'), 'utf8')
   const publishedReadme = readFileSync(join(installedPackageRoot, 'README.md'), 'utf8')
+  const publishedGuideManifest = JSON.parse(
+    readFileSync(join(installedPackageRoot, 'docs/guides/manifest.json'), 'utf8'),
+  )
   const compoundContract =
     'Compound members such as `DataBodyTemplate.Resource`, `Group`, `Tab`, `Section`'
 
@@ -147,6 +166,38 @@ try {
     !publishedReadme.includes('usage throws at render time')
   ) {
     throw new Error('Published README does not include the DataBodyTemplate contract')
+  }
+  if (
+    !publishedReadme.includes('npx @loykin/designkit guide list') ||
+    !publishedReadme.includes('Template demos are visual API references')
+  ) {
+    throw new Error('Published README does not explain implementation guide discovery')
+  }
+  if (
+    publishedGuideManifest.guides.map((guide) => guide.id).join(',') !==
+    'managed-table,publishing-workflow,commerce-workflow'
+  ) {
+    throw new Error('Published guide manifest does not match the supported workflow registry')
+  }
+
+  const guideBin = join(appDir, 'node_modules/.bin/designkit')
+  const guideList = run(guideBin, ['guide', 'list'], { cwd: appDir, capture: true })
+  const guidePrompt = run(guideBin, ['guide', 'publishing-workflow', '--prompt'], {
+    cwd: appDir,
+    capture: true,
+  })
+  if (
+    !guideList.includes('managed-table') ||
+    !guideList.includes('publishing-workflow') ||
+    !guideList.includes('commerce-workflow')
+  ) {
+    throw new Error('Installed designkit guide list does not expose every workflow')
+  }
+  if (
+    !guidePrompt.includes('Implement this workflow with @loykin/designkit') ||
+    !guidePrompt.includes('# Publishing Workflow Contract for AI')
+  ) {
+    throw new Error('Installed designkit guide command does not print the canonical prompt')
   }
 
   const duplicateCheck = run(

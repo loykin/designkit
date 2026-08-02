@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "description": "Versioned implementation guides for @loykin/designkit consumers and coding agents.",
+  "guides": [
+    {
+      "id": "managed-table",
+      "title": "Resource Management / Managed Table",
+      "summary": "Administrative collection with isolated queries, search, filters, sorting, pagination, CRUD routes, and concise detail inspection.",
+      "useWhen": ["admin CRUD", "resource table", "search and filters", "server pagination"],
+      "templates": ["DataBodyTemplate", "DetailBodyTemplate", "FormWizardBodyTemplate"],
+      "playgroundPaths": [
+        "/sidebar/databody-managed-table-guide",
+        "/header/databody-managed-table-guide"
+      ],
+      "contract": "managed-table.md"
+    },
+    {
+      "id": "publishing-workflow",
+      "title": "Publishing / Blog → Article",
+      "summary": "Searchable content collection connected to a stable, independently queried article route.",
+      "useWhen": ["blog", "journal", "content feed", "article detail"],
+      "templates": ["DataBodyTemplate", "DetailBodyTemplate"],
+      "playgroundPaths": [
+        "/sidebar/publishing-workflow-guide",
+        "/header/publishing-workflow-guide"
+      ],
+      "contract": "publishing-workflow.md"
+    },
+    {
+      "id": "commerce-workflow",
+      "title": "Commerce / Catalog → Product",
+      "summary": "Filterable catalog connected to a stable product decision and purchase route.",
+      "useWhen": ["commerce", "product catalog", "faceted browsing", "product detail"],
+      "templates": ["BrowseBodyTemplate", "DetailBodyTemplate"],
+      "playgroundPaths": ["/sidebar/commerce-workflow-guide", "/header/commerce-workflow-guide"],
+      "contract": "commerce-workflow.md"
+    }
+  ]
+}

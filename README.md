@@ -2,9 +2,44 @@
 
 React page template library. Provides ready-to-use page layouts for admin and dashboard applications.
 
-For AI-assisted implementation in consuming applications, follow the published
-compound-component contract below. The same rules are included in the package's
-TypeScript declarations so editors and coding agents can discover them.
+## Building with AI
+
+Do not generate an application workflow from a template name alone. DesignKit
+ships versioned implementation guides that connect routes, query boundaries,
+loading behavior, action placement, and the correct page templates.
+
+| Product workflow    | Guide ID              | Connected destinations                 |
+| ------------------- | --------------------- | -------------------------------------- |
+| Administrative CRUD | `managed-table`       | table → detail Sheet; create/edit page |
+| Publishing          | `publishing-workflow` | blog collection → article route        |
+| Commerce            | `commerce-workflow`   | filtered catalog → product route       |
+
+List the guides included with the installed package:
+
+```bash
+npx @loykin/designkit guide list
+```
+
+Print a complete contract for a developer or coding agent:
+
+```bash
+npx @loykin/designkit guide managed-table
+npx @loykin/designkit guide publishing-workflow --prompt
+npx @loykin/designkit guide commerce-workflow
+```
+
+`--prompt` adds a short implementation instruction before the canonical
+Markdown. Copy the complete output into the AI task. The same contracts are
+published under `@loykin/designkit/guides/*` and rendered in the Playground's
+**Guides** group. See the [Implementation Guide Index](./docs/guides/README.md)
+for the selection rules.
+
+Template demos are visual API references. Only entries in the **Guides** group
+are end-to-end implementation contracts.
+
+For lower-level component composition, follow the published compound-component
+contract below. The same rules are included in the package's TypeScript
+declarations so editors and coding agents can discover them.
 
 ## Installation
 
@@ -23,8 +58,8 @@ Import Tailwind and DesignKit from the same global CSS entry:
 
 ```css
 /* globals.css */
-@import "tailwindcss";
-@import "@loykin/designkit/styles";
+@import 'tailwindcss';
+@import '@loykin/designkit/styles';
 ```
 
 `@loykin/designkit/styles` registers the package's compiled JavaScript as a
@@ -44,9 +79,7 @@ export function UsersPage() {
       description="Manage your team members."
       actions={<Button>Add User</Button>}
     >
-      <DataBodyTemplate.Body>
-        {/* your content */}
-      </DataBodyTemplate.Body>
+      <DataBodyTemplate.Body>{/* your content */}</DataBodyTemplate.Body>
     </DataBodyTemplate>
   )
 }
@@ -77,16 +110,16 @@ General-purpose page shell. Accepts `.Body`, `.Tab`, and `.Section` child slots 
 </DataBodyTemplate>
 ```
 
-| Prop | Type | Description |
-|---|---|---|
-| `topBar` | `ReactNode` | Top breadcrumb bar. Pass `<PageTopBar left="..." />` or omit. |
-| `title` | `ReactNode` | Page title |
-| `description` | `ReactNode` | Subtitle below the title |
-| `status` | `ReactNode` | Badge or tag rendered inline next to the title |
-| `actions` | `ReactNode` | Page-level actions (Add, Export, etc.) next to the title |
-| `toolbarLeft` / `toolbarRight` | `ReactNode` | Toolbar slots above the content area |
-| `theme` | `CSSProperties` | Inline CSS variable overrides |
-| `className` | `string` | Class applied to the page root |
+| Prop                           | Type            | Description                                                   |
+| ------------------------------ | --------------- | ------------------------------------------------------------- |
+| `topBar`                       | `ReactNode`     | Top breadcrumb bar. Pass `<PageTopBar left="..." />` or omit. |
+| `title`                        | `ReactNode`     | Page title                                                    |
+| `description`                  | `ReactNode`     | Subtitle below the title                                      |
+| `status`                       | `ReactNode`     | Badge or tag rendered inline next to the title                |
+| `actions`                      | `ReactNode`     | Page-level actions (Add, Export, etc.) next to the title      |
+| `toolbarLeft` / `toolbarRight` | `ReactNode`     | Toolbar slots above the content area                          |
+| `theme`                        | `CSSProperties` | Inline CSS variable overrides                                 |
+| `className`                    | `string`        | Class applied to the page root                                |
 
 #### DataBodyTemplate.Body
 
@@ -94,9 +127,7 @@ Single-pane content. Use for full-height layouts.
 
 ```tsx
 <DataBodyTemplate title="Users">
-  <DataBodyTemplate.Body>
-    {/* your content */}
-  </DataBodyTemplate.Body>
+  <DataBodyTemplate.Body>{/* your content */}</DataBodyTemplate.Body>
 </DataBodyTemplate>
 ```
 
@@ -128,7 +159,9 @@ Settings-style layout with left navigation and right content panel.
       <form onSubmit={handleSubmit} className="space-y-3">
         <Label htmlFor="name">Name</Label>
         <Input id="name" defaultValue="Acme Corp" />
-        <Button type="submit" size="sm">Save</Button>
+        <Button type="submit" size="sm">
+          Save
+        </Button>
       </form>
     </DataBodyTemplate.Group>
   </DataBodyTemplate.Section>
@@ -142,24 +175,24 @@ Settings-style layout with left navigation and right content panel.
 
 Groups content within a tab or section. The `layout` prop controls the visual structure.
 
-| layout | Use case |
-|---|---|
+| layout       | Use case                                      |
+| ------------ | --------------------------------------------- |
 | `horizontal` | Label on left, input on right (settings form) |
-| `stacked` | Label above, input below |
-| `inline` | Table-style rows (detail view) |
-| `split` | Left list + right detail |
+| `stacked`    | Label above, input below                      |
+| `inline`     | Table-style rows (detail view)                |
+| `split`      | Left list + right detail                      |
 
 `layout` defaults to `stacked`; omit it when the stacked arrangement is intended.
 
-| Prop | Type | Description |
-|---|---|---|
-| `layout` | `GroupLayout` | Visual structure — see table above |
-| `variant` | `'card' \| 'plain' \| 'bordered'` | Wrapper style (defaults per layout) |
-| `title` | `ReactNode` | Group heading |
-| `description` | `ReactNode` | Subtitle below the heading |
-| `actions` | `ReactNode` | Action slot next to the heading |
-| `danger` | `boolean` | Renders title in destructive color |
-| `className` | `string` | Class applied to the group root element |
+| Prop          | Type                              | Description                             |
+| ------------- | --------------------------------- | --------------------------------------- |
+| `layout`      | `GroupLayout`                     | Visual structure — see table above      |
+| `variant`     | `'card' \| 'plain' \| 'bordered'` | Wrapper style (defaults per layout)     |
+| `title`       | `ReactNode`                       | Group heading                           |
+| `description` | `ReactNode`                       | Subtitle below the heading              |
+| `actions`     | `ReactNode`                       | Action slot next to the heading         |
+| `danger`      | `boolean`                         | Renders title in destructive color      |
+| `className`   | `string`                          | Class applied to the group root element |
 
 ```tsx
 <DataBodyTemplate title="Settings">
@@ -184,7 +217,9 @@ Read-only key-value display.
 <DataBodyTemplate title="Profile">
   <DataBodyTemplate.Group layout="inline" title="Identity">
     <DataBodyTemplate.Field label="Email">sarah@acme.com</DataBodyTemplate.Field>
-    <DataBodyTemplate.Field label="Role"><Badge>Admin</Badge></DataBodyTemplate.Field>
+    <DataBodyTemplate.Field label="Role">
+      <Badge>Admin</Badge>
+    </DataBodyTemplate.Field>
   </DataBodyTemplate.Group>
 </DataBodyTemplate>
 ```
@@ -198,7 +233,9 @@ Pinned summary area below the header, above tabs.
   <DataBodyTemplate.Summary>
     <StatCards />
   </DataBodyTemplate.Summary>
-  <DataBodyTemplate.Tab id="details" label="Details">...</DataBodyTemplate.Tab>
+  <DataBodyTemplate.Tab id="details" label="Details">
+    ...
+  </DataBodyTemplate.Tab>
 </DataBodyTemplate>
 ```
 
@@ -229,7 +266,10 @@ handle stays inside the clipped panel corner:
   --designkit-resize-handle-inset: clamp(4px, calc(var(--radius) * 0.45), 16px);
   --designkit-resize-handle-mark-size: clamp(6px, calc(var(--radius) * 0.55), 12px);
   --designkit-resize-handle-color: rgba(0, 0, 0, 0.35);
-  --designkit-resize-handle-mark-radius: min(var(--radius), var(--designkit-resize-handle-mark-size));
+  --designkit-resize-handle-mark-radius: min(
+    var(--radius),
+    var(--designkit-resize-handle-mark-size)
+  );
 }
 
 .dark .layout-dashboard .react-grid-item:not(.react-grid-placeholder) {
@@ -246,20 +286,25 @@ import type { PanelViewerProps } from '@loykin/dashboardkit'
 
 // Register panel types once at module level
 const engine = createDashboardEngine()
-engine.registerPanel(definePanel({
-  id: 'stat',
-  name: 'Stat',
-  optionsSchema: {},
-  viewer({ data, loading }: PanelViewerProps<unknown, unknown>) {
-    if (loading) return null
-    return <div className="text-2xl font-bold">{String(data ?? '—')}</div>
-  },
-}))
+engine.registerPanel(
+  definePanel({
+    id: 'stat',
+    name: 'Stat',
+    optionsSchema: {},
+    viewer({ data, loading }: PanelViewerProps<unknown, unknown>) {
+      if (loading) return null
+      return <div className="text-2xl font-bold">{String(data ?? '—')}</div>
+    },
+  }),
+)
 
 export function MyDashboard() {
   useLoadDashboard(engine, config)
   const envVar = useVariable(engine, 'env')
-  const variables = useMemo(() => ({ env: (envVar.value as string) ?? 'production' }), [envVar.value])
+  const variables = useMemo(
+    () => ({ env: (envVar.value as string) ?? 'production' }),
+    [envVar.value],
+  )
   const [editable, setEditable] = useState(false)
 
   return (
@@ -269,7 +314,8 @@ export function MyDashboard() {
     >
       <DashboardGrid engine={engine} editable={editable}>
         {({ panelType, config, data, rawData, loading, error, ref }) => {
-          const Viewer = engine.getPanelPlugin(panelType)?.viewer as React.FC<PanelViewerProps<unknown, unknown>> | undefined
+          const Viewer = engine.getPanelPlugin(panelType)?.viewer as
+            React.FC<PanelViewerProps<unknown, unknown>> | undefined
           return (
             <DashboardPanel
               ref={ref}
@@ -281,10 +327,14 @@ export function MyDashboard() {
             >
               {Viewer && (
                 <Viewer
-                  panel={config} options={config.options}
-                  data={data} rawData={rawData}
-                  width={0} height={0}
-                  loading={loading} error={error}
+                  panel={config}
+                  options={config.options}
+                  data={data}
+                  rawData={rawData}
+                  width={0}
+                  height={0}
+                  loading={loading}
+                  error={error}
                   variables={variables}
                 />
               )}
@@ -299,31 +349,31 @@ export function MyDashboard() {
 
 **DashboardBodyTemplate props:**
 
-| Prop | Type | Description |
-|---|---|---|
-| `topBar` | `ReactNode` | Top bar — breadcrumb, edit/refresh controls |
-| `variableBar` | `ReactNode` | Variable dropdown strip between top bar and panels |
-| `title` | `ReactNode` | Dashboard title (omit if topBar covers it) |
-| `description` | `ReactNode` | Subtitle |
-| `toolbar` | `ReactNode` | Toolbar slot next to the title |
-| `theme` | `CSSProperties` | Inline CSS variable overrides |
-| `className` | `string` | Class applied to the page root |
-| `contentClassName` | `string` | Class applied to the panel grid area |
+| Prop               | Type            | Description                                        |
+| ------------------ | --------------- | -------------------------------------------------- |
+| `topBar`           | `ReactNode`     | Top bar — breadcrumb, edit/refresh controls        |
+| `variableBar`      | `ReactNode`     | Variable dropdown strip between top bar and panels |
+| `title`            | `ReactNode`     | Dashboard title (omit if topBar covers it)         |
+| `description`      | `ReactNode`     | Subtitle                                           |
+| `toolbar`          | `ReactNode`     | Toolbar slot next to the title                     |
+| `theme`            | `CSSProperties` | Inline CSS variable overrides                      |
+| `className`        | `string`        | Class applied to the page root                     |
+| `contentClassName` | `string`        | Class applied to the panel grid area               |
 
 **DashboardPanel props:**
 
 Panel card component. Wrap your panel viewer in `DashboardPanel` for consistent chrome across all panels.
 
-| Prop | Type | Description |
-|---|---|---|
-| `title` | `string` | Panel title |
-| `description` | `string` | Panel subtitle |
-| `loading` | `boolean` | Shows loading spinner overlay |
-| `error` | `string` | Shows error state, hides children |
-| `editable` | `boolean` | Shows drag handle and edit ring |
-| `headerRight` | `ReactNode` | Action slot in panel header — hidden until hover |
-| `transparent` | `boolean` | Removes card border and background |
-| `ref` | forwarded | Attach `DashboardGrid`'s `ref` for viewport virtualization |
+| Prop          | Type        | Description                                                |
+| ------------- | ----------- | ---------------------------------------------------------- |
+| `title`       | `string`    | Panel title                                                |
+| `description` | `string`    | Panel subtitle                                             |
+| `loading`     | `boolean`   | Shows loading spinner overlay                              |
+| `error`       | `string`    | Shows error state, hides children                          |
+| `editable`    | `boolean`   | Shows drag handle and edit ring                            |
+| `headerRight` | `ReactNode` | Action slot in panel header — hidden until hover           |
+| `transparent` | `boolean`   | Removes card border and background                         |
+| `ref`         | forwarded   | Attach `DashboardGrid`'s `ref` for viewport virtualization |
 
 ---
 
@@ -339,7 +389,11 @@ export function SqlEditorPage() {
     <WorkbenchBodyTemplate
       topBar={<PageTopBar left="Data / Query editor" />}
       title="SQL editor"
-      headerRight={<Button variant="outline" size="sm">Run</Button>}
+      headerRight={
+        <Button variant="outline" size="sm">
+          Run
+        </Button>
+      }
       leftPane={<SchemaBrowser />}
       mainPane={<SqlEditor />}
       bottomPane={<ResultsGrid />}
@@ -351,18 +405,18 @@ export function SqlEditorPage() {
 
 **WorkbenchBodyTemplate props:**
 
-| Prop | Type | Description |
-|---|---|---|
-| `topBar` | `ReactNode` | Top bar above the workbench |
-| `title` / `description` | `ReactNode` | Header copy above the panes |
-| `status` | `ReactNode` | Badge or tag rendered inline next to the title |
-| `headerRight` / `actions` | `ReactNode` | Header action slots |
-| `leftPane` / `rightPane` | `ReactNode` | Optional side panes |
-| `mainPane` | `ReactNode` | Primary editor or preview area |
-| `bottomPane` | `ReactNode` | Optional result, query, or logs pane |
-| `resizable` | `boolean` | Enables pane drag handles |
-| `leftPaneCollapsed` / `rightPaneCollapsed` / `bottomPaneCollapsed` | `boolean` | Hides optional panes while preserving the template layout model |
-| `leftPaneWidth` / `rightPaneWidth` / `bottomPaneHeight` | `number` | Initial pane sizes in pixels |
+| Prop                                                               | Type        | Description                                                     |
+| ------------------------------------------------------------------ | ----------- | --------------------------------------------------------------- |
+| `topBar`                                                           | `ReactNode` | Top bar above the workbench                                     |
+| `title` / `description`                                            | `ReactNode` | Header copy above the panes                                     |
+| `status`                                                           | `ReactNode` | Badge or tag rendered inline next to the title                  |
+| `headerRight` / `actions`                                          | `ReactNode` | Header action slots                                             |
+| `leftPane` / `rightPane`                                           | `ReactNode` | Optional side panes                                             |
+| `mainPane`                                                         | `ReactNode` | Primary editor or preview area                                  |
+| `bottomPane`                                                       | `ReactNode` | Optional result, query, or logs pane                            |
+| `resizable`                                                        | `boolean`   | Enables pane drag handles                                       |
+| `leftPaneCollapsed` / `rightPaneCollapsed` / `bottomPaneCollapsed` | `boolean`   | Hides optional panes while preserving the template layout model |
+| `leftPaneWidth` / `rightPaneWidth` / `bottomPaneHeight`            | `number`    | Initial pane sizes in pixels                                    |
 
 ---
 
@@ -375,9 +429,9 @@ import { useState } from 'react'
 import { FormWizardBodyTemplate, type FormWizardStep } from '@loykin/designkit'
 
 const steps: FormWizardStep[] = [
-  { key: 'info',   title: 'Basic Info',    content: <BasicInfoForm />  },
-  { key: 'config', title: 'Configuration', content: <ConfigForm />     },
-  { key: 'review', title: 'Review',        content: <ReviewStep />     },
+  { key: 'info', title: 'Basic Info', content: <BasicInfoForm /> },
+  { key: 'config', title: 'Configuration', content: <ConfigForm /> },
+  { key: 'review', title: 'Review', content: <ReviewStep /> },
 ]
 
 export function OnboardingPage() {
@@ -427,21 +481,23 @@ export function SignInPage() {
           <Label htmlFor="password">Password</Label>
           <Input id="password" type="password" />
         </div>
-        <Button type="submit" className="w-full">Sign In</Button>
+        <Button type="submit" className="w-full">
+          Sign In
+        </Button>
       </form>
     </LoginBodyTemplate>
   )
 }
 ```
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `layout` | `'centered' \| 'split'` | `'centered'` | Centered card or split-panel with brand side |
-| `card` | `'card' \| 'plain'` | `'plain'` | Wrap form content in a card border |
-| `cardWidth` | `'sm' \| 'md' \| 'lg'` | `'md'` | Form card width |
-| `bg` | `'default' \| 'subtle' \| 'none'` | `'default'` | Background style |
-| `side` | `'left' \| 'right'` | `'left'` | Brand panel side (split layout only) |
-| `brand` | `ReactNode` | built-in | Custom brand/logo panel content |
+| Prop        | Type                              | Default      | Description                                  |
+| ----------- | --------------------------------- | ------------ | -------------------------------------------- |
+| `layout`    | `'centered' \| 'split'`           | `'centered'` | Centered card or split-panel with brand side |
+| `card`      | `'card' \| 'plain'`               | `'plain'`    | Wrap form content in a card border           |
+| `cardWidth` | `'sm' \| 'md' \| 'lg'`            | `'md'`       | Form card width                              |
+| `bg`        | `'default' \| 'subtle' \| 'none'` | `'default'`  | Background style                             |
+| `side`      | `'left' \| 'right'`               | `'left'`     | Brand panel side (split layout only)         |
+| `brand`     | `ReactNode`                       | built-in     | Custom brand/logo panel content              |
 
 ---
 
@@ -449,10 +505,15 @@ export function SignInPage() {
 
 ```tsx
 import {
-  Avatar, AvatarFallback, AvatarImage,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
   Badge,
   Button,
-  Card, CardContent, CardHeader, CardTitle,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
   Checkbox,
   DropdownMenu,
   EmptyState,
@@ -461,16 +522,30 @@ import {
   NavigationMenu,
   Popover,
   ScrollArea,
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Separator,
-  Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger,
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
   Sidebar,
   Skeleton,
   Slider,
   Switch,
   Table,
-  Tabs, TabsList, TabsTrigger, TabsContent,
-  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
   PageTopBar,
 } from '@loykin/designkit'
 ```
@@ -482,17 +557,17 @@ Top breadcrumb / action bar placed at the top of a page template via the `topBar
 ```tsx
 import { PageTopBar } from '@loykin/designkit'
 
-<PageTopBar left="Admin / Users" right={<Button size="sm">Add</Button>} />
+;<PageTopBar left="Admin / Users" right={<Button size="sm">Add</Button>} />
 ```
 
-| Prop | Type | Default | Description |
-|---|---|---|---|
-| `left` | `ReactNode` | — | Left content. A plain string is parsed as `/`-separated breadcrumbs. |
-| `right` | `ReactNode` | — | Right-aligned actions |
-| `variant` | `'ghost' \| 'default'` | `'ghost'` | `'default'` adds a bottom border |
-| `sidebarTrigger` | `false \| ReactNode` | auto | Mobile sidebar open button. `undefined` auto-detects SidebarProvider context; `false` suppresses; pass a `ReactNode` for a custom trigger. |
-| `height` | `string` | `var(--designkit-toolbar-height)` | Bar height |
-| `className` | `string` | — | Class applied to the bar root |
+| Prop             | Type                   | Default                           | Description                                                                                                                                |
+| ---------------- | ---------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `left`           | `ReactNode`            | —                                 | Left content. A plain string is parsed as `/`-separated breadcrumbs.                                                                       |
+| `right`          | `ReactNode`            | —                                 | Right-aligned actions                                                                                                                      |
+| `variant`        | `'ghost' \| 'default'` | `'ghost'`                         | `'default'` adds a bottom border                                                                                                           |
+| `sidebarTrigger` | `false \| ReactNode`   | auto                              | Mobile sidebar open button. `undefined` auto-detects SidebarProvider context; `false` suppresses; pass a `ReactNode` for a custom trigger. |
+| `height`         | `string`               | `var(--designkit-toolbar-height)` | Bar height                                                                                                                                 |
+| `className`      | `string`               | —                                 | Class applied to the bar root                                                                                                              |
 
 **Mobile sidebar trigger**
 
@@ -514,7 +589,7 @@ When `PageTopBar` is rendered inside a `SidebarShell` on a mobile viewport, it a
 import { EmptyState } from '@loykin/designkit'
 import { Users } from 'lucide-react'
 
-<EmptyState
+;<EmptyState
   icon={Users}
   title="No users yet"
   description="Add your first user to get started."
@@ -528,18 +603,18 @@ import { Users } from 'lucide-react'
 
 Designkit maps shadcn/ui CSS variables onto its own `--designkit-*` tokens. Changing your shadcn theme automatically updates all designkit components.
 
-| What | How |
-|---|---|
-| Colors, radius, typography | shadcn/ui theme variables (`--primary`, `--radius`, etc.) |
-| Spacing, density, padding | `--designkit-density`, `--designkit-page-padding-*`, `--designkit-panel-gap` |
-| Per-page overrides | `className` or `theme` prop |
+| What                       | How                                                                          |
+| -------------------------- | ---------------------------------------------------------------------------- |
+| Colors, radius, typography | shadcn/ui theme variables (`--primary`, `--radius`, etc.)                    |
+| Spacing, density, padding  | `--designkit-density`, `--designkit-page-padding-*`, `--designkit-panel-gap` |
+| Per-page overrides         | `className` or `theme` prop                                                  |
 
 ```css
 :root {
-  --designkit-density:        1;        /* 0.85 compact / 1 default / 1.15 comfortable */
+  --designkit-density: 1; /* 0.85 compact / 1 default / 1.15 comfortable */
   --designkit-page-padding-x: 1.5rem;
   --designkit-page-padding-y: 1rem;
-  --designkit-panel-gap:      1rem;
+  --designkit-panel-gap: 1rem;
 }
 ```
 
@@ -571,9 +646,9 @@ Or via `theme` prop:
 If your app also uses `@loykin/gridkit`, import its styles **after** designkit:
 
 ```css
-@import "tailwindcss";
-@import "@loykin/designkit/styles";
-@import "@loykin/gridkit/styles";  /* must come last — uses @layer gridkit */
+@import 'tailwindcss';
+@import '@loykin/designkit/styles';
+@import '@loykin/gridkit/styles'; /* must come last — uses @layer gridkit */
 ```
 
 gridkit registers a named `@layer gridkit`. Importing it before `tailwindcss` or `designkit/styles` causes layer ordering conflicts where utility overrides resolve incorrectly.
