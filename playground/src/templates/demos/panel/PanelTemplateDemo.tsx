@@ -193,19 +193,12 @@ function RunPanel({ run }: { run: PipelineRun }) {
       </PanelTemplate.Section>
 
       <PanelTemplate.Section title="Details">
-        <div className="space-y-2 text-sm">
-          {[
-            ['Branch',      run.branch],
-            ['Commit',      run.commit],
-            ['Started',     run.startedAt],
-            ['Triggered by', run.triggeredBy],
-          ].map(([label, value]) => (
-            <div key={label} className="flex items-center gap-2">
-              <span className="w-24 shrink-0 text-xs text-muted-foreground">{label}</span>
-              <span className="min-w-0 truncate font-mono text-xs">{value}</span>
-            </div>
-          ))}
-        </div>
+        <dl className="space-y-2">
+          <PanelTemplate.Row label="Branch">{run.branch}</PanelTemplate.Row>
+          <PanelTemplate.Row label="Commit">{run.commit}</PanelTemplate.Row>
+          <PanelTemplate.Row label="Started">{run.startedAt}</PanelTemplate.Row>
+          <PanelTemplate.Row label="Triggered by">{run.triggeredBy}</PanelTemplate.Row>
+        </dl>
       </PanelTemplate.Section>
 
       <PanelTemplate.Section title="Steps">

@@ -253,7 +253,7 @@ function PodDetailPanel({ pod, onOpenLogs, onOpenShell }: PodDetailPanelProps) {
         <>
           <Button
             variant="ghost"
-            size="icon-xs"
+            size="icon-sm"
             aria-label={`Open shell for ${pod.name}`}
             onClick={onOpenShell}
           >
@@ -261,60 +261,39 @@ function PodDetailPanel({ pod, onOpenLogs, onOpenShell }: PodDetailPanelProps) {
           </Button>
           <Button
             variant="ghost"
-            size="icon-xs"
+            size="icon-sm"
             aria-label={`Open logs for ${pod.name}`}
             onClick={onOpenLogs}
           >
             <ScrollText />
           </Button>
-          <div className="mx-1 h-4 w-px bg-border" aria-hidden="true" />
-          <Button variant="ghost" size="icon-xs" aria-label="Close" onClick={() => void close()}>
+          <Button variant="ghost" size="icon-sm" aria-label="Close" onClick={() => void close()}>
             <X />
           </Button>
         </>
       }
     >
       <PanelTemplate.Section title="Overview">
-        <dl className="space-y-2 text-sm">
-          {[
-            ['Status', pod.status],
-            ['Ready', pod.ready],
-            ['Restarts', String(pod.restarts)],
-            ['Age', pod.age],
-          ].map(([label, value]) => (
-            <div key={label} className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3">
-              <dt className="text-muted-foreground">{label}</dt>
-              <dd className="min-w-0 font-medium">{value}</dd>
-            </div>
-          ))}
+        <dl className="space-y-2">
+          <PanelTemplate.Row label="Status">{pod.status}</PanelTemplate.Row>
+          <PanelTemplate.Row label="Ready">{pod.ready}</PanelTemplate.Row>
+          <PanelTemplate.Row label="Restarts">{pod.restarts}</PanelTemplate.Row>
+          <PanelTemplate.Row label="Age">{pod.age}</PanelTemplate.Row>
         </dl>
       </PanelTemplate.Section>
 
       <PanelTemplate.Section title="Placement">
-        <dl className="space-y-2 text-sm">
-          {[
-            ['Node', pod.node],
-            ['Controlled by', pod.controlledBy],
-            ['QoS class', pod.qos],
-          ].map(([label, value]) => (
-            <div key={label} className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3">
-              <dt className="text-muted-foreground">{label}</dt>
-              <dd className="min-w-0 break-words font-mono text-xs">{value}</dd>
-            </div>
-          ))}
+        <dl className="space-y-2">
+          <PanelTemplate.Row label="Node">{pod.node}</PanelTemplate.Row>
+          <PanelTemplate.Row label="Controlled by">{pod.controlledBy}</PanelTemplate.Row>
+          <PanelTemplate.Row label="QoS class">{pod.qos}</PanelTemplate.Row>
         </dl>
       </PanelTemplate.Section>
 
       <PanelTemplate.Section title="Identity">
-        <dl className="space-y-2 text-sm">
-          <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3">
-            <dt className="text-muted-foreground">Namespace</dt>
-            <dd className="min-w-0 break-words font-mono text-xs">{pod.namespace}</dd>
-          </div>
-          <div className="grid grid-cols-[6rem_minmax(0,1fr)] gap-3">
-            <dt className="text-muted-foreground">Name</dt>
-            <dd className="min-w-0 break-words font-mono text-xs">{pod.name}</dd>
-          </div>
+        <dl className="space-y-2">
+          <PanelTemplate.Row label="Namespace">{pod.namespace}</PanelTemplate.Row>
+          <PanelTemplate.Row label="Name">{pod.name}</PanelTemplate.Row>
         </dl>
       </PanelTemplate.Section>
     </PanelTemplate>
@@ -614,7 +593,7 @@ function KubernetesWorkspace({ theme, guide = false }: KubernetesWorkspaceProps)
 export function KubernetesMonitoringDemo({ theme }: { theme?: CSSProperties }) {
   return (
     <ControlBarProvider persistKey="designkit-kubernetes-workspace-v2">
-      <SidePanelProvider className="h-full min-h-0">
+      <SidePanelProvider className="layout-databody-kubernetes h-full min-h-0" style={theme}>
         <KubernetesWorkspace theme={theme} />
       </SidePanelProvider>
     </ControlBarProvider>
@@ -624,7 +603,10 @@ export function KubernetesMonitoringDemo({ theme }: { theme?: CSSProperties }) {
 export function KubernetesWorkspaceGuide({ theme }: { theme?: CSSProperties }) {
   return (
     <ControlBarProvider persistKey="designkit-kubernetes-workspace-guide-v1">
-      <SidePanelProvider className="h-full min-h-0">
+      <SidePanelProvider
+        className="layout-guide-kubernetes-workspace h-full min-h-0"
+        style={theme}
+      >
         <KubernetesWorkspace theme={theme} guide />
       </SidePanelProvider>
     </ControlBarProvider>

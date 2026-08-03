@@ -20,6 +20,12 @@ export interface PanelTemplateSectionProps {
   children?: React.ReactNode
 }
 
+export interface PanelTemplateRowProps {
+  label: React.ReactNode
+  children?: React.ReactNode
+  className?: string
+}
+
 function PanelTemplateSection({
   title,
   description,
@@ -44,6 +50,15 @@ function PanelTemplateSection({
       )}
       {children}
     </section>
+  )
+}
+
+function PanelTemplateRow({ label, children, className }: PanelTemplateRowProps) {
+  return (
+    <div className={cn('grid grid-cols-[6rem_minmax(0,1fr)] gap-3', className)}>
+      <dt className="text-xs text-muted-foreground">{label}</dt>
+      <dd className="min-w-0 break-words font-mono text-xs">{children}</dd>
+    </div>
   )
 }
 
@@ -85,4 +100,5 @@ function PanelTemplateRoot({
 
 export const PanelTemplate = Object.assign(PanelTemplateRoot, {
   Section: PanelTemplateSection,
+  Row: PanelTemplateRow,
 })
