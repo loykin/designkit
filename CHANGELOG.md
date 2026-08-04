@@ -4,6 +4,8 @@ All notable changes to `@loykin/designkit` are documented here.
 
 ## Unreleased
 
+- Added `WorkbenchBodyTemplate.Section` for grouping related controls (e.g. an
+  options/inspector pane) into labeled sections.
 - Added the Tailwind v4 `@theme inline` bridge and class-based `.dark` variant to
   `@loykin/designkit/styles` so consumers can use DesignKit without installing
   shadcn CSS separately.

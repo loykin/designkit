@@ -102,6 +102,8 @@ When adding or changing a screen:
 
 Do not copy a DesignKit component into another project to make a visual variation — add a public variant, slot, or token when the requirement is broadly reusable.
 
+Never edit files under `src/components/ui/*` (the shadcn/ui-derived primitives — `button.tsx`, `input.tsx`, `select.tsx`, etc.) to satisfy a call site's need, including adding a new CVA variant, size, or prop. These primitives are the shared foundation every DesignKit template and every consumer depends on; changing them is a deliberate decision for whoever owns the design system, not something to do reactively while building a screen or fixing a bug elsewhere. If a call site needs sizing or behavior a primitive doesn't expose, work within what already exists, or stop and report the gap instead of extending the primitive.
+
 Do not nest one page-level template (`DataBodyTemplate`, `WorkbenchBodyTemplate`, `DashboardBodyTemplate`, `BrowseBodyTemplate`, `DetailBodyTemplate`, etc.) inside another page-level template's slot (`leftPane`, `rightPane`, `bottomPane`, `mainPane`, `children`, …). Every page-level template already wraps its content in `DataPage`; nesting two of them nests two page shells and duplicates chrome (headers, padding, and any built-in navigation-like pane). Pick the one template that fits and compose inside it — if its slots aren't expressive enough, extend that template instead of wrapping it in a second one.
 
 ## Implementation Guides

@@ -113,7 +113,7 @@ function ResizeHandle({
   )
 }
 
-export function WorkbenchBodyTemplate({
+function WorkbenchBodyTemplateRoot({
   theme,
   className,
   contentClassName,
@@ -461,3 +461,42 @@ export function WorkbenchBodyTemplate({
     </DataPage>
   )
 }
+
+// ─── Section ─────────────────────────────────────────────────────────────────
+
+export interface WorkbenchSectionProps {
+  title?: ReactNode
+  description?: ReactNode
+  actions?: ReactNode
+  className?: string
+  children?: ReactNode
+}
+
+/**
+ * Groups related controls inside a `WorkbenchBodyTemplate` pane (typically
+ * `rightPane`), separating an options/inspector area into labeled sections.
+ */
+function WorkbenchSection({ title, description, actions, className, children }: WorkbenchSectionProps) {
+  return (
+    <section className={cn('space-y-2.5 p-3', className)}>
+      {(title || description || actions) && (
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            {title && (
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                {title}
+              </h3>
+            )}
+            {description && <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>}
+          </div>
+          {actions && <div className="shrink-0">{actions}</div>}
+        </div>
+      )}
+      {children}
+    </section>
+  )
+}
+
+export const WorkbenchBodyTemplate = Object.assign(WorkbenchBodyTemplateRoot, {
+  Section: WorkbenchSection,
+})

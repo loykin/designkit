@@ -21,6 +21,7 @@ export { WorkbenchBodyTemplate } from './workbench/WorkbenchBodyTemplate'
 export type {
   WorkbenchBodyTemplateProps,
   WorkbenchResizeState,
+  WorkbenchSectionProps,
 } from './workbench/WorkbenchBodyTemplate'
 export { DataBodyTemplate } from './databody/DataBodyTemplate'
 export { BrowseBodyTemplate } from './browse/BrowseBodyTemplate'

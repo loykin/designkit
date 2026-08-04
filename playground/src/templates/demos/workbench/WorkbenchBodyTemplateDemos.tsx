@@ -9,8 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
   Switch,
+  WorkbenchBodyTemplate,
 } from '@loykin/designkit'
-import { ChevronDown, Database, Play, Search, Wand2 } from 'lucide-react'
+import { Database, Play, Search, Wand2 } from 'lucide-react'
 import type { TemplateCodeContext } from '../../code'
 
 function PaneHeader({ title, right }: { title: string; right?: ReactNode }) {
@@ -19,18 +20,6 @@ function PaneHeader({ title, right }: { title: string; right?: ReactNode }) {
       <span className="text-xs font-medium">{title}</span>
       {right && <div className="flex items-center gap-1">{right}</div>}
     </div>
-  )
-}
-
-function InspectorSection({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="border-b p-3">
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-xs font-semibold">{title}</h3>
-        <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
-      </div>
-      <div className="space-y-3">{children}</div>
-    </section>
   )
 }
 
@@ -75,7 +64,7 @@ export function PanelInspector() {
     <div className="flex h-full flex-col">
       <PaneHeader title="Panel options" />
       <div className="min-h-0 flex-1 overflow-auto">
-        <InspectorSection title="Visualization">
+        <WorkbenchBodyTemplate.Section title="Visualization">
           <Field label="Type">
             <Select defaultValue="timeseries">
               <SelectTrigger className="h-8 text-xs">
@@ -100,8 +89,8 @@ export function PanelInspector() {
               </SelectContent>
             </Select>
           </Field>
-        </InspectorSection>
-        <InspectorSection title="Field">
+        </WorkbenchBodyTemplate.Section>
+        <WorkbenchBodyTemplate.Section title="Field">
           <Field label="Unit">
             <Input defaultValue="milliseconds" className="h-8 text-xs" />
           </Field>
@@ -109,15 +98,15 @@ export function PanelInspector() {
             <span className="text-[11px] font-medium text-muted-foreground">Show points</span>
             <Switch defaultChecked />
           </div>
-        </InspectorSection>
-        <InspectorSection title="Thresholds">
+        </WorkbenchBodyTemplate.Section>
+        <WorkbenchBodyTemplate.Section title="Thresholds">
           <Field label="Warning">
             <Input defaultValue="200" className="h-8 text-xs" />
           </Field>
           <Field label="Critical">
             <Input defaultValue="500" className="h-8 text-xs" />
           </Field>
-        </InspectorSection>
+        </WorkbenchBodyTemplate.Section>
       </div>
     </div>
   )

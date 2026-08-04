@@ -93,6 +93,7 @@ import {
   FormInlineBodyTemplateDemo,
   buildFormInlineBodyTemplateCode,
 } from './demos/form/FormInlineBodyTemplateDemo'
+import { FormYamlToggleDemo } from './demos/form/FormYamlToggleDemo'
 import {
   SectionedBodyTemplateDemo,
   buildSectionedBodyTemplateCode,
@@ -158,6 +159,7 @@ const previewComponents: Record<
   'form-stacked': FormStackedBodyTemplateDemo,
   'form-wizard': FormWizardBodyTemplateDemo,
   'form-inline': FormInlineBodyTemplateDemo,
+  'form-yaml-toggle': FormYamlToggleDemo,
   sectioned: SectionedBodyTemplateDemo,
   typography: TypographyBodyTemplate,
   colors: ColorsBodyTemplate,
@@ -251,6 +253,7 @@ const previewSourcePathById: Partial<Record<PlaygroundTemplateId, string>> = {
   'form-stacked': './demos/form/FormStackedBodyTemplateDemo.tsx',
   'form-wizard': './demos/form/FormWizardBodyTemplateDemo.tsx',
   'form-inline': './demos/form/FormInlineBodyTemplateDemo.tsx',
+  'form-yaml-toggle': './demos/form/FormYamlToggleDemo.tsx',
   sectioned: './demos/sectioned/SectionedBodyTemplateDemo.tsx',
   login: './demos/auth/LoginBodyTemplateDemo.tsx',
   'login-forgot': './demos/auth/LoginForgotDemo.tsx',

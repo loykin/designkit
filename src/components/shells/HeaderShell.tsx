@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -13,7 +13,7 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 import type { TemplateNavigationGroup, TemplateNavigationItem } from '@/components/templates'
-import { Bell, Menu, Settings } from 'lucide-react'
+import { Bell, ChevronLeft, ChevronRight, Menu, Settings } from 'lucide-react'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -31,11 +31,82 @@ function itemIsActive(item: TemplateNavigationItem, activeItemId?: string) {
   return item.id === activeItemId || item.children?.some((c) => c.id === activeItemId) === true
 }
 
+/** A horizontally scrollable header nav needs a pointer affordance: overlay scrollbars
+ *  are invisible until scrolled, so without arrows the overflowed items are unreachable. */
+const NAV_SCROLL_STEP = 160
+
+function useNavOverflow<T extends HTMLElement>() {
+  const ref = useRef<T>(null)
+  const [overflow, setOverflow] = useState({ start: false, end: false })
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    const update = () => {
+      const max = el.scrollWidth - el.clientWidth
+      setOverflow({ start: el.scrollLeft > 1, end: el.scrollLeft < max - 1 })
+    }
+
+    update()
+    el.addEventListener('scroll', update, { passive: true })
+
+    let observer: ResizeObserver | undefined
+    if (typeof ResizeObserver !== 'undefined') {
+      observer = new ResizeObserver(update)
+      observer.observe(el)
+      for (const child of Array.from(el.children)) observer.observe(child)
+    }
+
+    return () => {
+      el.removeEventListener('scroll', update)
+      observer?.disconnect()
+    }
+  }, [])
+
+  const scrollBy = useCallback((direction: -1 | 1) => {
+    ref.current?.scrollBy({ left: direction * NAV_SCROLL_STEP, behavior: 'smooth' })
+  }, [])
+
+  return { ref, overflow, scrollBy }
+}
+
+/** Thin, always-rendered track so the nav reads as scrollable on every platform. */
+const navScrollAreaClass =
+  'min-w-0 justify-start overflow-x-auto overflow-y-hidden overscroll-x-contain pb-1 [scrollbar-width:thin] [scrollbar-color:var(--border)_transparent] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-border [&::-webkit-scrollbar-track]:bg-transparent'
+
+function NavScrollButton({
+  direction,
+  disabled,
+  onClick,
+}: {
+  direction: 'start' | 'end'
+  disabled: boolean
+  onClick: () => void
+}) {
+  const Icon = direction === 'start' ? ChevronLeft : ChevronRight
+
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon"
+      tabIndex={-1}
+      aria-hidden
+      disabled={disabled}
+      onClick={onClick}
+      className="h-8 w-6 shrink-0 text-muted-foreground disabled:opacity-30"
+    >
+      <Icon className="h-4 w-4" />
+    </Button>
+  )
+}
+
 // ─── Actions ──────────────────────────────────────────────────────────────────
 
 function HeaderActions() {
   return (
-    <div className="ml-auto flex items-center gap-2">
+    <div className="ml-auto flex shrink-0 items-center gap-2 pl-2">
       <Button variant="ghost" size="icon" className="relative h-8 w-8 text-muted-foreground">
         <Bell className="h-4 w-4" />
         <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-primary" />
@@ -128,6 +199,8 @@ function NavigationHeaderContent({
   onItemSelect,
 }: Pick<HeaderShellProps, 'navigation' | 'activeItemId' | 'onItemSelect'>) {
   const [menuValue, setMenuValue] = useState('')
+  const { ref: listRef, overflow, scrollBy } = useNavOverflow<HTMLUListElement>()
+  const scrollable = overflow.start || overflow.end
 
   const handleSelect = (id: string) => {
     onItemSelect?.(id)
@@ -139,7 +212,7 @@ function NavigationHeaderContent({
   return (
     <>
       {/* Mobile: hamburger + logo */}
-      <div className="flex items-center gap-2 md:hidden">
+      <div className="flex shrink-0 items-center gap-2 md:hidden">
         <MobileNavSheet
           navigation={navigation}
           activeItemId={activeItemId}
@@ -151,19 +224,32 @@ function NavigationHeaderContent({
       </div>
 
       {/* Desktop: logo + nav */}
-      <div className="mr-4 hidden items-center gap-2 md:flex">
+      <div className="mr-4 hidden shrink-0 items-center gap-2 md:flex">
         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-xs font-bold text-primary-foreground">
           D
         </div>
         <span className="text-sm font-semibold">DesignKit</span>
       </div>
 
-      <NavigationMenu value={menuValue} onValueChange={setMenuValue} className="hidden md:flex">
-        <NavigationMenuList>
+      <div className="hidden min-w-0 flex-1 items-center md:flex">
+        {scrollable && (
+          <NavScrollButton
+            direction="start"
+            disabled={!overflow.start}
+            onClick={() => scrollBy(-1)}
+          />
+        )}
+
+        <NavigationMenu
+          value={menuValue}
+          onValueChange={setMenuValue}
+          className="min-w-0 max-w-none flex-1 justify-start"
+        >
+          <NavigationMenuList ref={listRef} className={navScrollAreaClass}>
           {navigation.map((group, gi) => (
             <Fragment key={group.label}>
               {gi > 0 && (
-                <li className="flex items-center">
+                <li className="flex shrink-0 items-center">
                   <Separator orientation="vertical" className="mx-1 h-4 shrink-0" />
                 </li>
               )}
@@ -171,12 +257,12 @@ function NavigationHeaderContent({
                 const active = itemIsActive(item, activeItemId)
 
                 return (
-                  <NavigationMenuItem key={item.id} value={item.id}>
+                  <NavigationMenuItem key={item.id} value={item.id} className="shrink-0">
                     {(item.children?.length ?? 0) > 0 ? (
                       <>
                         <NavigationMenuTrigger
                           className={cn(
-                            'h-8 text-sm',
+                            'h-8 whitespace-nowrap text-sm',
                             active
                               ? 'text-foreground font-medium'
                               : 'text-muted-foreground font-normal',
@@ -207,7 +293,7 @@ function NavigationHeaderContent({
                         render={<button type="button" />}
                         onClick={() => handleSelect(item.id)}
                         className={cn(
-                          'h-8 px-2.5 py-1.5 text-sm',
+                          'h-8 whitespace-nowrap px-2.5 py-1.5 text-sm',
                           active
                             ? 'bg-accent text-foreground font-medium'
                             : 'text-muted-foreground',
@@ -221,8 +307,13 @@ function NavigationHeaderContent({
               })}
             </Fragment>
           ))}
-        </NavigationMenuList>
-      </NavigationMenu>
+          </NavigationMenuList>
+        </NavigationMenu>
+
+        {scrollable && (
+          <NavScrollButton direction="end" disabled={!overflow.end} onClick={() => scrollBy(1)} />
+        )}
+      </div>
 
       <HeaderActions />
     </>
@@ -230,29 +321,49 @@ function NavigationHeaderContent({
 }
 
 function DemoHeaderContent() {
+  const { ref: navRef, overflow, scrollBy } = useNavOverflow<HTMLElement>()
+  const scrollable = overflow.start || overflow.end
+
   return (
     <>
-      <div className="flex items-center gap-2 mr-6">
+      <div className="flex shrink-0 items-center gap-2 mr-6">
         <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-xs">
           A
         </div>
         <span className="text-sm font-semibold hidden sm:inline">Acme Corp</span>
       </div>
 
-      <nav className="hidden items-center gap-1 md:flex">
-        {demoNav.map((item) => (
-          <Button
-            key={item}
-            variant="ghost"
-            size="sm"
-            className={
-              item === 'Users' ? 'bg-accent text-foreground font-medium' : 'text-muted-foreground'
-            }
-          >
-            {item}
-          </Button>
-        ))}
-      </nav>
+      <div className="hidden min-w-0 flex-1 items-center md:flex">
+        {scrollable && (
+          <NavScrollButton
+            direction="start"
+            disabled={!overflow.start}
+            onClick={() => scrollBy(-1)}
+          />
+        )}
+
+        <nav ref={navRef} className={cn('flex flex-1 items-center gap-1', navScrollAreaClass)}>
+          {demoNav.map((item) => (
+            <Button
+              key={item}
+              variant="ghost"
+              size="sm"
+              className={cn(
+                'shrink-0',
+                item === 'Users'
+                  ? 'bg-accent text-foreground font-medium'
+                  : 'text-muted-foreground',
+              )}
+            >
+              {item}
+            </Button>
+          ))}
+        </nav>
+
+        {scrollable && (
+          <NavScrollButton direction="end" disabled={!overflow.end} onClick={() => scrollBy(1)} />
+        )}
+      </div>
 
       <HeaderActions />
     </>
@@ -270,7 +381,7 @@ export function HeaderShell({
 }: HeaderShellProps) {
   return (
     <div className="h-full flex flex-col">
-      <header className="flex h-12 shrink-0 items-center border-b border-border px-4 bg-(--designkit-header) backdrop-blur-sm">
+      <header className="flex h-12 min-w-0 shrink-0 items-center border-b border-border px-4 bg-(--designkit-header) backdrop-blur-sm">
         {header ?? (
           <NavigationHeaderContent
             navigation={navigation}
@@ -279,7 +390,7 @@ export function HeaderShell({
           />
         )}
       </header>
-      <div className="flex-1 overflow-hidden">{children}</div>
+      <div className="min-h-0 min-w-0 flex-1 overflow-hidden">{children}</div>
     </div>
   )
 }
