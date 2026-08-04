@@ -3,6 +3,7 @@
 @import 'shadcn/tailwind.css';
 @import '@fontsource-variable/geist';
 @import '@loykin/side-panel/styles';
+@import '@loykin/control-bar/styles';
 @import '@loykin/filter-input/styles';
 @import '@loykin/datetime-range/styles';
 @import '@loykin/gridkit/styles';

@@ -70,7 +70,9 @@ Logs, shell sessions, and cluster events are persistent workspace tools, not tra
 - Collapsing preserves tabs and active state.
 - Events are cluster-scoped; Logs and Shell are resource-scoped.
 
-The Control Bar package supplies the headless tab model. The application owns the domain-specific dock chrome and tool renderers.
+The Control Bar package supplies both the tab model (`useControlBar`) and the tab strip chrome (`ControlBar`) — render `<ControlBar />` for the dock header and content instead of hand-building a tab strip. The application still owns domain-specific tool renderers (via `registerTabType`) and any dock action beyond the package's own collapse/expand/fullscreen controls (e.g. an "Events" trigger).
+
+`ControlBar` currently unmounts itself entirely at zero tabs, which conflicts with "keep the dock visible at zero tabs" above. Until the package supports an always-visible empty state, wrap it: render your own 36px `No active resource panels` bar when there are no tabs, and mount `<ControlBar />` only once `tabs.length > 0`. Do not rebuild the populated tab strip yourself — the wrapper's only job is the empty state.
 
 ## 6. Spacing and resizing
 

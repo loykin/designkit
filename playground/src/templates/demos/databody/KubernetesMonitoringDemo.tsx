@@ -2,19 +2,11 @@ import { useMemo } from 'react'
 import type { CSSProperties, MouseEvent } from 'react'
 import type { Table } from '@tanstack/react-table'
 import { DataGrid, GlobalSearch, type DataGridColumnDef } from '@loykin/gridkit'
-import { ControlBarProvider, getTabType, registerTabType, useControlBar } from '@loykin/control-bar'
+import { ControlBar, ControlBarProvider, registerTabType, useControlBar } from '@loykin/control-bar'
 import { SidePanelProvider, useSidePanel } from '@loykin/side-panel'
 import { FilterInput, type FilterInputConfig } from '@loykin/filter-input'
 import { Badge, Button, DataBodyTemplate, PageTopBar, PanelTemplate } from '@loykin/designkit'
-import {
-  ChevronDown,
-  ChevronUp,
-  Clock3,
-  RefreshCw,
-  ScrollText,
-  SquareTerminal,
-  X,
-} from 'lucide-react'
+import { Clock3, RefreshCw, ScrollText, SquareTerminal, X } from 'lucide-react'
 
 type PodStatus = 'Running' | 'Succeeded' | 'Failed' | 'Pending'
 
@@ -50,9 +42,6 @@ interface PodDetailPanelProps {
   onOpenLogs: () => void
   onOpenShell: () => void
 }
-
-const CONTROL_DOCK_COLLAPSED_HEIGHT = 36
-const CONTROL_DOCK_EXPANDED_HEIGHT = 260
 
 const pods: PodRow[] = [
   {
@@ -362,6 +351,20 @@ function PodsResource({ pods }: PodsResourceProps) {
     )
   }
 
+  const openClusterEvents = () => {
+    const existingTab = tabs.find((tab) => tab.type === 'kubernetes-events')
+    if (existingTab) {
+      activate(existingTab.id)
+      return
+    }
+
+    open<ClusterEventData>({
+      type: 'kubernetes-events',
+      label: 'Cluster events',
+      data: { cluster: 'docker-desktop' },
+    })
+  }
+
   const columns = useMemo<DataGridColumnDef<PodRow>[]>(
     () => [
       {
@@ -450,109 +453,44 @@ function PodsResource({ pods }: PodsResourceProps) {
         </>
       )}
       headerRight={
-        <Button
-          variant="outline"
-          size="sm"
-          className="h-8 gap-1.5 rounded-[var(--gridkit-radius)] text-xs"
-        >
-          <RefreshCw />
-          Refresh
-        </Button>
+        <>
+          <Button variant="ghost" size="sm" onClick={openClusterEvents}>
+            <Clock3 />
+            Events
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-8 gap-1.5 rounded-[var(--gridkit-radius)] text-xs"
+          >
+            <RefreshCw />
+            Refresh
+          </Button>
+        </>
       }
     />
   )
 }
 
 function KubernetesControlDock() {
-  const { activeTabId, activate, close, collapse, expand, isCollapsed, open, tabs } =
-    useControlBar()
-  const activeTab = tabs.find((tab) => tab.id === activeTabId)
-  const activeDefinition = activeTab ? getTabType(activeTab.type) : undefined
-  const expanded = tabs.length > 0 && !isCollapsed
+  // TODO(basekit): remove this wrapper once @loykin/control-bar's <ControlBar>
+  // supports an always-visible empty state (see
+  // basekit/docs/control-bar-always-visible-dock.md). The guide requires the
+  // dock to stay visible at zero tabs; ControlBar currently unmounts instead.
+  const { tabs } = useControlBar()
 
-  const openClusterEvents = () => {
-    const existingTab = tabs.find((tab) => tab.type === 'kubernetes-events')
-    if (existingTab) {
-      activate(existingTab.id)
-      return
-    }
-
-    open<ClusterEventData>({
-      type: 'kubernetes-events',
-      label: 'Cluster events',
-      data: { cluster: 'docker-desktop' },
-    })
+  if (tabs.length === 0) {
+    return (
+      <div
+        aria-label="Resource panels"
+        className="flex h-9 shrink-0 items-center border-t border-border bg-muted/50 px-3 text-xs text-muted-foreground"
+      >
+        No active resource panels
+      </div>
+    )
   }
 
-  return (
-    <section
-      aria-label="Resource panels"
-      className="flex shrink-0 flex-col border-t border-border bg-background"
-      style={{
-        height: expanded ? CONTROL_DOCK_EXPANDED_HEIGHT : CONTROL_DOCK_COLLAPSED_HEIGHT,
-      }}
-    >
-      <div className="flex h-9 shrink-0 items-center bg-muted/50">
-        <div className="flex min-w-0 flex-1 items-center overflow-x-auto">
-          {tabs.length === 0 ? (
-            <span className="px-3 text-xs text-muted-foreground">No active resource panels</span>
-          ) : (
-            tabs.map((tab) => {
-              const definition = getTabType(tab.type)
-              const active = tab.id === activeTabId
-              return (
-                <div
-                  key={tab.id}
-                  className={
-                    active
-                      ? 'flex h-9 shrink-0 items-center border-r border-border bg-background text-foreground'
-                      : 'flex h-9 shrink-0 items-center border-r border-border text-muted-foreground'
-                  }
-                >
-                  <button
-                    type="button"
-                    className="flex h-full items-center gap-1.5 px-3 text-xs"
-                    onClick={() => (active && expanded ? collapse() : activate(tab.id))}
-                  >
-                    {definition?.icon}
-                    <span className="max-w-64 truncate">{tab.label}</span>
-                  </button>
-                  <button
-                    type="button"
-                    aria-label={`Close ${tab.label}`}
-                    className="mr-1 flex size-6 items-center justify-center rounded-(--radius) text-muted-foreground hover:bg-muted hover:text-foreground"
-                    onClick={() => close(tab.id)}
-                  >
-                    <X className="size-3" />
-                  </button>
-                </div>
-              )
-            })
-          )}
-        </div>
-        <div className="flex h-full shrink-0 items-center gap-1 border-l border-border px-2">
-          <Button variant="ghost" size="sm" className="h-7" onClick={openClusterEvents}>
-            <Clock3 className="size-3.5" />
-            Events
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon-xs"
-            aria-label={expanded ? 'Collapse resource panels' : 'Expand resource panels'}
-            disabled={tabs.length === 0}
-            onClick={expanded ? collapse : expand}
-          >
-            {expanded ? <ChevronDown /> : <ChevronUp />}
-          </Button>
-        </div>
-      </div>
-      {expanded && activeTab && activeDefinition && (
-        <div className="min-h-0 flex-1 overflow-hidden">
-          {activeDefinition.render(activeTab.data)}
-        </div>
-      )}
-    </section>
-  )
+  return <ControlBar />
 }
 
 interface KubernetesWorkspaceProps {

@@ -109,7 +109,7 @@ describe('implementation guide registry', () => {
       'onRowClick={openPodDetails}',
       'GlobalSearch',
       'FilterInput',
-      'KubernetesControlDock',
+      'ControlBar',
       'No active resource panels',
     ]) {
       expect(kubernetesDemo).toContain(rule)
@@ -169,7 +169,7 @@ describe('implementation guide registry', () => {
       'toolbarRight',
       'placeholderData: keepPreviousData',
       'DataGridPaginationBar',
-      'A Sheet is not the default form container.',
+      'A SidePanel is not the default form container.',
       'Keep automatic polling silent by default.',
     ]) {
       expect(managedGuide).toContain(rule)

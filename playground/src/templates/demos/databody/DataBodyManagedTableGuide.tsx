@@ -16,17 +16,14 @@ import {
   Label,
   PageBreadcrumb,
   PageTopBar,
+  PanelTemplate,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
 } from '@loykin/designkit'
+import { SidePanelProvider, useSidePanel } from '@loykin/side-panel'
 import { Filter, Plus, Search } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import type { SortingState } from '@tanstack/react-table'
@@ -321,32 +318,30 @@ function SearchField({
   )
 }
 
-function UserDetailSheet({ user, onClose }: { user?: User; onClose: () => void }) {
+function UserPanel({ user }: { user: User }) {
+  const { close } = useSidePanel()
   return (
-    <Sheet open={Boolean(user)} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="data-[side=right]:sm:max-w-md">
-        <SheetHeader>
-          <SheetTitle>{user?.name}</SheetTitle>
-          <SheetDescription>User details remain open during list refreshes.</SheetDescription>
-        </SheetHeader>
-        {user && (
-          <div className="grid gap-4 px-4 text-sm">
-            <div>
-              <p className="text-xs text-muted-foreground">Email</p>
-              <p>{user.email}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Role</p>
-              <p>{user.role}</p>
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Status</p>
-              <p className="capitalize">{user.status}</p>
-            </div>
-          </div>
-        )}
-      </SheetContent>
-    </Sheet>
+    <PanelTemplate
+      eyebrow="User"
+      title={user.name}
+      footer={
+        <div className="flex justify-end">
+          <Button variant="outline" size="sm" onClick={() => void close()}>
+            Close
+          </Button>
+        </div>
+      }
+    >
+      <PanelTemplate.Section title="Details">
+        <dl className="space-y-2">
+          <PanelTemplate.Row label="Email">{user.email}</PanelTemplate.Row>
+          <PanelTemplate.Row label="Role">{user.role}</PanelTemplate.Row>
+          <PanelTemplate.Row label="Status" className="capitalize">
+            {user.status}
+          </PanelTemplate.Row>
+        </dl>
+      </PanelTemplate.Section>
+    </PanelTemplate>
   )
 }
 
@@ -355,7 +350,7 @@ function UsersTab({ onAddUser }: { onAddUser: () => void }) {
   const [role, setRole] = useState('all')
   const [page, setPage] = useState(1)
   const [sorting, setSorting] = useState<SortingState>(USERS_INITIAL_SORT)
-  const [selectedUser, setSelectedUser] = useState<User>()
+  const { open } = useSidePanel()
   const query = useQuery({
     queryKey: ['resource-guide', 'users', search, role, page, sorting],
     queryFn: () => listUsers(search, role, page, sorting),
@@ -414,7 +409,7 @@ function UsersTab({ onAddUser }: { onAddUser: () => void }) {
         classNames={{ footer: 'pt-3' }}
         rowHeight={48}
         rowCursor
-        onRowClick={setSelectedUser}
+        onRowClick={(user) => open(<UserPanel user={user} />, { side: 'right', size: 420, resizable: true })}
         pagination={{
           pageSize: PAGE_SIZE,
           pageIndex: page - 1,
@@ -429,7 +424,6 @@ function UsersTab({ onAddUser }: { onAddUser: () => void }) {
           />
         )}
       />
-      <UserDetailSheet user={selectedUser} onClose={() => setSelectedUser(undefined)} />
     </DataBodyTemplate.Resource>
   )
 }
@@ -599,23 +593,25 @@ function UserListPage({
   onAddUser: () => void
 }) {
   return (
-    <DataBodyTemplate
-      theme={theme}
-      className="layout-databody-managed-table-guide"
-      topBar={<PageTopBar left={<PageBreadcrumb items={['Data', 'Users']} />} />}
-      title="Users"
-      description="Canonical managed-table composition with isolated tab queries."
-    >
-      <DataBodyTemplate.Tab id="users" label="Users">
-        <UsersTab onAddUser={onAddUser} />
-      </DataBodyTemplate.Tab>
-      <DataBodyTemplate.Tab id="sessions" label="Sessions">
-        <SessionsTab />
-      </DataBodyTemplate.Tab>
-      <DataBodyTemplate.Tab id="history" label="History">
-        <HistoryTab />
-      </DataBodyTemplate.Tab>
-    </DataBodyTemplate>
+    <SidePanelProvider className="h-full min-h-0">
+      <DataBodyTemplate
+        theme={theme}
+        className="layout-databody-managed-table-guide"
+        topBar={<PageTopBar left={<PageBreadcrumb items={['Data', 'Users']} />} />}
+        title="Users"
+        description="Canonical managed-table composition with isolated tab queries."
+      >
+        <DataBodyTemplate.Tab id="users" label="Users">
+          <UsersTab onAddUser={onAddUser} />
+        </DataBodyTemplate.Tab>
+        <DataBodyTemplate.Tab id="sessions" label="Sessions">
+          <SessionsTab />
+        </DataBodyTemplate.Tab>
+        <DataBodyTemplate.Tab id="history" label="History">
+          <HistoryTab />
+        </DataBodyTemplate.Tab>
+      </DataBodyTemplate>
+    </SidePanelProvider>
   )
 }
 

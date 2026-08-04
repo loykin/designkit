@@ -16,10 +16,10 @@ The Playground's **Guides / Resource Management / Managed Table** screen is the 
 
 | Status               | Playground reference                           | Role in this pattern                                                                   |
 | -------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------------- |
-| Executable pattern   | `Guides / Resource Management / Managed Table` | Complete list, tabs, queries, create route, form, pagination, and concise detail Sheet |
+| Executable pattern   | `Guides / Resource Management / Managed Table` | Complete list, tabs, queries, create route, form, pagination, and concise detail SidePanel |
 | Supporting reference | `DataBodyTemplate / Table / Standard`          | Base GridKit table composition and table sizing                                        |
 | Supporting contract  | `Guides / Forms / Stacked Form`                | Create/edit form spacing, modular Groups, and action alignment                         |
-| Supporting reference | `DetailBodyTemplate / Detail / Record`         | Full-page destination when detail outgrows a Sheet                                     |
+| Supporting reference | `DetailBodyTemplate / Detail / Record`         | Full-page destination when detail outgrows a SidePanel                                     |
 | Supporting reference | `FormWizardBodyTemplate / Wizard`              | Multi-step destination when create/edit outgrows a stacked form                        |
 | Counterexample       | `DashboardBodyTemplate / Dashboard`            | Monitoring panels are not an administrative table                                      |
 | Counterexample       | `BrowseBodyTemplate / Browse`                  | Consumer discovery is not an administrative resource list                              |
@@ -33,7 +33,7 @@ Only the entry marked **Executable pattern** implements this pattern end to end.
 | Collection list, tabs, search, filters, pagination | `DataBodyTemplate` + `DataBodyTemplate.Resource` | `Guides / Resource Management / Managed Table` |
 | Base table behavior                                | GridKit `DataGrid`                               | `DataBodyTemplate / Table / Standard`          |
 | Simple create/edit route                           | stacked `DataBodyTemplate.Group`                 | `Guides / Forms / Stacked Form`                |
-| Concise read-only inspection                       | `Sheet`                                          | `Managed Table` row detail                     |
+| Concise read-only inspection                       | BaseKit `SidePanel` (`@loykin/side-panel`)       | `Managed Table` row detail                     |
 | Complex full-page detail route                     | `DetailBodyTemplate`                             | `DetailBodyTemplate / Detail / Record`         |
 | Multi-step create/edit route                       | `FormWizardBodyTemplate`                         | `FormWizardBodyTemplate / Wizard`              |
 | Destructive confirmation                           | `AlertDialog`                                    | UI primitive contract                          |
@@ -72,7 +72,7 @@ This guide covers three destinations for any managed resource:
 
 ```text
 /<resources>
-├─ select row    → concise read-only detail Sheet
+├─ select row    → concise read-only detail SidePanel
 ├─ create action → /<resources>/new create page
 └─ edit action   → /<resources>/:resourceId/edit page
 ```
@@ -84,12 +84,12 @@ It does not define every `DataBodyTemplate` use case. Settings, dashboards, long
 | User intent                                                                     | Default destination   | Reason                                                                  |
 | ------------------------------------------------------------------------------- | --------------------- | ----------------------------------------------------------------------- |
 | Browse, search, filter, paginate                                                | Page                  | Stable, linkable working context                                        |
-| Inspect concise read-only row information                                       | Sheet                 | Preserves list context                                                  |
+| Inspect concise read-only row information                                       | SidePanel             | Preserves list context                                                  |
 | Create or edit an entity                                                        | Page with its own URL | Space for validation, permissions, responsive layout, and future fields |
-| Inspect long, editable, multi-section, permission-sensitive, or linkable detail | Page with its own URL | Sheet constraints are no longer appropriate                             |
+| Inspect long, editable, multi-section, permission-sensitive, or linkable detail | Page with its own URL | SidePanel constraints are no longer appropriate                        |
 | Confirm a destructive action or collect one narrowly scoped value               | Modal                 | Short, blocking decision                                                |
 
-A Sheet is not the default form container. Do not put general create or edit forms in a Sheet merely because the trigger originates in a table.
+A SidePanel is not the default form container. Do not put general create or edit forms in a SidePanel merely because the trigger originates in a table.
 
 ## Route and page hierarchy
 
@@ -156,7 +156,7 @@ Each tab must be a separate React component and own all state that affects its r
 - TanStack Query and query key
 - Search and filters
 - Pagination
-- Row selection and concise detail Sheet
+- Row selection and concise detail SidePanel
 - Mutations that belong to the list itself
 
 Query keys include every server-state input:
@@ -384,23 +384,51 @@ Form rules:
 - Do not add `mx-auto`, an arbitrary `max-w-*`, extra horizontal padding, a nested card, or a second action divider.
 - The form page owns its mutation. After success, invalidate the narrowest affected queries and navigate to the list or created entity.
 
-## Concise detail Sheet
+## Concise detail SidePanel
 
-Keep the list mounted while showing concise, mostly read-only row information:
+Keep the list mounted while showing concise, mostly read-only row information. Use BaseKit `SidePanelProvider`/`useSidePanel` (`@loykin/side-panel`) — the same package the Kubernetes Workspace guide uses — with DesignKit `PanelTemplate` for the panel body: `title`/`eyebrow` for the header, `PanelTemplate.Section` + `PanelTemplate.Row` for read-only fields, and a `Close` button in `footer` calling `close()`. Do not use DesignKit's own `Sheet` primitive for this, and do not hand-roll a label/value grid with raw `div`/`p` markup.
 
 ```tsx
-<Sheet open={Boolean(selectedUser)} onOpenChange={(open) => !open && clearSelection()}>
-  <SheetContent>
-    <SheetHeader>
-      <SheetTitle>{selectedUser?.name}</SheetTitle>
-      <SheetDescription>User details</SheetDescription>
-    </SheetHeader>
-    {/* concise read-only fields */}
-  </SheetContent>
-</Sheet>
+function UserPanel({ user }: { user: SelectedUser }) {
+  const { close } = useSidePanel()
+  return (
+    <PanelTemplate
+      eyebrow="User"
+      title={user.name}
+      footer={
+        <div className="flex justify-end">
+          <Button variant="outline" size="sm" onClick={() => void close()}>
+            Close
+          </Button>
+        </div>
+      }
+    >
+      <PanelTemplate.Section title="Details">
+        <dl className="space-y-2">
+          <PanelTemplate.Row label="Email">{user.email}</PanelTemplate.Row>
+          <PanelTemplate.Row label="Role">{user.role}</PanelTemplate.Row>
+        </dl>
+      </PanelTemplate.Section>
+    </PanelTemplate>
+  )
+}
+
+function UsersListPage() {
+  const { open } = useSidePanel()
+  return (
+    <SidePanelProvider className="h-full min-h-0">
+      <DataBodyTemplate>
+        <DataGrid
+          /* … */
+          onRowClick={(user) => open(<UserPanel user={user} />, { side: 'right', size: 420, resizable: true })}
+        />
+      </DataBodyTemplate>
+    </SidePanelProvider>
+  )
+}
 ```
 
-If the detail gains editing, multiple sections, complex permissions, a long history, or a need for a shareable URL, replace the Sheet with a detail page. Do not gradually turn the Sheet into a full page inside an overlay.
+If the detail gains editing, multiple sections, complex permissions, a long history, or a need for a shareable URL, replace the SidePanel with a detail page. Do not gradually turn the SidePanel into a full page inside an overlay.
 
 ## Public API boundary
 
@@ -429,7 +457,8 @@ Do not import package-internal source paths. Do not add TanStack Query, React Ro
 - [ ] Table toolbar and pagination controls are `28px` high.
 - [ ] Form controls and buttons are `32px` high.
 - [ ] The stacked form has no arbitrary max-width wrapper or extra action divider.
-- [ ] Create and edit use pages; concise read-only detail uses a Sheet.
+- [ ] Create and edit use pages; concise read-only detail uses a SidePanel.
+- [ ] The SidePanel body uses `PanelTemplate` (`title`/`eyebrow` + `PanelTemplate.Section`/`PanelTemplate.Row`), not hand-rolled label/value markup, and DesignKit's own `Sheet` primitive is not used for this.
 - [ ] Complex detail uses a page.
 - [ ] Only public package entry points are imported.
 - [ ] The experience is visually checked in both Sidebar and Header shells.
