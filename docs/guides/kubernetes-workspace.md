@@ -72,7 +72,7 @@ Logs, shell sessions, and cluster events are persistent workspace tools, not tra
 
 The Control Bar package supplies both the tab model (`useControlBar`) and the tab strip chrome (`ControlBar`) — render `<ControlBar />` for the dock header and content instead of hand-building a tab strip. The application still owns domain-specific tool renderers (via `registerTabType`) and any dock action beyond the package's own collapse/expand/fullscreen controls (e.g. an "Events" trigger).
 
-`ControlBar` currently unmounts itself entirely at zero tabs, which conflicts with "keep the dock visible at zero tabs" above. Until the package supports an always-visible empty state, wrap it: render your own 36px `No active resource panels` bar when there are no tabs, and mount `<ControlBar />` only once `tabs.length > 0`. Do not rebuild the populated tab strip yourself — the wrapper's only job is the empty state.
+Pass `alwaysVisible` and `emptyState` so the dock stays mounted at zero tabs instead of unmounting: `<ControlBar alwaysVisible emptyState="No active resource panels" />`. Do not hand-build an empty-state wrapper around `ControlBar` — the package owns this directly.
 
 ## 6. Spacing and resizing
 
@@ -141,7 +141,7 @@ function KubernetesWorkspace() {
       <SidePanelProvider className="h-full min-h-0">
         <div className="flex h-full min-h-0 flex-col overflow-hidden">
           <DataBodyTemplate>{/* PodsResource */}</DataBodyTemplate>
-          <KubernetesControlDock />
+          <ControlBar alwaysVisible emptyState="No active resource panels" />
         </div>
       </SidePanelProvider>
     </ControlBarProvider>

@@ -472,27 +472,6 @@ function PodsResource({ pods }: PodsResourceProps) {
   )
 }
 
-function KubernetesControlDock() {
-  // TODO(basekit): remove this wrapper once @loykin/control-bar's <ControlBar>
-  // supports an always-visible empty state (see
-  // basekit/docs/control-bar-always-visible-dock.md). The guide requires the
-  // dock to stay visible at zero tabs; ControlBar currently unmounts instead.
-  const { tabs } = useControlBar()
-
-  if (tabs.length === 0) {
-    return (
-      <div
-        aria-label="Resource panels"
-        className="flex h-9 shrink-0 items-center border-t border-border bg-muted/50 px-3 text-xs text-muted-foreground"
-      >
-        No active resource panels
-      </div>
-    )
-  }
-
-  return <ControlBar />
-}
-
 interface KubernetesWorkspaceProps {
   theme?: CSSProperties
   guide?: boolean
@@ -523,7 +502,7 @@ function KubernetesWorkspace({ theme, guide = false }: KubernetesWorkspaceProps)
           </DataBodyTemplate.Body>
         </DataBodyTemplate>
       </div>
-      <KubernetesControlDock />
+      <ControlBar alwaysVisible emptyState="No active resource panels" />
     </div>
   )
 }
