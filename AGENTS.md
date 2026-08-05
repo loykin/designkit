@@ -33,6 +33,7 @@ pnpm test:consumer  # pack + verify Tailwind discovery, installation, types, bun
 src/
   components/
     ui/          — primitive UI components (button, badge, avatar, card, …)
+    patterns/    — reusable content compositions, not page-level (PanelTemplate, InteractiveCard, Article*)
     templates/   — page-level template components
     shells/      — layout shells (HeaderShell, SidebarShell)
   hooks/         — use-mobile
@@ -40,6 +41,8 @@ src/
   store/         — useThemeStore (Zustand), types
   styles/        — index.css (design token bridge, CSS custom properties)
 ```
+
+DesignKit's components form three tiers: `ui/` atomic primitives (shadcn-derived; never edited to satisfy a call site, see below) → `patterns/` reusable compositions of those primitives that are not themselves a full page (a panel's content, a clickable card shell, an article's cover/byline) → `templates/` full page-level shells that compose primitives and patterns into a route. When a visual pattern repeats across more than one screen, it belongs in `patterns/` if it's not a full page, or as a new `templates/` entry if it is.
 
 ### Templates (`src/components/templates/`)
 
@@ -82,6 +85,7 @@ src/
 - `useStyleInjector` writes `:root` by default, or the configured `scope`, plus dark tonal and per-template `.layout-<id>` overrides inside `@layer designkit`
 - Because `useStyleInjector` writes inside `@layer designkit`, unlayered app CSS wins over injected runtime tokens by design
 - State styling uses `data-*` attributes; avoid relying on generated class ordering
+- GridKit's `DataGridCard` applies its own `padding: 16px` card-grid padding by default (correct for standalone GridKit usage — GridKit's own playground relies on it unmodified). When `DataGridCard` is nested inside a DesignKit page template, that default doubles up with the page's own `--designkit-page-padding-x`. Always pass `styles={{ content: { paddingInline: 0 } }}` in that case — do not modify GridKit's default, and do not skip this on a new demo just because an existing one already has it right.
 
 ## Repository Boundaries
 
@@ -112,6 +116,7 @@ Do not nest one page-level template (`DataBodyTemplate`, `WorkbenchBodyTemplate`
 - Entries under the Playground's **Guides** navigation are normative end-to-end implementation contracts. Existing template groups are visual API references only; do not infer product structure from a template demo when a matching Guide exists.
 - The current guide IDs are `managed-table`, `kubernetes-workspace`, `form-workflow`, `publishing-workflow`, and `commerce-workflow`.
 - Do not add an AI Guide to a visual template merely because a workflow happens to use that template.
+- Before writing or reviewing a Guide's executable TSX, read `docs/guides/ai-ui-implementation-contract.md`. A Guide demo is copied more literally than its prose; hand-rolled Tailwind in the demo teaches the wrong lesson regardless of what the Markdown says.
 
 ### Guide maintenance gate
 

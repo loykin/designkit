@@ -4,6 +4,16 @@ All notable changes to `@loykin/designkit` are documented here.
 
 ## Unreleased
 
+- Added `InteractiveCard` (hover-lift/elevation clickable card shell) and
+  `ArticleCover`, `ArticleByline`, `ArticleToc`, `ArticleBody`,
+  `ArticleBodySkeleton`, `ArticleCardPreview` (article/blog content
+  primitives, with a semantic `ArticleTone` instead of raw gradient class
+  strings). `ArticleCardPreview` composes the full card shape (cover,
+  category, title, excerpt, byline, read time); extracted after the
+  Publishing Workflow guide and Blog Feed demo were found to duplicate that
+  entire card near verbatim. Extracted from near-identical hand-rolled
+  markup that had been copied across the Publishing Workflow guide, Commerce
+  Workflow guide, Blog Feed demo, and Browse demo.
 - Added `WorkbenchBodyTemplate.Section` for grouping related controls (e.g. an
   options/inspector pane) into labeled sections.
 - Added the Tailwind v4 `@theme inline` bridge and class-based `.dark` variant to

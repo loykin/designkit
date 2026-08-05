@@ -15,6 +15,7 @@ import {
   PanelLeftOpen,
   PanelRight,
   Boxes,
+  Shapes,
 } from 'lucide-react'
 import { TEMPLATE_DEFINITIONS } from './definitions'
 import type { PlaygroundTemplateId } from './definitions'
@@ -126,6 +127,7 @@ import {
   buildListDetailBodyTemplateCode,
 } from './demos/listdetail/ListDetailBodyTemplateDemo'
 import { PanelTemplateDemo, buildPanelTemplateCode } from './demos/panel/PanelTemplateDemo'
+import { ArticlePatternsDemo } from './demos/patterns/ArticlePatternsDemo'
 import { buildDetailTemplateCode } from './demos/detail/DetailBodyTemplateDemo'
 import { ProductMediaDetailDemo } from './demos/detail/ProductMediaDetailDemo'
 import { OrderRecordDetailDemo } from './demos/detail/OrderRecordDetailDemo'
@@ -175,6 +177,7 @@ const previewComponents: Record<
   browse: BrowseBodyTemplateDemo,
   'list-detail': ListDetailBodyTemplateDemo,
   panel: PanelTemplateDemo,
+  'article-patterns': ArticlePatternsDemo,
   detail: ProductMediaDetailDemo,
   'detail-record': OrderRecordDetailDemo,
   'detail-full': ProductFullDetailDemo,
@@ -266,6 +269,7 @@ const previewSourcePathById: Partial<Record<PlaygroundTemplateId, string>> = {
   browse: './demos/browse/BrowseBodyTemplateDemo.tsx',
   'list-detail': './demos/listdetail/ListDetailBodyTemplateDemo.tsx',
   panel: './demos/panel/PanelTemplateDemo.tsx',
+  'article-patterns': './demos/patterns/ArticlePatternsDemo.tsx',
   detail: './demos/detail/ProductMediaDetailDemo.tsx',
   'detail-record': './demos/detail/OrderRecordDetailDemo.tsx',
   'detail-full': './demos/detail/ProductFullDetailDemo.tsx',
@@ -338,15 +342,15 @@ const navigationGroupIcon: Partial<Record<string, ComponentType<{ className?: st
   DashboardBodyTemplate: BarChart2,
   WorkbenchBodyTemplate: PanelsTopLeft,
   ListDetailBodyTemplate: PanelLeftOpen,
-  PanelTemplate: PanelRight,
+  Patterns: Shapes,
 }
 
 const navigationLabelOrder = [
   'Common',
+  'Patterns',
   'DataBodyTemplate',
   'DetailBodyTemplate',
   'ListDetailBodyTemplate',
-  'PanelTemplate',
   'FormWizardBodyTemplate',
   'LoginBodyTemplate',
   'DashboardBodyTemplate',

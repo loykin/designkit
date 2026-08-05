@@ -4,6 +4,8 @@ This is the normative implementation contract for a tabbed administrative table 
 
 The Playground's **Guides / Resource Management / Managed Table** screen is the executable end-to-end reference. Its records are sample data; the pattern is defined by the table responsibilities and template composition below, not by that data domain. If an implementation differs from this contract, revise the implementation rather than inventing a local layout.
 
+Read [AI UI Implementation Contract](./ai-ui-implementation-contract.md) first.
+
 ## Pattern identity and reference registry
 
 - Pattern ID: `managed-table`

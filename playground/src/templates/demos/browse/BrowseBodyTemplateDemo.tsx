@@ -3,7 +3,9 @@ import {
   BrowseBodyTemplate,
   PageTopBar,
   Badge,
+  CardContent,
   Checkbox,
+  InteractiveCard,
   Separator,
   Select,
   SelectTrigger,
@@ -176,7 +178,7 @@ function StarRating({ value }: { value: number }) {
 
 function ProductCard({ product }: { product: Product }) {
   return (
-    <div className="group flex flex-col overflow-hidden rounded-(--radius) border bg-card transition-shadow hover:shadow-md cursor-pointer h-full">
+    <InteractiveCard>
       <div className="relative flex h-36 items-center justify-center bg-muted/40 text-5xl select-none">
         👟
         {product.badge && (
@@ -188,7 +190,7 @@ function ProductCard({ product }: { product: Product }) {
           </Badge>
         )}
       </div>
-      <div className="flex flex-1 flex-col gap-2 p-3">
+      <CardContent className="flex flex-1 flex-col gap-2 p-3">
         <div>
           <p className="text-[11px] text-muted-foreground">{product.brand}</p>
           <p className="text-sm font-medium leading-tight">{product.name}</p>
@@ -201,8 +203,8 @@ function ProductCard({ product }: { product: Product }) {
           </div>
         </div>
         <StarRating value={product.rating} />
-      </div>
-    </div>
+      </CardContent>
+    </InteractiveCard>
   )
 }
 
@@ -380,6 +382,11 @@ export function BrowseBodyTemplateDemo({ theme }: { theme?: React.CSSProperties 
         isFetchingNextPage={isFetchingNextPage}
         fetchNextPage={fetchNextPage}
         renderCard={(row) => <ProductCard product={row.original} />}
+        styles={{
+          root: { overflow: 'visible' },
+          frameInner: { overflow: 'visible' },
+          content: { paddingInline: 0 },
+        }}
       />
     </BrowseBodyTemplate>
   )

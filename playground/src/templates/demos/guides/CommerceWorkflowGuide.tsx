@@ -6,7 +6,9 @@ import {
   Badge,
   BrowseBodyTemplate,
   Button,
+  CardContent,
   DetailBodyTemplate,
+  InteractiveCard,
   PageTopBar,
   Select,
   SelectContent,
@@ -118,11 +120,11 @@ async function getProduct(slug: string) {
 
 function ProductCard({ product }: { product: Product }) {
   return (
-    <div className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-(--radius) border bg-card transition-shadow hover:shadow-md">
+    <InteractiveCard>
       <div className="relative flex h-40 items-center justify-center bg-muted/50 text-6xl">
         👟{product.badge && <Badge className="absolute right-3 top-3">{product.badge}</Badge>}
       </div>
-      <div className="flex flex-1 flex-col gap-2 p-4">
+      <CardContent className="flex flex-1 flex-col gap-2 p-4">
         <p className="text-xs text-muted-foreground">
           {product.brand} · {product.category}
         </p>
@@ -134,8 +136,8 @@ function ProductCard({ product }: { product: Product }) {
             {product.rating}
           </span>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </InteractiveCard>
   )
 }
 
@@ -203,6 +205,11 @@ function CatalogPage({ theme, basePath }: { theme?: React.CSSProperties; basePat
         minCardWidth={210}
         minColumns={2}
         renderCard={(row) => <ProductCard product={row.original} />}
+        styles={{
+          root: { overflow: 'visible' },
+          frameInner: { overflow: 'visible' },
+          content: { paddingInline: 0 },
+        }}
       />
     </BrowseBodyTemplate>
   )

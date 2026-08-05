@@ -184,6 +184,7 @@ function UserCards() {
           </CardContent>
         </Card>
       )}
+      styles={{ content: { paddingInline: 0 } }}
     />
   )
 }

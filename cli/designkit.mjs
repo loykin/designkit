@@ -70,9 +70,17 @@ if (!command || command === 'help' || command === '--help' || command === '-h') 
     )
   } else {
     const contract = await readFile(join(guideRoot, guide.contract), 'utf8')
-    const prompt = wantsPrompt
-      ? `Implement this workflow with @loykin/designkit ${packageJson.version}. Follow the complete contract below. Preserve route, query, action-placement, loading, and page-template boundaries. Do not nest page-level templates.\n\n`
-      : ''
-    process.stdout.write(`${prompt}${contract.trim()}\n`)
+    if (!wantsPrompt) {
+      process.stdout.write(`${contract.trim()}\n`)
+    } else {
+      const uiContract = await readFile(
+        join(guideRoot, 'ai-ui-implementation-contract.md'),
+        'utf8',
+      )
+      const prompt = `Implement this workflow with @loykin/designkit ${packageJson.version}. Follow the complete contract below. Preserve route, query, action-placement, loading, and page-template boundaries. Do not nest page-level templates.\n\n`
+      process.stdout.write(
+        `${prompt}${uiContract.trim()}\n\n---\n\n${contract.trim()}\n`,
+      )
+    }
   }
 }

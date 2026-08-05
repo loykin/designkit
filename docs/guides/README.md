@@ -2,9 +2,11 @@
 
 The Playground's **Guides** group contains complete product flows. Existing template groups remain visual API references; they do not receive an AI guide merely because a workflow uses that template.
 
+Read [AI UI Implementation Contract](./ai-ui-implementation-contract.md) before implementing any Guide screen — it defines the mandatory build order (template → slot → component → variant → minimal custom CSS) that every Guide below assumes.
+
 | Workflow            | Pattern ID             | Connected destinations                 | Contract                                          |
 | ------------------- | ---------------------- | -------------------------------------- | ------------------------------------------------- |
-| Resource Management | `managed-table`        | table → detail Sheet; create/edit page | [Managed Table](./managed-table.md)               |
+| Resource Management | `managed-table`        | table → detail SidePanel; create/edit page | [Managed Table](./managed-table.md)               |
 | Operations          | `kubernetes-workspace` | Pod table → detail panel → tool dock   | [Kubernetes Workspace](./kubernetes-workspace.md) |
 | Forms               | `form-workflow`        | create, edit, and settings pages       | [Stacked Form](./form-workflow.md)                |
 | Publishing          | `publishing-workflow`  | blog collection → article route        | [Publishing Workflow](./publishing-workflow.md)   |

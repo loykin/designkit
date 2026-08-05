@@ -27,6 +27,9 @@ export * from './components/ui/tooltip'
 // Templates
 export * from './components/templates'
 
+// Patterns
+export * from './components/patterns'
+
 // Hooks
 export * from './hooks/use-mobile'
 

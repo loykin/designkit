@@ -11,6 +11,8 @@ Use this contract for create, edit, and settings forms. It standardizes the visu
 
 The existing **DataBodyTemplate / Form / Horizontal**, **Stacked**, and **Inline** entries are visual API references. When generating a product form, follow this guide instead of selecting among those demos.
 
+Read [AI UI Implementation Contract](./ai-ui-implementation-contract.md) first.
+
 The executable Playground example uses React Hook Form to demonstrate shared state across modular section components, controlled DesignKit inputs, and field-level errors. React Hook Form is a Playground implementation choice, not a DesignKit dependency or part of this visual contract.
 
 ## Non-negotiable visual contract

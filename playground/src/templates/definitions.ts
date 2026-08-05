@@ -12,7 +12,7 @@ export type TemplateNavigationGroupId =
   | 'DashboardBodyTemplate'
   | 'WorkbenchBodyTemplate'
   | 'ListDetailBodyTemplate'
-  | 'PanelTemplate'
+  | 'Patterns'
   | 'Common'
 export type TemplateExportKind =
   | 'data-grid'
@@ -671,10 +671,22 @@ export const TEMPLATE_DEFINITIONS: TemplateDefinition[] = [
     label: 'Side Panel',
     navigationSubgroupLabel: 'Panel',
     group: 'Pages',
-    navigationGroup: 'PanelTemplate',
+    navigationGroup: 'Patterns',
     layoutClassName: 'layout-panel',
     exportComponent: 'PanelTemplate',
     exportKind: 'panel',
+    preset: {},
+  },
+  // ── Patterns ───────────────────────────────────────────────────────────────
+  {
+    id: 'article-patterns',
+    label: 'Article',
+    navigationSubgroupLabel: 'Article',
+    group: 'Pages',
+    navigationGroup: 'Patterns',
+    layoutClassName: 'layout-article-patterns',
+    exportComponent: 'DataBodyTemplate',
+    exportKind: 'databody',
     preset: {},
   },
 ]

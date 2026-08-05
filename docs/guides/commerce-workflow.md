@@ -12,6 +12,8 @@ Use this guide to build a discovery-to-decision commerce experience. The executa
 
 The existing **Browse / Catalog** and product detail template demos remain visual references. This Guide defines their behavioral connection.
 
+Read [AI UI Implementation Contract](./ai-ui-implementation-contract.md) first. Product cards use DesignKit `InteractiveCard` for the clickable, hover-lifting shell — the same component the Publishing guide uses — not a hand-rolled `<div className="... hover:shadow-md ...">`.
+
 ## Route contract
 
 ```text
@@ -45,3 +47,4 @@ Selecting a product card navigates to the product route. Browser Back and the pr
 - [ ] Product breadcrumb returns to catalog
 - [ ] Purchase action exists only on the product route
 - [ ] No nested page templates and no product Sheet
+- [ ] Product cards use `InteractiveCard`, not a hand-rolled hover/elevation `className` block

@@ -12,6 +12,8 @@ Use this guide to build a publishing experience where a content collection leads
 
 The existing **Blog Feed** and **Article** template demos are visual references only. This Guide is the supported example of how those page shapes connect.
 
+Read [AI UI Implementation Contract](./ai-ui-implementation-contract.md) first. It governs how this Guide's card grid and article content are built.
+
 ## Route contract
 
 ```text
@@ -37,6 +39,18 @@ Card selection uses React Router navigation. Browser Back returns to the collect
 - Article actions such as Save or Share belong in the article header.
 - Render one page-level template per route. Never put `DetailBodyTemplate` inside `DataBodyTemplate.Body`.
 
+## Card and article presentation
+
+Do not hand-roll the card grid or article body with raw `<div>`/Tailwind. Use these DesignKit components:
+
+- `ArticleCardPreview` — the whole grid card: cover, category, title, excerpt, byline, read time. Pass `coverContent` for per-listing decoration (an icon, an overlay); do not reassemble the card shape from `InteractiveCard` + `ArticleCover` + `ArticleByline` by hand — that duplication is exactly why this component exists (it was copy-pasted near-verbatim between this guide and the Blog Feed demo before being promoted).
+- `ArticleCover` / `ArticleByline` — the cover and byline building blocks `ArticleCardPreview` uses internally. Reach for them directly only outside the card shape, e.g. the article page's hero (`ArticleCover`) and header (`ArticleByline`). `tone` is a semantic value (`'violet' | 'emerald' | 'amber' | 'rose' | 'sky' | 'slate'`), not a raw gradient class string — sample data stores `accent: ArticleTone`, never a Tailwind string.
+- `ArticleBody` — reading-width container with article typography for the article's prose.
+- `ArticleBodySkeleton` — loading placeholder matching `ArticleBody`'s width.
+- `ArticleToc` — the article aside's table of contents.
+
+Article title, excerpt, and category stay as plain content passed into these components; only the reusable shell moves into DesignKit.
+
 ## Deterministic ordering
 
 The mock API returns articles newest first and the GridKit collection declares the same initial published-date sort. In a real API, send sort parameters to the server and include them in the query key. Never sort humanized labels such as “2 hours ago”.
@@ -51,3 +65,6 @@ The mock API returns articles newest first and the GridKit collection declares t
 - [ ] Initial loading is local to the destination content
 - [ ] Existing content remains visible during background refetch
 - [ ] No nested page templates and no article Sheet
+- [ ] The grid card uses `ArticleCardPreview`, not a hand-assembled `InteractiveCard` + `ArticleCover` + `ArticleByline` composition
+- [ ] Article page presentation uses `ArticleBody`/`ArticleBodySkeleton` and `ArticleToc`, not hand-rolled `className` blocks
+- [ ] Sample data stores a semantic `accent`/tone value, never a Tailwind gradient string

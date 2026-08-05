@@ -9,6 +9,8 @@ The executable reference is available at:
 
 The `DataBodyTemplate / Kubernetes` entry is a visual API reference backed by the same composition. The **Guides / Operations / Kubernetes Workspace** entry is the normative workflow contract.
 
+Read [AI UI Implementation Contract](./ai-ui-implementation-contract.md) first.
+
 ## 1. Workflow identity
 
 This is one workspace with three distinct interaction layers:
