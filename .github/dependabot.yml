@@ -18,6 +18,11 @@ updates:
     groups:
       minor-and-patch:
         update-types: ["minor", "patch"]
+    ignore:
+      # @loykin/gridkit's dist imports the v8 API (useReactTable, get*RowModel).
+      # Bump this only after gridkit ships a v9-compatible peer range.
+      - dependency-name: "@tanstack/react-table"
+        update-types: ["version-update:semver-major"]
 
   # Keep GitHub Actions up to date
   - package-ecosystem: "github-actions"
