@@ -22,10 +22,10 @@ The executable Playground example uses React Hook Form to demonstrate shared sta
 3. Use one `DataBodyTemplate` page root.
 4. Use the stacked form shape for create, edit, and settings pages. Do not switch to `horizontal` or `inline` because the domain changed.
 5. Divide the form into one or more `DataBodyTemplate.Group layout="stacked"` sections according to meaning, not visual preference.
-6. Keep field spacing at `space-y-3`; keep each label/control/help block at `space-y-1.5`.
-7. Use DesignKit controls and the established compact control sizing: `h-8 text-sm` for inputs and selects, `size="sm"` with `h-8 text-xs` for actions.
-8. Put Cancel before the primary submit action. Keep the action cluster right-aligned at the bottom of its save boundary.
-9. Show validation text directly below its field. Show form-level failure above the bottom actions, inside the same form boundary.
+6. Wrap each field in `FormField` (label, control, and `error`/`helperText`) instead of hand-rolling a `space-y-1.5` + `Label` block; keep the fields inside a group at `space-y-3`.
+7. Use DesignKit controls and the established compact control sizing: `h-8 text-sm` for inputs and selects.
+8. End the form in `FormActions` (`status`, `submitLabel`, `onCancel`) instead of hand-rolling the bottom action row — it already puts Cancel before the right-aligned primary submit action and renders the divider above it. Do not add a second divider around it.
+9. Pass validation text to `FormField`'s `error` prop; pass form-level failure to `FormActions`' `status` prop, inside the same form boundary.
 10. A submitting, refreshing, or validation state must not replace or flash the page header or unrelated groups.
 
 ## Module boundary contract
@@ -81,18 +81,14 @@ function IdentitySection() {
       description="Basic account information."
     >
       <div className="space-y-3">
-        <div className="space-y-1.5">
-          <Label htmlFor="member-name" className="text-xs">
-            Name
-          </Label>
+        <FormField label="Name" htmlFor="member-name" error={errors.name?.message}>
           <Input
             id="member-name"
             {...register('name', { required: 'Enter a member name.' })}
             aria-invalid={Boolean(errors.name)}
             className="h-8 text-sm"
           />
-          {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
-        </div>
+        </FormField>
       </div>
     </DataBodyTemplate.Group>
   )
@@ -108,10 +104,7 @@ function AccessSection() {
       description="Default workspace permissions."
     >
       <div className="space-y-3">
-        <div className="space-y-1.5">
-          <Label htmlFor="member-role" className="text-xs">
-            Role
-          </Label>
+        <FormField label="Role" htmlFor="member-role">
           <Controller
             control={control}
             name="role"
@@ -124,7 +117,7 @@ function AccessSection() {
               </Select>
             )}
           />
-        </div>
+        </FormField>
         <Controller
           control={control}
           name="active"
@@ -154,14 +147,7 @@ function MemberForm() {
       <form className="contents" onSubmit={form.handleSubmit(submitMember)}>
         <IdentitySection />
         <AccessSection />
-        <div className="flex justify-end gap-2 border-t border-border pt-(--designkit-panel-gap)">
-          <Button type="button" variant="outline" size="sm" className="h-8 text-xs">
-            Cancel
-          </Button>
-          <Button type="submit" size="sm" className="h-8 text-xs">
-            Save
-          </Button>
-        </div>
+        <FormActions submitLabel="Save" />
       </form>
     </FormProvider>
   )
@@ -212,3 +198,5 @@ function ProfileSettingsSection() {
 - Group count follows the information model; it does not select a different layout.
 - Form and validation libraries remain application choices.
 - Bottom actions belong to the form that they submit.
+- Fields use `FormField`, not a hand-rolled `space-y-1.5` + `Label` block.
+- The bottom action row uses `FormActions`, not a hand-rolled Cancel/submit `div`.

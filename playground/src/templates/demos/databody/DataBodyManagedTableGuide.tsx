@@ -12,8 +12,9 @@ import {
   Badge,
   Button,
   DataBodyTemplate,
+  FormActions,
+  FormField,
   Input,
-  Label,
   PageBreadcrumb,
   PageTopBar,
   PanelTemplate,
@@ -665,10 +666,7 @@ function UserCreatePage({
             create.mutate({ name, email, role })
           }}
         >
-          <div className="space-y-1.5">
-            <Label htmlFor="new-user-name" className="text-xs">
-              Name
-            </Label>
+          <FormField label="Name" htmlFor="new-user-name">
             <Input
               id="new-user-name"
               value={name}
@@ -676,11 +674,8 @@ function UserCreatePage({
               className="h-8 text-sm"
               required
             />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="new-user-email" className="text-xs">
-              Email
-            </Label>
+          </FormField>
+          <FormField label="Email" htmlFor="new-user-email">
             <Input
               id="new-user-email"
               type="email"
@@ -689,11 +684,8 @@ function UserCreatePage({
               className="h-8 text-sm"
               required
             />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="new-user-role" className="text-xs">
-              Role
-            </Label>
+          </FormField>
+          <FormField label="Role" htmlFor="new-user-role">
             <Select value={role} onValueChange={(value) => value && setRole(value as UserRole)}>
               <SelectTrigger id="new-user-role" className="h-8 text-sm">
                 <SelectValue />
@@ -704,21 +696,12 @@ function UserCreatePage({
                 <SelectItem value="Viewer">Viewer</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-          <div className="flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={onCancel}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" size="sm" className="h-8 text-xs" disabled={create.isPending}>
-              {create.isPending ? 'Creating…' : 'Create user'}
-            </Button>
-          </div>
+          </FormField>
+          <FormActions
+            onCancel={onCancel}
+            submitLabel={create.isPending ? 'Creating…' : 'Create user'}
+            submitDisabled={create.isPending}
+          />
         </form>
       </DataBodyTemplate.Group>
     </DataBodyTemplate>

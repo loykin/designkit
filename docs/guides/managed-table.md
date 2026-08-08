@@ -334,43 +334,21 @@ function UserCreatePage() {
         description="Identity and access settings for the new account."
       >
         <form className="space-y-3" onSubmit={handleSubmit}>
-          <div className="space-y-1.5">
-            <Label htmlFor="user-name" className="text-xs">
-              Name
-            </Label>
+          <FormField label="Name" htmlFor="user-name">
             <Input id="user-name" className="h-8 text-sm" required />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="user-email" className="text-xs">
-              Email
-            </Label>
+          </FormField>
+          <FormField label="Email" htmlFor="user-email">
             <Input id="user-email" type="email" className="h-8 text-sm" required />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="user-role" className="text-xs">
-              Role
-            </Label>
+          </FormField>
+          <FormField label="Role" htmlFor="user-role">
             <Select defaultValue="Viewer">
               <SelectTrigger id="user-role" className="h-8 text-sm">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>{/* roles */}</SelectContent>
             </Select>
-          </div>
-          <div className="flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="h-8 text-xs"
-              onClick={() => navigate('/users')}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" size="sm" className="h-8 text-xs">
-              Create user
-            </Button>
-          </div>
+          </FormField>
+          <FormActions onCancel={() => navigate('/users')} submitLabel="Create user" />
         </form>
       </DataBodyTemplate.Group>
     </DataBodyTemplate>
@@ -381,9 +359,10 @@ function UserCreatePage() {
 Form rules:
 
 - Form controls and buttons are `32px` (`h-8`); this differs from the table toolbar's `28px` controls.
-- Use `space-y-3` for the form and `space-y-1.5` within each field.
+- Wrap each field in `FormField`; use `space-y-3` between fields inside the form.
+- End the form in `FormActions`; it already renders the divider and Cancel-before-submit order — do not add a second divider around it.
 - Use the full content width supplied by the stacked group.
-- Do not add `mx-auto`, an arbitrary `max-w-*`, extra horizontal padding, a nested card, or a second action divider.
+- Do not add `mx-auto`, an arbitrary `max-w-*`, extra horizontal padding, or a nested card.
 - The form page owns its mutation. After success, invalidate the narrowest affected queries and navigate to the list or created entity.
 
 ## Concise detail SidePanel
@@ -459,6 +438,7 @@ Do not import package-internal source paths. Do not add TanStack Query, React Ro
 - [ ] Table toolbar and pagination controls are `28px` high.
 - [ ] Form controls and buttons are `32px` high.
 - [ ] The stacked form has no arbitrary max-width wrapper or extra action divider.
+- [ ] The create/edit form uses `FormField` and `FormActions` (see the Stacked Form guide), not hand-rolled label/input or action-row markup.
 - [ ] Create and edit use pages; concise read-only detail uses a SidePanel.
 - [ ] The SidePanel body uses `PanelTemplate` (`title`/`eyebrow` + `PanelTemplate.Section`/`PanelTemplate.Row`), not hand-rolled label/value markup, and DesignKit's own `Sheet` primitive is not used for this.
 - [ ] Complex detail uses a page.

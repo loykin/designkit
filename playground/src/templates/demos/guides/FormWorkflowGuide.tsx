@@ -1,10 +1,10 @@
 import { memo, useState } from 'react'
 import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
 import {
-  Button,
   DataBodyTemplate,
+  FormActions,
+  FormField,
   Input,
-  Label,
   PageTopBar,
   Select,
   SelectContent,
@@ -34,22 +34,20 @@ const IdentitySection = memo(function IdentitySection() {
       description="Basic information used throughout the workspace."
     >
       <div className="space-y-3">
-        <div className="space-y-1.5">
-          <Label htmlFor="guide-member-name" className="text-xs">
-            Name
-          </Label>
+        <FormField label="Name" htmlFor="guide-member-name" error={errors.name?.message}>
           <Input
             id="guide-member-name"
             {...register('name', { required: 'Enter a member name.' })}
             className="h-8 text-sm"
             aria-invalid={Boolean(errors.name)}
           />
-          {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
-        </div>
-        <div className="space-y-1.5">
-          <Label htmlFor="guide-member-email" className="text-xs">
-            Email
-          </Label>
+        </FormField>
+        <FormField
+          label="Email"
+          htmlFor="guide-member-email"
+          error={errors.email?.message}
+          helperText="Invitations and account notifications are sent to this address."
+        >
           <Input
             id="guide-member-email"
             type="email"
@@ -60,14 +58,7 @@ const IdentitySection = memo(function IdentitySection() {
             className="h-8 text-sm"
             aria-invalid={Boolean(errors.email)}
           />
-          {errors.email ? (
-            <p className="text-xs text-destructive">{errors.email.message}</p>
-          ) : (
-            <p className="text-xs text-muted-foreground">
-              Invitations and account notifications are sent to this address.
-            </p>
-          )}
-        </div>
+        </FormField>
       </div>
     </DataBodyTemplate.Group>
   )
@@ -83,10 +74,7 @@ const AccessSection = memo(function AccessSection() {
       description="Choose the member's default permissions."
     >
       <div className="space-y-3">
-        <div className="space-y-1.5">
-          <Label htmlFor="guide-member-role" className="text-xs">
-            Role
-          </Label>
+        <FormField label="Role" htmlFor="guide-member-role">
           <Controller
             control={control}
             name="role"
@@ -103,7 +91,7 @@ const AccessSection = memo(function AccessSection() {
               </Select>
             )}
           />
-        </div>
+        </FormField>
         <div className="flex items-center justify-between gap-4 py-1">
           <div>
             <p className="text-sm font-medium">Active account</p>
@@ -140,21 +128,14 @@ function MemberForm() {
       <form className="contents" onSubmit={form.handleSubmit(() => setSaved(true))}>
         <IdentitySection />
         <AccessSection />
-        <div className="flex items-center justify-between border-t border-border pt-(--designkit-panel-gap)">
-          <p className="text-xs text-muted-foreground" role="status">
-            {saved
+        <FormActions
+          status={
+            saved
               ? 'Example saved. Form state remains inside this form boundary.'
-              : 'All fields are required unless marked optional.'}
-          </p>
-          <div className="flex items-center gap-2">
-            <Button type="button" variant="outline" size="sm" className="h-8 text-xs">
-              Cancel
-            </Button>
-            <Button type="submit" size="sm" className="h-8 text-xs">
-              Add member
-            </Button>
-          </div>
-        </div>
+              : 'All fields are required unless marked optional.'
+          }
+          submitLabel="Add member"
+        />
       </form>
     </FormProvider>
   )

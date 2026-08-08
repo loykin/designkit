@@ -4,6 +4,17 @@ All notable changes to `@loykin/designkit` are documented here.
 
 ## Unreleased
 
+- Added `FormField` (label + control + error/helper text) and `FormActions`
+  (Cancel-before-submit bottom action row, with its divider) to
+  `src/components/patterns/form/`. Extracted after the Stacked Form guide and
+  the Managed Table guide's create form were found to hand-roll the same
+  label/input wrapper and action row six times combined; the Managed Table
+  guide's version was also missing the divider `FormActions` now renders by
+  default.
+- Reorganized `src/components/{panel,card,article}` into
+  `src/components/patterns/*` — a third tier between `ui/` atomic primitives
+  and `templates/` page-level templates for reusable, non-page-level content
+  compositions. Public export names are unchanged.
 - Added `InteractiveCard` (hover-lift/elevation clickable card shell) and
   `ArticleCover`, `ArticleByline`, `ArticleToc`, `ArticleBody`,
   `ArticleBodySkeleton`, `ArticleCardPreview` (article/blog content
