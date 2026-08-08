@@ -107,7 +107,7 @@ importers:
         version: 0.0.6(@types/react@19.2.18)(immer@11.1.15)(react-dom@19.2.8(react@19.2.8))(react-grid-layout@2.2.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
       '@loykin/datetime-range':
         specifier: ^0.0.1-dev.2
-        version: 0.0.1-dev.2(@date-fns/tz@1.5.0)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.0.1-dev.4(@date-fns/tz@1.5.0)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@loykin/designkit':
         specifier: workspace:*
         version: link:..
@@ -710,11 +710,11 @@ packages:
     peerDependencies:
       hono: ^4
 
-  '@hugeicons/core-free-icons@4.2.0':
-    resolution: {integrity: sha512-V1G/Ph9TbmEow+pKnupZRWQjdORR/TGGr3JVRZOWkomdJ/5N6GgLuKPgBDs7G0kZ0//9LL34AGOUzWe3K+umNA==}
+  '@hugeicons/core-free-icons@4.2.3':
+    resolution: {integrity: sha512-fpiU0qFZkv4ABi23xJ2m4qNr0BBfuIaYjPboN8WDA6aj9D+OzXa7eykxKOpACZRuGbDz1U9S5DsNx1d5KNnsgA==}
 
-  '@hugeicons/react@1.1.6':
-    resolution: {integrity: sha512-c2LhXJMAW5wN1pC/smBXG0YPqUON6ceR/ZdXHCjEI9KvB+hjtqYjmzIxok5hAQOeXGz0WtORgCQMzqewFKAZwg==}
+  '@hugeicons/react@1.1.9':
+    resolution: {integrity: sha512-O+lWSWjbijoAvMCxn4K2bQWCGN5+mP1y5j+X99j23mXMj+s0X25fs71T6t9YJLaBodwmZdaewD27dzS/PiboQw==}
     peerDependencies:
       react: '>=16.0.0'
 
@@ -831,8 +831,8 @@ packages:
       react-grid-layout:
         optional: true
 
-  '@loykin/datetime-range@0.0.1-dev.2':
-    resolution: {integrity: sha512-qGuL2gDM63fOO+2g05U/nmZ15UyKpQlqhFVJKlULtd02M4hfUbKIEwtDVFLXoB/jbPeD+FojLBIvKz8t54qGRA==}
+  '@loykin/datetime-range@0.0.1-dev.4':
+    resolution: {integrity: sha512-Jg+99pN452y5CLztT1raxY0IeRNZR3sVxKSfdePJO2x72EgCplRJbfS4efJ4ZasNRSSQQo1bJrEfztIPcxL3VA==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -1764,8 +1764,8 @@ packages:
     resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
 
-  chrono-node@2.9.1:
-    resolution: {integrity: sha512-nqP8Zp11efCYQIESXPxeDM8ikzN5BDb3Zzou+a66fZq+X2hzKFdsNLQE2/uBAh//BZEMbaMo1eTnagK7hOenAg==}
+  chrono-node@2.10.1:
+    resolution: {integrity: sha512-tPOsBzYVAK5zth+CiHCgp5NGeqRc4mMD8FPthQ5IxkgjPWWxIFdM5odnmfw//IRAzl6C++Xy8olQW7wn5qBR1g==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
 
   class-variance-authority@0.7.1:
@@ -4397,9 +4397,9 @@ snapshots:
     dependencies:
       hono: 4.13.0
 
-  '@hugeicons/core-free-icons@4.2.0': {}
+  '@hugeicons/core-free-icons@4.2.3': {}
 
-  '@hugeicons/react@1.1.6(react@19.2.8)':
+  '@hugeicons/react@1.1.9(react@19.2.8)':
     dependencies:
       react: 19.2.8
 
@@ -4524,12 +4524,12 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  '@loykin/datetime-range@0.0.1-dev.2(@date-fns/tz@1.5.0)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@loykin/datetime-range@0.0.1-dev.4(@date-fns/tz@1.5.0)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@base-ui/react': 1.7.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@hugeicons/core-free-icons': 4.2.0
-      '@hugeicons/react': 1.1.6(react@19.2.8)
-      chrono-node: 2.9.1
+      '@hugeicons/core-free-icons': 4.2.3
+      '@hugeicons/react': 1.1.9(react@19.2.8)
+      chrono-node: 2.10.1
       class-variance-authority: 0.7.1
       clsx: 2.1.1
       date-fns: 4.4.0
@@ -5327,7 +5327,7 @@ snapshots:
     dependencies:
       readdirp: 4.1.2
 
-  chrono-node@2.9.1: {}
+  chrono-node@2.10.1: {}
 
   class-variance-authority@0.7.1:
     dependencies:
