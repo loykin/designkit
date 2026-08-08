@@ -114,7 +114,7 @@ importers:
         version: link:..
       '@loykin/filter-input':
         specifier: ^0.0.1-dev.2
-        version: 0.0.1-dev.2(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.0.1-dev.4(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@loykin/side-panel':
         specifier: ^0.0.1-dev.2
         version: 0.0.1-dev.2(@types/react@19.2.18)(immer@11.1.15)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
@@ -838,8 +838,8 @@ packages:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
 
-  '@loykin/filter-input@0.0.1-dev.2':
-    resolution: {integrity: sha512-Vpd5oJN/nItl/Uu7hQbjHNymcaxval1sKUAxPAU700huw+pJOwq3YgFq/tXQoiv1RJICa+WB58nB7WFfaGIGzQ==}
+  '@loykin/filter-input@0.0.1-dev.4':
+    resolution: {integrity: sha512-rBIL0TkDbO2JxmQKA41uJ8skiGSqPGaiRNARvnTucEv3AYriCwLtZU95EjAS5kh7AjDzvvnBwCLjiORjQjQ+/g==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -4550,7 +4550,7 @@ snapshots:
       - '@date-fns/tz'
       - '@types/react'
 
-  '@loykin/filter-input@0.0.1-dev.2(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+  '@loykin/filter-input@0.0.1-dev.4(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@base-ui/react': 1.7.0(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       clsx: 2.1.1
