@@ -116,7 +116,7 @@ importers:
         version: 0.0.1-dev.2(@date-fns/tz@1.5.0)(@types/react@19.2.18)(date-fns@4.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@loykin/side-panel':
         specifier: ^0.0.1-dev.2
-        version: 0.0.1-dev.2(@types/react@19.2.18)(immer@11.1.15)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
+        version: 0.0.1-dev.4(@types/react@19.2.18)(immer@11.1.15)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
       '@tanstack/react-query':
         specifier: ^5.101.4
         version: 5.101.4(react@19.2.8)
@@ -851,8 +851,8 @@ packages:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
 
-  '@loykin/side-panel@0.0.1-dev.2':
-    resolution: {integrity: sha512-YxB1nIzWaTwYaNrLf1z3wd9p76cw4BfJitI2O1PHMEJaAAi9YYUK1F2OwvIIBY3CgxouyO45BDl3UXGZaFS/Uw==}
+  '@loykin/side-panel@0.0.1-dev.4':
+    resolution: {integrity: sha512-ezLvpbqAb9T8K54yoPVSMbn/uMfc1NbKsNpKXVWp6OB/4vWPBm12L6rQZAUju3dhDsVNr95gDh8m12JibYx+AQ==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -4569,7 +4569,7 @@ snapshots:
       - immer
       - use-sync-external-store
 
-  '@loykin/side-panel@0.0.1-dev.2(@types/react@19.2.18)(immer@11.1.15)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))':
+  '@loykin/side-panel@0.0.1-dev.4(@types/react@19.2.18)(immer@11.1.15)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))':
     dependencies:
       clsx: 2.1.1
       re-resizable: 6.11.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
